@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import clsx from 'clsx';
 import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import {
   Sparkles,
@@ -32,6 +32,23 @@ import { apiClient } from '../../lib/api/client';
 
 export const LandingPage: React.FC = () => {
   const { mode, setMode } = useTheme();
+
+  // Hero Section: Animated 5-Step Visual Process Indicator State
+  const [activeProcessStep, setActiveProcessStep] = useState<number>(0);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveProcessStep((prev) => (prev + 1) % 5);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, []);
+
+  const PROCESS_STEPS = [
+    { id: 1, label: 'WhatsApp Message', icon: MessageSquare },
+    { id: 2, label: 'AI Extraction', icon: Sparkles },
+    { id: 3, label: 'Smart Matching', icon: Search },
+    { id: 4, label: 'Masked Flyer', icon: Share2 },
+    { id: 5, label: 'Deal Tracking', icon: TrendingUp },
+  ];
 
   // Section 2: Demo Video State & Responsive Selection
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -154,137 +171,240 @@ export const LandingPage: React.FC = () => {
       </header>
 
       {/* ========================================================= */}
-      {/* SECTION 1 — HERO                                          */}
+      {/* SECTION 1 — HERO (Phase 1 Visual Upgrade)                 */}
       {/* ========================================================= */}
-      <section className="relative pt-14 sm:pt-20 pb-16 px-4 sm:px-6 max-w-6xl mx-auto w-full">
-        <div className="text-center max-w-3xl mx-auto space-y-5">
-          {/* Tag Pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200/60 dark:bg-brand-950/40 dark:border-brand-800/40 text-brand-700 dark:text-brand-600 text-xs font-bold shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-brand-600" />
-            <span>Built for Indian Real Estate Brokers</span>
-            <span className="text-muted/60">·</span>
-            <span className="font-normal text-muted dark:text-slate-400">NCR & Panipat Active Pilot</span>
-          </div>
-
-          {/* Primary Headline */}
-          <h1 className="text-4xl sm:text-6xl font-black text-ink font-heading leading-[1.12] tracking-tight">
-            Turn Messages into{' '}
-            <span className="bg-gradient-to-r from-brand-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent">
-              Property Deals.
-            </span>
-          </h1>
-
-          {/* Supporting Description */}
-          <p className="text-sm sm:text-base text-muted max-w-2xl mx-auto leading-relaxed">
-            Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right property matches faster and manage more opportunities without losing track of your deals.
-          </p>
-
-          {/* Dual CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3 max-w-md mx-auto">
-            <Button
-              size="lg"
-              pill
-              onClick={scrollToInquiry}
-              className="w-full sm:w-auto flex-1 shadow-lg shadow-brand-700/20 text-xs font-bold"
-            >
-              <span>Get Free Demo</span>
-              <ArrowRight className="w-4 h-4 ml-1.5" />
-            </Button>
-
-            <Link to="/register" className="w-full sm:w-auto flex-1">
-              <Button variant="secondary" size="lg" pill className="w-full text-xs font-bold">
-                Start 14-Day Free Trial
-              </Button>
-            </Link>
-          </div>
-
-          {/* Trust points */}
-          <div className="flex items-center justify-center gap-5 pt-2 text-[11px] text-muted font-medium">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-brand-600" /> 100% Owner Contact Privacy
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-brand-600" /> No credit card required
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-brand-600" /> WhatsApp integrated
-            </span>
-          </div>
+      <section className="relative overflow-hidden bg-slate-950 text-white pt-16 sm:pt-24 pb-20 px-4 sm:px-6 w-full border-b border-slate-800/80">
+        {/* Realistic Indian Urban Architecture Background with Cinematic Dark Vignette & Gradient */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+          <img
+            src="/hero-bg.jpg"
+            alt="Indian Urban Real Estate Architecture"
+            className="w-full h-full object-cover object-center opacity-30 animate-hero-bg scale-100"
+            loading="eager"
+          />
+          {/* Multi-layered dark vignette & gradient overlay for 100% text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-slate-950" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-slate-950/70 to-slate-950" />
+          {/* Subtle soft emerald spotlight ray */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[650px] h-[340px] bg-gradient-to-b from-emerald-500/15 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
         </div>
 
-        {/* Product Visual Preview (Orion & Ecosight Style Card Deck) */}
-        <div className="mt-12 max-w-5xl mx-auto">
-          <Card className="p-3 sm:p-5 bg-gradient-to-b from-surface to-bg border-border/80 shadow-card-hover rounded-card-lg relative overflow-hidden">
-            {/* Window chrome / header bar */}
-            <div className="flex items-center justify-between pb-3 px-2 border-b border-border/60">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-400" />
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                <span className="text-[11px] font-bold text-muted ml-2">leadNivash Broker Operating System · Live Workspace</span>
-              </div>
-              <Badge variant="brand" pill dot>
-                Encrypted Owner Vault Active
-              </Badge>
+        <div className="relative z-10 max-w-6xl mx-auto w-full">
+          {/* Main Hero Header Stack */}
+          <div className="text-center max-w-3xl mx-auto space-y-6">
+            {/* 1. Old Badge completely removed as mandated */}
+
+            {/* 3. Hero Headline */}
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black font-heading leading-[1.08] tracking-tight text-white animate-hero-up">
+              Turn Messages into <br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500 bg-clip-text text-transparent drop-shadow-sm">
+                Property Deals.
+              </span>
+            </h1>
+
+            {/* 4. Supporting Text */}
+            <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
+              Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right property matches faster and manage more opportunities without losing track of your deals.
+            </p>
+
+            {/* 5. CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2 max-w-md mx-auto w-full">
+              <button
+                onClick={scrollToInquiry}
+                className="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-emerald-950/40 hover:shadow-emerald-500/25 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+              >
+                <span>Get Free Demo</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </button>
+
+              <Link to="/register" className="w-full sm:w-auto flex-1">
+                <button
+                  className="group w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700/80 hover:border-slate-500 font-bold text-xs tracking-wide backdrop-blur-sm hover:-translate-y-0.5 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-950 shadow-sm"
+                >
+                  <span>Start 14-Day Free Trial</span>
+                </button>
+              </Link>
             </div>
 
-            {/* Dashboard Interface Preview Grid */}
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3.5 text-left">
-              {/* Card 1: WhatsApp Parser Simulation */}
-              <div className="p-4 rounded-card bg-surface border border-border/70 shadow-xs space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted">WhatsApp Message</span>
-                  <span className="text-[10px] text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full font-bold">1-Tap Parse</span>
+            {/* Trust points */}
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-2 text-xs text-slate-400 font-medium">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 100% Owner Contact Privacy
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> No credit card required
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> WhatsApp integrated
+              </span>
+            </div>
+          </div>
+
+          {/* 6 & 7. Product Preview Container & Animated 5-Step Process Flow */}
+          <div className="mt-14 max-w-5xl mx-auto">
+            {/* Animated 5-Step Process Indicator (Replacing static pill) */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between sm:justify-center gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
+                {PROCESS_STEPS.map((step, idx) => {
+                  const Icon = step.icon;
+                  const isActive = activeProcessStep === idx;
+                  const isPassed = activeProcessStep > idx;
+
+                  return (
+                    <React.Fragment key={step.id}>
+                      <button
+                        type="button"
+                        onClick={() => setActiveProcessStep(idx)}
+                        className={clsx(
+                          'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer border',
+                          isActive
+                            ? 'bg-emerald-950/80 border-emerald-500/70 text-emerald-300 shadow-md shadow-emerald-500/20 ring-1 ring-emerald-500/40 scale-105'
+                            : isPassed
+                            ? 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700'
+                            : 'bg-slate-900/40 border-slate-800/60 text-slate-400 hover:text-slate-300'
+                        )}
+                      >
+                        <span
+                          className={clsx(
+                            'w-5 h-5 rounded-full flex items-center justify-center transition-colors',
+                            isActive
+                              ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                              : isPassed
+                              ? 'bg-slate-800 text-emerald-400'
+                              : 'bg-slate-800/80 text-slate-400'
+                          )}
+                        >
+                          <Icon className="w-3 h-3" />
+                        </span>
+                        <span>{step.label}</span>
+                      </button>
+
+                      {idx < PROCESS_STEPS.length - 1 && (
+                        <div className="hidden sm:block w-6 sm:w-10 h-0.5 rounded-full bg-slate-800 relative overflow-hidden shrink-0">
+                          <div
+                            className={clsx(
+                              'absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500',
+                              isPassed || isActive ? 'w-full animate-flow-line' : 'w-0'
+                            )}
+                          />
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Premium Dashboard-Window Container */}
+            <div className="rounded-2xl border border-slate-800/90 bg-slate-900/85 backdrop-blur-xl p-4 sm:p-6 shadow-2xl shadow-black/80 relative overflow-hidden transition-all duration-300 hover:border-slate-700/80">
+              {/* Window Chrome Header Bar with Clean OS Dots & Encrypted Status */}
+              <div className="flex items-center justify-between pb-3 px-1 border-b border-slate-800/80">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
+                  <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
+                  <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
                 </div>
-                <div className="p-2.5 rounded-xl bg-bg border border-border/60 text-[11px] font-mono text-muted line-clamp-3">
-                  "3 BHK builder floor, 2nd floor with lift, Model Town Panipat, 200 gaj, demand 1.25 Cr. Owner: 9876543210"
-                </div>
-                <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs">
-                  <span className="font-bold text-ink">3 BHK · 200 Gaj</span>
-                  <span className="font-extrabold text-brand-700">₹1.25 Cr</span>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-800/50 text-[10px] font-bold text-emerald-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Encrypted Owner Vault Active
+                  </span>
                 </div>
               </div>
 
-              {/* Card 2: Orion-Style High-Match Score Indicator */}
-              <div className="p-4 rounded-card bg-surface border border-border/70 shadow-xs space-y-2.5 flex flex-col justify-between">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted">Smart Property Match</span>
-                  <span className="text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full font-bold">Buyer Match</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-14 h-14 rounded-full border-4 border-brand-500/20 border-t-brand-600 flex items-center justify-center shrink-0">
-                    <span className="text-xs font-black text-brand-700 font-heading">96%</span>
+              {/* Preserved 3-Part Product Preview with Enhanced Dark Glass Styling */}
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                {/* Card 1: WhatsApp Parser Simulation */}
+                <div
+                  className={clsx(
+                    'p-4 rounded-xl bg-slate-950/60 border transition-all duration-300 space-y-3',
+                    activeProcessStep === 0 || activeProcessStep === 1
+                      ? 'border-emerald-500/50 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
+                      : 'border-slate-800/80'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      WhatsApp Message
+                    </span>
+                    <span className="text-[10px] text-emerald-400 bg-emerald-950/80 border border-emerald-800/40 px-2 py-0.5 rounded-full font-bold">
+                      1-Tap Parse
+                    </span>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-ink">Rajesh Sharma</h4>
-                    <p className="text-[11px] text-muted">Budget: ₹1.20 - 1.35 Cr</p>
-                    <span className="text-[10px] font-bold text-emerald-600">Model Town Match</span>
+                  <div className="p-3 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-slate-300 line-clamp-3">
+                    "3 BHK builder floor, 2nd floor with lift, Model Town Panipat, 200 gaj, demand 1.25 Cr. Owner: 9876543210"
+                  </div>
+                  <div className="pt-2 border-t border-slate-800/70 flex items-center justify-between text-xs">
+                    <span className="font-bold text-slate-100">3 BHK · 200 Gaj</span>
+                    <span className="font-extrabold text-emerald-400">₹1.25 Cr</span>
                   </div>
                 </div>
-                <div className="pt-2 border-t border-border/50 text-[11px] text-muted flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-brand-600" />
-                  <span>Matched instantly across 18 inquiries</span>
-                </div>
-              </div>
 
-              {/* Card 3: Masked Flyer & Branded Share */}
-              <div className="p-4 rounded-card bg-surface border border-border/70 shadow-xs space-y-2.5 flex flex-col justify-between">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted">Masked Flyer Output</span>
-                  <span className="text-[10px] text-gold-text bg-gold-bg px-2 py-0.5 rounded-full font-bold">Safe Share</span>
+                {/* Card 2: Smart Property Match Score Indicator */}
+                <div
+                  className={clsx(
+                    'p-4 rounded-xl bg-slate-950/60 border transition-all duration-300 space-y-3 flex flex-col justify-between',
+                    activeProcessStep === 2
+                      ? 'border-emerald-500/50 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
+                      : 'border-slate-800/80'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Smart Property Match
+                    </span>
+                    <span className="text-[10px] text-cyan-400 bg-cyan-950/80 border border-cyan-800/40 px-2 py-0.5 rounded-full font-bold">
+                      Buyer Match
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-full border-4 border-emerald-500/20 border-t-emerald-400 flex items-center justify-center shrink-0">
+                      <span className="text-xs font-black text-emerald-400 font-heading">96%</span>
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-100">Rajesh Sharma</h4>
+                      <p className="text-[11px] text-slate-400">Budget: ₹1.20 - 1.35 Cr</p>
+                      <span className="text-[10px] font-bold text-emerald-400">Model Town Match</span>
+                    </div>
+                  </div>
+                  <div className="pt-2 border-t border-slate-800/70 text-[11px] text-slate-400 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Matched instantly across 18 inquiries</span>
+                  </div>
                 </div>
-                <div className="p-2.5 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 text-white space-y-1">
-                  <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold block">Watermarked Flyer</span>
-                  <p className="text-xs font-bold">3 BHK Luxury Floor · Model Town</p>
-                  <p className="text-[10px] text-slate-300">Marketed by: Sharma Real Estate Agency</p>
-                </div>
-                <div className="pt-2 border-t border-border/50 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
-                  <span>Owner contact 100% hidden</span>
+
+                {/* Card 3: Masked Flyer & Branded Share */}
+                <div
+                  className={clsx(
+                    'p-4 rounded-xl bg-slate-950/60 border transition-all duration-300 space-y-3 flex flex-col justify-between',
+                    activeProcessStep === 3 || activeProcessStep === 4
+                      ? 'border-emerald-500/50 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
+                      : 'border-slate-800/80'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Masked Flyer Output
+                    </span>
+                    <span className="text-[10px] text-amber-400 bg-amber-950/80 border border-amber-800/40 px-2 py-0.5 rounded-full font-bold">
+                      Safe Share
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-lg bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 text-white space-y-1">
+                    <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold block">
+                      Watermarked Flyer
+                    </span>
+                    <p className="text-xs font-bold text-slate-100">3 BHK Luxury Floor · Model Town</p>
+                    <p className="text-[10px] text-slate-400">Marketed by: Sharma Real Estate Agency</p>
+                  </div>
+                  <div className="pt-2 border-t border-slate-800/70 text-[11px] text-emerald-400 font-semibold flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Owner contact 100% hidden</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       </section>
 

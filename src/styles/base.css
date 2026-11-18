@@ -38,3 +38,57 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Hero Cinematic Motion System */
+@keyframes heroBgScale {
+  0% {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes heroSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lineFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-hero-bg {
+  animation: heroBgScale 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-hero-up {
+  animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-flow-line {
+  background-size: 200% 200%;
+  animation: lineFlow 3.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-bg,
+  .animate-hero-up,
+  .animate-flow-line {
+    animation: none !important;
+    transform: none !important;
+  }
+}
