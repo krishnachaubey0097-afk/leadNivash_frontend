@@ -471,39 +471,174 @@
       </div>
     </section>
 
-    <!-- SECTION 3 — HOW IT WORKS -->
-    <section id="how-it-works" class="py-16 sm:py-24 px-4 sm:px-6 max-w-5xl mx-auto w-full text-center">
-      <div class="space-y-2 mb-12">
-        <span class="text-[11px] font-black uppercase tracking-widest text-emerald-700">SIMPLE WORKFLOW</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-heading">From WhatsApp Message to Property Deal.</h2>
-        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">Stop searching through endless chats and manually organising information. leadNivash helps you manage the entire workflow.</p>
-      </div>
+    <!-- SECTION 3 — HOW IT WORKS (Phase 3 Connected Workflow) -->
+    <section id="how-it-works" class="py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto w-full relative overflow-hidden">
+      <!-- Ambient light beam -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[220px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-3.5 text-left">
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">1</span>
-          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Paste a Message</h4>
-          <p class="text-[11px] text-slate-500">Copy requirements or listings directly from WhatsApp.</p>
+      <div class="relative z-10 space-y-12 text-center">
+        <!-- 1. Section Header -->
+        <div class="space-y-3 max-w-2xl mx-auto">
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+            SIMPLE WORKFLOW
+          </span>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-heading tracking-tight leading-tight">
+            From WhatsApp Message to <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">Property Deal.</span>
+          </h2>
+          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+            Stop searching through endless chats and manually organising information. leadNivash helps you manage the entire workflow.
+          </p>
         </div>
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">2</span>
-          <h4 class="text-xs font-bold text-slate-900 dark:text-white">AI Understands It</h4>
-          <p class="text-[11px] text-slate-500">Extracts name, budget, BHK, locality, area and contacts.</p>
+
+        <!-- 3 & 4. Interactive Connected Progress Line & Stepper -->
+        <div class="max-w-4xl mx-auto text-left">
+          <div class="flex items-center justify-between pb-3 px-1">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="workflow-stage-counter">Stage 1 of 5 · Continuous Flow</span>
+            </span>
+            <button onclick="toggleWorkflowPause()" id="btn-workflow-pause" class="text-[11px] font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 transition cursor-pointer">
+              Pause Flow
+            </button>
+          </div>
+
+          <!-- Connecting Stepper Bar -->
+          <div class="relative mb-8">
+            <div class="absolute top-5 inset-x-8 h-0.5 bg-slate-200 dark:bg-slate-800 -z-0">
+              <div id="workflow-progress-line" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500 w-0"></div>
+            </div>
+
+            <div class="flex items-center justify-between relative z-10" id="workflow-nav-buttons">
+              <button type="button" onclick="setWorkflowStep(0)" class="workflow-step-btn group flex flex-col items-center gap-2 cursor-pointer focus:outline-none">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-600/30 scale-110 ring-4 ring-emerald-500/20">
+                  <i data-lucide="message-square" class="w-4 h-4"></i>
+                </div>
+                <span class="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 font-extrabold hidden sm:inline">01. Paste</span>
+              </button>
+
+              <button type="button" onclick="setWorkflowStep(1)" class="workflow-step-btn group flex flex-col items-center gap-2 cursor-pointer focus:outline-none">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500">
+                  <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </div>
+                <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">02. AI Extraction</span>
+              </button>
+
+              <button type="button" onclick="setWorkflowStep(2)" class="workflow-step-btn group flex flex-col items-center gap-2 cursor-pointer focus:outline-none">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500">
+                  <i data-lucide="layers" class="w-4 h-4"></i>
+                </div>
+                <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">03. Save & Organise</span>
+              </button>
+
+              <button type="button" onclick="setWorkflowStep(3)" class="workflow-step-btn group flex flex-col items-center gap-2 cursor-pointer focus:outline-none">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500">
+                  <i data-lucide="search" class="w-4 h-4"></i>
+                </div>
+                <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">04. Find Matches</span>
+              </button>
+
+              <button type="button" onclick="setWorkflowStep(4)" class="workflow-step-btn group flex flex-col items-center gap-2 cursor-pointer focus:outline-none">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500">
+                  <i data-lucide="share-2" class="w-4 h-4"></i>
+                </div>
+                <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">05. Share & Track</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Stage Showcase Card -->
+          <div class="rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-5 sm:p-8 shadow-2xl transition-all duration-500">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <!-- Left Narrative -->
+              <div class="lg:col-span-5 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 text-xs font-bold shadow-xs" id="workflow-pill-label">
+                  STEP 01 — PASTE A MESSAGE
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-heading leading-snug" id="workflow-heading">
+                  Paste a Message
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-normal" id="workflow-desc">
+                  Copy a buyer requirement or property listing from WhatsApp and paste it into leadNivash.
+                </p>
+                <div class="pt-2 flex items-center gap-3">
+                  <button type="button" onclick="nextWorkflowStep()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-xs font-bold transition cursor-pointer">
+                    <span>Next Stage</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <span class="text-[11px] text-slate-400 font-medium">Click any step above to explore</span>
+                </div>
+              </div>
+
+              <!-- Right Dynamic Visual -->
+              <div class="lg:col-span-7" id="workflow-visual-container">
+                <!-- Injected dynamically by JS -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-slate-800 shadow-xl space-y-3.5">
+                  <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                      <span class="text-xs font-bold text-slate-300">WhatsApp Incoming Chat</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 font-mono">10:42 AM · NCR Broker Group</span>
+                  </div>
+                  <div class="p-3.5 rounded-2xl rounded-tl-xs bg-emerald-950/80 border border-emerald-800/60 text-slate-100 text-xs sm:text-sm font-sans leading-relaxed">
+                    "Need 3 BHK in Model Town, Panipat. Budget 1.25 Cr. Prefer lift and parking."
+                  </div>
+                  <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                    <span class="italic">* Fictional sample data for illustration</span>
+                    <span class="text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded-md border border-emerald-800/40">1-Tap Quick Paste Ready</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">3</span>
-          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Save and Organise</h4>
-          <p class="text-[11px] text-slate-500">Review extracted fields and save cleanly to inventory.</p>
-        </div>
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">4</span>
-          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Find Matches</h4>
-          <p class="text-[11px] text-slate-500">Scans buyers and properties with clear matching grades.</p>
-        </div>
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">5</span>
-          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Share and Track</h4>
-          <p class="text-[11px] text-slate-500">Generate masked flyers and track pipeline stages.</p>
+
+        <!-- 5 Connected Step Cards Grid (At a glance overview) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 pt-4 text-left">
+          <div onclick="setWorkflowStep(0)" class="workflow-overview-card group p-4 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-500 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20 -translate-y-1 transition-all duration-300 cursor-pointer space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs"><i data-lucide="message-square" class="w-4 h-4"></i></span>
+              <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400">STEP 01</span>
+            </div>
+            <h5 class="text-xs font-extrabold text-emerald-900 dark:text-emerald-300 leading-tight">Paste a Message</h5>
+            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">Copy a buyer requirement or property listing from WhatsApp and paste it into leadNivash.</p>
+          </div>
+
+          <div onclick="setWorkflowStep(1)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
+              <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">STEP 02</span>
+            </div>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white leading-tight">AI Understands It</h5>
+            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">AI extracts important information such as name, budget, property type, locality, area and contact details.</p>
+          </div>
+
+          <div onclick="setWorkflowStep(2)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="layers" class="w-4 h-4"></i></span>
+              <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">STEP 03</span>
+            </div>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white leading-tight">Save and Organise</h5>
+            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">Review the extracted information, correct anything necessary and save the buyer or property record.</p>
+          </div>
+
+          <div onclick="setWorkflowStep(3)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="search" class="w-4 h-4"></i></span>
+              <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">STEP 04</span>
+            </div>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white leading-tight">Find Matches</h5>
+            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">The matching engine compares buyer requirements against available inventory and explains why a property matches.</p>
+          </div>
+
+          <div onclick="setWorkflowStep(4)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="share-2" class="w-4 h-4"></i></span>
+              <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">STEP 05</span>
+            </div>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white leading-tight">Share and Track</h5>
+            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">Generate a branded masked property flyer, share it with the buyer and track the opportunity through your deal pipeline.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -1192,6 +1327,184 @@
         if (overlay) overlay.classList.remove('opacity-0', 'pointer-events-none');
       }
     }
+
+    // Section 3: How It Works Connected Stepper Engine
+    const WORKFLOW_DATA = [
+      {
+        pill: 'STEP 01 — PASTE A MESSAGE',
+        title: 'Paste a Message',
+        desc: 'Copy a buyer requirement or property listing from WhatsApp and paste it into leadNivash.',
+        visual: `
+          <div class="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-slate-800 shadow-xl space-y-3.5">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span class="text-xs font-bold text-slate-300">WhatsApp Incoming Chat</span></div>
+              <span class="text-[10px] text-slate-400 font-mono">10:42 AM · NCR Broker Group</span>
+            </div>
+            <div class="p-3.5 rounded-2xl rounded-tl-xs bg-emerald-950/80 border border-emerald-800/60 text-slate-100 text-xs sm:text-sm font-sans leading-relaxed">
+              "Need 3 BHK in Model Town, Panipat. Budget 1.25 Cr. Prefer lift and parking."
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+              <span class="italic">* Fictional sample data for illustration</span>
+              <span class="text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded-md border border-emerald-800/40">1-Tap Quick Paste Ready</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        pill: 'STEP 02 — AI UNDERSTANDS IT',
+        title: 'AI Understands It',
+        desc: 'AI extracts important information such as name, budget, property type, locality, area and contact details.',
+        visual: `
+          <div class="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-emerald-500/40 shadow-xl space-y-3.5 relative overflow-hidden">
+            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-pulse"></div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div class="flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i><span class="text-xs font-bold text-slate-200">AI Entity Extraction Active</span></div>
+              <span class="text-[10px] text-emerald-400 font-mono font-bold">4 Attributes Identified</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-left">
+              <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800"><span class="text-[10px] uppercase font-bold text-slate-400 block">Property</span><span class="text-xs font-bold text-emerald-400">3 BHK Builder Floor</span></div>
+              <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800"><span class="text-[10px] uppercase font-bold text-slate-400 block">Locality</span><span class="text-xs font-bold text-emerald-400">Model Town, Panipat</span></div>
+              <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800"><span class="text-[10px] uppercase font-bold text-slate-400 block">Budget</span><span class="text-xs font-bold text-emerald-400">₹1.25 Cr</span></div>
+              <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800"><span class="text-[10px] uppercase font-bold text-slate-400 block">Amenities</span><span class="text-xs font-bold text-emerald-400">Lift + Parking</span></div>
+            </div>
+            <div class="text-[11px] text-slate-400 pt-1 flex items-center justify-between"><span>Zero manual typing</span><span class="text-emerald-400 font-bold">Confidence: High</span></div>
+          </div>
+        `
+      },
+      {
+        pill: 'STEP 03 — SAVE AND ORGANISE',
+        title: 'Save and Organise',
+        desc: 'Review the extracted information, correct anything necessary and save the buyer or property record.',
+        visual: `
+          <div class="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-slate-800 shadow-xl space-y-3.5">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div class="flex items-center gap-2"><i data-lucide="layers" class="w-4 h-4 text-emerald-400"></i><span class="text-xs font-bold text-slate-200">Buyer Record #LN-8492</span></div>
+              <span class="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-800">Saved to Vault</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 text-left">
+              <div class="flex items-center justify-between"><span class="text-xs font-bold text-slate-200">Rajesh Sharma (Verified Buyer)</span><span class="text-xs font-extrabold text-emerald-400">₹1.25 Cr Max</span></div>
+              <p class="text-[11px] text-slate-400">Seeking 3 BHK with lift in Model Town · Contact stored in encrypted vault</p>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1"><span>Auto-indexed in 0.4s</span><span class="text-slate-300 font-semibold">100% Privacy Preserved</span></div>
+          </div>
+        `
+      },
+      {
+        pill: 'STEP 04 — FIND MATCHES',
+        title: 'Find Matches',
+        desc: 'The matching engine compares buyer requirements against available inventory and explains why a property matches.',
+        visual: `
+          <div class="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-emerald-500/50 shadow-xl space-y-3.5">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div class="flex items-center gap-2"><i data-lucide="search" class="w-4 h-4 text-emerald-400"></i><span class="text-xs font-bold text-slate-200">Matching Engine Evaluation</span></div>
+              <span class="text-[10px] font-mono text-emerald-400 font-bold">2 Listings Compared</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-900 border-2 border-emerald-500/70 shadow-lg shadow-emerald-500/10 space-y-2 text-left">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-white">3 BHK Luxury Floor · Model Town</span>
+                <span class="text-xs font-black text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded-md border border-emerald-800">96% Match*</span>
+              </div>
+              <div class="text-[11px] text-slate-300 flex items-center justify-between"><span>Demand: ₹1.22 Cr · 200 Gaj</span><span class="text-emerald-400 font-bold">Matches: Locality, Budget, Lift</span></div>
+            </div>
+            <p class="text-[10px] text-slate-400 italic text-left">* Match score is an illustrative demo value showing multi-criteria correlation.</p>
+          </div>
+        `
+      },
+      {
+        pill: 'STEP 05 — SHARE AND TRACK',
+        title: 'Share and Track',
+        desc: 'Generate a branded masked property flyer, share it with the buyer and track the opportunity through your deal pipeline.',
+        visual: `
+          <div class="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-slate-800 shadow-xl space-y-3.5">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div class="flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4 text-emerald-400"></i><span class="text-xs font-bold text-slate-200">Masked Flyer Output</span></div>
+              <span class="text-[10px] font-bold text-amber-300 bg-amber-950 px-2 py-0.5 rounded-full border border-amber-800">Negotiation Stage</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 space-y-2 text-left">
+              <div class="flex items-center justify-between">
+                <div><span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block">Sharma Real Estate Agency</span><h4 class="text-xs font-bold text-white">3 BHK Builder Floor · Model Town</h4></div>
+                <span class="text-xs font-black text-emerald-400">₹1.22 Cr</span>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+                <span class="text-emerald-400 flex items-center gap-1 font-semibold"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Owner Contact Hidden</span>
+                <span class="text-slate-300">Site Visit: Tomorrow 4 PM</span>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-400 flex items-center justify-between pt-1"><span>Direct WhatsApp Share Ready</span><span class="text-emerald-400 font-bold">Commission Protected</span></div>
+          </div>
+        `
+      }
+    ];
+
+    let currentWorkflowIdx = 0;
+    let isWorkflowPaused = false;
+    let workflowTimer = null;
+
+    function setWorkflowStep(idx) {
+      currentWorkflowIdx = idx;
+      const data = WORKFLOW_DATA[idx];
+      if (!data) return;
+
+      const pill = document.getElementById('workflow-pill-label');
+      const heading = document.getElementById('workflow-heading');
+      const desc = document.getElementById('workflow-desc');
+      const visualContainer = document.getElementById('workflow-visual-container');
+      const progressLine = document.getElementById('workflow-progress-line');
+      const stageCounter = document.getElementById('workflow-stage-counter');
+
+      if (pill) pill.innerText = data.pill;
+      if (heading) heading.innerText = data.title;
+      if (desc) desc.innerText = data.desc;
+      if (visualContainer) visualContainer.innerHTML = data.visual;
+      if (progressLine) progressLine.style.width = ((idx / 4) * 100) + '%';
+      if (stageCounter) stageCounter.innerText = 'Stage ' + (idx + 1) + ' of 5 · Continuous Flow';
+
+      // Update stepper nav buttons
+      const buttons = document.querySelectorAll('.workflow-step-btn');
+      buttons.forEach((btn, bIdx) => {
+        const circle = btn.querySelector('div');
+        const text = btn.querySelector('span');
+        if (bIdx === idx) {
+          if (circle) circle.className = 'w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-600/30 scale-110 ring-4 ring-emerald-500/20';
+          if (text) text.className = 'text-[11px] font-bold text-emerald-700 dark:text-emerald-400 font-extrabold hidden sm:inline';
+        } else if (bIdx < idx) {
+          if (circle) circle.className = 'w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-emerald-50 dark:bg-emerald-950/80 border-emerald-600 text-emerald-700 dark:text-emerald-400';
+          if (text) text.className = 'text-[11px] font-bold text-slate-500 hidden sm:inline';
+        } else {
+          if (circle) circle.className = 'w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500';
+          if (text) text.className = 'text-[11px] font-bold text-slate-500 hidden sm:inline';
+        }
+      });
+
+      // Update bottom overview cards
+      const cards = document.querySelectorAll('.workflow-overview-card');
+      cards.forEach((card, cIdx) => {
+        if (cIdx === idx) {
+          card.className = 'workflow-overview-card group p-4 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-500 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20 -translate-y-1 transition-all duration-300 cursor-pointer space-y-2';
+        } else {
+          card.className = 'workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2';
+        }
+      });
+
+      lucide.createIcons();
+    }
+
+    function nextWorkflowStep() {
+      setWorkflowStep((currentWorkflowIdx + 1) % 5);
+    }
+
+    function toggleWorkflowPause() {
+      isWorkflowPaused = !isWorkflowPaused;
+      const btn = document.getElementById('btn-workflow-pause');
+      if (btn) btn.innerText = isWorkflowPaused ? 'Resume Auto-Cycle' : 'Pause Flow';
+    }
+
+    // Auto-cycle workflow
+    workflowTimer = setInterval(() => {
+      if (!isWorkflowPaused) {
+        nextWorkflowStep();
+      }
+    }, 3400);
 
     // Landing ROI Calculator
     let currentDealVal = 7500000;
