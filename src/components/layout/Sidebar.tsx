@@ -32,11 +32,11 @@ export const Sidebar: React.FC = () => {
         {/* Brand Header with Logo */}
         <Link to="/app" className="flex items-center gap-3 px-2 py-1 group">
           <div className="w-9 h-9 rounded-xl bg-surface border border-border/70 p-1.5 shadow-xs group-hover:border-brand-600/40 transition">
-            <img src="/logo-icon.png" alt="LeadNivesh Logo" className="w-full h-full object-contain" />
+            <img src="/logo-icon.png" alt="leadNivash Logo" className="w-full h-full object-contain" />
           </div>
           <div>
             <span className="text-lg font-black tracking-tight text-ink font-heading leading-none">
-              Lead<span className="text-brand-600">Nivesh</span>
+              lead<span className="text-brand-600">Nivash</span>
             </span>
             <span className="text-[10px] text-muted font-bold block uppercase tracking-widest mt-0.5">
               Broker OS

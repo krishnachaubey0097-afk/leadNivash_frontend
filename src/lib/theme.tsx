@@ -11,7 +11,7 @@ export interface AccentOption {
 }
 
 export const ACCENT_OPTIONS: AccentOption[] = [
-  { id: 'emerald', name: 'Emerald Green', hex: '#00875A', description: 'LeadNivesh Brand Default' },
+  { id: 'emerald', name: 'Emerald Green', hex: '#00875A', description: 'leadNivash Brand Default' },
   { id: 'navy', name: 'Royal Navy', hex: '#2563EB', description: 'Corporate & Institutional' },
   { id: 'gold', name: 'Champagne Gold', hex: '#D97706', description: 'Luxury & High-Ticket' },
   { id: 'indigo', name: 'Urban Indigo', hex: '#6366F1', description: 'Modern Tech Broker' },

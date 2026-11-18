@@ -33,17 +33,17 @@ export const ResetPasswordPage: React.FC = () => {
     setErrorMsg(null);
 
     if (!token) {
-      setErrorMsg('Reset token invalid ya missing hai. Kripya naya reset link request karein.');
+      setErrorMsg('The password reset token is invalid or missing. Please request a new link.');
       return;
     }
 
     if (newPassword.length < 8) {
-      setErrorMsg('Password kam se kam 8 characters ka hona chahiye.');
+      setErrorMsg('Password must be at least 8 characters long.');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setErrorMsg('Dono passwords match nahi kar rahe hain.');
+      setErrorMsg('Passwords do not match. Please verify both fields.');
       return;
     }
 
@@ -59,9 +59,9 @@ export const ResetPasswordPage: React.FC = () => {
       }, 2500);
     } catch (err) {
       if (err instanceof ApiError) {
-        setErrorMsg(err.message || 'Password reset link expire ho gaya hai.');
+        setErrorMsg(err.message || 'The password reset link has expired. Please request a new one.');
       } else {
-        setErrorMsg('Password reset karne mein dikkat aayi.');
+        setErrorMsg('Unable to reset password. Please check your internet connection.');
       }
     } finally {
       setLoading(false);

@@ -13,12 +13,12 @@ export const Layout: React.FC = () => {
         <div className="flex flex-col items-center gap-4">
           <img
             src="/logo-icon.png"
-            alt="LeadNivesh"
+            alt="leadNivash"
             className="w-12 h-12 object-contain animate-bounce"
           />
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           <span className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide">
-            Loading LeadNivesh...
+            Loading leadNivash...
           </span>
         </div>
       </div>

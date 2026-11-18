@@ -31,12 +31,12 @@ export const RegisterPage: React.FC = () => {
     setFieldErrors({});
 
     if (!formData.termsAccepted) {
-      setErrorMsg('Aapko register karne ke liye Terms aur Privacy Policy accept karni hogi.');
+      setErrorMsg('Please accept the Terms of Service and Privacy Policy to create your account.');
       return;
     }
 
     if (formData.password.length < 8) {
-      setFieldErrors({ password: 'Password kam se kam 8 characters ka hona chahiye.' });
+      setFieldErrors({ password: 'Password must be at least 8 characters long.' });
       return;
     }
 
@@ -54,9 +54,9 @@ export const RegisterPage: React.FC = () => {
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 409) {
-          setErrorMsg('Is email ke saath account pehle se maujood hai.');
+          setErrorMsg('An account with this email address already exists. Please sign in instead.');
         } else if (err.status === 429) {
-          setErrorMsg(err.message || 'Thodi der baad dobara koshish karein.');
+          setErrorMsg(err.message || 'Too many attempts. Please try again in a few moments.');
         } else if (err.fields) {
           const mapped: Record<string, string> = {};
           Object.entries(err.fields).forEach(([k, v]) => {
@@ -64,10 +64,10 @@ export const RegisterPage: React.FC = () => {
           });
           setFieldErrors(mapped);
         } else {
-          setErrorMsg(err.message || 'Registration failed. Kripya details check karein.');
+          setErrorMsg(err.message || 'Registration failed. Please check your details and try again.');
         }
       } else {
-        setErrorMsg('Network error. Kripya apna internet connection check karein.');
+        setErrorMsg('Network error. Please check your internet connection.');
       }
     } finally {
       setLoading(false);
@@ -81,7 +81,7 @@ export const RegisterPage: React.FC = () => {
         <div className="flex flex-col items-center mb-6 text-center">
           <img
             src="/logo-full.png"
-            alt="LeadNivesh Logo"
+            alt="leadNivash Logo"
             className="h-14 object-contain mb-2 drop-shadow-sm"
           />
           <h1 className="text-xl font-bold tracking-tight text-ink font-heading">

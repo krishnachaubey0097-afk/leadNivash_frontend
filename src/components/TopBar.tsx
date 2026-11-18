@@ -19,12 +19,12 @@ export const TopBar: React.FC = () => {
         <Link to="/app/today" className="flex items-center gap-2.5 group">
           <img
             src="/logo-icon.png"
-            alt="LeadNivesh Logo"
+            alt="leadNivash Logo"
             className="w-8 h-8 object-contain transition-transform group-hover:scale-105"
           />
           <div className="flex flex-col">
             <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
-              Lead<span className="text-primary font-black">Nivesh</span>
+              lead<span className="text-primary font-black">Nivash</span>
             </span>
             <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">
               Broker OS

@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   private handleReportIssue = () => {
     const errorDetails = this.state.error?.message || 'Unknown error';
-    const text = `Hello LeadNivesh Support, I encountered an issue on the app: "${errorDetails}".`;
+    const text = `Hello leadNivash Support, I encountered an issue on the app: "${errorDetails}".`;
     openWhatsApp(env.VITE_FOUNDER_WHATSAPP, text);
   };
 

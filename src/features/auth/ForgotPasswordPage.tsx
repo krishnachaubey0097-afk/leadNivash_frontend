@@ -48,11 +48,11 @@ export const ForgotPasswordPage: React.FC = () => {
                 <span>Request Received</span>
               </div>
               <p className="text-xs text-text leading-relaxed">
-                Agar is email ke saath account maujood hai, to password reset link bhej diya gaya hai. Kripya apna inbox aur spam folder check karein.
+                If an account exists with this email address, a password reset link has been sent. Please check your inbox and spam folder.
               </p>
               <div className="pt-2">
                 <Link to="/login" className="text-xs font-bold text-brand-700 hover:underline">
-                  Sign in page par jaayein
+                  Return to sign in
                 </Link>
               </div>
             </div>

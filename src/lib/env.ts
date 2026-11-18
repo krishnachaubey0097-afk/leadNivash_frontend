@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   VITE_API_BASE_URL: z.string().default('/api/v1'),
-  VITE_APP_NAME: z.string().default('LeadNivesh'),
+  VITE_APP_NAME: z.string().default('leadNivash'),
   VITE_FOUNDER_WHATSAPP: z.string().default('919812345678'),
   VITE_UPI_ID: z.string().default('leadnivesh@okhdfcbank'),
   VITE_ENABLE_VOICE: z

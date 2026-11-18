@@ -20,7 +20,7 @@ export const TopBar: React.FC = () => {
     if (pathname.startsWith('/app/inquiries')) return { title: 'Inquiries', subtitle: 'Lead Inbox' };
     if (pathname.startsWith('/app/settings')) return { title: 'Settings', subtitle: 'Agency & Profile' };
     if (pathname.startsWith('/app/admin')) return { title: 'Admin Console', subtitle: 'System Control' };
-    return { title: 'LeadNivesh', subtitle: 'Broker OS' };
+    return { title: 'leadNivash', subtitle: 'Broker OS' };
   };
 
   const { title, subtitle } = getPageTitle(location.pathname);
@@ -32,7 +32,7 @@ export const TopBar: React.FC = () => {
         <div className="flex items-center gap-3">
           <Link to="/app" className="flex items-center gap-2 lg:hidden">
             <div className="w-8 h-8 rounded-xl bg-surface border border-border/70 p-1 shadow-xs">
-              <img src="/logo-icon.png" alt="LeadNivesh" className="w-full h-full object-contain" />
+              <img src="/logo-icon.png" alt="leadNivash" className="w-full h-full object-contain" />
             </div>
           </Link>
           <div className="flex flex-col">

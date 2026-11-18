@@ -11,19 +11,19 @@ export const PricingPage: React.FC = () => (
     <Link to="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-700">
       <ArrowLeft className="w-4 h-4" /> Back to Home
     </Link>
-    <h1 className="text-2xl font-bold text-ink font-heading">Simple, Transparent Pricing</h1>
+    <h1 className="text-2xl font-bold text-ink font-heading">Simple, High-ROI Pricing</h1>
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
       <div className="p-6 bg-surface border border-border rounded-card space-y-4">
-        <span className="text-xs font-bold uppercase tracking-wider text-muted">Trial Tier</span>
-        <h2 className="text-2xl font-black text-ink">14 Days Free</h2>
-        <p className="text-xs text-muted">Full access to quick paste, matching, and masked flyer sharing.</p>
+        <span className="text-xs font-bold uppercase tracking-wider text-muted">Starter Pilot</span>
+        <h2 className="text-2xl font-black text-ink">₹0 <span className="text-xs font-normal text-muted">/ 14 Days</span></h2>
+        <p className="text-xs text-muted">Up to 15 properties, 10 active buyers, WhatsApp requirement analyzer, and basic property matching.</p>
         <Link to="/register"><Button className="w-full">Start Free Trial</Button></Link>
       </div>
-      <div className="p-6 bg-surface border-2 border-brand-600 rounded-card space-y-4 shadow-sm">
-        <span className="text-xs font-bold uppercase tracking-wider text-brand-700">Broker Pro</span>
-        <h2 className="text-2xl font-black text-ink">₹999 <span className="text-xs font-normal text-muted">/ month</span></h2>
-        <p className="text-xs text-muted">Unlimited listings, buyer matching, custom agency branding, and track record insights.</p>
-        <Link to="/register"><Button className="w-full">Subscribe to Pro</Button></Link>
+      <div className="p-6 bg-surface border-2 border-brand-600 rounded-card space-y-4 shadow-sm relative">
+        <span className="text-xs font-bold uppercase tracking-wider text-brand-700">Founder Annual Pass</span>
+        <h2 className="text-2xl font-black text-ink">₹3,999 <span className="text-xs font-normal text-muted">/ Year</span></h2>
+        <p className="text-xs text-muted">Unlimited inventory, WhatsApp AI parser, multi-image brochure hosting, deal tracking & custom branding.</p>
+        <Link to="/register"><Button className="w-full">Get Started</Button></Link>
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@ export const PrivacyPage: React.FC = () => (
     <p>Last updated: November 2026</p>
     <h2 className="text-sm font-bold text-ink pt-2">Owner Vault Isolation</h2>
     <p>
-      LeadNivesh isolates all owner contact details strictly to the authenticated broker account. Owner telephone numbers and private notes are never sent to AI providers, never baked into public flyers, and never accessible across broker tenants.
+      leadNivash isolates all owner contact details strictly to the authenticated broker account. Owner telephone numbers and private notes are never sent to AI providers, never baked into public flyers, and never accessible across broker tenants.
     </p>
   </div>
 );
@@ -50,7 +50,7 @@ export const TermsPage: React.FC = () => (
     </Link>
     <h1 className="text-2xl font-bold text-ink font-heading">Terms of Service</h1>
     <p>Last updated: November 2026</p>
-    <p>By using the LeadNivesh platform, you agree to comply with Indian real estate standards and ensure accuracy in listed properties.</p>
+    <p>By using the leadNivash platform, you agree to comply with Indian real estate standards and ensure accuracy in listed properties.</p>
   </div>
 );
 
@@ -70,7 +70,7 @@ export const ContactPage: React.FC = () => {
 
     setLoading(true);
     try {
-      await apiClient.post('/public/contact', {
+      await apiClient.post('/contact', {
         name,
         phone,
         email: email || undefined,

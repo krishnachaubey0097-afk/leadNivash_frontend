@@ -40,7 +40,7 @@ export const applyWatermarkToImage = (
         // Draw original photo
         ctx.drawImage(img, 0, 0, width, height);
 
-        const agency = options.agencyName || 'LeadNivesh Verified';
+        const agency = options.agencyName || 'leadNivash Verified';
         const phone = options.brokerPhone ? `📞 ${options.brokerPhone}` : '';
 
         if (options.watermarkType === 'diagonal') {
@@ -90,16 +90,16 @@ export const applyWatermarkToImage = (
           ctx.font = `500 ${subSize}px Inter, sans-serif`;
           ctx.fillStyle = '#94A3B8';
           ctx.fillText(
-            phone ? `${phone} • Verified Listing` : 'Verified Real Estate Listing • LeadNivesh',
+            phone ? `${phone} • Verified Listing` : 'Verified Real Estate Listing • leadNivash',
             24,
             y + bannerHeight * 0.8
           );
 
-          // LeadNivesh brand pill on right side
+          // leadNivash brand pill on right side
           ctx.textAlign = 'right';
           ctx.font = `bold ${subSize}px Inter, sans-serif`;
           ctx.fillStyle = '#34D399';
-          ctx.fillText('LEADNIVESH', width - 24, y + bannerHeight * 0.6);
+          ctx.fillText('leadNivash', width - 24, y + bannerHeight * 0.6);
         }
 
         canvas.toBlob(

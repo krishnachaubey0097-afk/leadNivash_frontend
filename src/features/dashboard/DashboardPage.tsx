@@ -72,7 +72,7 @@ export const DashboardPage: React.FC = () => {
             </span>
           </div>
           <p className="text-xs text-muted mt-0.5">
-            {user?.agency?.name || 'LeadNivesh Broker Agency'} · Panipat, NCR
+            {user?.agency?.name || 'leadNivash Partner Agency'} · Panipat, NCR
           </p>
         </div>
 

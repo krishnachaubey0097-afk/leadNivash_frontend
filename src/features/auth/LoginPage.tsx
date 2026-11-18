@@ -29,9 +29,9 @@ export const LoginPage: React.FC = () => {
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 401) {
-          setErrorMsg('Email ya password galat hai');
+          setErrorMsg('Invalid email or password. Please try again.');
         } else if (err.status === 429) {
-          setErrorMsg(err.message || 'Bahut saari login attempts hui hain. Thodi der baad try karein.');
+          setErrorMsg(err.message || 'Too many login attempts. Please wait a moment before trying again.');
         } else {
           setErrorMsg(err.message || 'Login failed. Please verify your credentials.');
         }
