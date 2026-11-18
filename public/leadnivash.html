@@ -128,7 +128,7 @@
         <!-- Desktop Navigation Links -->
         <nav class="hidden md:flex items-center gap-7 text-xs font-bold text-slate-500 dark:text-slate-400">
           <a href="#how-it-works" class="hover:text-emerald-600 transition">How It Works</a>
-          <a href="#capabilities" class="hover:text-emerald-600 transition">Features</a>
+          <a href="#features" class="hover:text-emerald-600 transition">Features</a>
           <a href="#financial-impact" class="hover:text-emerald-600 transition">ROI Calculator</a>
           <a href="#pricing" class="hover:text-emerald-600 transition">Pricing</a>
           <a href="#why-leadnivash" class="hover:text-emerald-600 transition">Why leadNivash</a>
@@ -643,7 +643,267 @@
       </div>
     </section>
 
-    <!-- SECTION 4 — FINANCIAL IMPACT & COMMISSION ROI CALCULATOR -->
+    <!-- ========================================================= -->
+    <!-- SECTION 4 — FEATURES (CORE CAPABILITIES SHOWCASE)          -->
+    <!-- ========================================================= -->
+    <section id="features" class="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50/70 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800 relative overflow-hidden">
+      <!-- Subtle top ambient light-ray effect -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[220px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="max-w-6xl mx-auto space-y-12 relative z-10">
+        <!-- 1. Section Header & Introduction -->
+        <div class="text-center max-w-2xl mx-auto space-y-3">
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+            CORE CAPABILITIES
+          </span>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-heading tracking-tight leading-tight">
+            Everything Your Property Business Needs. <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">In One Place.</span>
+          </h2>
+          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-normal">
+            From organising properties and understanding WhatsApp enquiries to matching buyers and tracking commissions, leadNivash brings your brokerage workflow together.
+          </p>
+        </div>
+
+        <!-- Compact Section Sub-label -->
+        <div class="flex items-center justify-center">
+          <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800/50 text-emerald-800 dark:text-emerald-300 text-xs font-extrabold tracking-wide shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            ONE WORKSPACE. SIX POWERFUL CAPABILITIES.
+          </span>
+        </div>
+
+        <!-- 2 & 3. 6 Main Feature Cards (3-column, 2-row layout on desktop) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- FEATURE 01 — SMART PROPERTY INVENTORY -->
+          <div onclick="selectFeatureCard(0)" id="feature-card-0" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+            <div class="space-y-3 text-left">
+              <div class="flex items-center justify-between">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <i data-lucide="building-2" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 01</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                Smart Property Inventory
+              </h3>
+              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Keep all your property listings organised in one place, with important details and private owner information securely managed.
+              </p>
+            </div>
+
+            <!-- Lower Mini Product Visual -->
+            <div class="p-3 rounded-xl bg-slate-950 text-white border border-slate-800 flex items-center gap-3 shadow-inner group-hover:border-emerald-500/30 transition-all text-left">
+              <div class="relative w-14 h-14 rounded-lg overflow-hidden shrink-0 border border-slate-800 bg-slate-900">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=160&auto=format&fit=crop&q=80" alt="3 BHK Floor" class="w-full h-full object-cover">
+                <span class="absolute bottom-0 inset-x-0 bg-emerald-600/90 text-[8px] font-bold text-center text-white py-0.5">Active</span>
+              </div>
+              <div class="flex-1 min-w-0 space-y-0.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-100 truncate">3 BHK Floor · 200 Gaj</span>
+                  <span class="text-[10px] font-black text-emerald-400 font-mono">₹1.25 Cr</span>
+                </div>
+                <p class="text-[10px] text-slate-400 truncate">Model Town, Panipat</p>
+                <div class="flex items-center gap-2 pt-0.5">
+                  <span class="text-[9px] bg-slate-800 px-1.5 py-0.2 rounded text-slate-300">2nd Floor</span>
+                  <span class="text-[9px] bg-slate-800 px-1.5 py-0.2 rounded text-slate-300">Lift & Parking</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FEATURE 02 — BUYER REQUIREMENTS -->
+          <div onclick="selectFeatureCard(1)" id="feature-card-1" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+            <div class="space-y-3 text-left">
+              <div class="flex items-center justify-between">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <i data-lucide="users" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 02</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                Buyer Requirements
+              </h3>
+              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Organise buyer preferences, budgets, preferred localities and property criteria so you can act quickly when listings become available.
+              </p>
+            </div>
+
+            <!-- Lower Mini Product Visual -->
+            <div class="p-3.5 rounded-xl bg-slate-950 text-white border border-slate-800 space-y-2 shadow-inner text-left">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-emerald-900/80 text-emerald-300 text-[10px] font-black flex items-center justify-center">RS</div>
+                  <span class="text-xs font-bold text-slate-100">Rajesh Sharma</span>
+                </div>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 font-extrabold border border-emerald-800/80">Active Buyer</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[10px] pt-1">
+                <div class="bg-slate-900 p-1.5 rounded border border-slate-800">
+                  <span class="text-slate-400 block text-[9px]">Budget Range</span>
+                  <span class="text-slate-100 font-bold">₹1.20 - 1.35 Cr</span>
+                </div>
+                <div class="bg-slate-900 p-1.5 rounded border border-slate-800">
+                  <span class="text-slate-400 block text-[9px]">Target Locality</span>
+                  <span class="text-slate-100 font-bold truncate block">Model Town</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FEATURE 03 — WHATSAPP MESSAGE ANALYZER -->
+          <div onclick="selectFeatureCard(2)" id="feature-card-2" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+            <div class="space-y-3 text-left">
+              <div class="flex items-center justify-between">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <i data-lucide="message-square" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 03</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                WhatsApp Message Analyzer
+              </h3>
+              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Extract structured property information from unstructured WhatsApp text without manual data entry.
+              </p>
+            </div>
+
+            <!-- Lower Mini Product Visual -->
+            <div class="p-3.5 rounded-xl bg-slate-950 text-white border border-slate-800 space-y-2 shadow-inner text-left">
+              <div class="p-2 rounded-lg bg-emerald-950/40 border-l-2 border-emerald-500 text-[10px] text-emerald-200 font-mono leading-relaxed truncate">
+                "3 BHK builder floor, 2nd floor with lift, Model Town..."
+              </div>
+              <div class="flex items-center gap-1.5 text-[9px] pt-1">
+                <span class="bg-emerald-900/60 text-emerald-300 px-1.5 py-0.5 rounded font-mono">3 BHK</span>
+                <span class="bg-emerald-900/60 text-emerald-300 px-1.5 py-0.5 rounded font-mono">Model Town</span>
+                <span class="bg-emerald-900/60 text-emerald-300 px-1.5 py-0.5 rounded font-mono">₹1.25 Cr</span>
+                <span class="ml-auto text-[9px] text-emerald-400 font-bold flex items-center gap-0.5">
+                  <i data-lucide="check" class="w-3 h-3"></i> Parsed
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- FEATURE 04 — INTELLIGENT PROPERTY MATCHING -->
+          <div onclick="selectFeatureCard(3)" id="feature-card-3" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+            <div class="space-y-3 text-left">
+              <div class="flex items-center justify-between">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 04</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                Intelligent Property Matching
+              </h3>
+              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Connect buyer requirements with relevant property listings automatically based on locality, property type and budget.
+              </p>
+            </div>
+
+            <!-- Lower Mini Product Visual -->
+            <div class="p-3.5 rounded-xl bg-slate-950 text-white border border-slate-800 space-y-2 shadow-inner text-left">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-mono text-slate-400">Requirement ↔ Listing</span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-900/80 text-emerald-300 text-[10px] font-black border border-emerald-700">
+                  96% Match
+                </span>
+              </div>
+              <p class="text-[10px] text-slate-300 leading-tight">
+                Model Town match · Budget within ₹5L · Exact 3 BHK specification match
+              </p>
+              <span class="text-[9px] text-slate-400 italic block">
+                * Illustrative demo match score
+              </span>
+            </div>
+          </div>
+
+          <!-- FEATURE 05 — MASKED PROPERTY FLYERS -->
+          <div onclick="selectFeatureCard(4)" id="feature-card-4" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+            <div class="space-y-3 text-left">
+              <div class="flex items-center justify-between">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <i data-lucide="share-2" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 05</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                Masked Property Flyers
+              </h3>
+              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Generate clean, shareable property flyers with your agency branding while keeping private owner contact details securely protected.
+              </p>
+            </div>
+
+            <!-- Lower Mini Product Visual -->
+            <div class="p-3.5 rounded-xl bg-slate-950 text-white border border-slate-800 hover:rotate-1 hover:scale-[1.02] transition-transform duration-300 space-y-2 shadow-inner text-left">
+              <div class="flex items-center justify-between text-[10px] text-emerald-400 font-bold border-b border-slate-800 pb-1.5">
+                <span>Sharma Real Estate Agency</span>
+                <span class="text-slate-400 font-normal">leadNivash Safe Share</span>
+              </div>
+              <div class="space-y-0.5">
+                <h4 class="text-xs font-bold text-slate-100">3 BHK Luxury Floor · Model Town</h4>
+                <p class="text-[10px] text-emerald-400 font-extrabold">Demand: ₹1.22 Cr · 200 Gaj</p>
+              </div>
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
+                <span class="text-emerald-400 flex items-center gap-1 font-semibold">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Owner Contact 100% Hidden
+                </span>
+                <span class="text-slate-300 font-bold">PDF / WhatsApp</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- FEATURE 06 — DEAL & COMMISSION TRACKING -->
+          <div onclick="selectFeatureCard(5)" id="feature-card-5" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+            <div class="space-y-3 text-left">
+              <div class="flex items-center justify-between">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <i data-lucide="trending-up" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 06</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                Deal & Commission Tracking
+              </h3>
+              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Follow opportunities through deal stages and keep track of expected and received brokerage commissions.
+              </p>
+            </div>
+
+            <!-- Lower Mini Product Visual -->
+            <div class="p-3.5 rounded-xl bg-slate-950 text-white border border-slate-800 space-y-2.5 shadow-inner text-left">
+              <!-- 5-Stage Miniature Pipeline Track -->
+              <div class="flex items-center justify-between text-[9px] font-bold text-slate-400 border-b border-slate-800 pb-2">
+                <span class="text-slate-400">Interested</span>
+                <span>→</span>
+                <span class="text-slate-400">Shown</span>
+                <span>→</span>
+                <span class="text-emerald-400 font-extrabold bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">
+                  Negotiation
+                </span>
+                <span>→</span>
+                <span class="text-slate-500">Paid</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-1">
+                <div>
+                  <span class="text-[10px] font-mono text-slate-400 block">Deal: ₹1.25 Cr (1.5% Brokerage)</span>
+                  <span class="text-xs font-black text-emerald-400">₹1,87,500 Expected</span>
+                </div>
+                <span class="text-[10px] font-bold text-slate-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                  In 7 Days
+                </span>
+              </div>
+              <p class="text-[9px] text-slate-400 italic">
+                * Clearly identified illustrative sample brokerage calculation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 — FINANCIAL IMPACT & COMMISSION ROI CALCULATOR -->
     <section id="financial-impact" class="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800">
       <div class="max-w-4xl mx-auto space-y-10 text-center">
         <div class="space-y-2">
@@ -1505,6 +1765,26 @@
         nextWorkflowStep();
       }
     }, 3400);
+
+    // Section 4: Features Interactive Selection
+    let selectedFeatureIdx = null;
+    function selectFeatureCard(idx) {
+      if (selectedFeatureIdx === idx) {
+        selectedFeatureIdx = null;
+      } else {
+        selectedFeatureIdx = idx;
+      }
+
+      for (let i = 0; i < 6; i++) {
+        const card = document.getElementById(`feature-card-${i}`);
+        if (!card) continue;
+        if (selectedFeatureIdx === i) {
+          card.className = 'feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/30 -translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5';
+        } else {
+          card.className = 'feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5';
+        }
+      }
+    }
 
     // Landing ROI Calculator
     let currentDealVal = 7500000;
