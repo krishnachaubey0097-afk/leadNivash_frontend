@@ -1,82 +1,920 @@
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import {
+  Building2,
+  Plus,
+  ArrowLeft,
+  Search,
+  MapPin,
+  Maximize2,
+  Phone,
+  Eye,
+  EyeOff,
+  Share2,
+  Check,
+  Copy,
+  Clock,
+  Shield,
+  DollarSign,
+  ChevronRight,
+  Compass,
+} from 'lucide-react';
 import { Button } from '../../components/ui/Button';
-import { EmptyState } from '../../components/ui/EmptyState';
-import { Building2, Plus, ArrowLeft } from 'lucide-react';
+import { Badge } from '../../components/ui/Badge';
+import { Card } from '../../components/ui/Card';
+import { useToast } from '../../components/ui/Toast';
+import { formatRupees } from '../../lib/money';
+import {
+  fetchProperties,
+  fetchPropertyById,
+  createProperty,
+  updatePropertyStatus,
+  type PropertyItem,
+  type CreatePropertyDto,
+} from '../../lib/api/properties';
+import clsx from 'clsx';
 
+// =========================================================================
+// 1. PROPERTIES LIST PAGE
+// =========================================================================
 export const PropertiesListPage: React.FC = () => {
+  const [properties, setProperties] = useState<PropertyItem[]>([]);
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const loadProperties = async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchProperties({
+        status: filterStatus === 'all' ? undefined : filterStatus,
+        search: searchQuery || undefined,
+      });
+      setProperties(data);
+    } catch (err) {
+      console.warn('Could not load properties:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadProperties();
+  }, [filterStatus]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    loadProperties();
+  };
+
+  const statusFilters = [
+    { label: 'All Listings', value: 'all' },
+    { label: 'Available', value: 'available' },
+    { label: 'Under Hold', value: 'hold' },
+    { label: 'Sold', value: 'sold' },
+    { label: 'Rented', value: 'rented' },
+  ];
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-bold text-ink font-heading">Properties Inventory</h1>
+    <div className="space-y-6 pb-16 text-left max-w-6xl mx-auto">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
+              Properties Inventory
+            </h1>
+            <Badge variant="brand">
+              {properties.length} Active
+            </Badge>
+          </div>
+          <p className="text-xs text-muted mt-0.5">
+            Manage your listings, owner contacts, and share watermarked flyers with clients.
+          </p>
+        </div>
+
         <Link to="/app/properties/new">
-          <Button size="sm">
-            <Plus className="w-4 h-4 mr-1" />
-            <span>Add Property</span>
+          <Button size="md" pill className="font-bold text-xs shadow-md shadow-brand-700/20">
+            <Plus className="w-4 h-4 mr-1.5 stroke-[2.5]" />
+            <span>Add Property Listing</span>
           </Button>
         </Link>
       </div>
 
-      <EmptyState
-        icon={<Building2 className="w-10 h-10" />}
-        title="Abhi koi property nahi hai"
-        description="Pehli property add karo ya WhatsApp message paste karo."
-        actionLabel="Quick Add Property"
-        onAction={() => (window.location.href = '/app/properties/new')}
-      />
-    </div>
-  );
-};
+      {/* Search Bar & Filter Strip */}
+      <div className="flex flex-col sm:flex-row items-center gap-3">
+        {/* Search Input */}
+        <form onSubmit={handleSearchSubmit} className="relative flex-1 w-full">
+          <Search className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by locality (e.g. Model Town), type (Plot, Floor), or keyword..."
+            className="w-full pl-10 pr-4 py-2.5 rounded-full bg-surface border border-border/80 text-xs text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600 shadow-xs transition"
+          />
+        </form>
 
-export const PropertyNewPage: React.FC = () => {
-  return (
-    <div className="space-y-4 max-w-lg mx-auto">
-      <Link to="/app/properties" className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-700">
-        <ArrowLeft className="w-4 h-4" /> Back to Properties
-      </Link>
-      <h1 className="text-lg font-bold text-ink font-heading">Quick Add Property Listing</h1>
-      <div className="p-6 bg-surface border border-border rounded-card text-xs text-muted">
-        Property Quick Add form will be wired in Phase F2.
+        {/* Filter Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-none">
+          {statusFilters.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setFilterStatus(f.value)}
+              className={clsx(
+                'px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer',
+                filterStatus === f.value
+                  ? 'bg-brand-700 text-white shadow-xs'
+                  : 'bg-surface border border-border text-muted hover:text-ink'
+              )}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
+
+      {/* Grid of Property Cards */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-64 rounded-3xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+          ))}
+        </div>
+      ) : properties.length === 0 ? (
+        <Card className="p-12 text-center space-y-4">
+          <div className="w-12 h-12 rounded-full bg-brand-50 dark:bg-brand-950/60 text-brand-700 flex items-center justify-center mx-auto">
+            <Building2 className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-ink">No Properties Found</h3>
+            <p className="text-xs text-muted max-w-sm mx-auto mt-1">
+              {searchQuery
+                ? `No properties matched "${searchQuery}". Try a different locality or clear filter.`
+                : 'Your inventory is currently empty. Add your first listing or paste a WhatsApp forward.'}
+            </p>
+          </div>
+          <Link to="/app/properties/new">
+            <Button size="sm" pill className="font-bold text-xs">
+              + Add First Listing
+            </Button>
+          </Link>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {properties.map((prop) => (
+            <Card
+              key={prop._id}
+              className="p-5 flex flex-col justify-between hover:border-brand-600/40 hover:shadow-card transition-all group"
+            >
+              <div className="space-y-3">
+                {/* Top Badge Strip: Status & Type */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800">
+                    {prop.category} · {prop.type}
+                  </span>
+
+                  <Badge
+                    variant={
+                      prop.status === 'available'
+                        ? 'available'
+                        : prop.status === 'hold'
+                        ? 'hold'
+                        : prop.status === 'sold'
+                        ? 'sold'
+                        : 'neutral'
+                    }
+                  >
+                    {prop.status === 'available'
+                      ? 'Available'
+                      : prop.status === 'hold'
+                      ? 'Under Hold'
+                      : prop.status === 'sold'
+                      ? 'Sold Out'
+                      : 'Rented'}
+                  </Badge>
+                </div>
+
+                {/* Title & Price */}
+                <div>
+                  <h3 className="text-base font-black text-ink font-heading group-hover:text-brand-700 dark:group-hover:text-brand-600 transition line-clamp-1">
+                    {prop.title}
+                  </h3>
+                  <div className="mt-1 flex items-baseline gap-2">
+                    <span className="text-lg font-black text-brand-700 dark:text-brand-600">
+                      {formatRupees(prop.priceDemandPaise)}
+                    </span>
+                    <span className="text-[11px] text-muted">Asking Demand</span>
+                  </div>
+                </div>
+
+                {/* Key Attributes Strip */}
+                <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-border/60">
+                  <div className="flex items-center gap-1.5 text-muted">
+                    <MapPin className="w-3.5 h-3.5 text-brand-600 shrink-0" />
+                    <span className="truncate">{prop.locality}, {prop.city}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-muted">
+                    <Maximize2 className="w-3.5 h-3.5 text-brand-600 shrink-0" />
+                    <span>{prop.size.value} {prop.size.unit.toUpperCase()}</span>
+                  </div>
+                </div>
+
+                {/* Tags if any */}
+                {prop.tags && prop.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {prop.tags.slice(0, 3).map((t, idx) => (
+                      <span
+                        key={idx}
+                        className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium"
+                      >
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Actions */}
+              <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between gap-2">
+                <Link
+                  to={`/app/properties/${prop._id}/share`}
+                  className="px-3 py-1.5 rounded-full bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/40 text-brand-700 dark:text-brand-600 text-xs font-bold flex items-center gap-1 transition"
+                  title="Share Masked WhatsApp Flyer"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>Share Flyer</span>
+                </Link>
+
+                <Link
+                  to={`/app/properties/${prop._id}`}
+                  className="px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold transition flex items-center gap-1"
+                >
+                  <span>Details</span>
+                  <ChevronRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
+// =========================================================================
+// 2. QUICK ADD PROPERTY FORM PAGE
+// =========================================================================
+export const PropertyNewPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { success, error } = useToast();
+
+  const [type, setType] = useState<CreatePropertyDto['type']>('Floor');
+  const [category, setCategory] = useState<'Residential' | 'Commercial'>('Residential');
+  const [locality, setLocality] = useState('Model Town');
+  const [city] = useState('Panipat');
+  const [sizeValue, setSizeValue] = useState<number>(250);
+  const [sizeUnit, setSizeUnit] = useState<'gaj' | 'sqft' | 'marla'>('gaj');
+  const [priceInLakhs, setPriceInLakhs] = useState<number>(125);
+  const [facing, setFacing] = useState('North-East');
+  const [ownerName, setOwnerName] = useState('');
+  const [ownerPhone, setOwnerPhone] = useState('');
+  const [description, setDescription] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const localitiesList = [
+    'Model Town',
+    'Ansals Sushant City',
+    'Sector 18',
+    'Sector 12',
+    'Sector 11',
+    'GT Road',
+    'HUDA Sector 25',
+    'Chandni Bagh',
+    'Eldeco Estate',
+    'Industrial Area',
+  ];
+
+  const propertyTypes: Array<CreatePropertyDto['type']> = [
+    'Plot',
+    'Floor',
+    'Kothi',
+    'Flat',
+    'Shop',
+    'Other',
+  ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!locality) {
+      error('Please select or specify a locality.');
+      return;
+    }
+    if (!priceInLakhs || priceInLakhs <= 0) {
+      error('Please specify a valid asking price.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const priceDemandPaise = Math.round(priceInLakhs * 100000 * 100);
+
+      await createProperty({
+        type,
+        category,
+        locality,
+        city,
+        size: {
+          value: sizeValue,
+          unit: sizeUnit,
+        },
+        priceDemandPaise,
+        facing,
+        description,
+        status: 'available',
+        owner: {
+          name: ownerName || 'Direct Owner',
+          phone: ownerPhone || undefined,
+        },
+      });
+
+      success('Property listing added to inventory!');
+      setTimeout(() => navigate('/app/properties'), 600);
+    } catch (err: any) {
+      error(err.message || 'Could not create property.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6 max-w-2xl mx-auto pb-16 text-left">
+      {/* Back button & Title */}
+      <div className="flex items-center justify-between">
+        <Link
+          to="/app/properties"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-muted hover:text-ink transition"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Inventory</span>
+        </Link>
+        <span className="text-[11px] font-bold text-brand-700 bg-brand-50 px-2.5 py-0.5 rounded-full">
+          Direct Inventory Add
+        </span>
+      </div>
+
+      <Card className="p-5 sm:p-6 space-y-5 border-emerald-500/30 shadow-card">
+        <div>
+          <h1 className="text-lg sm:text-xl font-black text-ink font-heading">
+            Add New Property Listing
+          </h1>
+          <p className="text-xs text-muted mt-0.5">
+            Create a verified property card with owner vault privacy & instant flyer sharing.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+          {/* Property Type & Category Selection */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
+                Category
+              </label>
+              <div className="flex p-0.5 bg-slate-100 dark:bg-slate-800 rounded-full border border-border">
+                {(['Residential', 'Commercial'] as const).map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setCategory(cat)}
+                    className={clsx(
+                      'px-3 py-1 rounded-full text-[10px] font-bold transition cursor-pointer',
+                      category === cat
+                        ? 'bg-brand-700 text-white shadow-xs'
+                        : 'text-muted hover:text-ink'
+                    )}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <label className="font-bold text-ink uppercase tracking-wider text-[10px] block">
+              Property Type
+            </label>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+              {propertyTypes.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setType(t)}
+                  className={clsx(
+                    'py-2 px-3 rounded-xl font-bold text-xs transition cursor-pointer border',
+                    type === t
+                      ? 'bg-brand-700 text-white border-brand-700 shadow-xs'
+                      : 'bg-surface border-border text-muted hover:text-ink'
+                  )}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Asking Price Input */}
+          <div className="p-4 rounded-2xl bg-brand-50/50 dark:bg-brand-950/20 border border-brand-500/30 space-y-2">
+            <div className="flex justify-between items-center">
+              <label className="font-bold text-brand-900 dark:text-brand-300 uppercase tracking-wider text-[10px]">
+                Asking Price Demand
+              </label>
+              <span className="text-sm font-black text-brand-700 dark:text-brand-600">
+                ₹{priceInLakhs >= 100 ? `${(priceInLakhs / 100).toFixed(2)} Cr` : `${priceInLakhs} Lakhs`}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-muted text-sm">₹</span>
+              <input
+                type="number"
+                value={priceInLakhs}
+                onChange={(e) => setPriceInLakhs(Number(e.target.value))}
+                placeholder="Price in Lakhs (e.g. 85 or 125)"
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+              <span className="text-muted text-xs font-bold whitespace-nowrap">Lakhs</span>
+            </div>
+          </div>
+
+          {/* Size & Unit */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
+                Area Size
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={sizeValue}
+                  onChange={(e) => setSizeValue(Number(e.target.value))}
+                  placeholder="250"
+                  className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-brand-600"
+                />
+                <select
+                  value={sizeUnit}
+                  onChange={(e) => setSizeUnit(e.target.value as any)}
+                  className="bg-surface border border-border rounded-xl p-2.5 text-xs font-bold text-ink"
+                >
+                  <option value="gaj">Gaj</option>
+                  <option value="sqft">Sq.Ft</option>
+                  <option value="marla">Marla</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
+                Facing
+              </label>
+              <select
+                value={facing}
+                onChange={(e) => setFacing(e.target.value)}
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-bold text-ink"
+              >
+                <option value="North">North</option>
+                <option value="North-East">North-East</option>
+                <option value="East">East</option>
+                <option value="South-East">South-East</option>
+                <option value="South">South</option>
+                <option value="West">West</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Locality Dropdown / Text */}
+          <div className="space-y-1.5">
+            <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
+              Locality (Panipat / NCR)
+            </label>
+            <select
+              value={locality}
+              onChange={(e) => setLocality(e.target.value)}
+              className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs font-bold text-ink"
+            >
+              {localitiesList.map((loc) => (
+                <option key={loc} value={loc}>
+                  {loc}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Owner Privacy Vault Card */}
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-border space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-ink flex items-center gap-1.5 text-xs">
+                <Shield className="w-4 h-4 text-brand-600" />
+                Owner Privacy Vault
+              </span>
+              <span className="text-[10px] text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full font-bold">
+                Hidden on Public Flyers
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input
+                type="text"
+                value={ownerName}
+                onChange={(e) => setOwnerName(e.target.value)}
+                placeholder="Owner Name (e.g. Rajinder Gupta)"
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink"
+              />
+              <input
+                type="tel"
+                value={ownerPhone}
+                onChange={(e) => setOwnerPhone(e.target.value)}
+                placeholder="Owner Phone (+91 98120...)"
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink"
+              />
+            </div>
+            <p className="text-[10px] text-muted">
+              🔒 The owner's phone number is never printed on flyer links or sent to prospective buyers. Only you can reveal it.
+            </p>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-1.5">
+            <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
+              Highlights & Notes
+            </label>
+            <textarea
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. Near park, wide road, modular kitchen, immediate possession available..."
+              className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink"
+            />
+          </div>
+
+          {/* Submit */}
+          <div className="pt-2">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              pill
+              className="w-full font-bold text-xs shadow-md shadow-brand-700/20"
+            >
+              {isSubmitting ? 'Saving Property...' : 'Save & Publish Listing'}
+            </Button>
+          </div>
+        </form>
+      </Card>
+    </div>
+  );
+};
+
+// =========================================================================
+// 3. PROPERTY DETAIL & OWNER VAULT PAGE
+// =========================================================================
 export const PropertyDetailPage: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const { success } = useToast();
+
+  const [property, setProperty] = useState<PropertyItem | null>(null);
+  const [isOwnerRevealed, setIsOwnerRevealed] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState<PropertyItem['status']>('available');
+
+  useEffect(() => {
+    if (id) {
+      fetchPropertyById(id).then((p) => {
+        setProperty(p);
+        setCurrentStatus(p.status);
+      });
+    }
+  }, [id]);
+
+  if (!property) {
+    return (
+      <div className="p-8 text-center text-xs text-muted">
+        Loading property details...
+      </div>
+    );
+  }
+
+  const handleStatusChange = async (newStatus: PropertyItem['status']) => {
+    setCurrentStatus(newStatus);
+    await updatePropertyStatus(property._id, newStatus);
+    success(`Status updated to ${newStatus.toUpperCase()}`);
+  };
+
   return (
-    <div className="space-y-4 max-w-lg mx-auto">
-      <Link to="/app/properties" className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-700">
-        <ArrowLeft className="w-4 h-4" /> Back to Properties
-      </Link>
-      <h1 className="text-lg font-bold text-ink font-heading">Property Details</h1>
-      <p className="text-xs text-muted">Property ID: {id}</p>
+    <div className="space-y-6 max-w-3xl mx-auto pb-16 text-left">
+      {/* Top Navigation */}
+      <div className="flex items-center justify-between">
+        <Link
+          to="/app/properties"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-muted hover:text-ink transition"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Inventory</span>
+        </Link>
+
+        <Link to={`/app/properties/${property._id}/share`}>
+          <Button size="sm" pill className="font-bold text-xs flex items-center gap-1.5">
+            <Share2 className="w-3.5 h-3.5" />
+            <span>Generate Masked Flyer</span>
+          </Button>
+        </Link>
+      </div>
+
+      {/* Main Detail Card */}
+      <Card className="p-5 sm:p-6 space-y-6 border-emerald-500/30 shadow-card">
+        {/* Header Strip */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/80">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800">
+                {property.category} · {property.type}
+              </span>
+              <span className="text-xs text-muted flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-brand-600" />
+                ID: {property._id.slice(-6)}
+              </span>
+            </div>
+            <h1 className="text-xl sm:text-2xl font-black text-ink font-heading mt-1">
+              {property.title}
+            </h1>
+          </div>
+
+          {/* Status Segmented Buttons */}
+          <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-full border border-border">
+            {(['available', 'hold', 'sold'] as const).map((st) => (
+              <button
+                key={st}
+                onClick={() => handleStatusChange(st)}
+                className={clsx(
+                  'px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition cursor-pointer',
+                  currentStatus === st
+                    ? st === 'available'
+                      ? 'bg-brand-700 text-white shadow-xs'
+                      : st === 'hold'
+                      ? 'bg-amber-600 text-white shadow-xs'
+                      : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+                    : 'text-muted hover:text-ink'
+                )}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 4 Large Highlight KPI Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div className="p-3.5 rounded-2xl bg-brand-50/60 dark:bg-brand-950/30 border border-brand-500/30 space-y-1">
+            <span className="text-[10px] uppercase font-bold text-muted flex items-center gap-1">
+              <DollarSign className="w-3 h-3 text-brand-600" />
+              Asking Price
+            </span>
+            <span className="text-base font-black text-brand-700 dark:text-brand-600 block">
+              {formatRupees(property.priceDemandPaise)}
+            </span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-surface border border-border space-y-1">
+            <span className="text-[10px] uppercase font-bold text-muted flex items-center gap-1">
+              <Maximize2 className="w-3 h-3 text-brand-600" />
+              Size & Area
+            </span>
+            <span className="text-base font-bold text-ink block">
+              {property.size.value} {property.size.unit.toUpperCase()}
+            </span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-surface border border-border space-y-1">
+            <span className="text-[10px] uppercase font-bold text-muted flex items-center gap-1">
+              <Compass className="w-3 h-3 text-brand-600" />
+              Facing
+            </span>
+            <span className="text-base font-bold text-ink block">
+              {property.facing || 'North-East'}
+            </span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-surface border border-border space-y-1">
+            <span className="text-[10px] uppercase font-bold text-muted flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-brand-600" />
+              Locality
+            </span>
+            <span className="text-base font-bold text-ink block truncate">
+              {property.locality}
+            </span>
+          </div>
+        </div>
+
+        {/* Description */}
+        {property.description && (
+          <div className="space-y-1.5 text-xs">
+            <span className="font-bold text-ink uppercase tracking-wider text-[10px]">
+              Property Description & Highlights
+            </span>
+            <p className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-border text-slate-700 dark:text-slate-300 leading-relaxed">
+              {property.description}
+            </p>
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* OWNER PRIVACY VAULT                                      */}
+        {/* ======================================================== */}
+        <div className="p-5 rounded-3xl bg-gradient-to-br from-surface to-brand-50/40 dark:to-brand-950/20 border border-brand-500/30 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-brand-600" />
+              <div>
+                <h4 className="text-xs font-black text-ink uppercase tracking-wider font-heading">
+                  Owner Privacy Vault
+                </h4>
+                <p className="text-[10px] text-muted">
+                  Protects broker exclusivity. Only authorized account can view owner contact.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setIsOwnerRevealed(!isOwnerRevealed)}
+              className="px-3 py-1.5 rounded-full bg-surface border border-border hover:border-brand-600/40 text-xs font-bold text-brand-700 dark:text-brand-600 flex items-center gap-1.5 transition cursor-pointer"
+            >
+              {isOwnerRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              <span>{isOwnerRevealed ? 'Hide Details' : 'Reveal Contact'}</span>
+            </button>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-surface border border-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div>
+              <span className="text-[10px] text-muted uppercase font-bold block">Owner Name</span>
+              <span className="font-bold text-ink">
+                {isOwnerRevealed ? property.owner?.name || 'Direct Owner' : '•••••••• Gupta (Protected)'}
+              </span>
+            </div>
+
+            <div>
+              <span className="text-[10px] text-muted uppercase font-bold block">Phone Number</span>
+              <span className="font-black text-brand-700 dark:text-brand-600 tracking-wider">
+                {isOwnerRevealed ? property.owner?.phone || '+91 98120 44321' : '+91 98••• ••321'}
+              </span>
+            </div>
+
+            {isOwnerRevealed && (
+              <div className="flex items-center gap-2">
+                <a
+                  href={`tel:${property.owner?.phone || '+919812044321'}`}
+                  className="px-3 py-1 rounded-full bg-brand-700 text-white font-bold text-[11px] flex items-center gap-1"
+                >
+                  <Phone className="w-3 h-3" /> Call
+                </a>
+                <a
+                  href={`https://wa.me/${property.owner?.phone?.replace(/[^0-9]/g, '') || '919812044321'}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3 py-1 rounded-full bg-emerald-600 text-white font-bold text-[11px] flex items-center gap-1"
+                >
+                  WhatsApp
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
     </div>
   );
 };
 
-export const PropertyEditPage: React.FC = () => {
-  const { id } = useParams();
-  return (
-    <div className="space-y-4 max-w-lg mx-auto">
-      <Link to={`/app/properties/${id}`} className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-700">
-        <ArrowLeft className="w-4 h-4" /> Back to Details
-      </Link>
-      <h1 className="text-lg font-bold text-ink font-heading">Edit Property</h1>
-      <p className="text-xs text-muted">Property ID: {id}</p>
-    </div>
-  );
-};
-
+// =========================================================================
+// 4. MASKED FLYER & WHATSAPP SHARE PAGE
+// =========================================================================
 export const PropertySharePage: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const { success } = useToast();
+  const [property, setProperty] = useState<PropertyItem | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      fetchPropertyById(id).then(setProperty);
+    }
+  }, [id]);
+
+  if (!property) {
+    return (
+      <div className="p-8 text-center text-xs text-muted">
+        Loading property flyer...
+      </div>
+    );
+  }
+
+  const shareText = `🏡 *${property.title}*\n📍 *Location:* ${property.locality}, Panipat\n📐 *Size:* ${property.size.value} ${property.size.unit.toUpperCase()}\n🧭 *Facing:* ${property.facing || 'Prime Facing'}\n💰 *Demand:* ${formatRupees(property.priceDemandPaise)}\n\n✨ *Highlights:* ${property.description || 'Verified clear title property ready for inspection.'}\n\n📲 *Contact Verified Broker:* Sharma Real Estate Agency · Panipat\nDirect WhatsApp: wa.me/919876543210`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(shareText);
+    setCopied(true);
+    success('WhatsApp share message copied to clipboard!');
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+
   return (
-    <div className="space-y-4 max-w-lg mx-auto">
-      <Link to={`/app/properties/${id}`} className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-700">
-        <ArrowLeft className="w-4 h-4" /> Back to Details
+    <div className="space-y-6 max-w-xl mx-auto pb-16 text-left">
+      {/* Back button */}
+      <Link
+        to={`/app/properties/${property._id}`}
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-muted hover:text-ink transition"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span>Back to Property Details</span>
       </Link>
-      <h1 className="text-lg font-bold text-ink font-heading">Generate Masked Flyer</h1>
-      <p className="text-xs text-muted">Property ID: {id}</p>
+
+      {/* Masked Flyer Card */}
+      <Card className="p-6 space-y-5 border-emerald-500/40 shadow-2xl relative overflow-hidden bg-white dark:bg-slate-900">
+        {/* Top Watermark Agency Header */}
+        <div className="p-3 rounded-2xl bg-slate-900 text-white flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center font-black text-white text-xs">
+              LN
+            </div>
+            <div>
+              <h4 className="font-bold leading-tight">Sharma Real Estate Agency</h4>
+              <span className="text-[10px] text-emerald-400 font-medium">Panipat · Verified Listing</span>
+            </div>
+          </div>
+          <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
+            Exclusive
+          </span>
+        </div>
+
+        {/* Property Highlights */}
+        <div className="space-y-2">
+          <span className="text-[10px] uppercase font-bold text-muted tracking-wider">
+            {property.category} · {property.type}
+          </span>
+          <h2 className="text-xl font-black text-ink font-heading">
+            {property.title}
+          </h2>
+          <p className="text-2xl font-black text-emerald-700 dark:text-emerald-400">
+            {formatRupees(property.priceDemandPaise)}
+          </p>
+        </div>
+
+        {/* Feature Pill Grid */}
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-border">
+            <span className="text-muted block text-[10px] font-bold uppercase">Plot Area</span>
+            <span className="font-bold text-ink">{property.size.value} {property.size.unit.toUpperCase()}</span>
+          </div>
+          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-border">
+            <span className="text-muted block text-[10px] font-bold uppercase">Locality</span>
+            <span className="font-bold text-ink">{property.locality}</span>
+          </div>
+          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-border">
+            <span className="text-muted block text-[10px] font-bold uppercase">Facing</span>
+            <span className="font-bold text-ink">{property.facing || 'North-East'}</span>
+          </div>
+          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-border">
+            <span className="text-muted block text-[10px] font-bold uppercase">Status</span>
+            <span className="font-bold text-emerald-700 dark:text-emerald-400">Available</span>
+          </div>
+        </div>
+
+        {/* Watermark Banner Stamp */}
+        <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 text-center text-xs text-emerald-900 dark:text-emerald-300 font-bold">
+          🛡️ Watermarked: Owner phone number hidden to protect broker brokerage.
+        </div>
+
+        {/* Share Action Buttons */}
+        <div className="space-y-2 pt-2">
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="w-full py-3 px-4 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-700/20 transition cursor-pointer"
+          >
+            <Share2 className="w-4 h-4" />
+            <span>Share via WhatsApp (Pre-Filled)</span>
+          </a>
+
+          <button
+            onClick={handleCopy}
+            className="w-full py-2.5 px-4 rounded-full border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-muted hover:text-ink font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+          >
+            {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+            <span>{copied ? 'Copied' : 'Copy Clean Flyer Text'}</span>
+          </button>
+        </div>
+      </Card>
     </div>
   );
+};
+
+// Edit Page alias
+export const PropertyEditPage: React.FC = () => {
+  return <PropertyNewPage />;
 };
