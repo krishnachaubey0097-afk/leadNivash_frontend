@@ -47,6 +47,77 @@ export const DashboardPage: React.FC = () => {
     }
   };
 
+  // Interactive Deal Pipeline State
+  const [pipelineDeals, setPipelineDeals] = useState<Array<{
+    id: string;
+    title: string;
+    locality: string;
+    clientName: string;
+    propertyPrice: number;
+    brokerageAmount: number;
+    stage: 'token' | 'agreement' | 'registry' | 'won';
+    date: string;
+  }>>([
+    {
+      id: 'deal_1',
+      title: '3 BHK Luxury Floor',
+      locality: 'Model Town, Panipat',
+      clientName: 'Rajesh Sharma',
+      propertyPrice: 12500000,
+      brokerageAmount: 125000,
+      stage: 'agreement',
+      date: 'Due: 24 Nov',
+    },
+    {
+      id: 'deal_2',
+      title: '250 Gaj Residential Plot',
+      locality: 'Ansals Sushant City',
+      clientName: 'Vikram Verma',
+      propertyPrice: 8500000,
+      brokerageAmount: 85000,
+      stage: 'token',
+      date: 'Due: 28 Nov',
+    },
+    {
+      id: 'deal_3',
+      title: 'Commercial Shop Main Market',
+      locality: 'GT Road, Panipat',
+      clientName: 'Ashok Bansal',
+      propertyPrice: 9500000,
+      brokerageAmount: 95000,
+      stage: 'registry',
+      date: 'Tehsil: Tomorrow',
+    },
+    {
+      id: 'deal_4',
+      title: '4 BHK Independent Designer Kothi',
+      locality: 'Sector 18, Panipat',
+      clientName: 'Anjali Gupta',
+      propertyPrice: 24000000,
+      brokerageAmount: 240000,
+      stage: 'won',
+      date: 'Closed: 12 Nov',
+    },
+  ]);
+
+  const advanceDealStage = (dealId: string) => {
+    setPipelineDeals((prev) =>
+      prev.map((d) => {
+        if (d.id !== dealId) return d;
+        const nextStage: 'token' | 'agreement' | 'registry' | 'won' =
+          d.stage === 'token'
+            ? 'agreement'
+            : d.stage === 'agreement'
+            ? 'registry'
+            : d.stage === 'registry'
+            ? 'won'
+            : 'won';
+        return { ...d, stage: nextStage };
+      })
+    );
+    success('Deal advanced to next milestone in pipeline!');
+  };
+
   // Top Segmented control per PRD §5.3: Today | Track Record
   const [activeSegment, setActiveSegment] = useState<'today' | 'track-record'>('today');
 
@@ -637,49 +708,127 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           {/* Sub-tab view containers */}
-          <Card className="p-8 text-center">
+          <div>
             {trackRecordSubTab === 'active' && (
-              <div className="space-y-4 max-w-lg mx-auto">
-                <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-950/60 flex items-center justify-center mx-auto">
-                  <TrendingUp className="w-7 h-7" />
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-black text-ink font-heading">
+                    Active Pipeline Milestones ({pipelineDeals.filter((d) => d.stage !== 'won').length})
+                  </h3>
+                  <span className="text-xs text-muted">
+                    Advance deals as milestones are achieved
+                  </span>
                 </div>
-                <h3 className="text-base font-black text-ink font-heading">
-                  Active Deal Pipeline (Kanban)
-                </h3>
-                <p className="text-xs text-muted leading-relaxed">
-                  Track every deal across 4 stages: <strong className="text-ink">Interested</strong> → <strong className="text-ink">Site Visit</strong> → <strong className="text-ink">Negotiating</strong> → <strong className="text-ink">Token Finalized</strong>.
-                </p>
-                <Link to="/app/properties">
-                  <Button size="sm" pill className="mt-2 text-xs">
-                    View Full Pipeline
-                  </Button>
-                </Link>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {pipelineDeals
+                    .filter((d) => d.stage !== 'won')
+                    .map((deal) => (
+                      <Card
+                        key={deal.id}
+                        className="p-5 flex flex-col justify-between border-emerald-500/30 hover:border-brand-600/60 transition shadow-sm space-y-4"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span
+                              className={clsx(
+                                'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
+                                deal.stage === 'token'
+                                  ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400'
+                                  : deal.stage === 'agreement'
+                                  ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400'
+                                  : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400'
+                              )}
+                            >
+                              {deal.stage === 'token'
+                                ? '🎟️ Token Bayana'
+                                : deal.stage === 'agreement'
+                                ? '📑 Agreement Done'
+                                : '🏛️ Registry Ready'}
+                            </span>
+                            <span className="text-[11px] text-muted">{deal.date}</span>
+                          </div>
+
+                          <div>
+                            <h4 className="text-sm font-bold text-ink">{deal.title}</h4>
+                            <p className="text-xs text-muted">{deal.locality}</p>
+                          </div>
+
+                          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border flex items-center justify-between text-xs">
+                            <div>
+                              <span className="text-[10px] text-muted uppercase font-bold block">Client</span>
+                              <span className="font-bold text-ink">{deal.clientName}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-[10px] text-muted uppercase font-bold block">Brokerage</span>
+                              <span className="font-black text-brand-700 dark:text-brand-600">
+                                ₹{deal.brokerageAmount.toLocaleString('en-IN')}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <Button
+                          size="sm"
+                          pill
+                          onClick={() => advanceDealStage(deal.id)}
+                          className="w-full text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs"
+                        >
+                          <span>Advance Milestone</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Button>
+                      </Card>
+                    ))}
+                </div>
               </div>
             )}
 
             {trackRecordSubTab === 'wins' && (
-              <div className="space-y-4 max-w-lg mx-auto">
-                <div className="w-14 h-14 rounded-2xl bg-gold-bg text-gold-text flex items-center justify-center mx-auto">
-                  <Trophy className="w-7 h-7" />
-                </div>
-                <h3 className="text-base font-black text-ink font-heading">
-                  Wins & Closed Deal Records
-                </h3>
-                <p className="text-xs text-muted leading-relaxed">
-                  Every closed property celebration is logged here with brokerage earned, closing timeline, and customer review.
-                </p>
-                <div className="p-4 rounded-xl bg-bg border border-border text-xs text-muted text-left">
-                  <div className="flex justify-between font-bold text-ink">
-                    <span>Sample Win: 3 BHK Model Town</span>
-                    <span className="text-gold-text">₹1,25,000 Earned</span>
+              <div className="space-y-4">
+                <div className="p-5 rounded-3xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black shadow-md">
+                      <Trophy className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black text-ink font-heading">
+                        Year-to-Date Closed Wins: ₹4,85,000 Earned
+                      </h3>
+                      <p className="text-xs text-muted">
+                        12 Completed registry transactions logged across Panipat & NCR.
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-[11px] mt-1">Closed in 18 days · 1% brokerage collected from buyer</p>
+                  <Badge variant="sold">100% Collected</Badge>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {pipelineDeals
+                    .filter((d) => d.stage === 'won')
+                    .map((deal) => (
+                      <Card key={deal.id} className="p-5 space-y-2 border-amber-500/30 text-left">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                            Closed Won Deal 🏆
+                          </span>
+                          <span className="text-xs text-muted">{deal.date}</span>
+                        </div>
+                        <h4 className="text-base font-black text-ink font-heading">{deal.title}</h4>
+                        <p className="text-xs text-muted">{deal.locality} · Client: {deal.clientName}</p>
+                        <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
+                          <span className="text-muted">Net Collected Commission</span>
+                          <span className="font-black text-emerald-700 dark:text-emerald-400 text-sm">
+                            ₹{deal.brokerageAmount.toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                      </Card>
+                    ))}
                 </div>
               </div>
             )}
 
             {trackRecordSubTab === 'lost' && (
-              <div className="space-y-4 max-w-lg mx-auto">
+              <Card className="p-8 text-center space-y-4 max-w-lg mx-auto">
                 <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 text-muted flex items-center justify-center mx-auto">
                   <Clock className="w-7 h-7" />
                 </div>
@@ -689,11 +838,11 @@ export const DashboardPage: React.FC = () => {
                 <p className="text-xs text-muted leading-relaxed">
                   Log why deals fall through (price too high, buyer shifted location, loan rejected) to optimize future matches.
                 </p>
-              </div>
+              </Card>
             )}
 
             {trackRecordSubTab === 'insights' && (
-              <div className="space-y-4 max-w-lg mx-auto">
+              <Card className="p-8 text-center space-y-4 max-w-lg mx-auto">
                 <div className="w-14 h-14 rounded-2xl bg-blue-50 text-info dark:bg-blue-950/60 flex items-center justify-center mx-auto">
                   <Sparkles className="w-7 h-7" />
                 </div>
@@ -703,11 +852,11 @@ export const DashboardPage: React.FC = () => {
                 <p className="text-xs text-muted leading-relaxed">
                   Panipat & NCR market trends: High buyer demand in Model Town & Sector 12 with low 3 BHK inventory supply.
                 </p>
-              </div>
+              </Card>
             )}
 
             {trackRecordSubTab === 'deleted' && (
-              <div className="space-y-4 max-w-lg mx-auto">
+              <Card className="p-8 text-center space-y-4 max-w-lg mx-auto">
                 <div className="w-14 h-14 rounded-2xl bg-rose-50 text-danger dark:bg-rose-950/60 flex items-center justify-center mx-auto">
                   <Trash2 className="w-7 h-7" />
                 </div>
@@ -717,9 +866,9 @@ export const DashboardPage: React.FC = () => {
                 <p className="text-xs text-muted leading-relaxed">
                   Accidentally deleted a property listing or buyer lead? Recover it anytime within 30 days.
                 </p>
-              </div>
+              </Card>
             )}
-          </Card>
+          </div>
         </div>
       )}
     </div>

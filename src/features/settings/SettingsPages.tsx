@@ -1,88 +1,223 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
+import { useTheme } from '../../lib/theme';
 import { Button } from '../../components/ui/Button';
-import { Settings as SettingsIcon, Sun, Moon, Type, LogOut } from 'lucide-react';
+import { Badge } from '../../components/ui/Badge';
+import { Card } from '../../components/ui/Card';
+import { useToast } from '../../components/ui/Toast';
+import {
+  Settings as SettingsIcon,
+  Sun,
+  Moon,
+  ShieldCheck,
+  Inbox,
+  LogOut,
+  ChevronRight,
+  Check,
+} from 'lucide-react';
+import clsx from 'clsx';
 
 export const SettingsPage: React.FC = () => {
   const { user, logout } = useAuth();
+  const { mode, setMode } = useTheme();
+  const { success } = useToast();
 
-  const handleSetTheme = (theme: 'light' | 'dark') => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('ln_theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('ln_theme', 'light');
-    }
-  };
+  const [agencyName, setAgencyName] = useState('Sharma Real Estate Agency');
+  const [reraNo, setReraNo] = useState('HR/PNP/RERA-2024/889');
+  const [marlaStandard, setMarlaStandard] = useState<'30.25' | '25'>('25');
+  const [isSaved, setIsSaved] = useState(false);
 
-  const handleToggleLargeText = () => {
-    const isLg = document.documentElement.getAttribute('data-text') === 'lg';
-    if (isLg) {
-      document.documentElement.removeAttribute('data-text');
-      localStorage.removeItem('ln_text');
-    } else {
-      document.documentElement.setAttribute('data-text', 'lg');
-      localStorage.setItem('ln_text', 'lg');
-    }
+  const handleSaveProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaved(true);
+    success('Agency profile and regional unit settings saved!');
+    setTimeout(() => setIsSaved(false), 2000);
   };
 
   return (
-    <div className="space-y-5 max-w-lg mx-auto pb-6">
-      <div className="flex items-center gap-2">
-        <SettingsIcon className="w-5 h-5 text-brand-600" />
-        <h1 className="text-lg font-bold text-ink font-heading">Settings & Preferences</h1>
+    <div className="space-y-6 max-w-2xl mx-auto pb-16 text-left">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <SettingsIcon className="w-5 h-5 text-brand-600" />
+          <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
+            Settings & Agency Profile
+          </h1>
+        </div>
+        <Badge variant="brand">
+          Verified Account
+        </Badge>
       </div>
 
-      {/* Appearance (§5.9) */}
-      <div className="p-5 bg-surface border border-border rounded-card space-y-3">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-muted">Appearance</h2>
-        <div className="grid grid-cols-2 gap-2">
-          <Button variant="secondary" size="sm" onClick={() => handleSetTheme('light')}>
-            <Sun className="w-4 h-4 mr-1.5 text-amber-500" />
+      {/* Agency Identity & Verified Badge Card */}
+      <Card className="p-5 sm:p-6 space-y-4 border-emerald-500/30 shadow-card">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/80">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-black text-lg shadow-md shadow-brand-700/20">
+              LN
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h2 className="text-base font-black text-ink font-heading">{agencyName}</h2>
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              </div>
+              <p className="text-xs text-muted">
+                Primary Territory: <span className="font-semibold text-ink">Panipat Central & NCR</span>
+              </p>
+            </div>
+          </div>
+
+          <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold px-3 py-1 rounded-full border border-emerald-500/30 self-start sm:self-auto">
+            RERA Verified Broker
+          </span>
+        </div>
+
+        <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                Agency / Firm Name
+              </label>
+              <input
+                type="text"
+                value={agencyName}
+                onChange={(e) => setAgencyName(e.target.value)}
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                RERA / Registration No.
+              </label>
+              <input
+                type="text"
+                value={reraNo}
+                onChange={(e) => setReraNo(e.target.value)}
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                Broker Contact Phone
+              </label>
+              <input
+                type="text"
+                disabled
+                value={user?.phone || '+91 98120 44321'}
+                className="w-full bg-slate-100 dark:bg-slate-800 border border-border rounded-xl p-2.5 text-xs text-muted"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                Regional Marla Standard
+              </label>
+              <select
+                value={marlaStandard}
+                onChange={(e) => setMarlaStandard(e.target.value as any)}
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold"
+              >
+                <option value="25">25 Gaj / Marla (Panipat Local Standard)</option>
+                <option value="30.25">30.25 Gaj / Marla (Haryana Official Standard)</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-1">
+            <Button size="sm" pill type="submit" className="font-bold text-xs">
+              {isSaved ? (
+                <span className="flex items-center gap-1.5">
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Profile Saved</span>
+                </span>
+              ) : (
+                'Save Settings'
+              )}
+            </Button>
+          </div>
+        </form>
+      </Card>
+
+      {/* Shortcuts & Inbox Card */}
+      <Card className="p-4 sm:p-5 space-y-2 border-border shadow-xs">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-muted pb-1">
+          Quick Inboxes & Dashboards
+        </h3>
+
+        <Link
+          to="/app/inquiries"
+          className="p-3 rounded-2xl bg-surface hover:bg-slate-50 dark:hover:bg-slate-800/80 border border-border flex items-center justify-between text-xs transition group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-brand-50 text-brand-700 dark:bg-brand-950/60 flex items-center justify-center">
+              <Inbox className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="font-bold text-ink block group-hover:text-brand-700 transition">
+                Public Flyer Inquiries Inbox
+              </span>
+              <span className="text-muted text-[11px]">View leads captured from shared flyer links</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="bg-brand-600 text-white font-bold text-[10px] px-2 py-0.5 rounded-full">
+              4 New
+            </span>
+            <ChevronRight className="w-4 h-4 text-muted" />
+          </div>
+        </Link>
+      </Card>
+
+      {/* Theme & Display Engine */}
+      <Card className="p-5 space-y-3 border-border shadow-xs">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
+          Display & Appearance Mode
+        </h3>
+
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <button
+            onClick={() => setMode('light')}
+            className={clsx(
+              'p-3.5 rounded-2xl border flex items-center justify-center gap-2 font-bold transition cursor-pointer',
+              mode === 'light'
+                ? 'bg-brand-50 border-brand-600 text-brand-700 shadow-xs'
+                : 'bg-surface border-border text-muted hover:text-ink'
+            )}
+          >
+            <Sun className="w-4 h-4 text-amber-500" />
             <span>Light Theme</span>
-          </Button>
-          <Button variant="secondary" size="sm" onClick={() => handleSetTheme('dark')}>
-            <Moon className="w-4 h-4 mr-1.5 text-blue-400" />
-            <span>Dark Theme</span>
-          </Button>
-        </div>
-        <Button variant="ghost" size="sm" onClick={handleToggleLargeText} className="w-full">
-          <Type className="w-4 h-4 mr-1.5" />
-          <span>Toggle Large Text Mode</span>
-        </Button>
-      </div>
+          </button>
 
-      {/* Broker Profile (§5.9) */}
-      <div className="p-5 bg-surface border border-border rounded-card space-y-3">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-muted">Broker Profile</h2>
-        <div className="space-y-2 text-xs">
-          <div className="flex justify-between">
-            <span className="text-muted">Broker Name</span>
-            <span className="font-bold text-ink">{user?.name}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted">Email</span>
-            <span className="font-bold text-ink">{user?.email}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted">WhatsApp Phone</span>
-            <span className="font-bold text-ink">{user?.phone}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted">Agency</span>
-            <span className="font-bold text-ink">{user?.agency?.name || 'Independent'}</span>
-          </div>
+          <button
+            onClick={() => setMode('dark')}
+            className={clsx(
+              'p-3.5 rounded-2xl border flex items-center justify-center gap-2 font-bold transition cursor-pointer',
+              mode === 'dark'
+                ? 'bg-brand-950/70 border-brand-600 text-brand-400 shadow-xs'
+                : 'bg-surface border-border text-muted hover:text-ink'
+            )}
+          >
+            <Moon className="w-4 h-4 text-blue-400" />
+            <span>Dark Theme (OLED)</span>
+          </button>
         </div>
-      </div>
+      </Card>
 
-      {/* Sign Out */}
-      <Button variant="danger" onClick={() => logout()} className="w-full">
-        <LogOut className="w-4 h-4 mr-2" />
-        <span>Sign Out of LeadNivesh</span>
-      </Button>
+      {/* Sign Out Card */}
+      <Card className="p-4 border-border">
+        <button
+          onClick={() => logout()}
+          className="w-full py-2.5 px-4 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer"
+        >
+          <LogOut className="w-4 h-4" />
+          <span>Sign Out of leadNivash</span>
+        </button>
+      </Card>
     </div>
   );
 };
