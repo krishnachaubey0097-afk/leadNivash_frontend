@@ -1,0 +1,39 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://leadnivash.onrender.com/api/:path*"
+    },
+    {
+      "source": "/p/:path*",
+      "destination": "https://leadnivash.onrender.com/p/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://leadnivash.onrender.com/health"
+    },
+    {
+      "source": "/((?!api|p|health).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
+}

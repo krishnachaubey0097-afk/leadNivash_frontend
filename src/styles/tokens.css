@@ -1,0 +1,55 @@
+:root {
+  /* Brand Emerald */
+  --brand-600: #059669;
+  --brand-700: #047857; /* White text buttons & links (WCAG AA) */
+  --brand-50: #ECFDF5;
+
+  /* Typography Colors */
+  --ink: #0F172A;
+  --text: #475569;
+  --muted: #64748B;
+
+  /* Surfaces & Backgrounds */
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --border: #E2E8F0;
+
+  /* Semantic Accents */
+  --gold: #D97706;
+  --gold-text: #B45309;
+  --info: #2563EB;
+  --warn: #B45309;
+  --warn-bg: #FEF3C7;
+  --danger: #E11D48;
+}
+
+[data-theme='dark'],
+.dark {
+  /* Brand Emerald (Dark Mode) */
+  --brand-600: #10B981;
+  --brand-700: #34D399;
+  --brand-50: #052E24;
+
+  /* Typography Colors (Dark Mode) */
+  --ink: #F1F5F9;
+  --text: #CBD5E1;
+  --muted: #94A3B8;
+
+  /* Surfaces & Backgrounds (Dark Mode) */
+  --bg: #0B0F17;
+  --surface: #1E293B;
+  --border: #334155;
+
+  /* Semantic Accents (Dark Mode) */
+  --gold: #F59E0B;
+  --gold-text: #FBBF24;
+  --info: #60A5FA;
+  --warn: #FBBF24;
+  --warn-bg: #3B2A05;
+  --danger: #FB7185;
+}
+
+/* Large-text mode (§6.5) */
+html[data-text='lg'] {
+  font-size: 112.5%;
+}

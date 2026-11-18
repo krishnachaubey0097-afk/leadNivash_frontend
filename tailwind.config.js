@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class',
+  darkMode: ['class', '[data-theme="dark"]'],
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -9,37 +9,33 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#00875A', // Official LeadNivesh Logo Green
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
+          50: 'var(--brand-50)',
+          600: 'var(--brand-600)',
+          700: 'var(--brand-700)',
         },
-        slate: {
-          850: '#161f30',
-          900: '#0f172a',
-          950: '#080d1a',
+        ink: 'var(--ink)',
+        text: 'var(--text)',
+        muted: 'var(--muted)',
+        bg: 'var(--bg)',
+        surface: 'var(--surface)',
+        border: 'var(--border)',
+        gold: 'var(--gold)',
+        info: 'var(--info)',
+        warn: {
+          DEFAULT: 'var(--warn)',
+          bg: 'var(--warn-bg)',
         },
-        primary: {
-          DEFAULT: 'rgb(var(--color-primary) / <alpha-value>)',
-          focus: 'rgb(var(--color-primary-focus) / <alpha-value>)',
-          light: 'rgb(var(--color-primary-light) / <alpha-value>)',
-          muted: 'rgb(var(--color-primary-muted) / <alpha-value>)',
-        }
+        danger: 'var(--danger)',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
       },
-      boxShadow: {
-        'glow': '0 0 20px -5px rgb(var(--color-primary) / 0.35)',
-        'card-dark': '0 4px 20px -2px rgba(0, 0, 0, 0.45)',
-        'card-light': '0 2px 10px -1px rgba(0, 0, 0, 0.05)',
-      }
+      borderRadius: {
+        'input': '12px',
+        'card': '16px',
+        'sheet': '24px',
+      },
     },
   },
   plugins: [],
