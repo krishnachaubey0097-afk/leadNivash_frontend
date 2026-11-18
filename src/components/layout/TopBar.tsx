@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AvatarMenu } from './AvatarMenu';
-import { Sun, Moon, Bell } from 'lucide-react';
+import { Sun, Moon, Bell, Settings } from 'lucide-react';
 import { useTheme } from '../../lib/theme';
 
 export const TopBar: React.FC = () => {
@@ -69,6 +69,15 @@ export const TopBar: React.FC = () => {
             <Bell className="w-4 h-4" />
             <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-600" />
           </button>
+
+          {/* Mobile Settings button */}
+          <Link
+            to="/app/settings"
+            className="md:hidden w-9 h-9 rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            aria-label="Settings"
+          >
+            <Settings className="w-4 h-4" />
+          </Link>
 
           {/* User Avatar Menu */}
           <AvatarMenu />
