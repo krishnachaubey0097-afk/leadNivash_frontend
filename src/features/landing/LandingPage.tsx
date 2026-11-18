@@ -30,9 +30,10 @@ import {
   TrendingUp,
   Layers,
   Lock,
+  Calculator,
+  BarChart3,
 } from 'lucide-react';
 import { useTheme } from '../../lib/theme';
-import { formatRupees } from '../../lib/money';
 import { apiClient } from '../../lib/api/client';
 
 export const LandingPage: React.FC = () => {
@@ -151,14 +152,26 @@ export const LandingPage: React.FC = () => {
   const [selectedFeature, setSelectedFeature] = useState<number | null>(null);
 
   // Section 5: Commission Calculator State
-  const [dealValueRupees, setDealValueRupees] = useState<number>(7500000); // default ₹75 Lakh
+  const [dealValueRupees, setDealValueRupees] = useState<number>(7500000); // default ₹75,00,000 (₹75 Lakh)
   const [commissionRate, setCommissionRate] = useState<number>(1.5); // default 1.5%
   const [monthlyDealsCount, setMonthlyDealsCount] = useState<number>(3); // default 3 deals/month
 
-  // Calculator calculations
-  const commissionPerDeal = (dealValueRupees * commissionRate) / 100;
-  const monthlyCommission = commissionPerDeal * monthlyDealsCount;
-  const annualCommission = monthlyCommission * 12;
+  // Calculator calculations (Strict Accuracy formulas)
+  // Commission per deal: Property Deal Value * Commission Percentage / 100
+  const commissionPerDeal = Math.round((dealValueRupees * commissionRate) / 100);
+  // Estimated Monthly Commission: Commission per Deal * Monthly Deals Closed
+  const monthlyCommission = Math.round(commissionPerDeal * monthlyDealsCount);
+  // Projected Annual Brokerage: Monthly Commission * 12
+  const annualCommission = Math.round(monthlyCommission * 12);
+
+  // Standard Indian Currency Formatter (Intl.NumberFormat with en-IN and INR)
+  const formatINR = (amount: number): string => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   // Section 7: Free Demo Inquiry Form State
   const [formName, setFormName] = useState('');
@@ -1528,84 +1541,126 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================= */}
-      {/* SECTION 4 — FINANCIAL IMPACT (COMMISSION ROI CALCULATOR)  */}
+      {/* SECTION 5 — FINANCIAL IMPACT (COMMISSION ROI CALCULATOR)  */}
       {/* ========================================================= */}
-      <section id="financial-impact" className="py-16 sm:py-24 px-4 sm:px-6 bg-surface/60 border-y border-border/70">
-        <div className="max-w-4xl mx-auto space-y-12">
-          {/* Header */}
-          <div className="text-center max-w-2xl mx-auto space-y-2.5">
-            <span className="text-[11px] font-black uppercase tracking-widest text-gold-text">
+      <section id="financial-impact" className="py-16 sm:py-24 px-4 sm:px-6 bg-surface/50 border-y border-border/70 relative overflow-hidden">
+        {/* Subtle top ambient light-ray effect */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[220px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-5xl mx-auto space-y-12 relative z-10">
+          {/* 1. Section Header & Introduction */}
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
               FINANCIAL IMPACT
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-ink font-heading tracking-tight">
-              Your Next Deal Could Be Worth More Than You Think.
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-ink font-heading tracking-tight leading-tight">
+              Your Next Deal Could Be{' '}
+              <span className="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">
+                Worth More Than You Think.
+              </span>
             </h2>
-            <p className="text-xs sm:text-sm text-muted">
+            <p className="text-sm sm:text-base text-muted max-w-xl mx-auto leading-relaxed font-normal">
               Organise your opportunities, reduce missed matches and keep your brokerage pipeline moving.
             </p>
           </div>
 
-          {/* Interactive Calculator Card */}
-          <Card className="p-6 sm:p-10 bg-surface shadow-card max-w-3xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-left">
-              {/* Inputs Column */}
-              <div className="space-y-6">
-                {/* 1. Property Deal Value */}
-                <div>
-                  <div className="flex justify-between items-center text-xs font-bold mb-2">
-                    <span className="text-text">Property Deal Value</span>
-                    <span className="text-brand-700 font-extrabold">{formatRupees(dealValueRupees)}</span>
+          {/* 2. Interactive Financial Dashboard (Two-Column Layout) */}
+          <div className="rounded-3xl bg-surface/95 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 shadow-xl shadow-emerald-950/5 overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-border/70 dark:divide-slate-800">
+              
+              {/* LEFT COLUMN: Financial Assumptions & Controls (7 Cols on desktop) */}
+              <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 space-y-8 text-left">
+                <div className="flex items-center justify-between border-b border-border/60 dark:border-slate-800 pb-3">
+                  <h3 className="text-sm font-black uppercase tracking-wider text-ink font-heading flex items-center gap-2">
+                    <Calculator className="w-4 h-4 text-emerald-600" />
+                    Brokerage Assumptions
+                  </h3>
+                  <span className="text-[11px] font-semibold text-muted">
+                    Adjust variables in real time
+                  </span>
+                </div>
+
+                {/* INPUT 01 — PROPERTY DEAL VALUE */}
+                <div className="space-y-3.5">
+                  <div className="flex justify-between items-baseline">
+                    <label htmlFor="deal-value-slider" className="text-xs font-bold text-ink">
+                      Property Deal Value
+                    </label>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-lg sm:text-xl font-black text-emerald-700 dark:text-emerald-400 font-mono">
+                        {formatINR(dealValueRupees)}
+                      </span>
+                    </div>
                   </div>
-                  {/* Shortcut Pills */}
-                  <div className="flex items-center gap-2 mb-3">
+
+                  {/* Suggested Shortcuts */}
+                  <div className="flex items-center gap-2">
                     {[
                       { label: '₹45 Lakh', val: 4500000 },
                       { label: '₹75 Lakh', val: 7500000 },
                       { label: '₹1.5 Crore', val: 15000000 },
-                    ].map((pill, i) => (
+                    ].map((pill) => (
                       <button
-                        key={i}
+                        key={pill.val}
                         type="button"
                         onClick={() => setDealValueRupees(pill.val)}
-                        className={`px-2.5 py-1 text-[11px] font-bold rounded-full transition cursor-pointer ${
+                        className={clsx(
+                          'px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer shadow-2xs',
                           dealValueRupees === pill.val
-                            ? 'bg-brand-700 text-white'
-                            : 'bg-bg text-muted border border-border hover:text-ink'
-                        }`}
+                            ? 'bg-emerald-600 text-white shadow-xs ring-2 ring-emerald-500/30'
+                            : 'bg-surface dark:bg-slate-800 text-muted border border-border/80 dark:border-slate-700 hover:border-emerald-500/50 hover:text-ink'
+                        )}
                       >
                         {pill.label}
                       </button>
                     ))}
                   </div>
-                  <input
-                    type="range"
-                    min="2000000"
-                    max="30000000"
-                    step="500000"
-                    value={dealValueRupees}
-                    onChange={(e) => setDealValueRupees(Number(e.target.value))}
-                    className="w-full accent-brand-700 cursor-pointer"
-                  />
+
+                  {/* Range Slider */}
+                  <div className="space-y-1.5 pt-1">
+                    <input
+                      id="deal-value-slider"
+                      type="range"
+                      min="2000000"
+                      max="30000000"
+                      step="500000"
+                      value={dealValueRupees}
+                      onChange={(e) => setDealValueRupees(Number(e.target.value))}
+                      className="w-full accent-emerald-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer transition-all"
+                      aria-label="Property Deal Value Slider"
+                    />
+                    <div className="flex justify-between text-[10px] font-medium text-muted">
+                      <span>₹20 Lakh</span>
+                      <span>₹1.5 Crore</span>
+                      <span>₹3 Crore</span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* 2. Commission Percentage */}
-                <div>
-                  <div className="flex justify-between items-center text-xs font-bold mb-2">
-                    <span className="text-text">Commission Percentage</span>
-                    <span className="text-gold-text font-extrabold">{commissionRate}%</span>
+                {/* INPUT 02 — COMMISSION PERCENTAGE */}
+                <div className="space-y-3.5">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-xs font-bold text-ink">
+                      Commission Percentage
+                    </span>
+                    <span className="text-base font-black text-amber-600 dark:text-amber-400 font-mono">
+                      {commissionRate}%
+                    </span>
                   </div>
-                  {/* Shortcuts */}
-                  <div className="flex items-center gap-2 mb-3">
+
+                  {/* Premium Segmented Controls */}
+                  <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-border/70 dark:border-slate-700">
                     {[1.0, 1.5, 2.0].map((rate) => (
                       <button
                         key={rate}
                         type="button"
                         onClick={() => setCommissionRate(rate)}
-                        className={`px-3 py-1 text-[11px] font-bold rounded-full transition cursor-pointer ${
+                        className={clsx(
+                          'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center',
                           commissionRate === rate
-                            ? 'bg-gold text-white'
-                            : 'bg-bg text-muted border border-border hover:text-ink'
-                        }`}
+                            ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs ring-1 ring-emerald-500/40'
+                            : 'text-muted hover:text-ink'
+                        )}
                       >
                         {rate}%
                       </button>
@@ -1613,64 +1668,150 @@ export const LandingPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 3. Monthly Deals Count */}
-                <div>
-                  <div className="flex justify-between items-center text-xs font-bold mb-2">
-                    <span className="text-text">Monthly Deals Closed</span>
-                    <span className="text-ink font-extrabold">{monthlyDealsCount} Deal(s)</span>
+                {/* INPUT 03 — MONTHLY DEALS CLOSED */}
+                <div className="space-y-3.5">
+                  <div className="flex justify-between items-baseline">
+                    <label htmlFor="deals-closed-slider" className="text-xs font-bold text-ink">
+                      Monthly Deals Closed
+                    </label>
+                    <span className="text-base font-black text-ink font-mono">
+                      {monthlyDealsCount} {monthlyDealsCount === 1 ? 'deal' : 'deals'} / month
+                    </span>
                   </div>
-                  <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    step="1"
-                    value={monthlyDealsCount}
-                    onChange={(e) => setMonthlyDealsCount(Number(e.target.value))}
-                    className="w-full accent-brand-700 cursor-pointer"
-                  />
-                  <div className="flex justify-between text-[10px] text-muted mt-1">
-                    <span>1 deal/mo</span>
-                    <span>5 deals/mo</span>
-                    <span>10 deals/mo</span>
+
+                  <div className="space-y-1.5">
+                    <input
+                      id="deals-closed-slider"
+                      type="range"
+                      min="1"
+                      max="10"
+                      step="1"
+                      value={monthlyDealsCount}
+                      onChange={(e) => setMonthlyDealsCount(Number(e.target.value))}
+                      className="w-full accent-emerald-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer transition-all"
+                      aria-label="Monthly Deals Closed Slider"
+                    />
+                    <div className="flex justify-between text-[10px] font-medium text-muted">
+                      <span>1 deal/month</span>
+                      <span>5 deals/month</span>
+                      <span>10 deals/month</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Outputs Column (Financial Stats Display) */}
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-brand-50 to-emerald-50 dark:from-brand-950/60 dark:to-slate-900 border border-brand-200/80 dark:border-brand-800/40 text-center space-y-4">
-                <div>
-                  <span className="text-[11px] uppercase tracking-wider font-bold text-muted block">
-                    Estimated Commission Per Deal
-                  </span>
-                  <span className="text-2xl font-black text-ink font-heading block mt-0.5">
-                    {formatRupees(commissionPerDeal)}
-                  </span>
+              {/* RIGHT COLUMN: Calculated Commission Results (5 Cols on desktop) */}
+              <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-emerald-500/5 via-teal-500/5 to-slate-900/5 dark:from-emerald-950/40 dark:via-slate-900/60 dark:to-slate-950 text-left flex flex-col justify-between space-y-7">
+                
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-800 dark:text-emerald-300">
+                      PROJECTION SUMMARY
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-300 dark:border-emerald-800">
+                      Live Calculation
+                    </span>
+                  </div>
+
+                  {/* RESULT 01: Estimated Commission Per Deal */}
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-muted block">
+                      ESTIMATED COMMISSION PER DEAL
+                    </span>
+                    <div className="text-2xl sm:text-3xl font-black text-ink font-heading tracking-tight">
+                      {formatINR(commissionPerDeal)}
+                    </div>
+                  </div>
+
+                  {/* RESULT 02: Estimated Monthly Commission (Most Prominent) */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-emerald-500/40 shadow-lg shadow-emerald-500/5 space-y-1 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl pointer-events-none" />
+                    <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                      <TrendingUp className="w-3.5 h-3.5" />
+                      ESTIMATED MONTHLY COMMISSION
+                    </div>
+                    <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-600 dark:text-emerald-400 font-heading tracking-tight drop-shadow-2xs">
+                      {formatINR(monthlyCommission)}
+                    </div>
+                    <p className="text-[11px] text-muted font-medium pt-0.5">
+                      Calculated across {monthlyDealsCount} deal{monthlyDealsCount > 1 ? 's' : ''} / month at {commissionRate}% brokerage
+                    </p>
+                  </div>
+
+                  {/* RESULT 03: Projected Annual Brokerage */}
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-muted block">
+                      PROJECTED ANNUAL BROKERAGE
+                    </span>
+                    <div className="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400 font-heading">
+                      {formatINR(annualCommission)}{' '}
+                      <span className="text-xs font-semibold text-muted font-sans">/ year</span>
+                    </div>
+                  </div>
+
+                  {/* 8. Financial Visualization: Velocity Scale */}
+                  <div className="p-4 rounded-xl bg-slate-950 text-white border border-slate-800 space-y-2.5 shadow-inner">
+                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-300">
+                      <span className="flex items-center gap-1">
+                        <BarChart3 className="w-3.5 h-3.5 text-emerald-400" />
+                        Commission Scale Progression
+                      </span>
+                      <span className="text-emerald-400 font-mono text-[9px]">
+                        1 Deal → Monthly → Annual
+                      </span>
+                    </div>
+
+                    {/* Proportional visual bars */}
+                    <div className="space-y-2 text-[10px]">
+                      {/* 1 Deal */}
+                      <div className="space-y-0.5">
+                        <div className="flex justify-between text-[9px] text-slate-400">
+                          <span>1 Deal ({commissionRate}%)</span>
+                          <span className="font-mono text-slate-200">{formatINR(commissionPerDeal)}</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-slate-400 rounded-full transition-all duration-300"
+                            style={{ width: `${Math.max(6, Math.min(100, (commissionPerDeal / annualCommission) * 100))}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Monthly */}
+                      <div className="space-y-0.5">
+                        <div className="flex justify-between text-[9px] text-slate-400">
+                          <span>Monthly ({monthlyDealsCount} Deals)</span>
+                          <span className="font-mono text-emerald-400 font-bold">{formatINR(monthlyCommission)}</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-emerald-500 rounded-full transition-all duration-300"
+                            style={{ width: `${Math.max(12, Math.min(100, (monthlyCommission / annualCommission) * 100))}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Annual */}
+                      <div className="space-y-0.5">
+                        <div className="flex justify-between text-[9px] text-slate-400">
+                          <span>Annual Velocity (12 Months)</span>
+                          <span className="font-mono text-amber-400 font-bold">{formatINR(annualCommission)}</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-emerald-500 to-amber-400 rounded-full w-full transition-all duration-300" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="pt-3 border-t border-brand-200/60 dark:border-brand-800/40">
-                  <span className="text-[11px] uppercase tracking-wider font-bold text-brand-700 dark:text-brand-500 block">
-                    Estimated Monthly Commission
-                  </span>
-                  <span className="text-3xl sm:text-4xl font-black text-brand-700 dark:text-brand-500 font-heading block mt-0.5">
-                    {formatRupees(monthlyCommission)}
-                  </span>
-                </div>
-
-                <div className="pt-3 border-t border-brand-200/60 dark:border-brand-800/40">
-                  <span className="text-[11px] uppercase tracking-wider font-bold text-muted block">
-                    Projected Annual Brokerage
-                  </span>
-                  <span className="text-lg font-black text-gold-text block mt-0.5">
-                    {formatRupees(annualCommission)} / year
-                  </span>
-                </div>
-
-                <p className="text-[10px] text-muted leading-tight pt-1">
-                  Formula: Deal Value × Commission % / 100. Figures are illustrative based on assumptions, not guaranteed earnings.
+                {/* 10. Financial Disclaimer */}
+                <p className="text-[10px] text-muted leading-relaxed border-t border-border/60 dark:border-slate-800/80 pt-3">
+                  Illustrative estimates based on your selected property value, commission percentage and number of monthly deals. Actual brokerage earnings depend on completed transactions and agreed commission terms. leadNivash does not guarantee income.
                 </p>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       </section>
 
