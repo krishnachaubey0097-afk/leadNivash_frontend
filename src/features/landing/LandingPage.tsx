@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
 import {
   Sparkles,
   ArrowRight,
@@ -26,7 +25,6 @@ import {
   Search,
   MessageSquare,
   AlertCircle,
-  Briefcase,
   TrendingUp,
   Layers,
   Lock,
@@ -2070,63 +2068,222 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================= */}
-      {/* SECTION 6 — WHY CHOOSE leadNivash?                        */}
+      {/* SECTION 7 — WHY CHOOSE leadNivash?                        */}
       {/* ========================================================= */}
-      <section id="why-leadnivash" className="py-16 sm:py-24 px-4 sm:px-6 bg-surface/50 border-y border-border/70">
-        <div className="max-w-6xl mx-auto space-y-12">
-          {/* Header */}
-          <div className="text-center max-w-2xl mx-auto space-y-2.5">
-            <span className="text-[11px] font-black uppercase tracking-widest text-brand-700">
-              WHY leadNivash
+      <section id="why-leadnivash" className="py-16 sm:py-24 px-4 sm:px-6 bg-surface/50 border-y border-border/70 relative overflow-hidden">
+        {/* Subtle top ambient emerald sunrise / radial light effect */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[220px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto space-y-12 relative z-10">
+          {/* Section Introduction */}
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+              WHY LEADNIVASH
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-ink font-heading tracking-tight">
-              Built Around the Way Property Brokers Actually Work.
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-ink font-heading tracking-tight leading-tight">
+              Built Around the Way Property Brokers{' '}
+              <span className="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">
+                Actually Work.
+              </span>
             </h2>
-            <p className="text-xs sm:text-sm text-muted">
-              Your work happens across WhatsApp chats, property visits, buyer calls and negotiations. leadNivash brings these activities into one organised workspace.
+            <p className="text-sm sm:text-base text-muted max-w-xl mx-auto leading-relaxed font-normal">
+              LeadNivash helps you organise property enquiries, find relevant matches, protect business relationships, and keep deals moving — all without depending on scattered WhatsApp messages and manual tracking.
             </p>
           </div>
 
-          {/* 3 Primary Reason Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            {/* Reason 1 */}
-            <Card className="p-6 sm:p-7 space-y-4" interactive>
-              <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-600 flex items-center justify-center">
-                <Search className="w-6 h-6 stroke-[2]" />
-              </div>
-              <h3 className="text-base font-bold text-ink font-heading">
-                Never Lose a Match
-              </h3>
-              <p className="text-xs text-muted leading-relaxed">
-                Your buyer requirements and property inventory stay organised. Find relevant matches without repeatedly searching old WhatsApp conversations.
-              </p>
-            </Card>
+          {/* 3 Primary Reason Feature Panels */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch text-left">
+            
+            {/* CARD 1 — NEVER LOSE A MATCH */}
+            <div className="group rounded-3xl bg-surface/90 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                    <Search className="w-5 h-5 stroke-[2.2]" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                    REASON 01
+                  </span>
+                </div>
 
-            {/* Reason 2 */}
-            <Card className="p-6 sm:p-7 space-y-4" interactive>
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 flex items-center justify-center">
-                <ShieldCheck className="w-6 h-6 stroke-[2]" />
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-ink font-heading group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    Never Lose a Match
+                  </h3>
+                  <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    Keep buyer requirements and property inventory organised so relevant opportunities are easier to identify.
+                  </p>
+                  <p className="text-xs text-muted leading-relaxed pt-1">
+                    Stop searching through endless conversations to remember who needs what. Keep buyer requirements and property details organised, making it easier to discover relevant property matches.
+                  </p>
+                </div>
               </div>
-              <h3 className="text-base font-bold text-ink font-heading">
-                Protect Your Business Relationships
-              </h3>
-              <p className="text-xs text-muted leading-relaxed">
-                Share professional property flyers without exposing confidential owner contact information. Keep your broker identity and branding on shared property materials.
-              </p>
-            </Card>
 
-            {/* Reason 3 */}
-            <Card className="p-6 sm:p-7 space-y-4" interactive>
-              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 flex items-center justify-center">
-                <Briefcase className="w-6 h-6 stroke-[2]" />
+              {/* Miniature Product-Style Illustration */}
+              <div className="p-4 rounded-2xl bg-slate-950 text-white border border-slate-800 space-y-3 shadow-inner">
+                {/* Micro Buyer Requirement */}
+                <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-black flex items-center justify-center border border-emerald-800">
+                      RS
+                    </div>
+                    <div>
+                      <span className="text-[11px] font-bold text-slate-100 block">Rajesh Sharma</span>
+                      <span className="text-[9px] text-slate-400 font-mono">3 BHK · Model Town · ₹1.25 Cr</span>
+                    </div>
+                  </div>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-800/80">
+                    Buyer
+                  </span>
+                </div>
+
+                {/* Animated Connection Bridge */}
+                <div className="flex items-center justify-center gap-2 py-0.5">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-emerald-500" />
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-700/80 text-emerald-300 text-[10px] font-extrabold shadow-xs">
+                    <Sparkles className="w-3 h-3 text-emerald-400 animate-pulse" />
+                    96% Match
+                  </span>
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent via-emerald-500/50 to-emerald-500" />
+                </div>
+
+                {/* Micro Property Listing */}
+                <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-100 block">Luxury Builder Floor</span>
+                    <span className="text-[9px] text-slate-400 font-mono">200 Gaj · Model Town · ₹1.22 Cr</span>
+                  </div>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-bold">
+                    Inventory
+                  </span>
+                </div>
               </div>
-              <h3 className="text-base font-bold text-ink font-heading">
-                Manage More, Work Smarter
-              </h3>
-              <p className="text-xs text-muted leading-relaxed">
-                Save time on manual data entry, organise buyers and properties, and track your deals and commissions from one workspace.
-              </p>
-            </Card>
+            </div>
+
+            {/* CARD 2 — PROTECT YOUR BUSINESS RELATIONSHIPS */}
+            <div className="group rounded-3xl bg-surface/90 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                    <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                    REASON 02
+                  </span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-ink font-heading group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    Protect Your Business Relationships
+                  </h3>
+                  <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    Share property information professionally without exposing confidential owner contact details.
+                  </p>
+                  <p className="text-xs text-muted leading-relaxed pt-1">
+                    Create branded, shareable property flyers while keeping sensitive owner contact information protected. Present properties professionally and maintain control over how your business information is shared.
+                  </p>
+                </div>
+              </div>
+
+              {/* Miniature Property Flyer Preview with Masked Owner */}
+              <div className="p-4 rounded-2xl bg-slate-950 text-white border border-slate-800 space-y-3 shadow-inner">
+                {/* Agency Flyer Header */}
+                <div className="flex items-center justify-between text-[10px] pb-1.5 border-b border-slate-800">
+                  <span className="font-bold text-emerald-400">Sharma Real Estate Agency</span>
+                  <span className="text-[9px] text-slate-400">Watermarked Flyer</span>
+                </div>
+
+                {/* Property Card Snippet */}
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-lg bg-slate-900 border border-slate-800 overflow-hidden shrink-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=140&auto=format&fit=crop&q=80"
+                      alt="Floor"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-bold text-slate-100 block truncate">
+                      3 BHK Floor · Model Town
+                    </span>
+                    <span className="text-[10px] font-mono text-emerald-400 font-bold">
+                      Demand: ₹1.25 Cr
+                    </span>
+                  </div>
+                </div>
+
+                {/* Masked Owner Privacy Vault Box */}
+                <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-[10px]">
+                  <div className="flex items-center gap-1.5 text-slate-300">
+                    <Lock className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Owner Contact: <span className="font-mono text-slate-400 tracking-wider">●●●●●●8210</span></span>
+                  </div>
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 font-bold border border-emerald-800">
+                    Protected
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* CARD 3 — MANAGE MORE, WORK SMARTER */}
+            <div className="group rounded-3xl bg-surface/90 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                    <TrendingUp className="w-5 h-5 stroke-[2.2]" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                    REASON 03
+                  </span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-ink font-heading group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    Manage More, Work Smarter
+                  </h3>
+                  <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    Reduce repetitive manual work and keep deals and commissions organised.
+                  </p>
+                  <p className="text-xs text-muted leading-relaxed pt-1">
+                    Spend less time manually entering information and tracking conversations. Organise properties, buyer requirements, deal progress, and commissions in one structured workflow.
+                  </p>
+                </div>
+              </div>
+
+              {/* Miniature Deal-Management Pipeline Interface */}
+              <div className="p-4 rounded-2xl bg-slate-950 text-white border border-slate-800 space-y-3 shadow-inner">
+                {/* 4 Sample Deal Stages */}
+                <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 border-b border-slate-800 pb-2">
+                  <span className="text-slate-500">Enquiry</span>
+                  <span>→</span>
+                  <span className="text-slate-500">Shown</span>
+                  <span>→</span>
+                  <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-extrabold border border-emerald-800">
+                    Negotiation
+                  </span>
+                  <span>→</span>
+                  <span className="text-slate-500">Finalized</span>
+                </div>
+
+                {/* Active Deal & Commission Record */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-100">Deal: 3 BHK Model Town</span>
+                    <span className="text-[10px] font-mono text-slate-300 font-bold">₹1.25 Cr</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] pt-1">
+                    <span className="text-slate-400">Brokerage (1.5%):</span>
+                    <span className="text-xs font-black text-emerald-400 font-mono">₹1,87,500 Expected</span>
+                  </div>
+                </div>
+
+                {/* Disclaimer */}
+                <span className="text-[9px] text-slate-500 italic block pt-0.5">
+                  * Illustrative sample workflow data
+                </span>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
