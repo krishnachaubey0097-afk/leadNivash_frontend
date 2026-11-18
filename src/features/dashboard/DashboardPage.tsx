@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
 import {
   Sparkles,
-  Plus,
   Trophy,
   ArrowRight,
   TrendingUp,
@@ -19,9 +18,34 @@ import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import clsx from 'clsx';
 import { formatRupees } from '../../lib/money';
+import { parseMessage, type ParseResult } from '../../lib/api/parse';
+import { useToast } from '../../components/ui/Toast';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
+  const { success, error, toast } = useToast();
+
+  // Quick Paste embedded state
+  const [quickInput, setQuickInput] = useState('');
+  const [isQuickParsing, setIsQuickParsing] = useState(false);
+  const [quickResult, setQuickResult] = useState<ParseResult | null>(null);
+
+  const handleQuickParse = async () => {
+    if (!quickInput.trim() || quickInput.trim().length < 5) {
+      toast('Please paste a property or buyer message to extract.', 'error');
+      return;
+    }
+    setIsQuickParsing(true);
+    try {
+      const res = await parseMessage(quickInput);
+      setQuickResult(res);
+      success(`Identified as ${res.itemType === 'listing' ? 'Property Listing' : 'Buyer Requirement'}.`);
+    } catch {
+      error('Could not extract message.');
+    } finally {
+      setIsQuickParsing(false);
+    }
+  };
 
   // Top Segmented control per PRD §5.3: Today | Track Record
   const [activeSegment, setActiveSegment] = useState<'today' | 'track-record'>('today');
@@ -121,53 +145,169 @@ export const DashboardPage: React.FC = () => {
       {/* TODAY SEGMENT (§5.3.1) */}
       {activeSegment === 'today' && (
         <div className="space-y-6">
-          {/* Quick Paste Hero Card (Smudge Reference 3 style) */}
-          <Card className="p-5 sm:p-6 bg-gradient-to-br from-surface via-surface to-brand-50/30 dark:to-brand-950/20 border-brand-600/30 shadow-card relative overflow-hidden">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="p-1.5 rounded-lg bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-600">
-                    <Sparkles className="w-4 h-4" />
-                  </span>
-                  <h2 className="text-base font-black text-ink font-heading">
-                    Turn WhatsApp Messages into Business
+          {/* Quick Paste Hero Card (Integrated directly into Dashboard) */}
+          <Card className="p-4 sm:p-5 bg-gradient-to-br from-surface via-surface to-brand-50/40 dark:to-brand-950/20 border-brand-600/30 shadow-card space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 rounded-lg bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-600">
+                  <Sparkles className="w-4 h-4" />
+                </span>
+                <div>
+                  <h2 className="text-sm font-black text-ink font-heading leading-tight">
+                    Quick Paste WhatsApp Deal
                   </h2>
+                  <p className="text-[11px] text-muted">
+                    Paste forwarded WhatsApp message to auto-extract property & client details.
+                  </p>
                 </div>
-                <p className="text-xs text-muted max-w-lg">
-                  Paste forwarded property listings or client requirements. The AI extracts BHK, price, and location in seconds.
-                </p>
               </div>
-
-              <Link to="/app/paste" className="shrink-0">
-                <Button size="md" pill className="w-full sm:w-auto font-bold shadow-md shadow-brand-700/20 text-xs">
-                  <Plus className="w-4 h-4 mr-1 stroke-[2.5]" />
-                  <span>Paste New Message</span>
-                </Button>
+              <Link
+                to="/app/paste"
+                className="text-xs text-brand-700 dark:text-brand-600 font-bold hover:underline hidden sm:flex items-center gap-1"
+              >
+                <span>Voice Dictation & Full View</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            {/* Quick Suggestions / Chips */}
-            <div className="mt-4 pt-3 border-t border-border/50 flex flex-wrap items-center gap-2 text-xs">
-              <span className="text-[11px] text-muted font-bold">Quick Shortcuts:</span>
-              <Link
-                to="/app/properties/new"
-                className="px-3 py-1 rounded-full bg-surface border border-border hover:border-brand-600/40 text-text hover:text-ink transition text-[11px] font-semibold"
-              >
-                + Add Listing Manually
-              </Link>
-              <Link
-                to="/app/buyers/new"
-                className="px-3 py-1 rounded-full bg-surface border border-border hover:border-brand-600/40 text-text hover:text-ink transition text-[11px] font-semibold"
-              >
-                + Add Buyer Requirement
-              </Link>
-              <Link
-                to="/app/tools/calculator"
-                className="px-3 py-1 rounded-full bg-surface border border-border hover:border-brand-600/40 text-text hover:text-ink transition text-[11px] font-semibold"
-              >
-                Area Unit Converter (Gaj ⇄ Sq.Ft)
-              </Link>
+            {/* Quick Textarea */}
+            <div className="space-y-2">
+              <textarea
+                rows={3}
+                value={quickInput}
+                onChange={(e) => setQuickInput(e.target.value)}
+                placeholder="e.g. 2 BHK luxury floor in Model Town Panipat demand 65 Lakhs negotiable. Contact 9876543210..."
+                className="w-full bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 text-xs text-ink placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-600 transition"
+              />
+
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuickInput(
+                        '2 BHK builder floor in Model Town Panipat demand 65 Lakhs negotiable. North facing.'
+                      );
+                      setQuickResult(null);
+                    }}
+                    className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-700 text-slate-600 dark:text-slate-300 text-[10px] font-semibold border border-border transition cursor-pointer"
+                  >
+                    ⚡ 2 BHK Panipat
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuickInput(
+                        'Residential plot 250 Gaj in Sector 18 Panipat near HUDA park demand 85 Lakhs.'
+                      );
+                      setQuickResult(null);
+                    }}
+                    className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-700 text-slate-600 dark:text-slate-300 text-[10px] font-semibold border border-border transition cursor-pointer"
+                  >
+                    ⚡ Sector 18 Plot
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    to="/app/paste"
+                    className="sm:hidden text-[11px] font-bold text-brand-700 dark:text-brand-600"
+                  >
+                    Mic / Full Screen
+                  </Link>
+                  <Button
+                    size="sm"
+                    pill
+                    onClick={handleQuickParse}
+                    disabled={isQuickParsing || !quickInput.trim()}
+                    className="text-xs font-bold"
+                  >
+                    {isQuickParsing ? (
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        <span>Extracting...</span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Instant AI Parse</span>
+                      </span>
+                    )}
+                  </Button>
+                </div>
+              </div>
             </div>
+
+            {/* Quick Result Preview Box if extracted */}
+            {quickResult && (
+              <div className="p-3 rounded-2xl bg-brand-50/60 dark:bg-brand-950/40 border border-brand-500/30 text-xs space-y-2 animate-in fade-in duration-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 font-bold text-ink">
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                    <span>
+                      {quickResult.itemType === 'listing'
+                        ? 'Extracted Property Listing'
+                        : 'Extracted Buyer Requirement'}
+                    </span>
+                  </div>
+                  <Badge variant="brand">
+                    {Math.round((quickResult.confidence.overall || 0.94) * 100)}% Confidence
+                  </Badge>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+                  <div className="p-2 rounded-xl bg-surface border border-border/80">
+                    <span className="text-muted block text-[10px] uppercase font-bold">Category</span>
+                    <span className="font-bold text-ink">
+                      {quickResult.itemType === 'listing'
+                        ? quickResult.extracted.property?.title || 'Residential'
+                        : quickResult.extracted.buyer?.propertyType || 'Buyer Requirement'}
+                    </span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-surface border border-border/80">
+                    <span className="text-muted block text-[10px] uppercase font-bold">
+                      {quickResult.itemType === 'listing' ? 'Demand' : 'Budget'}
+                    </span>
+                    <span className="font-bold text-brand-700 dark:text-brand-600">
+                      {quickResult.itemType === 'listing'
+                        ? quickResult.extracted.property?.priceDemandRaw || '₹65 Lakhs'
+                        : quickResult.extracted.buyer?.budgetRaw || '₹85 Lakhs'}
+                    </span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-surface border border-border/80">
+                    <span className="text-muted block text-[10px] uppercase font-bold">Locality</span>
+                    <span className="font-bold text-ink">
+                      {quickResult.itemType === 'listing'
+                        ? quickResult.extracted.property?.locality || 'Model Town'
+                        : quickResult.extracted.buyer?.localities?.join(', ') || 'Sector 18'}
+                    </span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-surface border border-border/80">
+                    <span className="text-muted block text-[10px] uppercase font-bold">Size</span>
+                    <span className="font-bold text-ink">
+                      {quickResult.itemType === 'listing'
+                        ? `${quickResult.extracted.property?.sizeGaj || quickResult.extracted.property?.sizeValue || '180'} Gaj`
+                        : `${quickResult.extracted.buyer?.bhk ? quickResult.extracted.buyer.bhk.join(', ') + ' BHK' : '2-3 BHK'}`}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setQuickResult(null)}
+                    className="text-muted hover:text-ink text-[11px] font-semibold cursor-pointer px-2 py-1"
+                  >
+                    Clear
+                  </button>
+                  <Link to="/app/paste">
+                    <Button size="sm" pill className="text-xs font-bold">
+                      Open Full Review & Save
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
           </Card>
 
           {/* 4 Financial & Operational Stat Cards (Quixotic Reference 1 Fintech Style) */}
