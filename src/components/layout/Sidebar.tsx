@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   Building2,
@@ -19,7 +19,7 @@ export const Sidebar: React.FC = () => {
   const navLinks = [
     { to: '/app', label: 'Dashboard', icon: LayoutDashboard, end: true },
     { to: '/app/properties', label: 'Properties', icon: Building2 },
-    { to: '/app/paste', label: 'Quick Paste', icon: Plus },
+    { to: '/app/paste', label: 'Quick Paste', icon: Plus, highlight: true },
     { to: '/app/buyers', label: 'Buyers', icon: Users },
     { to: '/app/tools', label: 'Broker Tools', icon: Wrench },
     { to: '/app/inquiries', label: 'Inquiries', icon: Inbox },
@@ -27,11 +27,13 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 bg-surface border-r border-border shrink-0 min-h-screen p-4 justify-between">
+    <aside className="hidden lg:flex flex-col w-64 bg-surface/90 backdrop-blur-md border-r border-border shrink-0 min-h-screen p-5 justify-between">
       <div className="space-y-6">
-        {/* Brand Header */}
-        <div className="flex items-center gap-2.5 px-3 py-2">
-          <img src="/logo-icon.png" alt="LeadNivesh" className="w-8 h-8 object-contain" />
+        {/* Brand Header with Logo */}
+        <Link to="/app" className="flex items-center gap-3 px-2 py-1 group">
+          <div className="w-9 h-9 rounded-xl bg-surface border border-border/70 p-1.5 shadow-xs group-hover:border-brand-600/40 transition">
+            <img src="/logo-icon.png" alt="LeadNivesh Logo" className="w-full h-full object-contain" />
+          </div>
           <div>
             <span className="text-lg font-black tracking-tight text-ink font-heading leading-none">
               Lead<span className="text-brand-600">Nivesh</span>
@@ -40,10 +42,10 @@ export const Sidebar: React.FC = () => {
               Broker OS
             </span>
           </div>
-        </div>
+        </Link>
 
-        {/* Navigation Items */}
-        <nav className="space-y-1">
+        {/* Navigation Items (Quixotic rounded pill list) */}
+        <nav className="space-y-1.5">
           {navLinks.map((item) => {
             const Icon = item.icon;
             return (
@@ -53,15 +55,28 @@ export const Sidebar: React.FC = () => {
                 end={item.end}
                 className={({ isActive }) =>
                   clsx(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-input text-xs font-bold transition-colors',
+                    'flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold transition-all',
                     isActive
-                      ? 'bg-brand-50 text-brand-700'
-                      : 'text-text hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-ink'
+                      ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-600 shadow-xs'
+                      : 'text-text hover:bg-slate-100/70 dark:hover:bg-slate-800/60 hover:text-ink',
+                    item.highlight && !isActive && 'text-brand-700 font-extrabold'
                   )
                 }
               >
-                <Icon className="w-4 h-4 shrink-0" />
-                <span>{item.label}</span>
+                {({ isActive }) => (
+                  <>
+                    <Icon
+                      className={clsx(
+                        'w-4 h-4 shrink-0 transition-transform',
+                        isActive ? 'text-brand-700 dark:text-brand-600 stroke-[2.5]' : 'text-muted'
+                      )}
+                    />
+                    <span className="flex-1">{item.label}</span>
+                    {item.highlight && (
+                      <span className="w-2 h-2 rounded-full bg-brand-600" />
+                    )}
+                  </>
+                )}
               </NavLink>
             );
           })}
@@ -71,7 +86,7 @@ export const Sidebar: React.FC = () => {
               to="/app/admin"
               className={({ isActive }) =>
                 clsx(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-input text-xs font-bold transition-colors',
+                  'flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold transition-all',
                   isActive
                     ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50'
                     : 'text-amber-600 hover:bg-amber-50/50'
@@ -85,13 +100,18 @@ export const Sidebar: React.FC = () => {
         </nav>
       </div>
 
-      {/* Broker Profile Footer */}
-      <div className="p-3 bg-slate-50 dark:bg-slate-900 border border-border rounded-card">
-        <p className="text-xs font-bold text-ink truncate">{user?.name}</p>
-        <p className="text-[10px] text-muted truncate">{user?.agency?.name || user?.email}</p>
-        <span className="inline-block mt-1 text-[9px] font-black text-brand-700 bg-brand-50 px-1.5 py-0.5 rounded capitalize">
-          {user?.plan?.tier || 'Trial'} Plan
-        </span>
+      {/* Broker Profile Footer Card */}
+      <div className="p-4 bg-gradient-to-br from-bg to-brand-50/20 dark:to-brand-950/20 border border-border/80 rounded-2xl space-y-2">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-black uppercase tracking-wider text-brand-700 dark:text-brand-600">
+            {user?.plan?.tier || 'Trial'} Plan
+          </span>
+          <span className="flex h-2 w-2 rounded-full bg-brand-600" />
+        </div>
+        <div>
+          <p className="text-xs font-bold text-ink truncate">{user?.name || 'Partner Broker'}</p>
+          <p className="text-[11px] text-muted truncate">{user?.agency?.name || user?.email}</p>
+        </div>
       </div>
     </aside>
   );

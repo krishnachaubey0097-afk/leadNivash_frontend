@@ -1,52 +1,88 @@
 :root {
   /* Brand Emerald */
+  --brand-50: #ECFDF5;
+  --brand-100: #D1FAE5;
+  --brand-200: #A7F3D0;
+  --brand-500: #10B981;
   --brand-600: #059669;
   --brand-700: #047857; /* White text buttons & links (WCAG AA) */
-  --brand-50: #ECFDF5;
+  --brand-800: #065F46;
+  --brand-900: #064E3B;
+  --brand-950: #022C22;
 
   /* Typography Colors */
   --ink: #0F172A;
-  --text: #475569;
+  --text: #334155;
   --muted: #64748B;
+  --faint: #94A3B8;
 
   /* Surfaces & Backgrounds */
   --bg: #F8FAFC;
   --surface: #FFFFFF;
+  --surface-raised: #FFFFFF;
+  --surface-hover: #F1F5F9;
   --border: #E2E8F0;
+  --border-subtle: #F1F5F9;
 
   /* Semantic Accents */
   --gold: #D97706;
   --gold-text: #B45309;
+  --gold-bg: #FEF3C7;
   --info: #2563EB;
+  --info-bg: #EFF6FF;
   --warn: #B45309;
   --warn-bg: #FEF3C7;
   --danger: #E11D48;
+  --danger-bg: #FFE4E6;
+
+  /* Shadows */
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --shadow-card-hover: 0 16px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+  --shadow-glow: 0 0 50px -10px rgba(5, 150, 105, 0.2);
 }
 
 [data-theme='dark'],
 .dark {
   /* Brand Emerald (Dark Mode) */
+  --brand-50: #06281F;
+  --brand-100: #0B3B2F;
+  --brand-200: #0D4E3E;
+  --brand-500: #10B981;
   --brand-600: #10B981;
   --brand-700: #34D399;
-  --brand-50: #052E24;
+  --brand-800: #6EE7B7;
+  --brand-900: #A7F3D0;
+  --brand-950: #ECFDF5;
 
   /* Typography Colors (Dark Mode) */
-  --ink: #F1F5F9;
+  --ink: #F8FAFC;
   --text: #CBD5E1;
   --muted: #94A3B8;
+  --faint: #64748B;
 
   /* Surfaces & Backgrounds (Dark Mode) */
   --bg: #0B0F17;
-  --surface: #1E293B;
-  --border: #334155;
+  --surface: #131B2B;
+  --surface-raised: #1A2438;
+  --surface-hover: #1E293B;
+  --border: #1E293B;
+  --border-subtle: #172033;
 
   /* Semantic Accents (Dark Mode) */
   --gold: #F59E0B;
   --gold-text: #FBBF24;
+  --gold-bg: #2B1D04;
   --info: #60A5FA;
+  --info-bg: #0F203C;
   --warn: #FBBF24;
   --warn-bg: #3B2A05;
   --danger: #FB7185;
+  --danger-bg: #371118;
+
+  /* Shadows (Dark Mode) */
+  --shadow-card: 0 4px 24px -2px rgba(0, 0, 0, 0.5), 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 16px 36px -4px rgba(0, 0, 0, 0.6), 0 4px 12px 0 rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 50px -10px rgba(16, 185, 129, 0.25);
 }
 
 /* Large-text mode (§6.5) */
