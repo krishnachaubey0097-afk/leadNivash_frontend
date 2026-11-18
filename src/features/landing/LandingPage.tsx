@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from '../../components/ui/Button';
@@ -16,6 +16,10 @@ import {
   Sun,
   Play,
   Pause,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  RotateCcw,
   Smartphone,
   Monitor,
   Building2,
@@ -52,8 +56,84 @@ export const LandingPage: React.FC = () => {
   ];
 
   // Section 2: Demo Video State & Responsive Selection
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoMode, setVideoMode] = useState<'desktop' | 'mobile'>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 640) return 'mobile';
+    return 'desktop';
+  });
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [videoMode, setVideoMode] = useState<'desktop' | 'mobile'>('desktop');
+  const [isMuted, setIsMuted] = useState<boolean>(true);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [videoError, setVideoError] = useState<boolean>(false);
+  const [isEnded, setIsEnded] = useState<boolean>(false);
+
+  // Sync video source change when switching formats
+  useEffect(() => {
+    setIsPlaying(false);
+    setIsEnded(false);
+    setVideoError(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+      videoRef.current.load();
+    }
+  }, [videoMode]);
+
+  const handleTogglePlay = () => {
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+          setVideoError(false);
+          setIsEnded(false);
+        })
+        .catch((err) => {
+          console.warn('Video playback requirement note:', err);
+          setVideoError(true);
+          setIsPlaying(false);
+        });
+    }
+  };
+
+  const handleToggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  };
+
+  const handleToggleFullscreen = () => {
+    if (!videoRef.current) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    } else {
+      videoRef.current.requestFullscreen().catch(() => {});
+    }
+  };
+
+  const handleReplay = () => {
+    if (!videoRef.current) return;
+    videoRef.current.currentTime = 0;
+    videoRef.current
+      .play()
+      .then(() => {
+        setIsPlaying(true);
+        setIsEnded(false);
+      })
+      .catch(() => setVideoError(true));
+  };
+
+  const formatVideoTime = (secs: number) => {
+    if (!secs || isNaN(secs)) return '00:00';
+    const mins = Math.floor(secs / 60);
+    const rem = Math.floor(secs % 60);
+    return `${mins.toString().padStart(2, '0')}:${rem.toString().padStart(2, '0')}`;
+  };
 
   // Section 4: Commission Calculator State
   const [dealValueRupees, setDealValueRupees] = useState<number>(7500000); // default ₹75 Lakh
@@ -431,110 +511,276 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================= */}
-      {/* SECTION 2 — PURPOSE-BUILT FOR AGENTS: WHAT WE DO         */}
+      {/* SECTION 2 — PURPOSE-BUILT FOR AGENTS: PRODUCT DEMO UPGRADE*/}
       {/* ========================================================= */}
-      <section id="capabilities" className="py-16 sm:py-24 px-4 sm:px-6 bg-surface/50 border-y border-border/70">
-        <div className="max-w-6xl mx-auto space-y-12">
-          {/* Section Header */}
-          <div className="text-center max-w-2xl mx-auto space-y-2.5">
-            <span className="text-[11px] font-black uppercase tracking-widest text-brand-700">
+      <section id="capabilities" className="py-16 sm:py-24 px-4 sm:px-6 bg-surface/50 border-y border-border/70 relative overflow-hidden">
+        {/* Subtle top ambient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[200px] bg-gradient-to-b from-emerald-500/8 via-transparent to-transparent rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto space-y-12 relative z-10">
+          {/* 1. Section Header & Introduction */}
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
               PURPOSE-BUILT FOR AGENTS
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-ink font-heading tracking-tight">
-              Everything You Need to Turn Enquiries into Deals.
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-ink font-heading tracking-tight leading-tight">
+              Everything You Need to{' '}
+              <span className="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">
+                Turn Enquiries into Deals.
+              </span>
             </h2>
-            <p className="text-xs sm:text-sm text-muted">
+            <p className="text-sm sm:text-base text-muted max-w-xl mx-auto leading-relaxed font-normal">
               One organised workspace for your properties, buyers, WhatsApp requirements and brokerage pipeline.
             </p>
           </div>
 
-          {/* Centerpiece: Responsive Product Demonstration Video Component */}
+          {/* 2 & 3. Product Demonstration Video Player & Format Switcher */}
           <div className="max-w-4xl mx-auto">
-            {/* Device Aspect Switcher (Demonstrating landscape desktop vs portrait mobile) */}
-            <div className="flex items-center justify-between pb-3">
-              <span className="text-xs font-bold text-muted flex items-center gap-1.5">
-                <Play className="w-3.5 h-3.5 text-brand-600" />
-                <span>Product Demonstration</span>
-              </span>
-              <div className="flex items-center gap-1 p-1 bg-surface border border-border rounded-full text-xs font-bold">
+            {/* Format Selector Bar */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/80 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 text-xs font-bold shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  REAL PRODUCT WALKTHROUGH
+                </span>
+                {duration > 0 && (
+                  <span className="text-[11px] font-mono text-muted">
+                    {formatVideoTime(duration)}
+                  </span>
+                )}
+              </div>
+
+              {/* Format Switcher: Desktop 16:9 vs Mobile 9:16 */}
+              <div className="inline-flex items-center p-1 bg-surface dark:bg-slate-900 border border-border/80 dark:border-slate-800 rounded-full text-xs font-bold shadow-xs">
                 <button
+                  type="button"
                   onClick={() => setVideoMode('desktop')}
-                  className={`px-3 py-1 rounded-full flex items-center gap-1.5 transition cursor-pointer ${
-                    videoMode === 'desktop' ? 'bg-brand-700 text-white shadow-xs' : 'text-muted hover:text-ink'
-                  }`}
+                  className={clsx(
+                    'px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-200 cursor-pointer',
+                    videoMode === 'desktop'
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'text-muted hover:text-ink'
+                  )}
                 >
                   <Monitor className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Desktop (16:9)</span>
+                  <span>Desktop (16:9)</span>
                 </button>
+
                 <button
+                  type="button"
                   onClick={() => setVideoMode('mobile')}
-                  className={`px-3 py-1 rounded-full flex items-center gap-1.5 transition cursor-pointer ${
-                    videoMode === 'mobile' ? 'bg-brand-700 text-white shadow-xs' : 'text-muted hover:text-ink'
-                  }`}
+                  className={clsx(
+                    'px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-200 cursor-pointer',
+                    videoMode === 'mobile'
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'text-muted hover:text-ink'
+                  )}
                 >
                   <Smartphone className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Mobile (9:16)</span>
+                  <span>Mobile (9:16)</span>
                 </button>
               </div>
             </div>
 
-            {/* Video Container with Responsive Aspect Ratio */}
+            {/* Video Player Container */}
             <div
-              className={`mx-auto rounded-card-lg border border-border/80 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white shadow-card-hover overflow-hidden relative transition-all duration-300 ${
-                videoMode === 'desktop' ? 'aspect-video w-full' : 'aspect-[9/16] max-w-[340px]'
-              }`}
+              className={clsx(
+                'mx-auto rounded-2xl sm:rounded-3xl border border-border/90 dark:border-slate-800 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500 group',
+                videoMode === 'desktop' ? 'aspect-video w-full' : 'aspect-[9/16] max-w-[340px] w-full'
+              )}
             >
-              {/* Demonstration Video Overlay & Placeholder Poster */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center space-y-4">
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-brand-600/90 hover:bg-brand-600 text-white flex items-center justify-center shadow-lg shadow-brand-600/40 transition-transform hover:scale-105 active:scale-95 cursor-pointer"
-                  aria-label={isPlaying ? 'Pause Demo Video' : 'Play Demo Video'}
-                >
-                  {isPlaying ? (
-                    <Pause className="w-7 h-7 sm:w-8 sm:h-8" />
-                  ) : (
-                    <Play className="w-7 h-7 sm:w-8 sm:h-8 ml-1" />
+              {/* HTML5 Native Video Element */}
+              <video
+                ref={videoRef}
+                key={videoMode}
+                src={
+                  videoMode === 'desktop'
+                    ? '/assets/videos/leadnivash-desktop-demo.mp4'
+                    : '/assets/videos/leadnivash-mobile-demo.mp4'
+                }
+                poster={
+                  videoMode === 'desktop'
+                    ? '/assets/images/leadnivash-desktop-poster.webp'
+                    : '/assets/images/leadnivash-mobile-poster.webp'
+                }
+                playsInline
+                muted={isMuted}
+                onTimeUpdate={() => {
+                  if (videoRef.current) setCurrentTime(videoRef.current.currentTime);
+                }}
+                onLoadedMetadata={() => {
+                  if (videoRef.current) setDuration(videoRef.current.duration);
+                }}
+                onEnded={() => {
+                  setIsPlaying(false);
+                  setIsEnded(true);
+                }}
+                onError={() => {
+                  // Graceful fallback for non-existent video asset
+                  setVideoError(true);
+                  setIsPlaying(false);
+                }}
+                className="w-full h-full object-cover object-center"
+              />
+
+              {/* Poster / Play Overlay when video is paused or idle */}
+              {!isPlaying && !isEnded && (
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-950/40 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center space-y-4 transition-opacity duration-300">
+                  {/* Big Glowing Play Button */}
+                  <button
+                    type="button"
+                    onClick={handleTogglePlay}
+                    className="group/btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-xl shadow-emerald-600/40 hover:shadow-emerald-500/60 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-4 focus:ring-emerald-400/40"
+                    aria-label="Play Product Demonstration Video"
+                  >
+                    <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-25 group-hover/btn:opacity-40" />
+                    <Play className="w-7 h-7 sm:w-8 sm:h-8 ml-1 transition-transform group-hover/btn:scale-110" />
+                  </button>
+
+                  <div className="max-w-md mx-auto space-y-1.5">
+                    <h3 className="text-base sm:text-lg font-black font-heading text-white">
+                      leadNivash Real-Time Workflow Demo
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      {videoMode === 'desktop'
+                        ? 'Watch how a raw WhatsApp message is converted into an organised buyer requirement, matched with property inventory and transformed into a masked property flyer.'
+                        : 'See how easily you can manage buyer requirements and property matches directly from your phone.'}
+                    </p>
+                  </div>
+
+                  {/* Asset Requirement Notice if file not yet uploaded */}
+                  {videoError && (
+                    <div className="px-3.5 py-1.5 rounded-full bg-amber-950/80 border border-amber-600/60 text-[11px] font-mono text-amber-300 max-w-xs sm:max-w-md truncate">
+                      Asset hook: {videoMode === 'desktop' ? '/assets/videos/leadnivash-desktop-demo.mp4' : '/assets/videos/leadnivash-mobile-demo.mp4'}
+                    </div>
                   )}
-                </button>
-
-                <div>
-                  <h3 className="text-base sm:text-lg font-black font-heading text-white">
-                    leadNivash Real-Time Workflow Demo
-                  </h3>
-                  <p className="text-xs text-slate-300 max-w-md mx-auto mt-1">
-                    Watch how a raw WhatsApp text is converted into an auto-matched listing with a masked client flyer in under 60 seconds.
-                  </p>
                 </div>
+              )}
 
-                <span className="text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-white/10 text-emerald-300 border border-white/15">
-                  Asset hook: {videoMode === 'desktop' ? '/assets/videos/leadnivash-desktop-demo.mp4' : '/assets/videos/leadnivash-mobile-demo.mp4'}
-                </span>
-              </div>
+              {/* End State Overlay */}
+              {isEnded && (
+                <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-3">
+                  <button
+                    type="button"
+                    onClick={handleReplay}
+                    className="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-600/30 hover:scale-105 transition-all cursor-pointer"
+                    aria-label="Replay Demo Video"
+                  >
+                    <RotateCcw className="w-6 h-6" />
+                  </button>
+                  <p className="text-xs font-bold text-slate-200">Replay Demonstration</p>
+                </div>
+              )}
+
+              {/* Interactive Player Controls (visible while playing or on hover) */}
+              {isPlaying && (
+                <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-slate-950/95 via-slate-950/70 to-transparent flex items-center gap-3 transition-opacity duration-300 opacity-90 hover:opacity-100">
+                  <button
+                    type="button"
+                    onClick={handleTogglePlay}
+                    className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors cursor-pointer"
+                    aria-label="Pause Video"
+                  >
+                    <Pause className="w-4 h-4" />
+                  </button>
+
+                  {/* Progress Bar Track */}
+                  <div
+                    className="flex-1 h-1.5 rounded-full bg-white/20 relative overflow-hidden cursor-pointer"
+                    onClick={(e) => {
+                      if (!videoRef.current || !duration) return;
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const clickX = e.clientX - rect.left;
+                      const ratio = clickX / rect.width;
+                      videoRef.current.currentTime = ratio * duration;
+                    }}
+                  >
+                    <div
+                      className="absolute inset-y-0 left-0 bg-emerald-500 rounded-full transition-all duration-150"
+                      style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                    />
+                  </div>
+
+                  {/* Time Stamp */}
+                  <span className="text-[11px] font-mono text-slate-300 shrink-0">
+                    {formatVideoTime(currentTime)} / {formatVideoTime(duration)}
+                  </span>
+
+                  {/* Mute Button */}
+                  <button
+                    type="button"
+                    onClick={handleToggleMute}
+                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+                    aria-label={isMuted ? 'Unmute' : 'Mute'}
+                  >
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  </button>
+
+                  {/* Fullscreen Button */}
+                  <button
+                    type="button"
+                    onClick={handleToggleFullscreen}
+                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+                    aria-label="Toggle Fullscreen"
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* 6 Core Capabilities (Compact Cards below Video) */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pt-4">
+          {/* 6. Compact Core Capabilities Strip */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 pt-4">
             {[
-              { title: 'Smart Property Inventory', desc: 'Centralised listings with private vault', icon: Building2 },
-              { title: 'Buyer Requirements', desc: 'Active budgets, localities & criteria', icon: Users },
-              { title: 'WhatsApp Analyzer', desc: 'Instant extraction of BHK, size & price', icon: MessageSquare },
-              { title: 'Intelligent Matching', desc: 'Percentage scores & matching reasons', icon: Sparkles },
-              { title: 'Masked Flyers', desc: 'Agency watermarked brochures', icon: Share2 },
-              { title: 'Deal & Commission', desc: 'Track stages, pipeline & earnings', icon: TrendingUp },
+              {
+                title: 'Smart Property Inventory',
+                desc: 'Centralised listings with private vault',
+                icon: Building2,
+              },
+              {
+                title: 'Buyer Requirements',
+                desc: 'Active budgets, localities & criteria',
+                icon: Users,
+              },
+              {
+                title: 'WhatsApp Analyzer',
+                desc: 'Instant extraction of BHK, size & price',
+                icon: MessageSquare,
+              },
+              {
+                title: 'Intelligent Matching',
+                desc: 'Percentage scores & matching reasons',
+                icon: Sparkles,
+              },
+              {
+                title: 'Masked Flyers',
+                desc: 'Agency watermarked brochures',
+                icon: Share2,
+              },
+              {
+                title: 'Deal & Commission',
+                desc: 'Track stages, pipeline & earnings',
+                icon: TrendingUp,
+              },
             ].map((cap, i) => {
               const Icon = cap.icon;
               return (
                 <div
                   key={i}
-                  className="p-3.5 rounded-card bg-surface border border-border/70 shadow-xs space-y-1.5 text-left"
+                  className="group p-4 rounded-2xl bg-surface/90 dark:bg-slate-900/80 border border-border/80 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 text-left cursor-default space-y-2"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-600 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-xs">
                     <Icon className="w-4 h-4" />
                   </div>
-                  <h4 className="text-xs font-bold text-ink leading-tight">{cap.title}</h4>
-                  <p className="text-[11px] text-muted leading-tight">{cap.desc}</p>
+                  <div>
+                    <h4 className="text-xs font-bold text-ink group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-tight">
+                      {cap.title}
+                    </h4>
+                    <p className="text-[11px] text-muted leading-tight mt-1">
+                      {cap.desc}
+                    </p>
+                  </div>
                 </div>
               );
             })}

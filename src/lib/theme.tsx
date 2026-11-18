@@ -30,8 +30,8 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [mode, setModeState] = useState<ThemeMode>(() => {
-    const saved = localStorage.getItem('ln_theme_mode') as ThemeMode;
-    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'dark';
+    const saved = (localStorage.getItem('ln_theme_mode') || localStorage.getItem('ln_theme')) as ThemeMode;
+    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'light';
   });
 
   const [accent, setAccentState] = useState<AccentColor>(() => {
@@ -40,11 +40,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [isDark, setIsDark] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    const saved = localStorage.getItem('ln_theme_mode');
+    if (typeof window === 'undefined') return false;
+    const saved = localStorage.getItem('ln_theme_mode') || localStorage.getItem('ln_theme');
     if (saved === 'dark') return true;
     if (saved === 'light') return false;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return false; // Default to Light Mode
   });
 
   // Handle Light / Dark Theme

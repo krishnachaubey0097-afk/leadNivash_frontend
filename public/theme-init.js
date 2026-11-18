@@ -2,9 +2,9 @@
 // Runs synchronously in <head> without inline scripts (Strict CSP compliant)
 (function () {
   try {
-    var storedTheme = localStorage.getItem('ln_theme');
-    var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var isDark = storedTheme === 'dark' || (!storedTheme && systemDark);
+    var storedTheme = localStorage.getItem('ln_theme_mode') || localStorage.getItem('ln_theme');
+    // Default to Light Mode as requested
+    var isDark = storedTheme === 'dark';
 
     if (isDark) {
       document.documentElement.classList.add('dark');
