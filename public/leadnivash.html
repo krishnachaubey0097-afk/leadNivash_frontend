@@ -1152,37 +1152,312 @@
       </div>
     </section>
 
-    <!-- SECTION 5 — PRICING -->
-    <section id="pricing" class="py-16 sm:py-24 px-4 sm:px-6 max-w-4xl mx-auto w-full text-center">
-      <div class="space-y-2 mb-12">
-        <span class="text-[11px] font-black uppercase tracking-widest text-emerald-700">TRANSPARENT INVESTMENT</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-heading">Simple, High-ROI Pricing.</h2>
-        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Start with a free trial. Experience the workflow before deciding to upgrade.</p>
-      </div>
+    <!-- ========================================================= -->
+    <!-- SECTION 6 — PRICING (TRANSPARENT INVESTMENT)              -->
+    <!-- ========================================================= -->
+    <section id="pricing" class="py-16 sm:py-24 px-4 sm:px-6 max-w-5xl mx-auto w-full relative overflow-hidden">
+      <!-- Subtle top ambient light-ray effect -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[220px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-        <!-- Plan 1 -->
-        <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Starter Pilot</span>
-          <h3 class="text-3xl font-black text-slate-900 dark:text-white font-heading">₹0 <span class="text-xs font-normal text-slate-400">/ 14 Days</span></h3>
-          <p class="text-xs text-slate-500">Up to 15 listings, 10 active buyers, WhatsApp Requirement Analyzer, and basic property matching.</p>
-          <button onclick="openApp('dashboard')" class="w-full py-3 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-xs cursor-pointer">
-            Start Free Trial
-          </button>
+      <div class="space-y-14 relative z-10">
+        <!-- 1. Section Header & Introduction -->
+        <div class="text-center max-w-2xl mx-auto space-y-3">
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+            TRANSPARENT INVESTMENT
+          </span>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-heading tracking-tight leading-tight">
+            Simple, <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">High-ROI Pricing.</span>
+          </h2>
+          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-normal">
+            Start with a free trial. Experience the workflow before deciding to upgrade.
+          </p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            No complicated pricing. Start simple and grow with your business.
+          </p>
         </div>
 
-        <!-- Plan 2 -->
-        <div class="p-6 rounded-3xl bg-gradient-to-b from-white to-emerald-50/40 dark:from-slate-900 dark:to-emerald-950/20 border-2 border-emerald-600 shadow-xl space-y-4 relative">
-          <span class="absolute top-4 right-4 text-[9px] bg-emerald-700 text-white px-2.5 py-0.5 rounded-full font-bold uppercase">Most Popular</span>
-          <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Founder Annual Pass</span>
-          <div>
-            <h3 class="text-3xl font-black text-slate-900 dark:text-white font-heading">₹3,999 <span class="text-xs font-normal text-slate-400">/ Year</span></h3>
-            <span class="text-[11px] text-emerald-600 font-semibold">(~₹333 / month)</span>
+        <!-- 2. Exactly TWO Pricing Cards (Side-by-Side on Desktop) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+          
+          <!-- PLAN ONE — STARTER PILOT -->
+          <div class="group rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 relative">
+            <div class="space-y-6">
+              <!-- Header & Badge -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold shadow-xs">
+                    <i data-lucide="zap" class="w-4 h-4 text-emerald-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white font-heading">
+                      Starter Pilot
+                    </h3>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400 block">Essential Evaluation</span>
+                  </div>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-black uppercase tracking-wider border border-slate-200 dark:border-slate-700">
+                  FREE TO START
+                </span>
+              </div>
+
+              <!-- Price Display -->
+              <div>
+                <div class="flex items-baseline gap-1.5">
+                  <span class="text-4xl font-black text-slate-900 dark:text-white font-heading tracking-tight">₹0</span>
+                  <span class="text-xs font-bold text-slate-500 dark:text-slate-400">/ 14 Days Free Trial</span>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-2.5">
+                  Explore the essential leadNivash workflow and experience a more organised way to manage your property business.
+                </p>
+              </div>
+
+              <!-- Divider -->
+              <div class="h-px bg-slate-200 dark:bg-slate-800 w-full"></div>
+
+              <!-- Feature Checklist -->
+              <div class="space-y-3 text-xs text-slate-800 dark:text-slate-200">
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
+                  INCLUDED IN STARTER PILOT:
+                </span>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="leading-snug">Up to 15 property listings</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="leading-snug">Up to 10 active buyer profiles</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="leading-snug">WhatsApp Requirement Analyzer</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="leading-snug">Basic Property Matching</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="leading-snug">Standard Shareable Links</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="leading-snug">Essential Dashboard Features</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CTA Button -->
+            <div class="pt-8">
+              <button onclick="openApp('dashboard')" class="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
+                <span>Start Free Trial</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+              <span class="text-[10px] text-center text-slate-500 dark:text-slate-400 block mt-2">
+                No credit card required · Instant access
+              </span>
+            </div>
           </div>
-          <p class="text-xs text-slate-500">Unlimited property inventory, buyer management, multi-image brochures, deal tracking & custom branding.</p>
-          <button onclick="openApp('dashboard')" class="w-full py-3 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md cursor-pointer">
-            Get Started
-          </button>
+
+          <!-- PLAN TWO — FOUNDER ANNUAL PASS (Highlighted Plan) -->
+          <div class="group rounded-3xl bg-gradient-to-b from-white via-white to-emerald-50/40 dark:from-slate-900/95 dark:via-slate-900/95 dark:to-emerald-950/25 border-2 border-emerald-600/90 shadow-xl shadow-emerald-500/10 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-500/15 hover:-translate-y-1.5 transition-all duration-300 relative">
+            <div class="space-y-6">
+              <!-- Header & Badge -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-xs">
+                    <i data-lucide="crown" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white font-heading flex items-center gap-1.5">
+                      Founder Annual Pass
+                    </h3>
+                    <span class="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold block">Full Broker OS</span>
+                  </div>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
+                  FOUNDER OFFER
+                </span>
+              </div>
+
+              <!-- Price Display -->
+              <div>
+                <div class="flex items-baseline gap-1.5">
+                  <span class="text-4xl font-black text-slate-900 dark:text-white font-heading tracking-tight">₹3,999</span>
+                  <span class="text-xs font-bold text-slate-500 dark:text-slate-400">/ Per Year</span>
+                </div>
+                <div class="inline-block mt-1 px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 text-[11px] text-emerald-800 dark:text-emerald-300 font-bold">
+                  Approximately ₹333 / month <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">(billed annually)</span>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-2.5">
+                  Everything you need to organise your property business, manage opportunities and grow your brokerage workflow.
+                </p>
+              </div>
+
+              <!-- Divider -->
+              <div class="h-px bg-emerald-500/20 w-full"></div>
+
+              <!-- Feature Checklist -->
+              <div class="space-y-3 text-xs text-slate-800 dark:text-slate-200">
+                <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 block">
+                  EVERYTHING IN PILOT, PLUS:
+                </span>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="font-medium leading-snug">Unlimited Property Inventory, subject to approved plan limits</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="font-medium leading-snug">Unlimited Buyer Management, subject to approved plan limits</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="font-medium leading-snug">AI WhatsApp Parser</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="font-medium leading-snug">Multi-Image Public Brochure Hosting</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="font-medium leading-snug">Deal & Commission Tracking</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="font-medium leading-snug">Custom Agency Branding</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </div>
+                  <span class="font-medium leading-snug">Priority Support</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CTA Button -->
+            <div class="pt-8">
+              <button onclick="openApp('dashboard')" class="w-full py-3 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 transition-all cursor-pointer">
+                <span>Get Started</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+              <span class="text-[10px] text-center text-slate-500 dark:text-slate-400 block mt-2">
+                14-day evaluation period included · Cancel anytime
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Compact Plan Comparison Strip -->
+        <div class="max-w-4xl mx-auto rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 space-y-6 shadow-sm text-left">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white font-heading">
+                Everything You Need to Get Started.
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Detailed capability comparison between Starter Pilot and Founder Annual Pass.
+              </p>
+            </div>
+            <span class="text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shrink-0">
+              Plan Comparison
+            </span>
+          </div>
+
+          <!-- Comparison Table / Matrix -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-black uppercase tracking-wider text-slate-400">
+                  <th class="py-2.5 pr-4">Capability</th>
+                  <th class="py-2.5 px-4 text-center">Starter Pilot</th>
+                  <th class="py-2.5 pl-4 text-center text-emerald-700 dark:text-emerald-400">
+                    Founder Annual Pass
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300 font-medium">
+                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Trial Duration</td>
+                  <td class="py-2.5 px-4 text-center text-slate-500">14 Days Free</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">365 Days / Full Year</td>
+                </tr>
+                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Property Listings</td>
+                  <td class="py-2.5 px-4 text-center text-slate-500">Up to 15 listings</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Unlimited (plan limits)</td>
+                </tr>
+                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Active Buyer Profiles</td>
+                  <td class="py-2.5 px-4 text-center text-slate-500">Up to 10 profiles</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Unlimited (plan limits)</td>
+                </tr>
+                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">AI WhatsApp Parsing</td>
+                  <td class="py-2.5 px-4 text-center text-slate-500">Standard Analyzer</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Full AI WhatsApp Parser</td>
+                </tr>
+                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Property Matching</td>
+                  <td class="py-2.5 px-4 text-center text-slate-500">Basic Criteria</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Intelligent Auto-Matching</td>
+                </tr>
+                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Public Property Flyers</td>
+                  <td class="py-2.5 px-4 text-center text-slate-500">Standard Links</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Multi-Image Branded Hosting</td>
+                </tr>
+                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Deal & Commission Tracking</td>
+                  <td class="py-2.5 px-4 text-center text-slate-500">Essential Pipeline</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Full Deal & Commission Tracking</td>
+                </tr>
+                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Custom Agency Branding</td>
+                  <td class="py-2.5 px-4 text-center text-slate-500">—</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Logo & Custom Contact Protection</td>
+                </tr>
+                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Priority Support</td>
+                  <td class="py-2.5 px-4 text-center text-slate-500">Standard Support</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Dedicated Priority Support</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. Trust Note & FAQ Link -->
+        <div class="text-center max-w-xl mx-auto space-y-2 pt-2">
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Your trial gives you time to experience leadNivash before choosing a paid plan.
+          </p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Have questions about pricing? <a href="#inquiry-form" class="text-emerald-700 dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"><span>Talk to our team</span><i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+          </p>
         </div>
       </div>
     </section>
