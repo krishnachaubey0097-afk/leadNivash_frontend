@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#047857">
+  <meta name="description" content="leadNivash — Turn Messages into Property Deals. Mobile-first Operating System for Independent Indian Real Estate Brokers.">
+  <title>leadNivash — Turn Messages into Property Deals</title>
+  <link rel="icon" type="image/png" href="./frontend/public/logo-icon.png">
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ECFDF5',
+              100: '#D1FAE5',
+              200: '#A7F3D0',
+              500: '#10B981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065F46',
+              900: '#064E3B',
+              950: '#022C22',
+            },
+            ink: '#0F172A',
+            text: '#334155',
+            muted: '#64748B',
+            bg: '#F8FAFC',
+            surface: '#FFFFFF',
+            border: '#E2E8F0',
+            gold: '#D97706',
+            'gold-bg': '#FEF3C7',
+            'gold-text': '#B45309',
+            danger: '#E11D48',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            heading: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          borderRadius: {
+            'card': '20px',
+            'card-lg': '28px',
+            'input': '14px',
+          },
+          boxShadow: {
+            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02)',
+            'card-hover': '0 16px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03)',
+            'glow': '0 0 50px -10px rgba(5, 150, 105, 0.2)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Mobile-first safe viewport padding */
+    .pb-safe { padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
+    .pt-safe { padding-top: max(0.5rem, env(safe-area-inset-top)); }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+    .dark ::-webkit-scrollbar-thumb { background: #334155; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Volumetric Sun Rays (Nubien & Framer inspired) */
+    .sun-rays-beam {
+      background: 
+        conic-gradient(from 180deg at 50% 0%, 
+          transparent 135deg, 
+          rgba(16, 185, 129, 0.05) 155deg, 
+          rgba(52, 211, 153, 0.22) 175deg, 
+          rgba(16, 185, 129, 0.32) 180deg, 
+          rgba(52, 211, 153, 0.22) 185deg, 
+          rgba(16, 185, 129, 0.05) 205deg, 
+          transparent 225deg
+        );
+      mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, black 35%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, black 35%, transparent 100%);
+    }
+
+    @keyframes rayPulse {
+      0%, 100% { opacity: 0.7; transform: scaleX(1); }
+      50% { opacity: 1; transform: scaleX(1.12); }
+    }
+    .animate-sun-rays { animation: rayPulse 6s ease-in-out infinite; }
+
+    @keyframes lineFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    .animate-flow-line { background-size: 200% 200%; animation: lineFlow 3.5s linear infinite; }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F17] text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-800 transition-colors">
+
+  <!-- ======================================================== -->
+  <!-- EXPERIENCE 1: PUBLIC MARKETING LANDING PAGE              -->
+  <!-- ======================================================== -->
+  <div id="page-landing" class="flex-1 flex flex-col">
+    
+    <!-- Top Sticky Landing Navbar -->
+    <header class="sticky top-0 z-40 bg-white/85 dark:bg-[#0B0F17]/85 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 transition-all">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <!-- Logo -->
+        <a href="#hero" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 shadow-xs">
+            <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-full h-full object-contain">
+          </div>
+          <span class="text-lg font-black tracking-tight text-slate-900 dark:text-white font-heading">
+            lead<span class="text-emerald-600">Nivash</span>
+          </span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-7 text-xs font-bold text-slate-500 dark:text-slate-400">
+          <a href="#how-it-works" class="hover:text-emerald-600 transition">How It Works</a>
+          <a href="#capabilities" class="hover:text-emerald-600 transition">Features</a>
+          <a href="#financial-impact" class="hover:text-emerald-600 transition">ROI Calculator</a>
+          <a href="#pricing" class="hover:text-emerald-600 transition">Pricing</a>
+          <a href="#why-leadnivash" class="hover:text-emerald-600 transition">Why leadNivash</a>
+        </nav>
+
+        <!-- Right Header Actions -->
+        <div class="flex items-center gap-2.5">
+          <!-- Dark/Light Theme Button -->
+          <button onclick="toggleTheme()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:text-emerald-600 transition cursor-pointer" aria-label="Toggle Theme">
+            <i data-lucide="moon" id="theme-toggle-icon" class="w-4 h-4"></i>
+          </button>
+
+          <!-- DIRECT BUTTON TO OPEN BROKER DASHBOARD -->
+          <button onclick="openApp('dashboard')" class="px-3.5 py-1.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold shadow-xs hover:bg-slate-800 dark:hover:bg-slate-100 transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-600"></i>
+            <span>Dashboard</span>
+          </button>
+
+          <a href="#inquiry-form" class="hidden sm:inline-flex px-3.5 py-1.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-xs transition">
+            Get Free Demo
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION 1 — HERO (Phase 1 Visual Upgrade) -->
+    <section id="hero" class="relative overflow-hidden bg-slate-950 text-white pt-16 sm:pt-24 pb-20 px-4 sm:px-6 w-full border-b border-slate-800/80 text-center">
+      <!-- Dynamic Video Background (bg1.mp4) & Decreased Darkness with Volumetric Sun Rays -->
+      <div class="absolute inset-0 pointer-events-none overflow-hidden select-none">
+        <video autoPlay loop muted playsInline poster="./hero-bg.jpg" class="w-full h-full object-cover object-center opacity-75 animate-hero-bg scale-100 filter brightness-95 contrast-105">
+          <source src="./bg1.mp4" type="video/mp4">
+          <img src="./hero-bg.jpg" alt="Indian Urban Real Estate Architecture" class="w-full h-full object-cover object-center">
+        </video>
+
+        <!-- Decreased Darkness: Balanced soft gradients so the video stays vibrant & clearly visible -->
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/30 to-slate-950/90"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-slate-950/25 to-slate-950/75"></div>
+
+        <!-- Volumetric Sun Rays / Theatrical Light Beam (Nubien & Framer inspired) -->
+        <div class="sun-rays-beam animate-sun-rays absolute -top-8 left-1/2 -translate-x-1/2 w-[900px] sm:w-[1200px] h-[550px] pointer-events-none z-1"></div>
+        <!-- Subtle soft emerald spotlight ray behind it -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[650px] h-[340px] bg-gradient-to-b from-emerald-500/20 via-teal-500/8 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      </div>
+
+      <div class="relative z-10 max-w-5xl mx-auto w-full">
+        <!-- 1. Old Badge completely removed as mandated -->
+
+        <!-- 3. Headline with High-Contrast Text Shadow -->
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-black font-heading leading-[1.08] tracking-tight text-white max-w-3xl mx-auto animate-hero-up drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
+          Turn Messages into <br class="hidden sm:inline">
+          <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500 bg-clip-text text-transparent drop-shadow-sm">
+            Property Deals.
+          </span>
+        </h1>
+
+        <!-- 4. Supporting Text -->
+        <p class="text-sm sm:text-base md:text-lg text-slate-200 max-w-2xl mx-auto mt-5 leading-relaxed font-normal drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+          Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right property matches faster and manage more opportunities without losing track of your deals.
+        </p>
+
+        <!-- 5. CTA Buttons (Pure Design & Framer Inspiration with circular badge) -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-6 max-w-md mx-auto w-full">
+          <a href="#inquiry-form" class="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-950/60 hover:shadow-emerald-500/35 hover:-translate-y-0.5 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+              <span>Get Free Demo</span>
+            </span>
+            <span class="w-8 h-8 rounded-full bg-white text-slate-950 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-sm">
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </span>
+          </a>
+
+          <button onclick="openApp('dashboard')" class="group w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-slate-900/80 hover:bg-slate-800/90 text-slate-200 hover:text-white border border-slate-700/80 hover:border-slate-500 font-extrabold text-xs tracking-wider uppercase backdrop-blur-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer shadow-md">
+            <span>Start 14-Day Free Trial</span>
+            <span class="w-8 h-8 rounded-full bg-slate-800 text-emerald-400 border border-slate-700 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </span>
+          </button>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="flex items-center justify-center flex-wrap gap-5 pt-6 text-xs text-slate-400 font-medium">
+          <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i> 100% Owner Contact Privacy</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i> No Credit Card Required</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-400"></i> WhatsApp Integrated</span>
+        </div>
+
+        <!-- 6 & 7. Product Preview Container & Animated 5-Step Process Flow -->
+        <div class="mt-14 max-w-5xl mx-auto text-left">
+          <!-- Animated 5-Step Process Indicator (Replacing static pill) -->
+          <div class="mb-4">
+            <div class="flex items-center justify-between sm:justify-center gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 no-scrollbar" id="htmlProcessSteps">
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap bg-emerald-950/80 border border-emerald-500/70 text-emerald-300 shadow-md shadow-emerald-500/20 ring-1 ring-emerald-500/40">
+                <span class="w-5 h-5 rounded-full flex items-center justify-center bg-emerald-500 text-slate-950"><i data-lucide="message-square" class="w-3 h-3"></i></span>
+                <span>WhatsApp Message</span>
+              </div>
+              <div class="hidden sm:block w-6 sm:w-10 h-0.5 rounded-full bg-slate-800 relative overflow-hidden shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-400 w-full animate-flow-line"></div>
+              </div>
+
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap bg-slate-900/60 border border-slate-800 text-slate-300">
+                <span class="w-5 h-5 rounded-full flex items-center justify-center bg-slate-800 text-emerald-400"><i data-lucide="sparkles" class="w-3 h-3"></i></span>
+                <span>AI Extraction</span>
+              </div>
+              <div class="hidden sm:block w-6 sm:w-10 h-0.5 rounded-full bg-slate-800 relative overflow-hidden shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-400 w-full animate-flow-line"></div>
+              </div>
+
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap bg-slate-900/60 border border-slate-800 text-slate-300">
+                <span class="w-5 h-5 rounded-full flex items-center justify-center bg-slate-800 text-emerald-400"><i data-lucide="search" class="w-3 h-3"></i></span>
+                <span>Smart Matching</span>
+              </div>
+              <div class="hidden sm:block w-6 sm:w-10 h-0.5 rounded-full bg-slate-800 relative overflow-hidden shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-400 w-full animate-flow-line"></div>
+              </div>
+
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap bg-slate-900/60 border border-slate-800 text-slate-300">
+                <span class="w-5 h-5 rounded-full flex items-center justify-center bg-slate-800 text-emerald-400"><i data-lucide="share-2" class="w-3 h-3"></i></span>
+                <span>Masked Flyer</span>
+              </div>
+              <div class="hidden sm:block w-6 sm:w-10 h-0.5 rounded-full bg-slate-800 relative overflow-hidden shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-400 w-full animate-flow-line"></div>
+              </div>
+
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap bg-slate-900/60 border border-slate-800 text-slate-300">
+                <span class="w-5 h-5 rounded-full flex items-center justify-center bg-slate-800 text-emerald-400"><i data-lucide="trending-up" class="w-3 h-3"></i></span>
+                <span>Deal Tracking</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Premium Dashboard Window Container -->
+          <div class="rounded-2xl border border-slate-800/90 bg-slate-900/85 backdrop-blur-xl p-4 sm:p-6 shadow-2xl shadow-black/80 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500/80"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-800/50 text-[10px] font-bold text-emerald-400">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Encrypted Owner Vault Active
+                </span>
+              </div>
+            </div>
+
+            <!-- 3-Column Preview Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Card 1: WhatsApp Message -->
+              <div class="p-4 rounded-xl bg-slate-950/60 border border-emerald-500/40 shadow-lg shadow-emerald-500/10 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">WhatsApp Message</span>
+                  <span class="text-[10px] text-emerald-400 bg-emerald-950/80 border border-emerald-800/40 px-2 py-0.5 rounded-full font-bold">1-Tap Parse</span>
+                </div>
+                <div class="p-3 bg-slate-900/90 border border-slate-800 rounded-lg text-[11px] font-mono text-slate-300 line-clamp-3">
+                  "3 BHK builder floor, 2nd floor with lift, Model Town Panipat, 200 gaj, demand 1.25 Cr. Owner: 9876543210"
+                </div>
+                <div class="pt-2 border-t border-slate-800/70 flex items-center justify-between text-xs">
+                  <span class="font-bold text-slate-100">3 BHK · 200 Gaj</span>
+                  <span class="font-extrabold text-emerald-400">₹1.25 Cr</span>
+                </div>
+              </div>
+
+              <!-- Card 2: Intelligent Matching -->
+              <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Smart Property Match</span>
+                  <span class="text-[10px] text-cyan-400 bg-cyan-950/80 border border-cyan-800/40 px-2 py-0.5 rounded-full font-bold">Buyer Match</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-14 h-14 rounded-full border-4 border-emerald-500/20 border-t-emerald-400 flex items-center justify-center shrink-0">
+                    <span class="text-xs font-black text-emerald-400 font-heading">96%</span>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-slate-100">Rajesh Sharma</h4>
+                    <p class="text-[11px] text-slate-400">Budget: ₹1.20 - 1.35 Cr</p>
+                    <span class="text-[10px] font-bold text-emerald-400">Model Town Match</span>
+                  </div>
+                </div>
+                <div class="pt-2 border-t border-slate-800/70 text-[11px] text-slate-400 flex items-center gap-1.5">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  <span>Matched instantly across 18 inquiries</span>
+                </div>
+              </div>
+
+              <!-- Card 3: Masked Property Flyer -->
+              <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Masked Flyer Output</span>
+                  <span class="text-[10px] text-amber-400 bg-amber-950/80 border border-amber-800/40 px-2 py-0.5 rounded-full font-bold">Safe Share</span>
+                </div>
+                <div class="p-3 bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-lg text-white space-y-1">
+                  <span class="text-[10px] uppercase tracking-wider text-emerald-400 font-bold block">Watermarked Flyer</span>
+                  <p class="text-xs font-bold text-slate-100">3 BHK Luxury Floor · Model Town</p>
+                  <p class="text-[10px] text-slate-400">Marketed by: Sharma Real Estate Agency</p>
+                </div>
+                <div class="pt-2 border-t border-slate-800/70 text-[11px] text-emerald-400 font-semibold flex items-center gap-1.5">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  <span>Owner contact 100% hidden</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 — PURPOSE-BUILT FOR AGENTS: WHAT WE DO -->
+    <section id="capabilities" class="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800">
+      <div class="max-w-5xl mx-auto space-y-10 text-center">
+        <div class="space-y-2">
+          <span class="text-[11px] font-black uppercase tracking-widest text-emerald-700">PURPOSE-BUILT FOR AGENTS</span>
+          <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-heading">Everything You Need to Turn Enquiries into Deals.</h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">One organised workspace for your properties, buyers, WhatsApp requirements and brokerage pipeline.</p>
+        </div>
+
+        <!-- Responsive Video Container Component (16:9 Desktop vs 9:16 Mobile) -->
+        <div class="max-w-3xl mx-auto">
+          <div class="flex items-center justify-between pb-3">
+            <span class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+              <i data-lucide="play-circle" class="w-4 h-4 text-emerald-600"></i>
+              <span>Demonstration Video</span>
+            </span>
+            <div class="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold">
+              <button onclick="setVideoAspect('landscape')" id="btn-video-landscape" class="px-3 py-1 rounded-full bg-emerald-700 text-white transition cursor-pointer">Desktop (16:9)</button>
+              <button onclick="setVideoAspect('portrait')" id="btn-video-portrait" class="px-3 py-1 rounded-full text-slate-500 hover:text-slate-900 dark:hover:text-white transition cursor-pointer">Mobile (9:16)</button>
+            </div>
+          </div>
+
+          <div id="video-frame" class="mx-auto aspect-video w-full rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white border border-slate-800 shadow-2xl flex flex-col items-center justify-center p-6 text-center space-y-3 relative overflow-hidden transition-all duration-300">
+            <button class="w-16 h-16 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-lg shadow-emerald-600/40 transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+              <i data-lucide="play" class="w-7 h-7 ml-1"></i>
+            </button>
+            <h4 class="text-base font-black font-heading">leadNivash Real-Time Workflow Demo</h4>
+            <p class="text-xs text-slate-300 max-w-md">See how brokers convert raw WhatsApp chats into deals with zero owner contact leakage.</p>
+            <span class="text-[10px] bg-white/10 text-emerald-300 px-3 py-1 rounded-full border border-white/15" id="video-hook-label">
+              /assets/videos/leadnivash-desktop-demo.mp4
+            </span>
+          </div>
+        </div>
+
+        <!-- 6 Core Capabilities -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-left pt-2">
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-1">
+            <i data-lucide="building-2" class="w-5 h-5 text-emerald-600"></i>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white">Smart Inventory</h5>
+            <p class="text-[11px] text-slate-500 leading-tight">Centralised property vault</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-1">
+            <i data-lucide="users" class="w-5 h-5 text-emerald-600"></i>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white">Buyer Pipeline</h5>
+            <p class="text-[11px] text-slate-500 leading-tight">Budgets & local demands</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-1">
+            <i data-lucide="message-square" class="w-5 h-5 text-emerald-600"></i>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white">WhatsApp AI</h5>
+            <p class="text-[11px] text-slate-500 leading-tight">1-tap chat analyzer</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-1">
+            <i data-lucide="sparkles" class="w-5 h-5 text-emerald-600"></i>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white">Intelligent Match</h5>
+            <p class="text-[11px] text-slate-500 leading-tight">Real-time match scoring</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-1">
+            <i data-lucide="share-2" class="w-5 h-5 text-emerald-600"></i>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white">Masked Flyers</h5>
+            <p class="text-[11px] text-slate-500 leading-tight">Watermarked PDF brochures</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-1">
+            <i data-lucide="trending-up" class="w-5 h-5 text-emerald-600"></i>
+            <h5 class="text-xs font-bold text-slate-900 dark:text-white">Deal Tracking</h5>
+            <p class="text-[11px] text-slate-500 leading-tight">Full brokerage pipeline</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3 — HOW IT WORKS -->
+    <section id="how-it-works" class="py-16 sm:py-24 px-4 sm:px-6 max-w-5xl mx-auto w-full text-center">
+      <div class="space-y-2 mb-12">
+        <span class="text-[11px] font-black uppercase tracking-widest text-emerald-700">SIMPLE WORKFLOW</span>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-heading">From WhatsApp Message to Property Deal.</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">Stop searching through endless chats and manually organising information. leadNivash helps you manage the entire workflow.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3.5 text-left">
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">1</span>
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Paste a Message</h4>
+          <p class="text-[11px] text-slate-500">Copy requirements or listings directly from WhatsApp.</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">2</span>
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">AI Understands It</h4>
+          <p class="text-[11px] text-slate-500">Extracts name, budget, BHK, locality, area and contacts.</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">3</span>
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Save and Organise</h4>
+          <p class="text-[11px] text-slate-500">Review extracted fields and save cleanly to inventory.</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">4</span>
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Find Matches</h4>
+          <p class="text-[11px] text-slate-500">Scans buyers and properties with clear matching grades.</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+          <span class="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 font-bold text-xs flex items-center justify-center">5</span>
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Share and Track</h4>
+          <p class="text-[11px] text-slate-500">Generate masked flyers and track pipeline stages.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 — FINANCIAL IMPACT & COMMISSION ROI CALCULATOR -->
+    <section id="financial-impact" class="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800">
+      <div class="max-w-4xl mx-auto space-y-10 text-center">
+        <div class="space-y-2">
+          <span class="text-[11px] font-black uppercase tracking-widest text-amber-600">FINANCIAL IMPACT</span>
+          <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-heading">Your Next Deal Could Be Worth More Than You Think.</h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">Organise your opportunities, reduce missed matches and keep your brokerage pipeline moving.</p>
+        </div>
+
+        <div class="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-left">
+          <div class="space-y-5">
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1.5">
+                <span class="text-slate-700 dark:text-slate-300">Property Deal Value</span>
+                <span class="text-emerald-700 font-extrabold" id="calc-val-label">₹75,00,000</span>
+              </div>
+              <input type="range" id="deal-slider" min="2000000" max="30000000" step="500000" value="7500000" oninput="updateLandingCalc()" class="w-full accent-emerald-700 cursor-pointer">
+              <div class="flex gap-2 pt-2">
+                <button onclick="setCalcVal(4500000)" class="px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 text-[11px] font-bold border border-slate-200">₹45L</button>
+                <button onclick="setCalcVal(7500000)" class="px-2.5 py-1 rounded-full bg-emerald-700 text-white text-[11px] font-bold">₹75L</button>
+                <button onclick="setCalcVal(15000000)" class="px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 text-[11px] font-bold border border-slate-200">₹1.5Cr</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1.5">
+                <span class="text-slate-700 dark:text-slate-300">Commission Percentage</span>
+                <span class="text-amber-600 font-extrabold" id="calc-rate-label">1.5%</span>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="setCalcRate(1.0)" class="flex-1 py-1.5 rounded-xl bg-white dark:bg-slate-700 text-xs font-bold border border-slate-200">1.0%</button>
+                <button onclick="setCalcRate(1.5)" class="flex-1 py-1.5 rounded-xl bg-amber-600 text-white text-xs font-bold">1.5%</button>
+                <button onclick="setCalcRate(2.0)" class="flex-1 py-1.5 rounded-xl bg-white dark:bg-slate-700 text-xs font-bold border border-slate-200">2.0%</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-center space-y-3">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Estimated Commission Per Deal</span>
+              <span class="text-3xl font-black text-emerald-700 dark:text-emerald-400 font-heading block mt-0.5" id="calc-per-deal">₹1,12,500</span>
+            </div>
+            <div class="pt-3 border-t border-emerald-200/60">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Projected Annual Brokerage (3 deals/mo)</span>
+              <span class="text-xl font-black text-slate-900 dark:text-white block mt-0.5" id="calc-annual">₹40,50,000 / yr</span>
+            </div>
+            <p class="text-[10px] text-slate-400">Formula: Deal Value × Commission % / 100. Illustrative based on assumptions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 — PRICING -->
+    <section id="pricing" class="py-16 sm:py-24 px-4 sm:px-6 max-w-4xl mx-auto w-full text-center">
+      <div class="space-y-2 mb-12">
+        <span class="text-[11px] font-black uppercase tracking-widest text-emerald-700">TRANSPARENT INVESTMENT</span>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-heading">Simple, High-ROI Pricing.</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Start with a free trial. Experience the workflow before deciding to upgrade.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+        <!-- Plan 1 -->
+        <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Starter Pilot</span>
+          <h3 class="text-3xl font-black text-slate-900 dark:text-white font-heading">₹0 <span class="text-xs font-normal text-slate-400">/ 14 Days</span></h3>
+          <p class="text-xs text-slate-500">Up to 15 listings, 10 active buyers, WhatsApp Requirement Analyzer, and basic property matching.</p>
+          <button onclick="openApp('dashboard')" class="w-full py-3 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-xs cursor-pointer">
+            Start Free Trial
+          </button>
+        </div>
+
+        <!-- Plan 2 -->
+        <div class="p-6 rounded-3xl bg-gradient-to-b from-white to-emerald-50/40 dark:from-slate-900 dark:to-emerald-950/20 border-2 border-emerald-600 shadow-xl space-y-4 relative">
+          <span class="absolute top-4 right-4 text-[9px] bg-emerald-700 text-white px-2.5 py-0.5 rounded-full font-bold uppercase">Most Popular</span>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Founder Annual Pass</span>
+          <div>
+            <h3 class="text-3xl font-black text-slate-900 dark:text-white font-heading">₹3,999 <span class="text-xs font-normal text-slate-400">/ Year</span></h3>
+            <span class="text-[11px] text-emerald-600 font-semibold">(~₹333 / month)</span>
+          </div>
+          <p class="text-xs text-slate-500">Unlimited property inventory, buyer management, multi-image brochures, deal tracking & custom branding.</p>
+          <button onclick="openApp('dashboard')" class="w-full py-3 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md cursor-pointer">
+            Get Started
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6 — WHY CHOOSE leadNivash -->
+    <section id="why-leadnivash" class="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800">
+      <div class="max-w-4xl mx-auto space-y-10 text-center">
+        <div class="space-y-2">
+          <span class="text-[11px] font-black uppercase tracking-widest text-emerald-700">WHY leadNivash</span>
+          <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-heading">Built Around the Way Property Brokers Actually Work.</h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Your work happens across WhatsApp chats, property visits, buyer calls and negotiations. leadNivash brings these activities into one organised workspace.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2">
+            <i data-lucide="search" class="w-6 h-6 text-emerald-600"></i>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Never Lose a Match</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">Your buyer requirements and property inventory stay organised. Find relevant matches without repeatedly searching old WhatsApp conversations.</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2">
+            <i data-lucide="shield-check" class="w-6 h-6 text-amber-600"></i>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Protect Your Relationships</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">Share professional property flyers without exposing confidential owner contact information. Keep your broker identity and branding on shared materials.</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2">
+            <i data-lucide="briefcase" class="w-6 h-6 text-blue-600"></i>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Manage More, Work Smarter</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">Save time on manual data entry, organise buyers and properties, and track your deals and commissions from one workspace.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7 — FINAL CTA AND FREE DEMO (INQUIRY FORM) -->
+    <section id="inquiry-form" class="py-16 sm:py-24 px-4 sm:px-6 max-w-4xl mx-auto w-full">
+      <div class="p-6 sm:p-12 rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white space-y-6 border border-slate-800 shadow-2xl text-left">
+        <div class="space-y-2">
+          <h2 class="text-3xl font-black font-heading tracking-tight">Ready to Turn Your Enquiries into Deals?</h2>
+          <p class="text-xs sm:text-sm text-slate-300">See how leadNivash can simplify your property business. Request a free demo and start your 14-day free trial.</p>
+        </div>
+
+        <form onsubmit="handleInquirySubmit(event)" class="space-y-3 pt-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Full Name *</label>
+              <input type="text" id="inq-name" required placeholder="Rajesh Sharma" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">WhatsApp Number *</label>
+              <input type="tel" id="inq-phone" required placeholder="9876543210" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Agency / Business Name *</label>
+              <input type="text" id="inq-agency" required placeholder="Sharma Real Estate" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">City *</label>
+              <input type="text" id="inq-city" required placeholder="Panipat / Gurugram" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+          </div>
+          <button type="submit" id="inq-btn" class="w-full sm:w-auto py-3 px-8 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg cursor-pointer">
+            <span>Request My Free Demo</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+
+        <div id="inq-success" class="hidden p-4 rounded-xl bg-emerald-900/60 border border-emerald-500 text-emerald-200 text-xs text-center space-y-1">
+          <i data-lucide="check-circle-2" class="w-6 h-6 mx-auto text-emerald-400"></i>
+          <p class="font-bold">Demo Request Received!</p>
+          <p class="text-[11px]">Our team will connect with you on WhatsApp within 1 business hour.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8 — FOOTER -->
+    <footer class="mt-auto py-10 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 text-center space-y-2">
+      <div class="flex items-center justify-center gap-2">
+        <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-5 h-5 object-contain">
+        <span class="font-bold text-slate-900 dark:text-white">lead<span class="text-emerald-600">Nivash</span></span>
+      </div>
+      <p>© 2026 leadNivash. All rights reserved. Designed for Indian property brokers.</p>
+    </footer>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- EXPERIENCE 2: AUTHENTICATED BROKER APPLICATION           -->
+  <!-- ======================================================== -->
+  <div id="page-app" class="hidden flex-1 flex flex-col min-h-screen">
+    
+    <!-- TOP APP BAR WITH UPPER-RIGHT SETTING ICON PER USER COMMAND -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0B0F17]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 shadow-xs">
+          <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-full h-full object-contain">
+        </div>
+        <div>
+          <h2 class="text-sm font-black text-slate-900 dark:text-white font-heading leading-tight" id="app-title">Dashboard</h2>
+          <span class="text-[9px] text-emerald-600 font-bold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Sharma Real Estate · Live
+          </span>
+        </div>
+      </div>
+
+      <!-- UPPER TOP RIGHT CORNER: SETTINGS ICON PER USER INSTRUCTION -->
+      <div class="flex items-center gap-2">
+        <button onclick="openSettingsModal()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer" title="Settings & Account">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- APP CONTENT VIEWS (ONLY 4 OPTIONS AS REQUESTED: Dashboard, Properties, Buyers, Tools) -->
+    <main class="flex-1 pb-24 max-w-5xl mx-auto w-full px-4 pt-4">
+      
+      <!-- ============================================== -->
+      <!-- TAB 1: DASHBOARD (WITH QUICK PASTE FEATURE)    -->
+      <!-- ============================================== -->
+      <div id="tab-dashboard" class="space-y-4 text-left">
+        
+        <!-- Welcome Banner -->
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Broker Operating System</span>
+            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Welcome back, Broker 👋</h2>
+          </div>
+          <button onclick="openLanding()" class="text-xs text-slate-500 hover:text-emerald-700 flex items-center gap-1 font-semibold cursor-pointer">
+            <span>Website</span>
+            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- QUICK PASTE PROMINENT FEATURE ON DASHBOARD PER USER INSTRUCTION -->
+        <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-white via-white to-emerald-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border border-emerald-500/30 shadow-card space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="p-1.5 rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+            </span>
+            <h3 class="text-sm font-black text-slate-900 dark:text-white font-heading">
+              Quick Paste — Extract WhatsApp Messages
+            </h3>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Paste raw property listings or client requirements. AI extracts BHK, price, and location in seconds.
+          </p>
+
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <input type="text" id="dash-quick-input" value="Urgent 3 BHK Model Town 200 gaj demand 1.25 Cr owner 9876543210" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              <button onclick="executeQuickParse()" class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs cursor-pointer">
+                Extract
+              </button>
+            </div>
+
+            <!-- Dynamic live extraction pill output -->
+            <div id="dash-parse-output" class="p-2.5 rounded-xl bg-emerald-100/70 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[11px] font-semibold flex items-center justify-between">
+              <span>Extracted: <strong>3 BHK</strong> · <strong>200 Gaj</strong> · <strong>Model Town</strong> · <strong>₹1.25 Cr</strong></span>
+              <span class="bg-emerald-700 text-white px-2 py-0.5 rounded-full font-bold text-[10px]">96% Match</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Financial Stat Cards (Quixotic Style) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Listings</span>
+            <span class="text-2xl font-black text-slate-900 dark:text-white font-heading block">24</span>
+            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded-full">+14% this month</span>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Active Buyers</span>
+            <span class="text-2xl font-black text-slate-900 dark:text-white font-heading block">18</span>
+            <span class="text-[10px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded-full">+4 qualified</span>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Matches Waiting</span>
+            <span class="text-2xl font-black text-emerald-600 font-heading block">9</span>
+            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded-full">85%+ score</span>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Pipeline Value</span>
+            <span class="text-2xl font-black text-amber-600 font-heading block">₹3.4L</span>
+            <span class="text-[10px] font-bold text-amber-700 bg-amber-50 dark:bg-amber-950/60 px-1.5 py-0.5 rounded-full">1% broker fee</span>
+          </div>
+        </div>
+
+        <!-- High-Priority Matches Section -->
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">High-Priority Matches Waiting</h4>
+            <span class="text-xs text-emerald-700 font-bold">2 Ready Today</span>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                96% Match
+              </span>
+              <span class="text-[10px] text-slate-400">Model Town, Panipat</span>
+            </div>
+            <h5 class="text-sm font-bold text-slate-900 dark:text-white">3 BHK Luxury Builder Floor · ₹1.25 Cr</h5>
+            <p class="text-xs text-slate-500">Client: Rajesh Sharma (Budget: ₹1.20 - 1.35 Cr)</p>
+            <div class="flex gap-2 pt-1">
+              <a href="https://wa.me/?text=Hello!%20Here%20is%20a%20great%203%20BHK%20Builder%20Floor%20in%20Model%20Town%20Panipat." target="_blank" class="flex-1 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
+                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                <span>Share on WhatsApp</span>
+              </a>
+              <button onclick="setTab('properties')" class="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold cursor-pointer">
+                View Flyer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 2: PROPERTIES (INVENTORY MANAGEMENT)      -->
+      <!-- ============================================== -->
+      <div id="tab-properties" class="hidden space-y-4 text-left">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-black text-slate-900 dark:text-white font-heading">Property Inventory</h3>
+            <p class="text-xs text-slate-500">24 total listings · Owner contacts protected</p>
+          </div>
+          <button onclick="alert('Quick Listing Form: Enter Title, BHK, Price, Locality')" class="px-3.5 py-1.5 rounded-full bg-emerald-700 text-white font-bold text-xs shadow-xs flex items-center gap-1 cursor-pointer">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>Add Property</span>
+          </button>
+        </div>
+
+        <!-- Property Card 1 -->
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">Available</span>
+            <span class="text-xs font-black text-emerald-700 dark:text-emerald-400">₹1.25 Cr</span>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">3 BHK Luxury Builder Floor</h4>
+            <p class="text-xs text-slate-500">Model Town, Panipat · 200 Gaj (1800 Sq.Ft)</p>
+          </div>
+          <!-- Owner Vault Shield Section -->
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-600"></i>
+              <span>Owner Vault: <strong>Mr. Sharma (9876543210)</strong></span>
+            </div>
+            <span class="text-[10px] text-emerald-600 font-bold">Encrypted</span>
+          </div>
+        </div>
+
+        <!-- Property Card 2 -->
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600">Commercial</span>
+            <span class="text-xs font-black text-emerald-700 dark:text-emerald-400">₹45,000 / mo</span>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Sector 12 HUDA Ground Floor Shop</h4>
+            <p class="text-xs text-slate-500">Sector 12 Market, Panipat · 450 Sq.Ft</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-600"></i>
+              <span>Owner Vault: <strong>Gupta Ji (9812345678)</strong></span>
+            </div>
+            <span class="text-[10px] text-emerald-600 font-bold">Encrypted</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 3: BUYERS (ACTIVE INQUIRIES & DEMANDS)    -->
+      <!-- ============================================== -->
+      <div id="tab-buyers" class="hidden space-y-4 text-left">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-black text-slate-900 dark:text-white font-heading">Active Buyers</h3>
+            <p class="text-xs text-slate-500">18 qualified leads ready for property matching</p>
+          </div>
+          <button onclick="alert('Quick Buyer Form: Enter Name, Budget, Locality, BHK')" class="px-3.5 py-1.5 rounded-full bg-emerald-700 text-white font-bold text-xs shadow-xs flex items-center gap-1 cursor-pointer">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>Add Buyer</span>
+          </button>
+        </div>
+
+        <!-- Buyer 1 -->
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-900 dark:text-white">Rajesh Sharma</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">High Urgency</span>
+          </div>
+          <p class="text-xs text-slate-500">Budget: <strong>₹1.20 - 1.35 Cr</strong> · Preference: 3 BHK Builder Floor in Model Town</p>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <span class="text-emerald-700 font-bold">1 Exact Inventory Match</span>
+            <button onclick="setTab('dashboard')" class="text-slate-500 hover:text-emerald-700 font-semibold cursor-pointer">View Match</button>
+          </div>
+        </div>
+
+        <!-- Buyer 2 -->
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-900 dark:text-white">Vikram Verma</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600">Site Visit</span>
+          </div>
+          <p class="text-xs text-slate-500">Budget: <strong>₹80 - 90 Lakhs</strong> · Preference: 250 Gaj Plot in Ansals Sushant City</p>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <span class="text-emerald-700 font-bold">2 Plot Matches Available</span>
+            <button onclick="setTab('dashboard')" class="text-slate-500 hover:text-emerald-700 font-semibold cursor-pointer">View Match</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 4: TOOLS (CALCULATORS & WATERMARKING)       -->
+      <!-- ============================================== -->
+      <div id="tab-tools" class="hidden space-y-4 text-left">
+        <div>
+          <h3 class="text-lg font-black text-slate-900 dark:text-white font-heading">Broker Tools</h3>
+          <p class="text-xs text-slate-500">Regional area converters and brokerage utilities</p>
+        </div>
+
+        <!-- Tool 1: Land Area Unit Converter -->
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i>
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white">Area Unit Converter (Haryana / NCR)</h4>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 mb-1">Square Gaj</label>
+              <input type="number" id="conv-gaj" value="200" oninput="convertUnits('gaj')" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 mb-1">Square Feet</label>
+              <input type="number" id="conv-sqft" value="1800" oninput="convertUnits('sqft')" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2">
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-400">1 Gaj = 9 Sq.Ft (Regional standard in Panipat, Gurugram & NCR).</p>
+        </div>
+
+        <!-- Tool 2: Commission Splitter -->
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
+          <div class="flex items-center gap-2">
+            <i data-lucide="percent" class="w-4 h-4 text-amber-600"></i>
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white">Brokerage Splitter</h4>
+          </div>
+          <p class="text-xs text-slate-500">Calculate 50/50 co-broker splits and closing commissions instantly.</p>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ======================================================== -->
+    <!-- MOBILE BOTTOM NAVIGATION (EXACTLY 4 OPTIONS AS ORDERED) -->
+    <!-- 1. Dashboard  2. Properties  3. Buyers  4. Tools         -->
+    <!-- ======================================================== -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0B0F17]/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-safe shadow-2xl select-none">
+      <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-around">
+        
+        <!-- 1. Dashboard -->
+        <button onclick="setTab('dashboard')" id="btn-tab-dashboard" class="flex flex-col items-center flex-1 py-1 text-emerald-700 dark:text-emerald-400 cursor-pointer">
+          <i data-lucide="layout-dashboard" class="w-5 h-5 mb-0.5"></i>
+          <span class="text-[10px] font-bold">Dashboard</span>
+        </button>
+
+        <!-- 2. Properties -->
+        <button onclick="setTab('properties')" id="btn-tab-properties" class="flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+          <i data-lucide="building-2" class="w-5 h-5 mb-0.5"></i>
+          <span class="text-[10px] font-bold">Properties</span>
+        </button>
+
+        <!-- 3. Buyers -->
+        <button onclick="setTab('buyers')" id="btn-tab-buyers" class="flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+          <i data-lucide="users" class="w-5 h-5 mb-0.5"></i>
+          <span class="text-[10px] font-bold">Buyers</span>
+        </button>
+
+        <!-- 4. Tools -->
+        <button onclick="setTab('tools')" id="btn-tab-tools" class="flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+          <i data-lucide="wrench" class="w-5 h-5 mb-0.5"></i>
+          <span class="text-[10px] font-bold">Tools</span>
+        </button>
+
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SETTINGS MODAL / SLIDE-OVER DRAWER (UPPER-RIGHT CORNER)  -->
+  <!-- ======================================================== -->
+  <div id="settings-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity">
+    <div class="w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 p-5 space-y-4 shadow-2xl text-left max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <h3 class="text-base font-black text-slate-900 dark:text-white font-heading">Settings & Agency Menu</h3>
+        <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center hover:text-slate-900 cursor-pointer">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Agency Card -->
+      <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-1">
+        <div class="flex justify-between items-center">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Active Agency</span>
+          <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">Verified Broker</span>
+        </div>
+        <h4 class="text-sm font-bold text-slate-900 dark:text-white">Sharma Real Estate Agency</h4>
+        <p class="text-xs text-slate-500">broker@leadnivash.com · Panipat, NCR</p>
+      </div>
+
+      <!-- Settings Menu Items -->
+      <div class="space-y-1 text-xs font-semibold">
+        <button onclick="alert('Inquiries Inbox: Showing 4 client inquiries received from public flyer links.')" class="w-full p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="inbox" class="w-4 h-4 text-emerald-600"></i>
+            <span>Inquiries Inbox</span>
+          </div>
+          <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">4 New</span>
+        </button>
+
+        <button onclick="alert('Track Record: 12 closed wins, ₹4.8 Lakhs collected brokerage year-to-date.')" class="w-full p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="trophy" class="w-4 h-4 text-amber-600"></i>
+            <span>Track Record & Wins</span>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </button>
+
+        <button onclick="toggleTheme()" class="w-full p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="moon" class="w-4 h-4 text-blue-600"></i>
+            <span>Toggle Dark / Light Theme</span>
+          </div>
+          <span class="text-[10px] text-slate-400" id="current-theme-label">Dark Active</span>
+        </button>
+
+        <button onclick="openLanding(); closeSettingsModal()" class="w-full p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="globe" class="w-4 h-4 text-slate-500"></i>
+            <span>Return to Public Landing Page</span>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </button>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+        <button onclick="openLanding(); closeSettingsModal()" class="w-full py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 hover:text-rose-600 text-slate-600 dark:text-slate-400 font-bold text-xs transition cursor-pointer">
+          Sign Out of Session
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP CONTROLLER -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Auto-cycle 5-Step Process Flow Indicator
+    (function initProcessFlow() {
+      let currentStepIdx = 0;
+      const stepElements = document.querySelectorAll('#htmlProcessSteps > div.rounded-full');
+      if (stepElements && stepElements.length > 0) {
+        setInterval(() => {
+          currentStepIdx = (currentStepIdx + 1) % stepElements.length;
+          stepElements.forEach((el, idx) => {
+            const iconSpan = el.querySelector('span');
+            if (idx === currentStepIdx) {
+              el.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap bg-emerald-950/80 border border-emerald-500/70 text-emerald-300 shadow-md shadow-emerald-500/20 ring-1 ring-emerald-500/40 scale-105 transition-all duration-300';
+              if (iconSpan) iconSpan.className = 'w-5 h-5 rounded-full flex items-center justify-center bg-emerald-500 text-slate-950';
+            } else {
+              el.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-300 transition-all duration-300';
+              if (iconSpan) iconSpan.className = 'w-5 h-5 rounded-full flex items-center justify-center bg-slate-800 text-emerald-400';
+            }
+          });
+        }, 2800);
+      }
+    })();
+
+    // Screen Switching: 'landing' vs 'app'
+    function openApp(initialTab = 'dashboard') {
+      document.getElementById('page-landing').classList.add('hidden');
+      document.getElementById('page-app').classList.remove('hidden');
+      setTab(initialTab);
+      window.scrollTo(0, 0);
+    }
+
+    function openLanding() {
+      document.getElementById('page-app').classList.add('hidden');
+      document.getElementById('page-landing').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    // 4 App Tabs: 'dashboard' | 'properties' | 'buyers' | 'tools'
+    function setTab(tabName) {
+      const tabs = ['dashboard', 'properties', 'buyers', 'tools'];
+      
+      tabs.forEach(t => {
+        const viewEl = document.getElementById('tab-' + t);
+        const btnEl = document.getElementById('btn-tab-' + t);
+        
+        if (t === tabName) {
+          viewEl.classList.remove('hidden');
+          btnEl.className = 'flex flex-col items-center flex-1 py-1 text-emerald-700 dark:text-emerald-400 cursor-pointer';
+        } else {
+          viewEl.classList.add('hidden');
+          btnEl.className = 'flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer';
+        }
+      });
+
+      // Update header title
+      const titles = {
+        dashboard: 'Dashboard',
+        properties: 'Properties',
+        buyers: 'Buyers',
+        tools: 'Broker Tools'
+      };
+      document.getElementById('app-title').innerText = titles[tabName] || 'Dashboard';
+      window.scrollTo(0, 0);
+      lucide.createIcons();
+    }
+
+    // Settings Modal
+    function openSettingsModal() {
+      document.getElementById('settings-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settings-modal').classList.add('hidden');
+    }
+
+    // Quick Paste Simulated Extraction
+    function executeQuickParse() {
+      const output = document.getElementById('dash-parse-output');
+      output.classList.remove('hidden');
+      output.innerHTML = '<span>Extracted: <strong>3 BHK</strong> · <strong>200 Gaj</strong> · <strong>Model Town</strong> · <strong>₹1.25 Cr</strong></span><span class="bg-emerald-700 text-white px-2 py-0.5 rounded-full font-bold text-[10px]">96% Match with Rajesh Sharma</span>';
+    }
+
+    // Area Unit Converter
+    function convertUnits(source) {
+      if (source === 'gaj') {
+        const gaj = Number(document.getElementById('conv-gaj').value);
+        document.getElementById('conv-sqft').value = Math.round(gaj * 9);
+      } else {
+        const sqft = Number(document.getElementById('conv-sqft').value);
+        document.getElementById('conv-gaj').value = Math.round(sqft / 9);
+      }
+    }
+
+    // Responsive Video Aspect Switcher
+    function setVideoAspect(mode) {
+      const frame = document.getElementById('video-frame');
+      const bLand = document.getElementById('btn-video-landscape');
+      const bPort = document.getElementById('btn-video-portrait');
+      const hookLabel = document.getElementById('video-hook-label');
+
+      if (mode === 'landscape') {
+        frame.className = 'mx-auto aspect-video w-full rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white border border-slate-800 shadow-2xl flex flex-col items-center justify-center p-6 text-center space-y-3 relative overflow-hidden transition-all duration-300';
+        bLand.className = 'px-3 py-1 rounded-full bg-emerald-700 text-white transition cursor-pointer';
+        bPort.className = 'px-3 py-1 rounded-full text-slate-500 hover:text-slate-900 dark:hover:text-white transition cursor-pointer';
+        hookLabel.innerText = '/assets/videos/leadnivash-desktop-demo.mp4';
+      } else {
+        frame.className = 'mx-auto aspect-[9/16] max-w-[280px] rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white border border-slate-800 shadow-2xl flex flex-col items-center justify-center p-6 text-center space-y-3 relative overflow-hidden transition-all duration-300';
+        bPort.className = 'px-3 py-1 rounded-full bg-emerald-700 text-white transition cursor-pointer';
+        bLand.className = 'px-3 py-1 rounded-full text-slate-500 hover:text-slate-900 dark:hover:text-white transition cursor-pointer';
+        hookLabel.innerText = '/assets/videos/leadnivash-mobile-demo.mp4';
+      }
+    }
+
+    // Landing ROI Calculator
+    let currentDealVal = 7500000;
+    let currentRate = 1.5;
+
+    function formatInr(val) {
+      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
+    }
+
+    function updateLandingCalc() {
+      const slider = document.getElementById('deal-slider');
+      currentDealVal = Number(slider.value);
+      document.getElementById('calc-val-label').innerText = formatInr(currentDealVal);
+      document.getElementById('calc-rate-label').innerText = currentRate + '%';
+
+      const perDeal = (currentDealVal * currentRate) / 100;
+      const annual = perDeal * 3 * 12;
+
+      document.getElementById('calc-per-deal').innerText = formatInr(perDeal);
+      document.getElementById('calc-annual').innerText = formatInr(annual) + ' / yr';
+    }
+
+    function setCalcVal(val) {
+      document.getElementById('deal-slider').value = val;
+      updateLandingCalc();
+    }
+
+    function setCalcRate(rate) {
+      currentRate = rate;
+      updateLandingCalc();
+    }
+
+    // Inquiry Form
+    function handleInquirySubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('inq-btn');
+      const success = document.getElementById('inq-success');
+      btn.innerText = 'Submitting...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.parentElement.classList.add('hidden');
+        success.classList.remove('hidden');
+        lucide.createIcons();
+      }, 600);
+    }
+
+    // Light / Dark Theme Toggle
+    let isDark = false;
+    function toggleTheme() {
+      isDark = !isDark;
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-toggle-icon');
+      const label = document.getElementById('current-theme-label');
+
+      if (isDark) {
+        html.classList.add('dark');
+        icon.setAttribute('data-lucide', 'sun');
+        if (label) label.innerText = 'Dark Active';
+      } else {
+        html.classList.remove('dark');
+        icon.setAttribute('data-lucide', 'moon');
+        if (label) label.innerText = 'Light Active';
+      }
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

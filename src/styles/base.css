@@ -84,10 +84,56 @@
   animation: lineFlow 3.5s linear infinite;
 }
 
+/* Volumetric Sun Rays (Nubien & Framer inspired) */
+.sun-rays-beam {
+  background: 
+    conic-gradient(from 180deg at 50% 0%, 
+      transparent 135deg, 
+      rgba(16, 185, 129, 0.05) 155deg, 
+      rgba(52, 211, 153, 0.22) 175deg, 
+      rgba(16, 185, 129, 0.32) 180deg, 
+      rgba(52, 211, 153, 0.22) 185deg, 
+      rgba(16, 185, 129, 0.05) 205deg, 
+      transparent 225deg
+    );
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, black 35%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, black 35%, transparent 100%);
+}
+
+@keyframes rayPulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1.12);
+  }
+}
+
+.animate-sun-rays {
+  animation: rayPulse 6s ease-in-out infinite;
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: floatGentle 5s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-hero-bg,
   .animate-hero-up,
-  .animate-flow-line {
+  .animate-flow-line,
+  .animate-sun-rays,
+  .animate-float {
     animation: none !important;
     transform: none !important;
   }

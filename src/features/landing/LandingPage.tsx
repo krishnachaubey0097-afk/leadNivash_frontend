@@ -6,6 +6,7 @@ import { Card } from '../../components/ui/Card';
 import {
   Sparkles,
   ArrowRight,
+  ArrowUpRight,
   ShieldCheck,
   CheckCircle2,
   FileText,
@@ -174,19 +175,32 @@ export const LandingPage: React.FC = () => {
       {/* SECTION 1 — HERO (Phase 1 Visual Upgrade)                 */}
       {/* ========================================================= */}
       <section className="relative overflow-hidden bg-slate-950 text-white pt-16 sm:pt-24 pb-20 px-4 sm:px-6 w-full border-b border-slate-800/80">
-        {/* Realistic Indian Urban Architecture Background with Cinematic Dark Vignette & Gradient */}
+        {/* Dynamic Video Background (bg1.mp4) with Fallback & Decreased Darkness */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-          <img
-            src="/hero-bg.jpg"
-            alt="Indian Urban Real Estate Architecture"
-            className="w-full h-full object-cover object-center opacity-30 animate-hero-bg scale-100"
-            loading="eager"
-          />
-          {/* Multi-layered dark vignette & gradient overlay for 100% text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-slate-950" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-slate-950/70 to-slate-950" />
-          {/* Subtle soft emerald spotlight ray */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[650px] h-[340px] bg-gradient-to-b from-emerald-500/15 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/hero-bg.jpg"
+            className="w-full h-full object-cover object-center opacity-75 animate-hero-bg scale-100 filter brightness-95 contrast-105"
+          >
+            <source src="/bg1.mp4" type="video/mp4" />
+            <img
+              src="/hero-bg.jpg"
+              alt="Indian Urban Real Estate Architecture"
+              className="w-full h-full object-cover object-center"
+            />
+          </video>
+
+          {/* Decreased Darkness: Balanced soft gradients so the video stays vibrant & clearly visible */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/30 to-slate-950/90" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-slate-950/25 to-slate-950/75" />
+
+          {/* Volumetric Sun Rays / Theatrical Light Beam (Nubien & Framer inspired) */}
+          <div className="sun-rays-beam animate-sun-rays absolute -top-8 left-1/2 -translate-x-1/2 w-[900px] sm:w-[1200px] h-[550px] pointer-events-none z-1" />
+          {/* Subtle soft emerald spotlight ray behind it */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[650px] h-[340px] bg-gradient-to-b from-emerald-500/20 via-teal-500/8 to-transparent rounded-full blur-3xl pointer-events-none" />
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto w-full">
@@ -194,8 +208,8 @@ export const LandingPage: React.FC = () => {
           <div className="text-center max-w-3xl mx-auto space-y-6">
             {/* 1. Old Badge completely removed as mandated */}
 
-            {/* 3. Hero Headline */}
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black font-heading leading-[1.08] tracking-tight text-white animate-hero-up">
+            {/* 3. Hero Headline with high-contrast text shadow */}
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black font-heading leading-[1.08] tracking-tight text-white animate-hero-up drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
               Turn Messages into <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500 bg-clip-text text-transparent drop-shadow-sm">
                 Property Deals.
@@ -203,31 +217,39 @@ export const LandingPage: React.FC = () => {
             </h1>
 
             {/* 4. Supporting Text */}
-            <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
+            <p className="text-sm sm:text-base md:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed font-normal drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
               Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right property matches faster and manage more opportunities without losing track of your deals.
             </p>
 
-            {/* 5. CTA Buttons */}
+            {/* 5. CTA Buttons (Pure Design & Framer Inspiration with circular badge) */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2 max-w-md mx-auto w-full">
               <button
                 onClick={scrollToInquiry}
-                className="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-emerald-950/40 hover:shadow-emerald-500/25 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+                className="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-950/60 hover:shadow-emerald-500/35 hover:-translate-y-0.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
               >
-                <span>Get Free Demo</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                  <span>Get Free Demo</span>
+                </span>
+                <span className="w-8 h-8 rounded-full bg-white text-slate-950 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-sm">
+                  <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                </span>
               </button>
 
               <Link to="/register" className="w-full sm:w-auto flex-1">
                 <button
-                  className="group w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700/80 hover:border-slate-500 font-bold text-xs tracking-wide backdrop-blur-sm hover:-translate-y-0.5 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-950 shadow-sm"
+                  className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-slate-900/80 hover:bg-slate-800/90 text-slate-200 hover:text-white border border-slate-700/80 hover:border-slate-500 font-extrabold text-xs tracking-wider uppercase backdrop-blur-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-950 shadow-md"
                 >
                   <span>Start 14-Day Free Trial</span>
+                  <span className="w-8 h-8 rounded-full bg-slate-800 text-emerald-400 border border-slate-700 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
+                    <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                  </span>
                 </button>
               </Link>
             </div>
 
             {/* Trust points */}
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-2 text-xs text-slate-400 font-medium">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-2 text-xs text-slate-300 font-medium drop-shadow-sm">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 100% Owner Contact Privacy
               </span>
