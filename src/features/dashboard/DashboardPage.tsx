@@ -64,7 +64,7 @@ export const DashboardPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
-              Namaste, {user?.name?.split(' ')[0] || 'Broker'} 👋
+              Welcome back, {user?.name?.split(' ')[0] || 'Broker'} 👋
             </h1>
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-600 border border-brand-200/60 dark:border-brand-800/40">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-600 animate-pulse" />
@@ -444,7 +444,7 @@ export const DashboardPage: React.FC = () => {
                   <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between gap-2">
                     <a
                       href={`https://wa.me/?text=${encodeURIComponent(
-                        `Namaste! Here is a great property matching your requirement: ${match.propertyTitle} in ${match.locality}. Price: ${formatRupees(match.propertyPrice)}. Let me know if you would like a site visit!`
+                        `Hello! Here is a great property matching your requirement: ${match.propertyTitle} in ${match.locality}. Price: ${formatRupees(match.propertyPrice)}. Let me know if you would like to schedule a site visit!`
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"

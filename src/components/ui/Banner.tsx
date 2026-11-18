@@ -20,10 +20,10 @@ export const Banner: React.FC<BannerProps> = ({ variant, message, onDismiss, cla
   }[variant];
 
   const defaultMsg = {
-    offline: 'Internet nahi hai — kuch features kaam nahi karenge',
-    'server-waking': 'Server jag raha hai… 30–60 second lag sakte hain',
-    plan: 'Trial chal raha hai — unlimited fair-use active',
-    warning: 'Please review your pending actions',
+    offline: 'You are currently offline. Some features may be temporarily unavailable.',
+    'server-waking': 'Connecting to server… This may take 30–60 seconds on initial wake.',
+    plan: '14-Day Free Trial Active — Unlimited access to all broker tools.',
+    warning: 'Please review your pending actions.',
   }[variant];
 
   return (
@@ -43,7 +43,7 @@ export const Banner: React.FC<BannerProps> = ({ variant, message, onDismiss, cla
         <span>{message || defaultMsg}</span>
       </div>
       {onDismiss && (
-        <button onClick={onDismiss} className="p-1 hover:opacity-75 transition" aria-label="Dismiss">
+        <button onClick={onDismiss} className="p-1 hover:opacity-75 transition cursor-pointer" aria-label="Dismiss">
           <X className="w-3.5 h-3.5" />
         </button>
       )}

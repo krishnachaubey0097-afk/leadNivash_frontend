@@ -31,7 +31,7 @@ export const AppShell: React.FC = () => {
         {!isOnline && <Banner variant="offline" />}
         {isServerWaking && <Banner variant="server-waking" />}
         {trialDaysRemaining !== null && trialDaysRemaining <= 7 && (
-          <Banner variant="plan" message={`Trial ke ${trialDaysRemaining} din bache hain`} />
+          <Banner variant="plan" message={`${trialDaysRemaining} day${trialDaysRemaining === 1 ? '' : 's'} remaining in your free trial`} />
         )}
 
         {/* Top Header */}

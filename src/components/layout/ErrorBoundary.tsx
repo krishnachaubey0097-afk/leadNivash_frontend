@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   private handleReportIssue = () => {
     const errorDetails = this.state.error?.message || 'Unknown error';
-    const text = `Namaste LeadNivesh Team, I encountered an issue on the app: "${errorDetails}".`;
+    const text = `Hello LeadNivesh Support, I encountered an issue on the app: "${errorDetails}".`;
     openWhatsApp(env.VITE_FOUNDER_WHATSAPP, text);
   };
 
@@ -42,23 +42,35 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-6 text-center">
-          <div className="max-w-md w-full bg-surface border border-border p-6 sm:p-8 rounded-card shadow-sm space-y-4">
-            <AlertCircle className="w-10 h-10 text-danger mx-auto" />
-            <h1 className="text-lg font-bold text-ink font-heading">
-              Kuch gadbad hui (App Error)
-            </h1>
-            <p className="text-xs text-muted leading-relaxed">
-              Kripya page reload karke dobara koshish karein. Agar dikkat bani rahe, to directly team ko report karein.
-            </p>
+          <div className="max-w-md w-full bg-surface border border-border p-6 sm:p-8 rounded-card shadow-card space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-danger dark:bg-rose-950/60 flex items-center justify-center mx-auto">
+              <AlertCircle className="w-6 h-6" />
+            </div>
+            
+            <div>
+              <h1 className="text-lg font-black text-ink font-heading">
+                Something went wrong
+              </h1>
+              <p className="text-xs text-muted leading-relaxed mt-1">
+                An unexpected error occurred. Please refresh the page to try again, or reach out to our support team if the issue persists.
+              </p>
+            </div>
+
+            {/* Display error detail if available */}
+            {this.state.error && (
+              <div className="p-3 rounded-xl bg-bg border border-border/80 text-left text-xs font-mono text-danger overflow-x-auto max-h-32">
+                {this.state.error.message}
+              </div>
+            )}
 
             <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
-              <Button onClick={this.handleRetry} className="flex-1">
-                <RefreshCw className="w-4 h-4 mr-1.5" />
+              <Button onClick={this.handleRetry} pill className="flex-1 text-xs">
+                <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
                 <span>Reload Page</span>
               </Button>
-              <Button onClick={this.handleReportIssue} variant="secondary" className="flex-1">
-                <MessageCircle className="w-4 h-4 mr-1.5 text-brand-600" />
-                <span>Report Issue</span>
+              <Button onClick={this.handleReportIssue} variant="secondary" pill className="flex-1 text-xs">
+                <MessageCircle className="w-3.5 h-3.5 mr-1.5 text-brand-600" />
+                <span>Contact Support</span>
               </Button>
             </div>
           </div>
