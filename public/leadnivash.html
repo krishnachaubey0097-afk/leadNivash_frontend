@@ -103,6 +103,46 @@
       100% { background-position: 200% 50%; }
     }
     .animate-flow-line { background-size: 200% 200%; animation: lineFlow 3.5s linear infinite; }
+
+    /* Button Traveling Border Shine (Premium Apple-class SaaS Effect) */
+    @keyframes borderShineSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .btn-shine-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 9999px;
+      padding: 1.5px;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+    }
+    .btn-shine-wrapper:hover { transform: translateY(-1px); }
+    .btn-shine-wrapper:active { transform: scale(0.98); }
+    .btn-shine-border {
+      position: absolute;
+      inset: -150%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 270deg,
+        rgba(16, 185, 129, 0.4) 305deg,
+        rgba(255, 255, 255, 0.95) 345deg,
+        transparent 360deg
+      );
+      animation: borderShineSpin 4s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-hero-bg,
+      .animate-flow-line,
+      .animate-sun-rays,
+      .btn-shine-border {
+        animation: none !important;
+        transform: none !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-slate-50 dark:bg-[#0B0F17] text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-800 transition-colors">
@@ -142,9 +182,13 @@
             <span>Dashboard</span>
           </button>
 
-          <a href="#inquiry-form" class="hidden sm:inline-flex px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition">
-            Get Free Demo
-          </a>
+          <div class="btn-shine-wrapper hidden sm:inline-flex">
+            <div class="btn-shine-border"></div>
+            <a href="#inquiry-form" class="relative z-10 px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition inline-flex items-center gap-1.5 min-h-[38px]">
+              <span>Get Free Demo</span>
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
 
           <!-- Mobile Hamburger Toggle Button -->
           <button
@@ -259,22 +303,25 @@
           Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right property matches faster and manage more opportunities without losing track of your deals.
         </p>
 
-        <!-- 5. CTA Buttons (Apple-Class High Contrast Styling) -->
+        <!-- 5. CTA Buttons (Apple-Class High Contrast Styling with Outline Traveling Shine) -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-6 max-w-md mx-auto w-full">
-          <a href="#inquiry-form" class="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/40 hover:-translate-y-0.5 cursor-pointer">
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-              <span>Get Free Demo</span>
-            </span>
-            <span class="w-8 h-8 rounded-full bg-white text-emerald-800 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs">
-              <i data-lucide="arrow-up-right" class="w-4 h-4 stroke-[2.5]"></i>
-            </span>
-          </a>
+          <div class="btn-shine-wrapper w-full sm:w-auto flex-1 flex">
+            <div class="btn-shine-border"></div>
+            <a href="#inquiry-form" class="relative z-10 w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-600/25 cursor-pointer min-h-[46px]">
+              <span class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                <span>Get Free Demo</span>
+              </span>
+              <span class="w-8 h-8 rounded-full bg-white text-emerald-800 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs">
+                <i data-lucide="arrow-up-right" class="w-4 h-4 stroke-[2.5]"></i>
+              </span>
+            </a>
+          </div>
 
-          <button onclick="openApp('dashboard')" class="group w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 hover:text-slate-900 border border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+          <button onclick="openApp('register')" class="group w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-3 sm:py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 hover:text-slate-900 border border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer min-h-[46px]">
             <span>Start 14-Day Free Trial</span>
-            <span class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
-              <i data-lucide="arrow-up-right" class="w-4 h-4 stroke-[2.5]"></i>
+            <span class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:scale-105">
+              <i data-lucide="arrow-right" class="w-4 h-4 stroke-[2.5]"></i>
             </span>
           </button>
         </div>

@@ -1,29 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   Building2,
   Plus,
-  ArrowLeft,
   Search,
+  Share2,
+  Clock,
   MapPin,
   Maximize2,
-  Phone,
+  DollarSign,
+  Compass,
+  ArrowLeft,
   Eye,
   EyeOff,
-  Share2,
-  Check,
   Copy,
-  Clock,
-  Shield,
-  DollarSign,
+  Check,
   ChevronRight,
-  Compass,
+  Upload,
+  Image as ImageIcon,
+  Video as VideoIcon,
+  X,
+  Play,
+  Film,
+  AlertCircle,
+  ShieldCheck,
 } from 'lucide-react';
+import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
-import { formatRupees } from '../../lib/money';
 import {
   fetchProperties,
   fetchPropertyById,
@@ -32,27 +37,28 @@ import {
   type PropertyItem,
   type CreatePropertyDto,
 } from '../../lib/api/properties';
+import { formatRupees } from '../../lib/money';
 import clsx from 'clsx';
 
 // =========================================================================
-// 1. PROPERTIES LIST PAGE
+// 1. PROPERTY LIST & INVENTORY OVERVIEW PAGE
 // =========================================================================
 export const PropertiesListPage: React.FC = () => {
   const [properties, setProperties] = useState<PropertyItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const loadProperties = async () => {
     setIsLoading(true);
     try {
       const data = await fetchProperties({
-        status: filterStatus === 'all' ? undefined : filterStatus,
         search: searchQuery || undefined,
+        status: filterStatus === 'all' ? undefined : filterStatus,
       });
       setProperties(data);
     } catch (err) {
-      console.warn('Could not load properties:', err);
+      console.warn('Failed to fetch properties:', err);
     } finally {
       setIsLoading(false);
     }
@@ -68,35 +74,34 @@ export const PropertiesListPage: React.FC = () => {
   };
 
   const statusFilters = [
-    { label: 'All Listings', value: 'all' },
+    { label: 'All Inventory', value: 'all' },
     { label: 'Available', value: 'available' },
-    { label: 'Under Hold', value: 'hold' },
-    { label: 'Sold', value: 'sold' },
-    { label: 'Rented', value: 'rented' },
+    { label: 'On Hold', value: 'hold' },
+    { label: 'Sold / Closed', value: 'sold' },
   ];
 
   return (
     <div className="space-y-6 pb-16 text-left max-w-6xl mx-auto">
-      {/* Top Header */}
+      {/* Top Header Strip */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
-              Properties Inventory
+              Property Inventory
             </h1>
             <Badge variant="brand">
-              {properties.length} Active
+              {properties.length} Listings
             </Badge>
           </div>
           <p className="text-xs text-muted mt-0.5">
-            Manage your listings, owner contacts, and share watermarked flyers with clients.
+            Organised listings with protected owner contact vault & shareable flyers.
           </p>
         </div>
 
         <Link to="/app/properties/new">
-          <Button size="md" pill className="font-bold text-xs shadow-md shadow-brand-700/20">
-            <Plus className="w-4 h-4 mr-1.5 stroke-[2.5]" />
-            <span>Add Property Listing</span>
+          <Button size="md" pill className="font-bold text-xs flex items-center gap-2 shadow-md shadow-brand-700/20">
+            <Plus className="w-4 h-4" />
+            <span>Add New Listing</span>
           </Button>
         </Link>
       </div>
@@ -165,34 +170,61 @@ export const PropertiesListPage: React.FC = () => {
           {properties.map((prop) => (
             <Card
               key={prop._id}
-              className="p-5 flex flex-col justify-between hover:border-brand-600/40 hover:shadow-card transition-all group"
+              className="p-5 flex flex-col justify-between hover:border-brand-600/50 transition-all duration-200 shadow-card hover:shadow-lg group text-left relative overflow-hidden"
             >
               <div className="space-y-3">
-                {/* Top Badge Strip: Status & Type */}
+                {/* Media Preview Thumbnail if available */}
+                {((prop.photos && prop.photos.length > 0) || prop.videoUrl || prop.video?.url) && (
+                  <div className="w-full h-36 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 relative mb-2">
+                    {prop.photos && prop.photos.length > 0 ? (
+                      <img
+                        src={prop.photos[0].url}
+                        alt={prop.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-slate-900 text-white">
+                        <Film className="w-8 h-8 text-emerald-400" />
+                      </div>
+                    )}
+
+                    {/* Media Count Badges */}
+                    <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
+                      {prop.photos && prop.photos.length > 0 && (
+                        <span className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
+                          <ImageIcon className="w-3 h-3" />
+                          <span>{prop.photos.length}</span>
+                        </span>
+                      )}
+                      {(prop.videoUrl || prop.video?.url) && (
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-700/80 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
+                          <Play className="w-3 h-3 fill-current" />
+                          <span>Video</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Status & Type Pill */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800">
-                    {prop.category} · {prop.type}
+                  <span
+                    className={clsx(
+                      'text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider',
+                      prop.status === 'available'
+                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+                        : prop.status === 'hold'
+                        ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'
+                        : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                    )}
+                  >
+                    {prop.status}
                   </span>
 
-                  <Badge
-                    variant={
-                      prop.status === 'available'
-                        ? 'available'
-                        : prop.status === 'hold'
-                        ? 'hold'
-                        : prop.status === 'sold'
-                        ? 'sold'
-                        : 'neutral'
-                    }
-                  >
-                    {prop.status === 'available'
-                      ? 'Available'
-                      : prop.status === 'hold'
-                      ? 'Under Hold'
-                      : prop.status === 'sold'
-                      ? 'Sold Out'
-                      : 'Rented'}
-                  </Badge>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                    {prop.category} · {prop.type}
+                  </span>
                 </div>
 
                 {/* Title & Price */}
@@ -263,7 +295,7 @@ export const PropertiesListPage: React.FC = () => {
 };
 
 // =========================================================================
-// 2. QUICK ADD PROPERTY FORM PAGE
+// 2. PROPERTY CREATION & MEDIA UPLOAD FORM PAGE
 // =========================================================================
 export const PropertyNewPage: React.FC = () => {
   const navigate = useNavigate();
@@ -281,6 +313,15 @@ export const PropertyNewPage: React.FC = () => {
   const [ownerPhone, setOwnerPhone] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Media state
+  const [photos, setPhotos] = useState<Array<{ url: string; publicId: string; file?: File }>>([]);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const localitiesList = [
     'Model Town',
@@ -304,6 +345,74 @@ export const PropertyNewPage: React.FC = () => {
     'Other',
   ];
 
+  // Handle Photo selection with size & type validation
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadError(null);
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    if (photos.length + files.length > 4) {
+      setUploadError('Maximum 4 photos allowed per property listing.');
+      return;
+    }
+
+    const newPhotos: Array<{ url: string; publicId: string; file: File }> = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      // Max 5 MB per image
+      if (file.size > 5 * 1024 * 1024) {
+        setUploadError(`Photo "${file.name}" exceeds the 5 MB limit.`);
+        return;
+      }
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        setUploadError(`Photo "${file.name}" is not supported. Use JPG, PNG or WebP.`);
+        return;
+      }
+      const previewUrl = URL.createObjectURL(file);
+      newPhotos.push({
+        url: previewUrl,
+        publicId: `local_photo_${Date.now()}_${i}`,
+        file,
+      });
+    }
+
+    setPhotos((prev) => [...prev, ...newPhotos]);
+    if (imageInputRef.current) imageInputRef.current.value = '';
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos((prev) => prev.filter((_, idx) => idx !== index));
+  };
+
+  // Handle Video selection with size & type validation (max 30 MB)
+  const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadError(null);
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Max 30 MB for video
+    if (file.size > 30 * 1024 * 1024) {
+      setUploadError(`Video "${file.name}" exceeds the 30 MB limit. Please select a shorter walkthrough clip.`);
+      return;
+    }
+    if (!['video/mp4', 'video/webm', 'video/quicktime'].includes(file.type)) {
+      setUploadError('Please select a valid MP4 or WebM video file.');
+      return;
+    }
+
+    setVideoFile(file);
+    const url = URL.createObjectURL(file);
+    setVideoPreviewUrl(url);
+    if (videoInputRef.current) videoInputRef.current.value = '';
+  };
+
+  const removeVideo = () => {
+    setVideoFile(null);
+    if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
+    setVideoPreviewUrl(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!locality) {
@@ -319,6 +428,12 @@ export const PropertyNewPage: React.FC = () => {
     try {
       const priceDemandPaise = Math.round(priceInLakhs * 100000 * 100);
 
+      // Package photos
+      const photoPayload = photos.map((p) => ({
+        url: p.url,
+        publicId: p.publicId,
+      }));
+
       await createProperty({
         type,
         category,
@@ -332,13 +447,15 @@ export const PropertyNewPage: React.FC = () => {
         facing,
         description,
         status: 'available',
+        photos: photoPayload,
+        videoUrl: videoPreviewUrl || undefined,
         owner: {
           name: ownerName || 'Direct Owner',
           phone: ownerPhone || undefined,
         },
       });
 
-      success('Property listing added to inventory!');
+      success('Property listing added to inventory with media!');
       setTimeout(() => navigate('/app/properties'), 600);
     } catch (err: any) {
       error(err.message || 'Could not create property.');
@@ -369,9 +486,16 @@ export const PropertyNewPage: React.FC = () => {
             Add New Property Listing
           </h1>
           <p className="text-xs text-muted mt-0.5">
-            Create a verified property card with owner vault privacy & instant flyer sharing.
+            Add listing details, upload photos and video walkthroughs with owner vault protection.
           </p>
         </div>
+
+        {uploadError && (
+          <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <span>{uploadError}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           {/* Property Type & Category Selection */}
@@ -507,11 +631,110 @@ export const PropertyNewPage: React.FC = () => {
             </select>
           </div>
 
+          {/* ======================================================== */}
+          {/* MEDIA UPLOAD SECTION: PHOTOS & VIDEO                    */}
+          {/* ======================================================== */}
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-border space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-ink flex items-center gap-1.5 text-xs">
+                <ImageIcon className="w-4 h-4 text-emerald-600" />
+                Property Media (Photos & Video)
+              </span>
+              <span className="text-[10px] text-muted">
+                {photos.length}/4 Photos • {videoPreviewUrl ? '1 Video' : '0 Video'}
+              </span>
+            </div>
+
+            {/* Photo Thumbnails */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              {photos.map((photo, idx) => (
+                <div key={idx} className="relative h-24 rounded-xl overflow-hidden border border-border group bg-white dark:bg-slate-900">
+                  <img src={photo.url} alt={`Upload ${idx + 1}`} className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(idx)}
+                    className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/70 hover:bg-rose-600 text-white flex items-center justify-center transition cursor-pointer"
+                    title="Remove Photo"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="absolute bottom-1 left-1.5 text-[9px] bg-black/60 text-white px-1.5 py-0.2 rounded font-bold">
+                    Photo {idx + 1}
+                  </span>
+                </div>
+              ))}
+
+              {photos.length < 4 && (
+                <button
+                  type="button"
+                  onClick={() => imageInputRef.current?.click()}
+                  className="h-24 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-600 dark:hover:border-emerald-500 bg-white/50 dark:bg-slate-800/40 flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-emerald-700 transition cursor-pointer"
+                >
+                  <Upload className="w-5 h-5" />
+                  <span className="text-[10px] font-bold">+ Add Photo</span>
+                </button>
+              )}
+            </div>
+
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              onChange={handlePhotoSelect}
+              className="hidden"
+            />
+
+            {/* Video Walkthrough Attachment */}
+            <div className="pt-2 border-t border-border">
+              {videoPreviewUrl ? (
+                <div className="relative rounded-2xl overflow-hidden border border-emerald-500/40 bg-black">
+                  <video
+                    src={videoPreviewUrl}
+                    controls
+                    playsInline
+                    className="w-full max-h-48 object-contain"
+                  />
+                  <div className="p-2.5 bg-slate-900 text-white flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1.5 font-bold">
+                      <Play className="w-3.5 h-3.5 text-emerald-400 fill-current" />
+                      <span>{videoFile?.name || 'Property Walkthrough Video'}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={removeVideo}
+                      className="text-rose-400 hover:text-rose-300 text-xs font-bold underline cursor-pointer"
+                    >
+                      Remove Video
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => videoInputRef.current?.click()}
+                  className="w-full py-3 px-4 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-600 bg-white dark:bg-slate-900 flex items-center justify-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-emerald-700 transition cursor-pointer"
+                >
+                  <VideoIcon className="w-4 h-4 text-emerald-600" />
+                  <span>Attach Property Video Walkthrough (MP4, Max 30 MB)</span>
+                </button>
+              )}
+            </div>
+
+            <input
+              ref={videoInputRef}
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime"
+              onChange={handleVideoSelect}
+              className="hidden"
+            />
+          </div>
+
           {/* Owner Privacy Vault Card */}
           <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-border space-y-3">
             <div className="flex items-center justify-between">
               <span className="font-bold text-ink flex items-center gap-1.5 text-xs">
-                <Shield className="w-4 h-4 text-brand-600" />
+                <ShieldCheck className="w-4 h-4 text-brand-600" />
                 Owner Privacy Vault
               </span>
               <span className="text-[10px] text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full font-bold">
@@ -535,8 +758,9 @@ export const PropertyNewPage: React.FC = () => {
                 className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink"
               />
             </div>
-            <p className="text-[10px] text-muted">
-              🔒 The owner's phone number is never printed on flyer links or sent to prospective buyers. Only you can reveal it.
+            <p className="text-[10px] text-muted flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>Owner contact details are stored in your encrypted vault and never exposed on shared flyers.</span>
             </p>
           </div>
 
@@ -605,6 +829,9 @@ export const PropertyDetailPage: React.FC = () => {
     success(`Status updated to ${newStatus.toUpperCase()}`);
   };
 
+  const hasPhotos = property.photos && property.photos.length > 0;
+  const hasVideo = !!(property.videoUrl || property.video?.url);
+
   return (
     <div className="space-y-6 max-w-3xl mx-auto pb-16 text-left">
       {/* Top Navigation */}
@@ -667,6 +894,56 @@ export const PropertyDetailPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Media Gallery & Video Walkthrough */}
+        {(hasPhotos || hasVideo) && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+              <span className="flex items-center gap-1.5">
+                <ImageIcon className="w-4 h-4 text-emerald-600" />
+                <span>Property Gallery</span>
+              </span>
+              {hasVideo && (
+                <span className="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
+                  <Play className="w-3 h-3 fill-current" />
+                  <span>Video Available</span>
+                </span>
+              )}
+            </div>
+
+            {/* Video Player */}
+            {hasVideo && (
+              <div className="rounded-2xl overflow-hidden bg-black shadow-md border border-slate-200">
+                <video
+                  src={property.videoUrl || property.video?.url}
+                  controls
+                  playsInline
+                  poster={hasPhotos ? property.photos![0].url : undefined}
+                  className="w-full max-h-72 object-contain"
+                />
+              </div>
+            )}
+
+            {/* Photos Strip */}
+            {hasPhotos && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {property.photos!.map((photo, idx) => (
+                  <div
+                    key={idx}
+                    className="h-28 rounded-2xl overflow-hidden border border-border bg-slate-100 dark:bg-slate-800"
+                  >
+                    <img
+                      src={photo.url}
+                      alt={`Property photo ${idx + 1}`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* 4 Large Highlight KPI Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
           <div className="p-3.5 rounded-2xl bg-brand-50/60 dark:bg-brand-950/30 border border-brand-500/30 space-y-1">
@@ -728,7 +1005,7 @@ export const PropertyDetailPage: React.FC = () => {
         <div className="p-5 rounded-3xl bg-gradient-to-br from-surface to-brand-50/40 dark:to-brand-950/20 border border-brand-500/30 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-brand-600" />
+              <ShieldCheck className="w-5 h-5 text-brand-600" />
               <div>
                 <h4 className="text-xs font-black text-ink uppercase tracking-wider font-heading">
                   Owner Privacy Vault
@@ -758,29 +1035,10 @@ export const PropertyDetailPage: React.FC = () => {
 
             <div>
               <span className="text-[10px] text-muted uppercase font-bold block">Phone Number</span>
-              <span className="font-black text-brand-700 dark:text-brand-600 tracking-wider">
-                {isOwnerRevealed ? property.owner?.phone || '+91 98120 44321' : '+91 98••• ••321'}
+              <span className="font-bold text-ink font-mono">
+                {isOwnerRevealed ? property.owner?.phone || '+91 98120 44321' : '+91 ••••• ••••• (Shielded)'}
               </span>
             </div>
-
-            {isOwnerRevealed && (
-              <div className="flex items-center gap-2">
-                <a
-                  href={`tel:${property.owner?.phone || '+919812044321'}`}
-                  className="px-3 py-1 rounded-full bg-brand-700 text-white font-bold text-[11px] flex items-center gap-1"
-                >
-                  <Phone className="w-3 h-3" /> Call
-                </a>
-                <a
-                  href={`https://wa.me/${property.owner?.phone?.replace(/[^0-9]/g, '') || '919812044321'}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-3 py-1 rounded-full bg-emerald-600 text-white font-bold text-[11px] flex items-center gap-1"
-                >
-                  WhatsApp
-                </a>
-              </div>
-            )}
           </div>
         </div>
       </Card>
@@ -789,7 +1047,7 @@ export const PropertyDetailPage: React.FC = () => {
 };
 
 // =========================================================================
-// 4. MASKED FLYER & WHATSAPP SHARE PAGE
+// 4. PROPERTY SHARE & WHATSAPP FLYER PAGE
 // =========================================================================
 export const PropertySharePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -811,7 +1069,7 @@ export const PropertySharePage: React.FC = () => {
     );
   }
 
-  const shareText = `🏡 *${property.title}*\n📍 *Location:* ${property.locality}, Panipat\n📐 *Size:* ${property.size.value} ${property.size.unit.toUpperCase()}\n🧭 *Facing:* ${property.facing || 'Prime Facing'}\n💰 *Demand:* ${formatRupees(property.priceDemandPaise)}\n\n✨ *Highlights:* ${property.description || 'Verified clear title property ready for inspection.'}\n\n📲 *Contact Verified Broker:* Sharma Real Estate Agency · Panipat\nDirect WhatsApp: wa.me/919876543210`;
+  const shareText = `*${property.title}*\nLocation: ${property.locality}, Panipat\nSize: ${property.size.value} ${property.size.unit.toUpperCase()}\nFacing: ${property.facing || 'Prime Facing'}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Verified clear title property ready for inspection.'}\n\nContact Verified Broker: Sharma Real Estate Agency · Panipat\nView Verified Flyer & Media: https://leadnivash.com/flyer/${property._id}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareText);
@@ -851,6 +1109,22 @@ export const PropertySharePage: React.FC = () => {
           </span>
         </div>
 
+        {/* Media indicators */}
+        <div className="flex items-center gap-2 text-xs">
+          {property.photos && property.photos.length > 0 && (
+            <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
+              <ImageIcon className="w-3 h-3 text-emerald-600" />
+              <span>{property.photos.length} Verified Photos Attached</span>
+            </span>
+          )}
+          {(property.videoUrl || property.video?.url) && (
+            <span className="text-[10px] bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
+              <Play className="w-3 h-3 fill-current text-emerald-600" />
+              <span>Video Walkthrough Included</span>
+            </span>
+          )}
+        </div>
+
         {/* Property Highlights */}
         <div className="space-y-2">
           <span className="text-[10px] uppercase font-bold text-muted tracking-wider">
@@ -885,8 +1159,9 @@ export const PropertySharePage: React.FC = () => {
         </div>
 
         {/* Watermark Banner Stamp */}
-        <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 text-center text-xs text-emerald-900 dark:text-emerald-300 font-bold">
-          🛡️ Watermarked: Owner phone number hidden to protect broker brokerage.
+        <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 text-center text-xs text-emerald-900 dark:text-emerald-300 font-bold flex items-center justify-center gap-1.5">
+          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <span>Watermarked: Owner phone number hidden to protect broker brokerage.</span>
         </div>
 
         {/* Share Action Buttons */}

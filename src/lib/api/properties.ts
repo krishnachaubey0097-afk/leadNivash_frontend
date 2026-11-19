@@ -24,6 +24,13 @@ export interface PropertyItem {
     width?: number;
     height?: number;
   }>;
+  videoUrl?: string;
+  video?: {
+    url: string;
+    publicId?: string;
+    duration?: number;
+    thumbnailUrl?: string;
+  };
   owner?: {
     name?: string;
     phone?: string;
@@ -50,6 +57,19 @@ export interface CreatePropertyDto {
   tags?: string[];
   description?: string;
   status?: 'available' | 'hold' | 'sold' | 'rented';
+  photos?: Array<{
+    url: string;
+    publicId: string;
+    width?: number;
+    height?: number;
+  }>;
+  videoUrl?: string;
+  video?: {
+    url: string;
+    publicId?: string;
+    duration?: number;
+    thumbnailUrl?: string;
+  };
   owner?: {
     name?: string;
     phone?: string;

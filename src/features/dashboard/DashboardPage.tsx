@@ -159,12 +159,8 @@ export const DashboardPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
-              Welcome back, {user?.name?.split(' ')[0] || 'Broker'} 👋
+              Welcome back, {user?.name?.split(' ')[0] || 'Broker'}
             </h1>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-600 border border-brand-200/60 dark:border-brand-800/40">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-600 animate-pulse" />
-              Live Sync
-            </span>
           </div>
           <p className="text-xs text-muted mt-0.5">
             {user?.agency?.name || 'leadNivash Partner Agency'} · Panipat, NCR
@@ -687,7 +683,7 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
             {[
               { id: 'active', label: 'Active Deals (Pipeline)' },
-              { id: 'wins', label: 'Wins & Closed Deals 🏆' },
+              { id: 'wins', label: 'Wins & Closed Deals' },
               { id: 'lost', label: 'Lost Analysis' },
               { id: 'insights', label: 'Market Insights' },
               { id: 'deleted', label: 'Recently Deleted Vault' },
@@ -741,10 +737,10 @@ export const DashboardPage: React.FC = () => {
                               )}
                             >
                               {deal.stage === 'token'
-                                ? '🎟️ Token Bayana'
+                                ? 'Token Bayana'
                                 : deal.stage === 'agreement'
-                                ? '📑 Agreement Done'
-                                : '🏛️ Registry Ready'}
+                                ? 'Agreement Done'
+                                : 'Registry Ready'}
                             </span>
                             <span className="text-[11px] text-muted">{deal.date}</span>
                           </div>
@@ -809,7 +805,7 @@ export const DashboardPage: React.FC = () => {
                       <Card key={deal.id} className="p-5 space-y-2 border-amber-500/30 text-left">
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
-                            Closed Won Deal 🏆
+                            Closed Won Deal
                           </span>
                           <span className="text-xs text-muted">{deal.date}</span>
                         </div>

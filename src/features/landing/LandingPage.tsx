@@ -32,6 +32,7 @@ import {
   Zap,
   Menu,
   X,
+  LogIn,
 } from 'lucide-react';
 import { apiClient } from '../../lib/api/client';
 
@@ -271,14 +272,22 @@ export const LandingPage: React.FC = () => {
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
               to="/login"
-              className="text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-2 transition hidden sm:inline-block"
+              className="text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-2 transition hidden sm:inline-flex items-center gap-1.5"
             >
-              Sign In
+              <LogIn className="w-3.5 h-3.5 text-slate-500" />
+              <span>Sign In</span>
             </Link>
 
-            <Button size="sm" pill onClick={scrollToInquiry} className="font-bold shadow-xs text-xs min-h-[40px] px-4">
-              <span>Get Free Demo</span>
-            </Button>
+            <div className="btn-shine-wrapper hidden sm:inline-flex">
+              <div className="btn-shine-border" />
+              <button
+                onClick={scrollToInquiry}
+                className="relative z-10 px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs min-h-[38px]"
+              >
+                <span>Get Free Demo</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
 
             {/* Mobile Hamburger Toggle Button */}
             <button
@@ -458,28 +467,31 @@ export const LandingPage: React.FC = () => {
               Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right property matches faster and manage more opportunities without losing track of your deals.
             </p>
 
-            {/* 5. CTA Buttons (Apple-Class High Contrast Styling with >=44px touch target) */}
+            {/* 5. CTA Buttons (Apple-Class High Contrast Styling with traveling border shine) */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2 max-w-md mx-auto w-full px-2 sm:px-0">
-              <button
-                onClick={scrollToInquiry}
-                className="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-3 sm:py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/40 hover:-translate-y-0.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 min-h-[46px]"
-              >
-                <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                  <span>Get Free Demo</span>
-                </span>
-                <span className="w-8 h-8 rounded-full bg-white text-emerald-800 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs">
-                  <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
-                </span>
-              </button>
+              <div className="btn-shine-wrapper w-full sm:w-auto flex-1">
+                <div className="btn-shine-border" />
+                <button
+                  onClick={scrollToInquiry}
+                  className="relative z-10 w-full group inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-3 sm:py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-600/25 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 min-h-[46px]"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                    <span>Get Free Demo</span>
+                  </span>
+                  <span className="w-8 h-8 rounded-full bg-white text-emerald-800 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs">
+                    <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                  </span>
+                </button>
+              </div>
 
               <Link to="/register" className="w-full sm:w-auto flex-1">
                 <button
                   className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-3 sm:py-2.5 rounded-full bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-800 hover:text-slate-900 border border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 min-h-[46px]"
                 >
                   <span>Start 14-Day Free Trial</span>
-                  <span className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
-                    <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                  <span className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:scale-105">
+                    <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                   </span>
                 </button>
               </Link>
@@ -1390,6 +1402,26 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Keep all your property listings organised in one place, with important details and private owner information securely managed.
                 </p>
+
+                {/* Structured 4-Point Broker Guide */}
+                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
+                    <span>Encrypted central vault for your residential and commercial listing portfolio.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
+                    <span>Stops owner contacts and key specs from getting lost across scattered chats.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
+                    <span>Add BHK, size in Gaj/sq.ft, price, photos, and locked owner contact in seconds.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
+                    <span className="text-emerald-900 font-semibold">Instant recall on client calls with 100% owner privacy guaranteed.</span>
+                  </div>
+                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1437,6 +1469,26 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Organise buyer preferences, budgets, preferred localities and property requirements without searching through old chats.
                 </p>
+
+                {/* Structured 4-Point Broker Guide */}
+                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
+                    <span>Profiles buyer demand by locality, BHK type, maximum budget, and timeframe.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
+                    <span>Prevents active buyers from getting forgotten when inquiries get buried in WhatsApp.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
+                    <span>Save client parameters and loan status once; system monitors matching stock.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
+                    <span className="text-emerald-900 font-semibold">Immediate match alerts the moment suitable inventory enters your market.</span>
+                  </div>
+                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1484,6 +1536,26 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Convert unstructured WhatsApp messages into structured buyer requirements and property information with AI assistance.
                 </p>
+
+                {/* Structured 4-Point Broker Guide */}
+                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
+                    <span>Extracts BHK, Gaj/Sq.Ft, price, locality, and phone numbers from chat text & voice.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
+                    <span>Saves 2+ hours daily spent re-typing messy forwarded Hinglish messages into Excel.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
+                    <span>Paste forwarded text or speak into Quick Paste; AI detects listing vs buyer.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
+                    <span className="text-emerald-900 font-semibold">One-tap conversion from raw chat into structured, searchable records.</span>
+                  </div>
+                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1528,6 +1600,26 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Compare buyer requirements against your property inventory and understand why a property matches.
                 </p>
+
+                {/* Structured 4-Point Broker Guide */}
+                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
+                    <span>Cross-matches inventory and buyer demand with compatibility percentages.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
+                    <span>Eliminates missed deals when inventory arrives weeks after a buyer's initial visit.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
+                    <span>Review instant match suggestions broken down by locality, BHK, and price fit.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
+                    <span className="text-emerald-900 font-semibold">Fast pairings and proactive follow-ups before the buyer purchases elsewhere.</span>
+                  </div>
+                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1574,6 +1666,26 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Create professional, agency-branded property flyers while protecting confidential owner contact information.
                 </p>
+
+                {/* Structured 4-Point Broker Guide */}
+                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
+                    <span>Generates branded public flyers with photos and video walkthroughs.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
+                    <span>Prevents buyers and other brokers from bypassing you directly to the owner.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
+                    <span>Tap "Share on WhatsApp"; a watermarked flyer link opens with your contact info.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
+                    <span className="text-emerald-900 font-semibold">Share freely across WhatsApp groups while retaining 100% deal control.</span>
+                  </div>
+                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1618,6 +1730,26 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Follow opportunities through deal stages and keep track of expected and received brokerage commissions.
                 </p>
+
+                {/* Structured 4-Point Broker Guide */}
+                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
+                    <span>5-stage pipeline tracking from initial inquiry to final registry and payment.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
+                    <span>Prevents forgotten follow-ups, lost commission calculations, and missed client calls.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
+                    <span>Advance matched deals, set commission percentages, and schedule site visits.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5">
+                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
+                    <span className="text-emerald-900 font-semibold">Predictable monthly brokerage income and zero deals abandoned mid-way.</span>
+                  </div>
+                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1959,22 +2091,22 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
             
             {/* PLAN ONE — STARTER PILOT */}
-            <div className="group rounded-3xl bg-surface/90 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 relative">
+            <div className="group rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 relative shadow-2xs">
               <div className="space-y-6">
                 {/* Header & Badge */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold shadow-xs">
+                    <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold shadow-xs">
                       <Zap className="w-4 h-4 text-emerald-600" />
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-ink font-heading">
+                      <h3 className="text-base font-bold text-slate-900 font-heading">
                         Starter Pilot
                       </h3>
-                      <span className="text-[10px] text-muted block">Essential Evaluation</span>
+                      <span className="text-[10px] text-slate-500 block">14-Day Free Evaluation</span>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-black uppercase tracking-wider border border-border/70 dark:border-slate-700">
+                  <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider border border-slate-200">
                     FREE TO START
                   </span>
                 </div>
@@ -1982,35 +2114,37 @@ export const LandingPage: React.FC = () => {
                 {/* Price Display */}
                 <div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-4xl font-black text-ink font-heading tracking-tight">₹0</span>
-                    <span className="text-xs font-bold text-muted">/ 14 Days Free Trial</span>
+                    <span className="text-4xl font-black text-slate-900 font-heading tracking-tight">₹0</span>
+                    <span className="text-xs font-bold text-slate-500">/ 14 Days Free Trial</span>
                   </div>
-                  <p className="text-xs text-muted leading-relaxed mt-2.5">
-                    Explore the essential leadNivash workflow and experience a more organised way to manage your property business.
+                  <p className="text-xs text-slate-600 leading-relaxed mt-2.5">
+                    Explore the essential leadNivash workflow and experience an organised way to manage property enquiries.
                   </p>
                 </div>
 
                 {/* Divider */}
-                <div className="h-px bg-border/70 dark:bg-slate-800 w-full" />
+                <div className="h-px bg-slate-100 w-full" />
 
-                {/* Feature Checklist */}
-                <div className="space-y-3 text-xs text-ink/90">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted block">
+                {/* Feature Checklist with Explicit Limits */}
+                <div className="space-y-3 text-xs text-slate-700">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
                     INCLUDED IN STARTER PILOT:
                   </span>
                   {[
-                    'Up to 15 property listings',
-                    'Up to 10 active buyer profiles',
-                    'WhatsApp Requirement Analyzer',
-                    'Basic Property Matching',
-                    'Standard Shareable Links',
-                    'Essential Dashboard Features',
+                    { text: 'Up to 15 property listings', limit: true },
+                    { text: 'Up to 10 active buyer profiles', limit: true },
+                    { text: 'WhatsApp Message Analyzer (10 parses)', limit: true },
+                    { text: 'Basic Property Matching engine', limit: false },
+                    { text: 'Standard single-photo shareable links', limit: false },
+                    { text: 'Essential 5-stage deal pipeline', limit: false },
                   ].map((feat, i) => (
                     <div key={i} className="flex items-start gap-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                      <div className="w-4 h-4 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 border border-emerald-200">
                         <Check className="w-3 h-3 stroke-[3]" />
                       </div>
-                      <span className="leading-snug">{feat}</span>
+                      <span className="leading-snug">
+                        {feat.text}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -2020,18 +2154,18 @@ export const LandingPage: React.FC = () => {
               <div className="pt-8">
                 <Link to="/register" className="block">
                   <Button variant="secondary" pill className="w-full text-xs font-bold py-3 flex items-center justify-center gap-2 group-hover:border-emerald-500/60 transition-colors">
-                    <span>Start Free Trial</span>
+                    <span>Start 14-Day Free Trial</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <span className="text-[10px] text-center text-muted block mt-2">
+                <span className="text-[10px] text-center text-slate-500 block mt-2">
                   No credit card required · Instant access
                 </span>
               </div>
             </div>
 
             {/* PLAN TWO — FOUNDER ANNUAL PASS (Highlighted Plan) */}
-            <div className="group rounded-3xl bg-gradient-to-b from-white via-white to-emerald-50/40 dark:from-slate-900/95 dark:via-slate-900/95 dark:to-emerald-950/25 border-2 border-emerald-600/90 shadow-xl shadow-emerald-500/10 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-500/15 hover:-translate-y-1.5 transition-all duration-300 relative">
+            <div className="group rounded-3xl bg-gradient-to-b from-white via-white to-emerald-50/40 border-2 border-emerald-600/90 shadow-xl shadow-emerald-500/10 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-500/15 hover:-translate-y-1.5 transition-all duration-300 relative">
               <div className="space-y-6">
                 {/* Header & Badge */}
                 <div className="flex items-center justify-between">
@@ -2040,10 +2174,10 @@ export const LandingPage: React.FC = () => {
                       <Crown className="w-4 h-4" />
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-ink font-heading flex items-center gap-1.5">
+                      <h3 className="text-base font-bold text-slate-900 font-heading flex items-center gap-1.5">
                         Founder Annual Pass
                       </h3>
-                      <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold block">Full Broker OS</span>
+                      <span className="text-[10px] text-emerald-700 font-semibold block">Full Broker OS</span>
                     </div>
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
@@ -2054,15 +2188,15 @@ export const LandingPage: React.FC = () => {
                 {/* Price Display */}
                 <div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-4xl font-black text-ink font-heading tracking-tight">₹3,999</span>
-                    <span className="text-xs font-bold text-muted">/ Per Year</span>
+                    <span className="text-4xl font-black text-slate-900 font-heading tracking-tight">₹3,999</span>
+                    <span className="text-xs font-bold text-slate-500">/ Per Year</span>
                   </div>
-                  <div className="inline-block mt-1 px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 text-[11px] text-emerald-800 dark:text-emerald-300 font-bold">
+                  <div className="inline-block mt-1 px-2.5 py-0.5 rounded-md bg-emerald-100 border border-emerald-200 text-[11px] text-emerald-800 font-bold">
                     Approximately ₹333 / month{' '}
-                    <span className="text-[10px] font-normal text-muted">(billed annually)</span>
+                    <span className="text-[10px] font-normal text-slate-500">(billed annually)</span>
                   </div>
-                  <p className="text-xs text-muted leading-relaxed mt-2.5">
-                    Everything you need to organise your property business, manage opportunities and grow your brokerage workflow.
+                  <p className="text-xs text-slate-600 leading-relaxed mt-2.5">
+                    Everything you need to organise your property business, manage opportunities, and scale deal closings.
                   </p>
                 </div>
 
@@ -2070,18 +2204,19 @@ export const LandingPage: React.FC = () => {
                 <div className="h-px bg-emerald-500/20 w-full" />
 
                 {/* Feature Checklist */}
-                <div className="space-y-3 text-xs text-ink/90">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 block">
+                <div className="space-y-3 text-xs text-slate-700">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 block">
                     EVERYTHING IN PILOT, PLUS:
                   </span>
                   {[
-                    'Unlimited Property Inventory, subject to approved plan limits',
-                    'Unlimited Buyer Management, subject to approved plan limits',
-                    'AI WhatsApp Parser',
-                    'Multi-Image Public Brochure Hosting',
-                    'Deal & Commission Tracking',
-                    'Custom Agency Branding',
-                    'Priority Support',
+                    'Unlimited Property Listings (subject to fair-use limits)',
+                    'Unlimited Buyer Management & Profiles',
+                    'Full AI WhatsApp & Voice Parser (Unlimited)',
+                    'Multi-Image & Video Walkthrough Public Hosting',
+                    'Intelligent Auto-Matching with Reason Breakdown',
+                    'Complete Deal & Commission Tracking Pipeline',
+                    'Custom Agency Branding & Watermark Protection',
+                    'Dedicated Priority WhatsApp & Phone Support',
                   ].map((feat, i) => (
                     <div key={i} className="flex items-start gap-2.5">
                       <div className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
@@ -2093,15 +2228,21 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* CTA Button */}
+              {/* CTA Button with Button Shine */}
               <div className="pt-8">
                 <Link to="/register" className="block">
-                  <Button size="md" pill className="w-full text-xs font-extrabold py-3 shadow-md shadow-emerald-600/20 bg-emerald-700 hover:bg-emerald-800 flex items-center justify-center gap-2">
-                    <span>Get Started</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
+                  <div className="btn-shine-wrapper w-full flex">
+                    <div className="btn-shine-border" />
+                    <button
+                      type="button"
+                      className="relative z-10 w-full py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider transition shadow-md shadow-emerald-600/25 flex items-center justify-center gap-2 cursor-pointer min-h-[46px]"
+                    >
+                      <span>Upgrade to Founder Pass</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </Link>
-                <span className="text-[10px] text-center text-muted block mt-2">
+                <span className="text-[10px] text-center text-slate-500 block mt-2">
                   14-day evaluation period included · Cancel anytime
                 </span>
               </div>
@@ -2109,17 +2250,17 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* 3. Compact Plan Comparison Strip */}
-          <div className="max-w-4xl mx-auto rounded-3xl bg-surface/90 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 p-6 sm:p-8 space-y-6 shadow-sm text-left">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/70 dark:border-slate-800 pb-4">
+          <div className="max-w-4xl mx-auto rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 space-y-6 shadow-sm text-left">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
               <div>
-                <h3 className="text-base font-bold text-ink font-heading">
+                <h3 className="text-base font-bold text-slate-900 font-heading">
                   Everything You Need to Get Started.
                 </h3>
-                <p className="text-xs text-muted mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Detailed capability comparison between Starter Pilot and Founder Annual Pass.
                 </p>
               </div>
-              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shrink-0">
+              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0">
                 Plan Comparison
               </span>
             </div>
@@ -2128,30 +2269,30 @@ export const LandingPage: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-border/60 dark:border-slate-800 text-[11px] font-black uppercase tracking-wider text-muted">
+                  <tr className="border-b border-slate-200 text-[11px] font-black uppercase tracking-wider text-slate-500">
                     <th className="py-2.5 pr-4">Capability</th>
                     <th className="py-2.5 px-4 text-center">Starter Pilot</th>
-                    <th className="py-2.5 pl-4 text-center text-emerald-700 dark:text-emerald-400">
+                    <th className="py-2.5 pl-4 text-center text-emerald-700">
                       Founder Annual Pass
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border/50 dark:divide-slate-800/60 text-ink/90 font-medium">
+                <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
                   {[
                     { cap: 'Trial Duration', p1: '14 Days Free', p2: '365 Days / Full Year' },
                     { cap: 'Property Listings', p1: 'Up to 15 listings', p2: 'Unlimited (plan limits)' },
                     { cap: 'Active Buyer Profiles', p1: 'Up to 10 profiles', p2: 'Unlimited (plan limits)' },
-                    { cap: 'AI WhatsApp Parsing', p1: 'Standard Analyzer', p2: 'Full AI WhatsApp Parser' },
+                    { cap: 'AI WhatsApp Parsing', p1: '10 messages / month', p2: 'Full AI & Voice (Unlimited)' },
                     { cap: 'Property Matching', p1: 'Basic Criteria', p2: 'Intelligent Auto-Matching' },
-                    { cap: 'Public Property Flyers', p1: 'Standard Links', p2: 'Multi-Image Branded Hosting' },
+                    { cap: 'Public Property Flyers', p1: 'Single Photo Links', p2: 'Multi-Image & Video Hosting' },
                     { cap: 'Deal & Commission Tracking', p1: 'Essential Pipeline', p2: 'Full Deal & Commission Tracking' },
-                    { cap: 'Custom Agency Branding', p1: '—', p2: 'Logo & Custom Contact Protection' },
-                    { cap: 'Priority Support', p1: 'Standard Support', p2: 'Dedicated Priority Support' },
+                    { cap: 'Custom Agency Branding', p1: '—', p2: 'Logo & Custom Watermark' },
+                    { cap: 'Priority Support', p1: 'Community Support', p2: 'Dedicated WhatsApp & Phone' },
                   ].map((row, idx) => (
-                    <tr key={idx} className="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                      <td className="py-2.5 pr-4 font-semibold text-ink">{row.cap}</td>
-                      <td className="py-2.5 px-4 text-center text-muted">{row.p1}</td>
-                      <td className="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">
+                    <tr key={idx} className="hover:bg-emerald-50/40 transition-colors">
+                      <td className="py-2.5 pr-4 font-semibold text-slate-900">{row.cap}</td>
+                      <td className="py-2.5 px-4 text-center text-slate-500">{row.p1}</td>
+                      <td className="py-2.5 pl-4 text-center font-bold text-emerald-700">
                         {row.p2}
                       </td>
                     </tr>

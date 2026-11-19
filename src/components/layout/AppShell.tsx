@@ -30,6 +30,12 @@ export const AppShell: React.FC = () => {
         {/* Global Alert Banners */}
         {!isOnline && <Banner variant="offline" />}
         {isServerWaking && <Banner variant="server-waking" />}
+        {user && !user.phone && (
+          <Banner
+            variant="warning"
+            message="Please complete your profile: A verified mobile number is required to enable masked client sharing and WhatsApp flyers."
+          />
+        )}
         {trialDaysRemaining !== null && trialDaysRemaining <= 7 && (
           <Banner variant="plan" message={`${trialDaysRemaining} day${trialDaysRemaining === 1 ? '' : 's'} remaining in your free trial`} />
         )}

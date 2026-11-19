@@ -17,6 +17,7 @@ export interface SpeechListenerOptions {
 export class VoiceRecognition {
   private recognition: any = null;
   private isListening = false;
+  private lastFinalIndex = -1;
 
   constructor() {
     const SpeechClass = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -41,23 +42,35 @@ export class VoiceRecognition {
       this.stop();
     }
 
+    this.lastFinalIndex = -1;
     this.recognition.lang = options.lang || 'hi-IN'; // Default to Hindi/Hinglish
 
     this.recognition.onresult = (event: any) => {
-      let finalTranscript = '';
-      let interimTranscript = '';
+      let finalChunk = '';
+      let interimChunk = '';
 
       for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
+        const item = event.results[i];
+        const text = item[0]?.transcript?.trim() || '';
+
+        if (item.isFinal) {
+          if (i > this.lastFinalIndex) {
+            this.lastFinalIndex = i;
+            if (text) {
+              finalChunk += (finalChunk ? ' ' : '') + text;
+            }
+          }
         } else {
-          interimTranscript += event.results[i][0].transcript;
+          if (text) {
+            interimChunk += (interimChunk ? ' ' : '') + text;
+          }
         }
       }
 
-      const text = (finalTranscript || interimTranscript).trim();
-      if (text) {
-        options.onResult(text, !!finalTranscript);
+      if (finalChunk) {
+        options.onResult(finalChunk, true);
+      } else if (interimChunk) {
+        options.onResult(interimChunk, false);
       }
     };
 

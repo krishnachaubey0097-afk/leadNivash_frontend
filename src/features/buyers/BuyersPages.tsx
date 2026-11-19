@@ -65,9 +65,9 @@ export const BuyersListPage: React.FC = () => {
 
   const urgencyFilters = [
     { label: 'All Inquiries', value: 'all' },
-    { label: '🔥 Immediate Closing', value: 'hot' },
-    { label: '🟡 Within Month', value: 'warm' },
-    { label: '⚪ Casual Exploring', value: 'cold' },
+    { label: 'Immediate Closing', value: 'hot' },
+    { label: 'Within Month', value: 'warm' },
+    { label: 'Casual Exploring', value: 'cold' },
   ];
 
   return (
@@ -399,9 +399,9 @@ export const BuyerNewPage: React.FC = () => {
             </label>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: '🔥 Immediate (7 Days)', value: 'hot' },
-                { label: '🟡 Within Month', value: 'warm' },
-                { label: '⚪ Flexible / Casual', value: 'cold' },
+                { label: 'Immediate (7 Days)', value: 'hot' },
+                { label: 'Within Month', value: 'warm' },
+                { label: 'Flexible / Casual', value: 'cold' },
               ].map((u) => (
                 <button
                   key={u.value}
@@ -597,7 +597,7 @@ export const BuyerDetailPage: React.FC = () => {
                     : 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400'
                 )}
               >
-                {buyer.urgency === 'hot' ? '🔥 Hot Client' : '🟡 Active Buyer'}
+                {buyer.urgency === 'hot' ? 'Hot Client' : 'Active Buyer'}
               </span>
             </div>
             <p className="text-xs text-muted mt-0.5">
@@ -629,7 +629,7 @@ export const BuyerDetailPage: React.FC = () => {
 
         {buyer.notes && (
           <p className="text-xs text-slate-600 dark:text-slate-300 p-3 rounded-xl bg-surface border border-border">
-            💡 <span className="font-bold">Client Notes:</span> {buyer.notes}
+            <span className="font-bold">Client Notes:</span> {buyer.notes}
           </p>
         )}
       </Card>

@@ -117,7 +117,7 @@ export const ToolsPage: React.FC = () => {
             </h1>
             <Badge variant="brand">
               <Sparkles className="w-3 h-3 mr-1 inline" />
-              Field Math
+              Calculators
             </Badge>
           </div>
           <p className="text-xs text-muted mt-0.5">
@@ -129,11 +129,11 @@ export const ToolsPage: React.FC = () => {
       {/* Segmented Top Navigation Tabs */}
       <div className="flex p-1 bg-slate-200/70 dark:bg-slate-800/80 rounded-full border border-border/80 overflow-x-auto scrollbar-none">
         {[
-          { id: 'area', label: '📐 Area Converter' },
-          { id: 'registry', label: '🏛️ Registry & Stamp' },
-          { id: 'emi', label: '💳 Home Loan EMI' },
-          { id: 'commission', label: '🤝 Brokerage Split' },
-          { id: 'templates', label: '📲 WhatsApp Chips' },
+          { id: 'area', label: 'Area Converter' },
+          { id: 'registry', label: 'Registry & Stamp' },
+          { id: 'emi', label: 'Home Loan EMI' },
+          { id: 'commission', label: 'Brokerage Split' },
+          { id: 'templates', label: 'WhatsApp Chips' },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -324,9 +324,9 @@ export const ToolsPage: React.FC = () => {
               </label>
               <div className="grid grid-cols-3 gap-1.5">
                 {[
-                  { id: 'female', label: '👩 Female (5%)' },
-                  { id: 'male', label: '👨 Male (7%)' },
-                  { id: 'joint', label: '👫 Joint (6%)' },
+                  { id: 'female', label: 'Female (5%)' },
+                  { id: 'male', label: 'Male (7%)' },
+                  { id: 'joint', label: 'Joint (6%)' },
                 ].map((g) => (
                   <button
                     key={g.id}

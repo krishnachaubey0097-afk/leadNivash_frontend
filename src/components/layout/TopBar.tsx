@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AvatarMenu } from './AvatarMenu';
-import { Sun, Moon, Bell, Settings } from 'lucide-react';
-import { useTheme } from '../../lib/theme';
+import { Bell, Settings } from 'lucide-react';
 
 export const TopBar: React.FC = () => {
   const location = useLocation();
-  const { mode, setMode } = useTheme();
 
   const getPageTitle = (pathname: string): { title: string; subtitle?: string } => {
     if (pathname === '/app') return { title: 'Today', subtitle: 'Overview & Matches' };
@@ -51,15 +49,6 @@ export const TopBar: React.FC = () => {
           <Link to="/app/paste" className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/40 text-brand-700 dark:text-brand-600 text-xs font-bold transition">
             <span>＋ Paste Message</span>
           </Link>
-
-          {/* Theme switcher toggle */}
-          <button
-            onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-            aria-label="Toggle Theme"
-          >
-            {mode === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
-          </button>
 
           {/* Notifications button */}
           <button
