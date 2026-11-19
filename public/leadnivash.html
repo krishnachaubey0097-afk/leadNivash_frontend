@@ -135,9 +135,9 @@
         </nav>
 
         <!-- Right Header Actions -->
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2 sm:gap-2.5">
           <!-- DIRECT BUTTON TO OPEN BROKER DASHBOARD -->
-          <button onclick="openApp('dashboard')" class="px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+          <button onclick="openApp('dashboard')" class="hidden xs:inline-flex px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition items-center gap-1.5 cursor-pointer">
             <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-emerald-400"></i>
             <span>Dashboard</span>
           </button>
@@ -145,6 +145,83 @@
           <a href="#inquiry-form" class="hidden sm:inline-flex px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition">
             Get Free Demo
           </a>
+
+          <!-- Mobile Hamburger Toggle Button -->
+          <button
+            type="button"
+            onclick="toggleMobileMenu()"
+            class="md:hidden w-10 h-10 rounded-full flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:bg-slate-100 active:scale-95 transition cursor-pointer border border-slate-200/80 shadow-2xs"
+            aria-label="Toggle navigation menu"
+            id="mobileMenuBtn"
+          >
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation Drawer / Overlay -->
+      <div id="mobileDrawer" class="fixed inset-0 z-50 md:hidden hidden">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity" onclick="toggleMobileMenu(false)" aria-hidden="true"></div>
+
+        <!-- Slide-in Drawer Panel -->
+        <div class="fixed top-0 right-0 bottom-0 w-full max-w-xs sm:max-w-sm bg-white shadow-2xl z-50 p-6 flex flex-col justify-between border-l border-slate-200 transform translate-x-full transition-transform duration-300 ease-in-out" id="drawerPanel">
+          <div class="space-y-6">
+            <!-- Drawer Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div class="flex items-center gap-2.5">
+                <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-7 h-7 object-contain">
+                <span class="font-black text-slate-900 font-heading text-base">
+                  lead<span class="text-emerald-700">Nivash</span>
+                </span>
+              </div>
+              <button
+                type="button"
+                onclick="toggleMobileMenu(false)"
+                class="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
+                aria-label="Close menu"
+              >
+                <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex flex-col space-y-1 text-sm font-bold text-slate-700">
+              <a href="#how-it-works" onclick="toggleMobileMenu(false)" class="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between">
+                <span>How It Works</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400"></i>
+              </a>
+              <a href="#features" onclick="toggleMobileMenu(false)" class="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between">
+                <span>Features & Capabilities</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400"></i>
+              </a>
+              <a href="#financial-impact" onclick="toggleMobileMenu(false)" class="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between">
+                <span>ROI Calculator</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400"></i>
+              </a>
+              <a href="#pricing" onclick="toggleMobileMenu(false)" class="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between">
+                <span>Pricing Plans</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400"></i>
+              </a>
+              <a href="#why-leadnivash" onclick="toggleMobileMenu(false)" class="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between">
+                <span>Why leadNivash</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400"></i>
+              </a>
+            </nav>
+          </div>
+
+          <!-- Drawer Bottom Actions -->
+          <div class="pt-6 border-t border-slate-100 space-y-3">
+            <a href="#inquiry-form" onclick="toggleMobileMenu(false)" class="w-full py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider transition shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 cursor-pointer min-h-[46px]">
+              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+              <span>Get Free Demo</span>
+            </a>
+
+            <button onclick="toggleMobileMenu(false); openApp('dashboard');" class="w-full py-3 rounded-full bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer min-h-[46px]">
+              <i data-lucide="layout-dashboard" class="w-4 h-4 text-emerald-400"></i>
+              <span>Open Broker Dashboard</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -2546,6 +2623,38 @@
         lucide.createIcons();
       }, 600);
     }
+
+    // Mobile Navigation Drawer Toggle
+    let isMobileMenuOpen = false;
+    function toggleMobileMenu(forceState) {
+      const drawer = document.getElementById('mobileDrawer');
+      const panel = document.getElementById('drawerPanel');
+      if (!drawer || !panel) return;
+      isMobileMenuOpen = typeof forceState === 'boolean' ? forceState : !isMobileMenuOpen;
+      if (isMobileMenuOpen) {
+        drawer.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          panel.classList.remove('translate-x-full');
+          panel.classList.add('translate-x-0');
+        });
+        document.body.style.overflow = 'hidden';
+      } else {
+        panel.classList.remove('translate-x-0');
+        panel.classList.add('translate-x-full');
+        setTimeout(() => {
+          drawer.classList.add('hidden');
+        }, 300);
+        document.body.style.overflow = '';
+      }
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isMobileMenuOpen) {
+        toggleMobileMenu(false);
+      }
+    });
 
     // Pure Apple-Class Light Theme Enforcer
     document.documentElement.classList.remove('dark');

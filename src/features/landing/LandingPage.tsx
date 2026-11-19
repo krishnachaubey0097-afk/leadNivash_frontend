@@ -30,10 +30,31 @@ import {
   BarChart3,
   Crown,
   Zap,
+  Menu,
+  X,
 } from 'lucide-react';
 import { apiClient } from '../../lib/api/client';
 
 export const LandingPage: React.FC = () => {
+  // Mobile Navigation Drawer State
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  // Lock background scroll and listen to Escape key when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') setMobileMenuOpen(false);
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [mobileMenuOpen]);
 
   // Hero Section: Animated 5-Step Visual Process Indicator State
   const [activeProcessStep, setActiveProcessStep] = useState<number>(0);
@@ -220,46 +241,173 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================= */}
       {/* NAVIGATION HEADER                                         */}
       {/* ========================================================= */}
-      <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border/80 transition-all">
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           {/* Logo with strict brand styling: leadNivash */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-surface border border-border/70 p-1.5 shadow-xs group-hover:border-brand-600/40 transition">
+          <Link to="/" className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-xl">
+            <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 p-1.5 shadow-xs group-hover:border-emerald-600/40 transition">
               <img src="/logo-icon.png" alt="leadNivash" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black tracking-tight text-ink font-heading leading-tight">
-                lead<span className="text-brand-600">Nivash</span>
+              <span className="text-lg font-black tracking-tight text-slate-900 font-heading leading-tight">
+                lead<span className="text-emerald-700">Nivash</span>
               </span>
-              <span className="text-[9px] uppercase tracking-widest text-muted font-bold -mt-0.5">
+              <span className="text-[9px] uppercase tracking-widest text-slate-500 font-bold -mt-0.5">
                 Broker OS
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-8 text-xs font-bold text-muted">
-            <a href="#how-it-works" className="hover:text-ink transition">How It Works</a>
-            <a href="#features" className="hover:text-ink transition">Features</a>
-            <a href="#financial-impact" className="hover:text-ink transition">Financial Impact</a>
-            <a href="#pricing" className="hover:text-ink transition">Pricing</a>
-            <a href="#why-leadnivash" className="hover:text-ink transition">Why leadNivash</a>
+          <nav className="hidden lg:flex items-center gap-8 text-xs font-bold text-slate-600">
+            <a href="#how-it-works" className="hover:text-emerald-700 transition">How It Works</a>
+            <a href="#capabilities" className="hover:text-emerald-700 transition">Features</a>
+            <a href="#financial-impact" className="hover:text-emerald-700 transition">Financial Impact</a>
+            <a href="#pricing" className="hover:text-emerald-700 transition">Pricing</a>
+            <a href="#why-leadnivash" className="hover:text-emerald-700 transition">Why leadNivash</a>
           </nav>
 
           {/* Right Action Items */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               to="/login"
-              className="text-xs font-bold text-text hover:text-ink px-3 py-2 transition hidden sm:inline-block"
+              className="text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-2 transition hidden sm:inline-block"
             >
               Sign In
             </Link>
 
-            <Button size="sm" pill onClick={scrollToInquiry} className="font-bold shadow-xs text-xs">
+            <Button size="sm" pill onClick={scrollToInquiry} className="font-bold shadow-xs text-xs min-h-[40px] px-4">
               <span>Get Free Demo</span>
             </Button>
+
+            {/* Mobile Hamburger Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:bg-slate-100 active:scale-95 transition cursor-pointer border border-slate-200/80 shadow-2xs"
+              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Drawer / Overlay */}
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-hidden="true"
+            />
+
+            {/* Slide-in Drawer Panel */}
+            <div
+              className="fixed top-0 right-0 bottom-0 w-full max-w-xs sm:max-w-sm bg-white shadow-2xl z-50 p-6 flex flex-col justify-between border-l border-slate-200 animate-hero-up"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile Navigation"
+            >
+              <div className="space-y-6">
+                {/* Drawer Header */}
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                  <div className="flex items-center gap-2.5">
+                    <img src="/logo-icon.png" alt="leadNivash" className="w-7 h-7 object-contain" />
+                    <span className="font-black text-slate-900 font-heading text-base">
+                      lead<span className="text-emerald-700">Nivash</span>
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
+                    aria-label="Close menu"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Navigation Links */}
+                <nav className="flex flex-col space-y-1 text-sm font-bold text-slate-700">
+                  <a
+                    href="#how-it-works"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between"
+                  >
+                    <span>How It Works</span>
+                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                  </a>
+                  <a
+                    href="#capabilities"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between"
+                  >
+                    <span>Features & Capabilities</span>
+                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                  </a>
+                  <a
+                    href="#financial-impact"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between"
+                  >
+                    <span>ROI Calculator</span>
+                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                  </a>
+                  <a
+                    href="#pricing"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between"
+                  >
+                    <span>Pricing Plans</span>
+                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                  </a>
+                  <a
+                    href="#why-leadnivash"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center justify-between"
+                  >
+                    <span>Why leadNivash</span>
+                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                  </a>
+                </nav>
+              </div>
+
+              {/* Drawer Bottom Actions */}
+              <div className="pt-6 border-t border-slate-100 space-y-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    scrollToInquiry();
+                  }}
+                  className="w-full py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider transition shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 cursor-pointer min-h-[46px]"
+                >
+                  <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                  <span>Get Free Demo</span>
+                </button>
+
+                <Link
+                  to="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-800 font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer border border-slate-200 min-h-[46px]"
+                >
+                  <span>Start 14-Day Free Trial</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </Link>
+
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-xs text-center text-slate-500 hover:text-slate-900 block font-bold py-2 transition"
+                >
+                  Already have an account? Sign In
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* ========================================================= */}
@@ -298,7 +446,7 @@ export const LandingPage: React.FC = () => {
             {/* 1. Old Badge completely removed as mandated */}
 
             {/* 3. Hero Headline with high-contrast emerald typography */}
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black font-heading leading-[1.08] tracking-tight text-slate-900 animate-hero-up">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-heading leading-[1.12] sm:leading-[1.08] tracking-tight text-slate-900 animate-hero-up">
               Turn Messages into <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 bg-clip-text text-transparent">
                 Property Deals.
@@ -306,15 +454,15 @@ export const LandingPage: React.FC = () => {
             </h1>
 
             {/* 4. Supporting Text */}
-            <p className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
+            <p className="text-xs sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal px-2 sm:px-0">
               Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right property matches faster and manage more opportunities without losing track of your deals.
             </p>
 
-            {/* 5. CTA Buttons (Apple-Class High Contrast Styling) */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2 max-w-md mx-auto w-full">
+            {/* 5. CTA Buttons (Apple-Class High Contrast Styling with >=44px touch target) */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2 max-w-md mx-auto w-full px-2 sm:px-0">
               <button
                 onClick={scrollToInquiry}
-                className="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/40 hover:-translate-y-0.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                className="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-3 sm:py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/40 hover:-translate-y-0.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 min-h-[46px]"
               >
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
@@ -327,7 +475,7 @@ export const LandingPage: React.FC = () => {
 
               <Link to="/register" className="w-full sm:w-auto flex-1">
                 <button
-                  className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 hover:text-slate-900 border border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                  className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-3 sm:py-2.5 rounded-full bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-800 hover:text-slate-900 border border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 min-h-[46px]"
                 >
                   <span>Start 14-Day Free Trial</span>
                   <span className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
@@ -338,24 +486,24 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Trust points */}
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-2 text-xs text-slate-600 font-semibold">
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 100% Owner Contact Privacy
+            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-6 pt-2 text-xs text-slate-600 font-semibold px-2">
+              <span className="flex items-center gap-1.5 whitespace-nowrap">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> 100% Owner Contact Privacy
               </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> No credit card required
+              <span className="flex items-center gap-1.5 whitespace-nowrap">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> No credit card required
               </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> WhatsApp integrated
+              <span className="flex items-center gap-1.5 whitespace-nowrap">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> WhatsApp integrated
               </span>
             </div>
           </div>
 
           {/* 6 & 7. Product Preview Container & Animated 5-Step Process Flow */}
-          <div className="mt-14 max-w-5xl mx-auto">
-            {/* Animated 5-Step Process Indicator (Replacing static pill) */}
+          <div className="mt-10 sm:mt-14 max-w-5xl mx-auto">
+            {/* Animated 5-Step Process Indicator (Smooth scrollable with snapping on mobile) */}
             <div className="mb-4">
-              <div className="flex items-center justify-between sm:justify-center gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
+              <div className="flex items-center justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 no-scrollbar scroll-smooth snap-x snap-mandatory px-1 sm:px-0">
                 {PROCESS_STEPS.map((step, idx) => {
                   const Icon = step.icon;
                   const isActive = activeProcessStep === idx;
@@ -367,7 +515,7 @@ export const LandingPage: React.FC = () => {
                         type="button"
                         onClick={() => setActiveProcessStep(idx)}
                         className={clsx(
-                          'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer border',
+                          'flex items-center gap-2 px-3 sm:px-3.5 py-2 sm:py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer border snap-center shrink-0 min-h-[40px]',
                           isActive
                             ? 'bg-white border-emerald-500 text-emerald-800 shadow-lg shadow-emerald-600/15 ring-2 ring-emerald-500/25 scale-105 font-bold'
                             : isPassed
@@ -407,7 +555,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Apple-Class Crisp White Dashboard-Window Container */}
-            <div className="rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-2xl p-4 sm:p-6 shadow-2xl shadow-emerald-950/10 relative overflow-hidden transition-all duration-300">
+            <div className="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-2xl p-3.5 sm:p-6 shadow-2xl shadow-emerald-950/10 relative overflow-hidden transition-all duration-300">
               {/* Window Chrome Header Bar with Clean OS Dots & Encrypted Status */}
               <div className="flex items-center justify-between pb-3 px-1 border-b border-slate-200/80">
                 <div className="flex items-center gap-2">
@@ -416,7 +564,7 @@ export const LandingPage: React.FC = () => {
                   <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-[10px] font-bold text-emerald-800 shadow-2xs">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-[10px] font-bold text-emerald-800 shadow-2xs">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     Encrypted Owner Vault Active
                   </span>
@@ -806,23 +954,23 @@ export const LandingPage: React.FC = () => {
           {/* 3 & 4. Interactive Connected Progress Line & Stage Navigation */}
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between pb-3 px-1">
-              <span className="text-xs font-bold text-muted flex items-center gap-1.5">
+              <span className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Stage {activeWorkflowStep + 1} of 5 · Continuous Flow</span>
               </span>
               <button
                 type="button"
                 onClick={() => setIsWorkflowPaused(!isWorkflowPaused)}
-                className="text-[11px] font-bold text-muted hover:text-ink px-2.5 py-1 rounded-full border border-border/80 bg-surface hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer"
+                className="text-[11px] font-bold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer min-h-[36px]"
               >
                 {isWorkflowPaused ? 'Resume Auto-Cycle' : 'Pause Flow'}
               </button>
             </div>
 
-            {/* Desktop Horizontal Stepper Bar */}
-            <div className="relative mb-8">
+            {/* Responsive Stepper Bar */}
+            <div className="relative mb-6 sm:mb-8">
               {/* Subtle connecting line across stages */}
-              <div className="absolute top-5 inset-x-8 h-0.5 bg-slate-200 dark:bg-slate-800 -z-0">
+              <div className="absolute top-5 inset-x-6 sm:inset-x-8 h-0.5 bg-slate-200 -z-0">
                 <div
                   className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
                   style={{ width: `${(activeWorkflowStep / 4) * 100}%` }}
@@ -847,29 +995,31 @@ export const LandingPage: React.FC = () => {
                       key={s.num}
                       type="button"
                       onClick={() => setActiveWorkflowStep(idx)}
-                      className="group flex flex-col items-center gap-2 cursor-pointer focus:outline-none"
+                      className="group flex flex-col items-center gap-1.5 cursor-pointer focus:outline-none min-h-[44px] min-w-[44px]"
+                      aria-label={`Step ${s.num}: ${s.title}`}
                     >
                       <div
                         className={clsx(
-                          'w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2',
+                          'w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2',
                           isActive
                             ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-600/30 scale-110 ring-4 ring-emerald-500/20'
                             : isPassed
-                            ? 'bg-emerald-50 dark:bg-emerald-950/80 border-emerald-600 text-emerald-700 dark:text-emerald-400'
-                            : 'bg-surface dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-muted hover:border-slate-400'
+                            ? 'bg-emerald-50 border-emerald-600 text-emerald-700'
+                            : 'bg-white border-slate-300 text-slate-500 hover:border-slate-400'
                         )}
                       >
                         <Icon className="w-4 h-4" />
                       </div>
                       <span
                         className={clsx(
-                          'text-[11px] font-bold tracking-tight hidden sm:inline transition-colors',
+                          'text-[10px] sm:text-[11px] font-bold tracking-tight transition-colors',
                           isActive
-                            ? 'text-emerald-700 dark:text-emerald-400 font-extrabold'
-                            : 'text-muted group-hover:text-ink'
+                            ? 'text-emerald-700 font-extrabold'
+                            : 'text-slate-500 group-hover:text-slate-900'
                         )}
                       >
-                        {s.num}. {s.title}
+                        <span className="sm:hidden">{s.num}</span>
+                        <span className="hidden sm:inline">{s.num}. {s.title}</span>
                       </span>
                     </button>
                   );
@@ -878,11 +1028,11 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Active Stage Visual Showcase Deck */}
-            <div className="rounded-2xl sm:rounded-3xl border border-border/90 dark:border-slate-800 bg-surface/90 dark:bg-slate-900/90 backdrop-blur-xl p-5 sm:p-8 shadow-2xl transition-all duration-500">
+            <div className="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-xl p-4 sm:p-8 shadow-xl transition-all duration-500">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
                 {/* Left Column: Stage Narrative & Action */}
                 <div className="lg:col-span-5 space-y-4 text-left">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 text-xs font-bold shadow-xs">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-xs">
                     <span>
                       {activeWorkflowStep === 0 && 'STEP 01 — PASTE A MESSAGE'}
                       {activeWorkflowStep === 1 && 'STEP 02 — AI UNDERSTANDS IT'}
@@ -892,7 +1042,7 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-black text-ink font-heading leading-snug">
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 font-heading leading-snug">
                     {activeWorkflowStep === 0 && 'Paste a Message'}
                     {activeWorkflowStep === 1 && 'AI Understands It'}
                     {activeWorkflowStep === 2 && 'Save and Organise'}
@@ -900,7 +1050,7 @@ export const LandingPage: React.FC = () => {
                     {activeWorkflowStep === 4 && 'Share and Track'}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-muted leading-relaxed font-normal">
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                     {activeWorkflowStep === 0 &&
                       'Copy a buyer requirement or property listing from WhatsApp and paste it into leadNivash.'}
                     {activeWorkflowStep === 1 &&
@@ -913,16 +1063,16 @@ export const LandingPage: React.FC = () => {
                       'Generate a branded masked property flyer, share it with the buyer and track the opportunity through your deal pipeline.'}
                   </p>
 
-                  <div className="pt-2 flex items-center gap-3">
+                  <div className="pt-2 flex flex-wrap items-center gap-3">
                     <button
                       type="button"
                       onClick={() => setActiveWorkflowStep((prev) => (prev + 1) % 5)}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-ink text-xs font-bold transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 text-xs font-bold transition cursor-pointer min-h-[40px]"
                     >
                       <span>Next Stage</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
-                    <span className="text-[11px] text-muted font-medium">Click any step above to explore</span>
+                    <span className="text-[11px] text-slate-500 font-medium">Tap any step above to explore</span>
                   </div>
                 </div>
 
@@ -1528,17 +1678,17 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* 2. Interactive Financial Dashboard (Two-Column Layout) */}
-          <div className="rounded-3xl bg-surface/95 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 shadow-xl shadow-emerald-950/5 overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-border/70 dark:divide-slate-800">
+          <div className="rounded-3xl bg-white border border-slate-200/90 shadow-xl shadow-emerald-950/5 overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
               
               {/* LEFT COLUMN: Financial Assumptions & Controls (7 Cols on desktop) */}
-              <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 space-y-8 text-left">
-                <div className="flex items-center justify-between border-b border-border/60 dark:border-slate-800 pb-3">
-                  <h3 className="text-sm font-black uppercase tracking-wider text-ink font-heading flex items-center gap-2">
+              <div className="lg:col-span-7 p-5 sm:p-8 lg:p-10 space-y-7 text-left">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                  <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 font-heading flex items-center gap-2">
                     <Calculator className="w-4 h-4 text-emerald-600" />
                     Brokerage Assumptions
                   </h3>
-                  <span className="text-[11px] font-semibold text-muted">
+                  <span className="text-[11px] font-semibold text-slate-500">
                     Adjust variables in real time
                   </span>
                 </div>
@@ -1546,18 +1696,18 @@ export const LandingPage: React.FC = () => {
                 {/* INPUT 01 — PROPERTY DEAL VALUE */}
                 <div className="space-y-3.5">
                   <div className="flex justify-between items-baseline">
-                    <label htmlFor="deal-value-slider" className="text-xs font-bold text-ink">
+                    <label htmlFor="deal-value-slider" className="text-xs font-bold text-slate-900">
                       Property Deal Value
                     </label>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-lg sm:text-xl font-black text-emerald-700 dark:text-emerald-400 font-mono">
+                      <span className="text-lg sm:text-xl font-black text-emerald-700 font-mono">
                         {formatINR(dealValueRupees)}
                       </span>
                     </div>
                   </div>
 
-                  {/* Suggested Shortcuts */}
-                  <div className="flex items-center gap-2">
+                  {/* Suggested Shortcuts (Touch-Friendly min 44px) */}
+                  <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                     {[
                       { label: '₹45 Lakh', val: 4500000 },
                       { label: '₹75 Lakh', val: 7500000 },
@@ -1568,10 +1718,10 @@ export const LandingPage: React.FC = () => {
                         type="button"
                         onClick={() => setDealValueRupees(pill.val)}
                         className={clsx(
-                          'px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer shadow-2xs',
+                          'flex-1 min-w-[90px] py-2 px-3 text-xs font-bold rounded-xl transition-all duration-200 cursor-pointer shadow-2xs min-h-[44px] flex items-center justify-center active:scale-95',
                           dealValueRupees === pill.val
-                            ? 'bg-emerald-600 text-white shadow-xs ring-2 ring-emerald-500/30'
-                            : 'bg-surface dark:bg-slate-800 text-muted border border-border/80 dark:border-slate-700 hover:border-emerald-500/50 hover:text-ink'
+                            ? 'bg-emerald-600 text-white shadow-xs ring-2 ring-emerald-500/30 font-extrabold'
+                            : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-emerald-500/50 hover:text-slate-900'
                         )}
                       >
                         {pill.label}
@@ -1589,10 +1739,10 @@ export const LandingPage: React.FC = () => {
                       step="500000"
                       value={dealValueRupees}
                       onChange={(e) => setDealValueRupees(Number(e.target.value))}
-                      className="w-full accent-emerald-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer transition-all"
+                      className="w-full accent-emerald-600 h-2.5 bg-slate-200 rounded-lg cursor-pointer transition-all touch-none"
                       aria-label="Property Deal Value Slider"
                     />
-                    <div className="flex justify-between text-[10px] font-medium text-muted">
+                    <div className="flex justify-between text-[10px] font-medium text-slate-500">
                       <span>₹20 Lakh</span>
                       <span>₹1.5 Crore</span>
                       <span>₹3 Crore</span>
@@ -1603,26 +1753,26 @@ export const LandingPage: React.FC = () => {
                 {/* INPUT 02 — COMMISSION PERCENTAGE */}
                 <div className="space-y-3.5">
                   <div className="flex justify-between items-baseline">
-                    <span className="text-xs font-bold text-ink">
+                    <span className="text-xs font-bold text-slate-900">
                       Commission Percentage
                     </span>
-                    <span className="text-base font-black text-amber-600 dark:text-amber-400 font-mono">
+                    <span className="text-base font-black text-amber-600 font-mono">
                       {commissionRate}%
                     </span>
                   </div>
 
-                  {/* Premium Segmented Controls */}
-                  <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-border/70 dark:border-slate-700">
+                  {/* Premium Segmented Controls (Touch-Friendly min 44px) */}
+                  <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-100 border border-slate-200">
                     {[1.0, 1.5, 2.0].map((rate) => (
                       <button
                         key={rate}
                         type="button"
                         onClick={() => setCommissionRate(rate)}
                         className={clsx(
-                          'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center',
+                          'py-2.5 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center min-h-[44px] flex items-center justify-center active:scale-95',
                           commissionRate === rate
-                            ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs ring-1 ring-emerald-500/40'
-                            : 'text-muted hover:text-ink'
+                            ? 'bg-white text-emerald-700 shadow-xs ring-1 ring-emerald-500/40 font-black'
+                            : 'text-slate-600 hover:text-slate-900'
                         )}
                       >
                         {rate}%
@@ -1634,10 +1784,10 @@ export const LandingPage: React.FC = () => {
                 {/* INPUT 03 — MONTHLY DEALS CLOSED */}
                 <div className="space-y-3.5">
                   <div className="flex justify-between items-baseline">
-                    <label htmlFor="deals-closed-slider" className="text-xs font-bold text-ink">
+                    <label htmlFor="deals-closed-slider" className="text-xs font-bold text-slate-900">
                       Monthly Deals Closed
                     </label>
-                    <span className="text-base font-black text-ink font-mono">
+                    <span className="text-base font-black text-slate-900 font-mono">
                       {monthlyDealsCount} {monthlyDealsCount === 1 ? 'deal' : 'deals'} / month
                     </span>
                   </div>
@@ -1651,10 +1801,10 @@ export const LandingPage: React.FC = () => {
                       step="1"
                       value={monthlyDealsCount}
                       onChange={(e) => setMonthlyDealsCount(Number(e.target.value))}
-                      className="w-full accent-emerald-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer transition-all"
+                      className="w-full accent-emerald-600 h-2.5 bg-slate-200 rounded-lg cursor-pointer transition-all touch-none"
                       aria-label="Monthly Deals Closed Slider"
                     />
-                    <div className="flex justify-between text-[10px] font-medium text-muted">
+                    <div className="flex justify-between text-[10px] font-medium text-slate-500">
                       <span>1 deal/month</span>
                       <span>5 deals/month</span>
                       <span>10 deals/month</span>
@@ -1664,7 +1814,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* RIGHT COLUMN: Calculated Commission Results (5 Cols on desktop) */}
-              <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-emerald-500/5 via-teal-500/5 to-slate-900/5 dark:from-emerald-950/40 dark:via-slate-900/60 dark:to-slate-950 text-left flex flex-col justify-between space-y-7">
+              <div className="lg:col-span-5 p-5 sm:p-8 lg:p-10 bg-gradient-to-br from-emerald-500/5 via-teal-500/5 to-slate-900/5 text-left flex flex-col justify-between space-y-7">
                 
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-emerald-500/20 pb-3">
@@ -2296,71 +2446,76 @@ export const LandingPage: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Full Name *
                   </label>
                   <input
                     type="text"
                     required
+                    autoComplete="name"
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="e.g. Rajesh Sharma"
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     WhatsApp Number *
                   </label>
                   <input
                     type="tel"
                     required
+                    inputMode="tel"
+                    autoComplete="tel"
                     value={formPhone}
                     onChange={(e) => setFormPhone(e.target.value)}
                     placeholder="e.g. 9876543210"
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Agency / Business Name *
                   </label>
                   <input
                     type="text"
                     required
+                    autoComplete="organization"
                     value={formAgency}
                     onChange={(e) => setFormAgency(e.target.value)}
                     placeholder="e.g. Sharma Real Estate"
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     City *
                   </label>
                   <input
                     type="text"
                     required
+                    autoComplete="address-level2"
                     value={formCity}
                     onChange={(e) => setFormCity(e.target.value)}
                     placeholder="e.g. Panipat / Gurugram"
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs min-h-[44px]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Active Properties Managed (Optional)
                   </label>
                   <select
                     value={formActiveProps}
                     onChange={(e) => setFormActiveProps(e.target.value)}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs cursor-pointer"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs cursor-pointer min-h-[44px]"
                   >
                     <option value="1-10">1 to 10 properties</option>
                     <option value="10-50">10 to 50 properties</option>
@@ -2370,7 +2525,7 @@ export const LandingPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Message / Specific Requirement (Optional)
                   </label>
                   <input
@@ -2378,24 +2533,24 @@ export const LandingPage: React.FC = () => {
                     value={formMessage}
                     onChange={(e) => setFormMessage(e.target.value)}
                     placeholder="Any specific questions or locality preferences?"
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs min-h-[44px]"
                   />
                 </div>
               </div>
 
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                 <Button
                   type="submit"
                   size="lg"
                   pill
                   isLoading={formSubmitting}
-                  className="w-full sm:w-auto font-bold text-xs"
+                  className="w-full sm:w-auto font-bold text-xs min-h-[48px] py-3.5 px-8 flex items-center justify-center cursor-pointer active:scale-[0.98]"
                 >
                   <span>Request My Free Demo</span>
                   <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Button>
 
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-slate-500 text-center sm:text-left">
                   By submitting, you agree to receive product demo updates on WhatsApp. Zero spam guaranteed.
                 </p>
               </div>
@@ -2407,33 +2562,33 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================= */}
       {/* SECTION 8 — FOOTER                                        */}
       {/* ========================================================= */}
-      <footer className="mt-auto py-12 border-t border-border px-4 sm:px-6 bg-surface text-xs text-muted">
+      <footer className="mt-auto py-12 border-t border-slate-200 px-4 sm:px-6 bg-white text-xs text-slate-500">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <div className="flex items-center gap-2.5">
                 <img src="/logo-icon.png" alt="leadNivash" className="w-6 h-6 object-contain" />
-                <span className="font-black text-ink font-heading text-sm">
-                  lead<span className="text-brand-600">Nivash</span>
+                <span className="font-black text-slate-900 font-heading text-sm">
+                  lead<span className="text-emerald-700">Nivash</span>
                 </span>
               </div>
-              <p className="text-[11px] text-muted max-w-sm leading-relaxed">
+              <p className="text-[11px] text-slate-500 max-w-sm leading-relaxed">
                 The mobile-first operating system designed for independent Indian real estate brokers.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-6 font-semibold">
-              <a href="#how-it-works" className="hover:text-ink transition">How It Works</a>
-              <a href="#capabilities" className="hover:text-ink transition">Features</a>
-              <a href="#financial-impact" className="hover:text-ink transition">ROI Calculator</a>
-              <a href="#pricing" className="hover:text-ink transition">Pricing</a>
-              <a href="#why-leadnivash" className="hover:text-ink transition">Why leadNivash</a>
-              <Link to="/privacy" className="hover:text-ink transition">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-ink transition">Terms of Service</Link>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 font-semibold text-slate-600 text-xs">
+              <a href="#how-it-works" className="py-1 hover:text-emerald-700 transition">How It Works</a>
+              <a href="#capabilities" className="py-1 hover:text-emerald-700 transition">Features</a>
+              <a href="#financial-impact" className="py-1 hover:text-emerald-700 transition">ROI Calculator</a>
+              <a href="#pricing" className="py-1 hover:text-emerald-700 transition">Pricing</a>
+              <a href="#why-leadnivash" className="py-1 hover:text-emerald-700 transition">Why leadNivash</a>
+              <Link to="/privacy" className="py-1 hover:text-emerald-700 transition">Privacy Policy</Link>
+              <Link to="/terms" className="py-1 hover:text-emerald-700 transition">Terms of Service</Link>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
+          <div className="pt-6 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
             <p>© 2026 leadNivash. All rights reserved.</p>
             <p>Designed with care for Indian property brokers.</p>
           </div>
