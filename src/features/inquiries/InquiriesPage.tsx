@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Phone,
   MessageCircle,
+  MessageSquare,
   Building2,
   Calendar,
   CheckCircle2,
@@ -171,9 +172,10 @@ export const InquiriesPage: React.FC = () => {
               </div>
 
               {/* Message */}
-              <p className="text-xs text-slate-700 dark:text-slate-300 p-3 rounded-xl bg-surface border border-border/70 leading-relaxed">
-                💬 "{inq.message}"
-              </p>
+              <div className="text-xs text-slate-700 dark:text-slate-300 p-3 rounded-xl bg-surface border border-border/70 leading-relaxed flex items-start gap-2">
+                <MessageSquare className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span>"{inq.message}"</span>
+              </div>
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">

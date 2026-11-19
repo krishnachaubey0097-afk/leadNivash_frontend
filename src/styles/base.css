@@ -138,19 +138,26 @@
   }
 }
 
+/* Premium SaaS Action Button with Thin Radiant Traveling Outline */
+@keyframes borderShineSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .btn-shine-wrapper {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 2px;
   overflow: hidden;
   border-radius: 9999px;
-  padding: 1.5px;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
 }
 
 .btn-shine-wrapper:hover {
-  transform: translateY(-1px);
+  transform: translateY(-1.5px);
+  box-shadow: 0 12px 28px -4px rgba(5, 150, 105, 0.35);
 }
 
 .btn-shine-wrapper:active {
@@ -159,16 +166,17 @@
 
 .btn-shine-border {
   position: absolute;
-  inset: -150%;
+  inset: -200%;
   background: conic-gradient(
     from 0deg,
     transparent 0deg,
-    transparent 270deg,
-    rgba(16, 185, 129, 0.4) 305deg,
-    rgba(255, 255, 255, 0.95) 345deg,
+    transparent 280deg,
+    rgba(52, 211, 153, 0.5) 310deg,
+    rgba(255, 255, 255, 1) 345deg,
     transparent 360deg
   );
-  animation: borderShineSpin 4s linear infinite;
+  animation: borderShineSpin 3.5s linear infinite;
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

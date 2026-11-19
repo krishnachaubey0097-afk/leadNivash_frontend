@@ -7,8 +7,6 @@ import {
   Settings as SettingsIcon,
   Shield,
   LogOut,
-  Moon,
-  Sun,
 } from 'lucide-react';
 
 export interface AvatarMenuProps {
@@ -17,19 +15,6 @@ export interface AvatarMenuProps {
 
 export const AvatarMenu: React.FC<AvatarMenuProps> = ({ inquiryCount = 0 }) => {
   const { user, logout } = useAuth();
-
-  const toggleTheme = () => {
-    const isDark = document.documentElement.classList.contains('dark');
-    if (isDark) {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('ln_theme', 'light');
-    } else {
-      document.documentElement.classList.add('dark');
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('ln_theme', 'dark');
-    }
-  };
 
   const initials = user?.name
     ? user.name
@@ -98,16 +83,6 @@ export const AvatarMenu: React.FC<AvatarMenuProps> = ({ inquiryCount = 0 }) => {
               <SettingsIcon className="w-4 h-4 text-muted" />
               <span>Settings</span>
             </Link>
-          </DropdownMenu.Item>
-
-          {/* Quick Theme Switch */}
-          <DropdownMenu.Item
-            onClick={toggleTheme}
-            className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-text hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer outline-none transition"
-          >
-            <Sun className="w-4 h-4 text-amber-500 dark:hidden" />
-            <Moon className="w-4 h-4 text-blue-400 hidden dark:inline" />
-            <span>Switch Theme</span>
           </DropdownMenu.Item>
 
           {/* Admin panel link (Visible only if user.role === 'admin') */}

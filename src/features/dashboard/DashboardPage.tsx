@@ -257,9 +257,9 @@ export const DashboardPage: React.FC = () => {
                       );
                       setQuickResult(null);
                     }}
-                    className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-700 text-slate-600 dark:text-slate-300 text-[10px] font-semibold border border-border transition cursor-pointer"
+                    className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-brand-50 hover:text-brand-700 text-slate-600 text-[10px] font-semibold border border-border transition cursor-pointer"
                   >
-                    ⚡ 2 BHK Panipat
+                    2 BHK Floor Sample
                   </button>
                   <button
                     type="button"
@@ -269,9 +269,9 @@ export const DashboardPage: React.FC = () => {
                       );
                       setQuickResult(null);
                     }}
-                    className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-700 text-slate-600 dark:text-slate-300 text-[10px] font-semibold border border-border transition cursor-pointer"
+                    className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-brand-50 hover:text-brand-700 text-slate-600 text-[10px] font-semibold border border-border transition cursor-pointer"
                   >
-                    ⚡ Sector 18 Plot
+                    Sector 18 Plot Sample
                   </button>
                 </div>
 

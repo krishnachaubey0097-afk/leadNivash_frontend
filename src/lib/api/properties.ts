@@ -94,6 +94,21 @@ export const SEED_PROPERTIES: PropertyItem[] = [
     tags: ['Corner', 'Lift', 'Stilt Parking'],
     description: 'Ultra-luxury 2nd floor with private stilt car parking, modular Italian kitchen, and branded fittings. Ready to move.',
     status: 'available',
+    photos: [
+      {
+        url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
+        publicId: 'seed_photo_1_1',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+        publicId: 'seed_photo_1_2',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=80',
+        publicId: 'seed_photo_1_3',
+      },
+    ],
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-modern-interior-of-a-luxury-apartment-42750-large.mp4',
     owner: {
       name: 'Rajinder Gupta',
       phone: '+919812044321',
@@ -116,6 +131,16 @@ export const SEED_PROPERTIES: PropertyItem[] = [
     tags: ['40ft Road', 'Park Facing', 'Gated Society'],
     description: 'Prime residential plot in peaceful sector. 40ft wide road, north facing with 24x7 security.',
     status: 'available',
+    photos: [
+      {
+        url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
+        publicId: 'seed_photo_2_1',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80',
+        publicId: 'seed_photo_2_2',
+      },
+    ],
     owner: {
       name: 'Suresh Mittal',
       phone: '+919876543210',
@@ -138,6 +163,17 @@ export const SEED_PROPERTIES: PropertyItem[] = [
     tags: ['Furnished', 'Garden', 'Double Height'],
     description: 'Architect-built modern bungalow with landscaped lawn, home theatre room, and servant quarters.',
     status: 'hold',
+    photos: [
+      {
+        url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80',
+        publicId: 'seed_photo_3_1',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80',
+        publicId: 'seed_photo_3_2',
+      },
+    ],
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-tour-of-a-contemporary-living-room-41712-large.mp4',
     owner: {
       name: 'Col. Jasbir Singh',
       phone: '+919416012345',
@@ -160,6 +196,12 @@ export const SEED_PROPERTIES: PropertyItem[] = [
     tags: ['High Footfall', 'Rental Income'],
     description: 'Ground floor retail shop with high rental yield. Excellent visibility from GT Road highway.',
     status: 'sold',
+    photos: [
+      {
+        url: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+        publicId: 'seed_photo_4_1',
+      },
+    ],
     owner: {
       name: 'Ashok Bansal',
       phone: '+919896077889',
@@ -230,6 +272,9 @@ export async function createProperty(data: CreatePropertyDto): Promise<PropertyI
     tags: data.tags || [],
     description: data.description,
     status: data.status || 'available',
+    photos: data.photos,
+    videoUrl: data.videoUrl,
+    video: data.video,
     owner: data.owner,
     createdAt: new Date().toISOString(),
   };

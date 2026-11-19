@@ -113,7 +113,7 @@ export const ToolsPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
-              Broker Field Toolkit
+              Broker Toolkit & Calculators
             </h1>
             <Badge variant="brand">
               <Sparkles className="w-3 h-3 mr-1 inline" />

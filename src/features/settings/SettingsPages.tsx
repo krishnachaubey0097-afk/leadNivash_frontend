@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
-import { useTheme } from '../../lib/theme';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
 import {
   Settings as SettingsIcon,
-  Sun,
-  Moon,
   ShieldCheck,
   Inbox,
   LogOut,
   ChevronRight,
   Check,
 } from 'lucide-react';
-import clsx from 'clsx';
 
 export const SettingsPage: React.FC = () => {
   const { user, logout } = useAuth();
-  const { mode, setMode } = useTheme();
   const { success } = useToast();
 
   const [agencyName, setAgencyName] = useState('Sharma Real Estate Agency');
@@ -171,41 +166,6 @@ export const SettingsPage: React.FC = () => {
             <ChevronRight className="w-4 h-4 text-muted" />
           </div>
         </Link>
-      </Card>
-
-      {/* Theme & Display Engine */}
-      <Card className="p-5 space-y-3 border-border shadow-xs">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
-          Display & Appearance Mode
-        </h3>
-
-        <div className="grid grid-cols-2 gap-3 text-xs">
-          <button
-            onClick={() => setMode('light')}
-            className={clsx(
-              'p-3.5 rounded-2xl border flex items-center justify-center gap-2 font-bold transition cursor-pointer',
-              mode === 'light'
-                ? 'bg-brand-50 border-brand-600 text-brand-700 shadow-xs'
-                : 'bg-surface border-border text-muted hover:text-ink'
-            )}
-          >
-            <Sun className="w-4 h-4 text-amber-500" />
-            <span>Light Theme</span>
-          </button>
-
-          <button
-            onClick={() => setMode('dark')}
-            className={clsx(
-              'p-3.5 rounded-2xl border flex items-center justify-center gap-2 font-bold transition cursor-pointer',
-              mode === 'dark'
-                ? 'bg-brand-950/70 border-brand-600 text-brand-400 shadow-xs'
-                : 'bg-surface border-border text-muted hover:text-ink'
-            )}
-          >
-            <Moon className="w-4 h-4 text-blue-400" />
-            <span>Dark Theme (OLED)</span>
-          </button>
-        </div>
       </Card>
 
       {/* Sign Out Card */}

@@ -1,16 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
-import { useTheme } from '../lib/theme';
-import { Moon, Sun, Settings as SettingsIcon, LogOut } from 'lucide-react';
+import { Settings as SettingsIcon, LogOut } from 'lucide-react';
 
 export const TopBar: React.FC = () => {
   const { user, logout } = useAuth();
-  const { isDark, setMode } = useTheme();
-
-  const toggleDarkMode = () => {
-    setMode(isDark ? 'light' : 'dark');
-  };
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-[#0B0F17]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
@@ -34,19 +28,10 @@ export const TopBar: React.FC = () => {
 
         {/* Action Controls */}
         <div className="flex items-center gap-2">
-          {/* Quick Theme Toggle */}
-          <button
-            onClick={toggleDarkMode}
-            title={`Switch to ${isDark ? 'Light' : 'Dark'} mode`}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
-          >
-            {isDark ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
-          </button>
-
           {/* Settings Link */}
           <Link
             to="/app/settings"
-            title="Appearance & Settings"
+            title="Agency & Profile Settings"
             className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
           >
             <SettingsIcon className="w-5 h-5" />

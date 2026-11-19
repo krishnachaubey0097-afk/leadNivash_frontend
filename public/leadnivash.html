@@ -114,25 +114,29 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      padding: 2px;
       overflow: hidden;
       border-radius: 9999px;
-      padding: 1.5px;
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
     }
-    .btn-shine-wrapper:hover { transform: translateY(-1px); }
+    .btn-shine-wrapper:hover {
+      transform: translateY(-1.5px);
+      box-shadow: 0 12px 28px -4px rgba(5, 150, 105, 0.35);
+    }
     .btn-shine-wrapper:active { transform: scale(0.98); }
     .btn-shine-border {
       position: absolute;
-      inset: -150%;
+      inset: -200%;
       background: conic-gradient(
         from 0deg,
         transparent 0deg,
-        transparent 270deg,
-        rgba(16, 185, 129, 0.4) 305deg,
-        rgba(255, 255, 255, 0.95) 345deg,
+        transparent 280deg,
+        rgba(52, 211, 153, 0.5) 310deg,
+        rgba(255, 255, 255, 1) 345deg,
         transparent 360deg
       );
-      animation: borderShineSpin 4s linear infinite;
+      animation: borderShineSpin 3.5s linear infinite;
+      pointer-events: none;
     }
     @media (prefers-reduced-motion: reduce) {
       .animate-hero-bg,
@@ -304,23 +308,23 @@
         </p>
 
         <!-- 5. CTA Buttons (Apple-Class High Contrast Styling with Outline Traveling Shine) -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-6 max-w-md mx-auto w-full">
-          <div class="btn-shine-wrapper w-full sm:w-auto flex-1 flex">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 max-w-lg mx-auto w-full px-2 sm:px-0">
+          <div class="btn-shine-wrapper w-full sm:w-auto flex-1">
             <div class="btn-shine-border"></div>
-            <a href="#inquiry-form" class="relative z-10 w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-600/25 cursor-pointer min-h-[46px]">
+            <a href="#inquiry-form" class="relative z-10 w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-3 h-[52px] rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-lg shadow-emerald-600/30 cursor-pointer focus:outline-none">
               <span class="flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
                 <span>Get Free Demo</span>
               </span>
-              <span class="w-8 h-8 rounded-full bg-white text-emerald-800 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs">
+              <span class="w-7 h-7 rounded-full bg-white text-emerald-800 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs shrink-0">
                 <i data-lucide="arrow-up-right" class="w-4 h-4 stroke-[2.5]"></i>
               </span>
             </a>
           </div>
 
-          <button onclick="openApp('register')" class="group w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-3 sm:py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 hover:text-slate-900 border border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer min-h-[46px]">
+          <button onclick="openApp('register')" class="group w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-3 h-[52px] rounded-full bg-white hover:bg-slate-50 text-slate-800 hover:text-slate-900 border-2 border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none">
             <span>Start 14-Day Free Trial</span>
-            <span class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:scale-105">
+            <span class="w-7 h-7 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:scale-105 shrink-0">
               <i data-lucide="arrow-right" class="w-4 h-4 stroke-[2.5]"></i>
             </span>
           </button>
@@ -1874,7 +1878,7 @@
         <div class="flex items-center justify-between">
           <div>
             <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Broker Operating System</span>
-            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Welcome back, Broker 👋</h2>
+            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Welcome back, Broker</h2>
           </div>
           <button onclick="openLanding()" class="text-xs text-slate-500 hover:text-emerald-700 flex items-center gap-1 font-semibold cursor-pointer">
             <span>Website</span>

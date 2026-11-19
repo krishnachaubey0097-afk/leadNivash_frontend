@@ -24,7 +24,7 @@ import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
 import { parseMessage, commitParsedItem, type ParseResult } from '../../lib/api/parse';
 import { useVoiceDictation } from '../../lib/hooks/useVoiceDictation';
-import { fetchProperties, type PropertyItem } from '../../lib/api/properties';
+import { fetchProperties, SEED_PROPERTIES, type PropertyItem } from '../../lib/api/properties';
 import { createBuyer, fetchBuyers } from '../../lib/api/buyers';
 import { createDeal } from '../../lib/api/deals';
 import { formatRupees } from '../../lib/money';
@@ -154,7 +154,44 @@ export const PastePage: React.FC = () => {
     }
   };
 
-  // STEP 2 -> STEP 3: AI Find Matching Properties
+  // DIRECT ACTION 1: Share Buyer Requirement on WhatsApp
+  const handleShareBuyerRequirement = () => {
+    const text = `*Client Property Requirement*\n\n*Buyer:* ${buyerName || 'Direct Client'}\n*Seeking:* ${buyerBedrooms} ${buyerType}\n*Location:* ${buyerLocation}, Panipat\n*Budget:* Up to ₹${buyerBudgetLakhs} Lakhs\n*Preferences:* ${buyerNotes || 'Ready to close deals'}\n\nShared via Sharma Real Estate Agency`;
+    const cleanPhone = buyerPhone.replace(/\D/g, '');
+    const url = cleanPhone.length === 10 || cleanPhone.length === 12
+      ? `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${encodeURIComponent(text)}`
+      : `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
+
+  // DIRECT ACTION 2: Save Buyer directly to records
+  const handleDirectSaveBuyer = async () => {
+    if (!buyerLocation.trim()) {
+      error('Please specify a preferred location.');
+      return;
+    }
+    try {
+      const budgetMaxPaise = buyerBudgetLakhs * 10000000;
+      const budgetMinPaise = Math.round(budgetMaxPaise * 0.85);
+      await createBuyer({
+        name: buyerName || 'Direct Client',
+        phone: buyerPhone || '+919876543210',
+        localities: [buyerLocation],
+        types: [buyerType],
+        budget: {
+          minPaise: budgetMinPaise,
+          maxPaise: budgetMaxPaise,
+        },
+        notes: `${buyerBedrooms} · ${buyerNotes}`,
+      });
+      success(`Buyer requirement for "${buyerName}" saved to Buyer records!`);
+      setTimeout(() => navigate('/app/buyers'), 600);
+    } catch (err: any) {
+      error(err.message || 'Could not save buyer.');
+    }
+  };
+
+  // STEP 2 -> STEP 3: AI Find Matching Properties & Proceed to Share/Deals
   const handleFindMatches = async () => {
     if (!buyerLocation.trim()) {
       error('Please specify a preferred location for matching.');
@@ -181,12 +218,15 @@ export const PastePage: React.FC = () => {
 
       setActiveBuyerId(buyerRecord._id);
 
-      // Query real property inventory
-      const properties = await fetchProperties();
+      // Query real property inventory with seed fallback
+      let properties = await fetchProperties();
+      if (!properties || properties.length === 0) {
+        properties = SEED_PROPERTIES;
+      }
 
       // Transparent scoring against inventory
       const scored = properties
-        .filter((p) => p.status === 'available')
+        .filter((p) => p.status === 'available' || !p.status)
         .map((p) => {
           let score = 50;
           const reasons: string[] = [];
@@ -230,7 +270,7 @@ export const PastePage: React.FC = () => {
 
       setMatchedProperties(scored);
       setCurrentStep('matches');
-      success(`Found ${scored.length} potential property match${scored.length === 1 ? '' : 'es'} in inventory.`);
+      success(`Found ${scored.length} matching propert${scored.length === 1 ? 'y' : 'ies'} ready to save or share!`);
     } catch (err: any) {
       error(err.message || 'Error finding matches.');
     } finally {
@@ -617,35 +657,54 @@ export const PastePage: React.FC = () => {
             </div>
           </div>
 
-          {/* TWO ACTIONS ONLY AT THIS STAGE: OPTION A vs OPTION B */}
-          <div className="pt-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3">
-            {/* Option A — Fill Buyer Details */}
-            <button
-              type="button"
-              onClick={() => setIsEditingBuyer(!isEditingBuyer)}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-full border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-center gap-1.5 transition cursor-pointer"
-            >
-              <FileCheck className="w-4 h-4 text-slate-500" />
-              <span>{isEditingBuyer ? 'Hide Extra Fields' : 'Edit / Complete Details'}</span>
-            </button>
+          {/* STEP 2 ACTIONS: Edit, Save directly, Share to WhatsApp, or Proceed to Matching Deals */}
+          <div className="pt-4 border-t border-border flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setIsEditingBuyer(!isEditingBuyer)}
+                className="px-3.5 py-2 rounded-full border border-border hover:bg-slate-50 text-xs font-bold text-slate-700 flex items-center gap-1.5 transition cursor-pointer"
+              >
+                <FileCheck className="w-3.5 h-3.5 text-slate-500" />
+                <span>{isEditingBuyer ? 'Hide Extra Fields' : 'Edit Details'}</span>
+              </button>
 
-            {/* Option B — AI Find Matching Properties */}
+              <button
+                type="button"
+                onClick={handleDirectSaveBuyer}
+                className="px-3.5 py-2 rounded-full border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-xs font-bold text-emerald-800 flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+              >
+                <Save className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Save Buyer</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleShareBuyerRequirement}
+                className="px-3.5 py-2 rounded-full border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-xs font-bold text-emerald-800 flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+              >
+                <Share2 className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Share Requirement</span>
+              </button>
+            </div>
+
+            {/* Primary Action — Find Matches & Proceed to Step 3 */}
             <Button
               size="md"
               pill
               onClick={handleFindMatches}
               disabled={isMatching || !buyerLocation.trim()}
-              className="w-full sm:w-auto font-bold text-xs shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2"
+              className="font-bold text-xs shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2"
             >
               {isMatching ? (
                 <span className="flex items-center gap-2">
-                  <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   <span>Searching Inventory...</span>
                 </span>
               ) : (
                 <span className="flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4" />
-                  <span>AI Find Matching Properties</span>
+                  <span>Find Matches & Deals</span>
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </span>
               )}
@@ -670,7 +729,15 @@ export const PastePage: React.FC = () => {
               <p className="text-xs text-muted">Target: {buyerLocation} ({buyerType})</p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={handleShareBuyerRequirement}
+                className="px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>Share Requirement</span>
+              </button>
               <button
                 onClick={() => setCurrentStep('buyer-details')}
                 className="px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-border text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-ink transition cursor-pointer"
@@ -679,7 +746,7 @@ export const PastePage: React.FC = () => {
               </button>
               <button
                 onClick={() => setCurrentStep('paste')}
-                className="px-3 py-1.5 rounded-full bg-emerald-600 text-white text-xs font-bold transition cursor-pointer"
+                className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"
               >
                 + New Paste
               </button>

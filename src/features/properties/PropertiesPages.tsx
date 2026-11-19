@@ -24,6 +24,8 @@ import {
   Film,
   AlertCircle,
   ShieldCheck,
+  Download,
+  Send,
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -269,14 +271,31 @@ export const PropertiesListPage: React.FC = () => {
 
               {/* Bottom Actions */}
               <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between gap-2">
-                <Link
-                  to={`/app/properties/${prop._id}/share`}
-                  className="px-3 py-1.5 rounded-full bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/40 text-brand-700 dark:text-brand-600 text-xs font-bold flex items-center gap-1 transition"
-                  title="Share Masked WhatsApp Flyer"
-                >
-                  <Share2 className="w-3.5 h-3.5" />
-                  <span>Share Flyer</span>
-                </Link>
+                <div className="flex items-center gap-1.5">
+                  <Link
+                    to={`/app/properties/${prop._id}/share`}
+                    className="px-3 py-1.5 rounded-full bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/40 text-brand-700 dark:text-brand-600 text-xs font-bold flex items-center gap-1 transition"
+                    title="Share Masked WhatsApp Flyer & Media"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>Flyer & Media</span>
+                  </Link>
+
+                  {/* 1-Tap Quick WhatsApp Share */}
+                  <a
+                    href={`https://wa.me/?text=${encodeURIComponent(
+                      `*${prop.title}*\nLocation: ${prop.locality}, ${prop.city}\nSize: ${prop.size.value} ${prop.size.unit.toUpperCase()}\nPrice: ${formatRupees(
+                        prop.priceDemandPaise
+                      )}\n\nVerified Flyer & Photos: https://leadnivash.com/flyer/${prop._id}`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 transition"
+                    title="Quick 1-Tap WhatsApp Share"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                  </a>
+                </div>
 
                 <Link
                   to={`/app/properties/${prop._id}`}
@@ -1051,9 +1070,10 @@ export const PropertyDetailPage: React.FC = () => {
 // =========================================================================
 export const PropertySharePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { success } = useToast();
+  const { success, toast } = useToast();
   const [property, setProperty] = useState<PropertyItem | null>(null);
   const [copied, setCopied] = useState(false);
+  const [isSharingMedia, setIsSharingMedia] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -1069,7 +1089,9 @@ export const PropertySharePage: React.FC = () => {
     );
   }
 
-  const shareText = `*${property.title}*\nLocation: ${property.locality}, Panipat\nSize: ${property.size.value} ${property.size.unit.toUpperCase()}\nFacing: ${property.facing || 'Prime Facing'}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Verified clear title property ready for inspection.'}\n\nContact Verified Broker: Sharma Real Estate Agency · Panipat\nView Verified Flyer & Media: https://leadnivash.com/flyer/${property._id}`;
+  const shareText = `*${property.title}*\nLocation: ${property.locality}, ${property.city || 'Panipat'}\nSize: ${property.size.value} ${property.size.unit.toUpperCase()}\nFacing: ${property.facing || 'Prime Facing'}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Verified clear title property ready for inspection.'}\n\nMarketed by: Sharma Real Estate Agency · Panipat\nView Verified Flyer & Media: https://leadnivash.com/flyer/${property._id}`;
+
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareText);
@@ -1078,7 +1100,71 @@ export const PropertySharePage: React.FC = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+  // Direct media download pack (allows direct drag-and-drop into WhatsApp Web/Desktop)
+  const handleDownloadMediaPack = () => {
+    if (property.photos && property.photos.length > 0) {
+      property.photos.forEach((photo, idx) => {
+        const link = document.createElement('a');
+        link.href = photo.url;
+        link.download = `${property.title.replace(/[^a-zA-Z0-9]/g, '_')}_media_${idx + 1}.jpg`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+      success(`Downloaded ${property.photos.length} photos! Attach directly to your WhatsApp chat.`);
+    } else {
+      toast('No attached photos found to download.', 'info');
+    }
+  };
+
+  // Direct native media share sheet (WhatsApp on Mobile natively attaches media)
+  const handleShareDirectMedia = async () => {
+    setIsSharingMedia(true);
+    try {
+      if (property.photos && property.photos.length > 0 && typeof navigator.share === 'function') {
+        const filesToShare: File[] = [];
+
+        // Attempt to fetch first 2 photos as files
+        for (let i = 0; i < Math.min(property.photos.length, 2); i++) {
+          try {
+            const photoUrl = property.photos[i].url;
+            const res = await fetch(photoUrl, { mode: 'cors' });
+            const blob = await res.blob();
+            const file = new File(
+              [blob],
+              `${property.title.replace(/[^a-zA-Z0-9]/g, '_')}_${i + 1}.jpg`,
+              { type: blob.type || 'image/jpeg' }
+            );
+            filesToShare.push(file);
+          } catch {
+            // If CORS or local blob, skip file packaging
+          }
+        }
+
+        if (filesToShare.length > 0 && navigator.canShare && navigator.canShare({ files: filesToShare })) {
+          await navigator.share({
+            title: property.title,
+            text: shareText,
+            files: filesToShare,
+          });
+          success('Property flyer and photos shared directly via media!');
+          return;
+        }
+      }
+
+      // Desktop / fallback: Download media pack + open WhatsApp chat
+      handleDownloadMediaPack();
+      window.open(whatsappUrl, '_blank');
+      success('Photos downloaded! Attach them directly to WhatsApp chat.');
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        window.open(whatsappUrl, '_blank');
+      }
+    } finally {
+      setIsSharingMedia(false);
+    }
+  };
 
   return (
     <div className="space-y-6 max-w-xl mx-auto pb-16 text-left">
@@ -1109,21 +1195,57 @@ export const PropertySharePage: React.FC = () => {
           </span>
         </div>
 
-        {/* Media indicators */}
-        <div className="flex items-center gap-2 text-xs">
-          {property.photos && property.photos.length > 0 && (
-            <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
-              <ImageIcon className="w-3 h-3 text-emerald-600" />
-              <span>{property.photos.length} Verified Photos Attached</span>
-            </span>
-          )}
-          {(property.videoUrl || property.video?.url) && (
-            <span className="text-[10px] bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
-              <Play className="w-3 h-3 fill-current text-emerald-600" />
-              <span>Video Walkthrough Included</span>
-            </span>
-          )}
-        </div>
+        {/* Media Preview Gallery */}
+        {property.photos && property.photos.length > 0 ? (
+          <div className="space-y-2">
+            <div className="w-full h-48 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 relative">
+              <img
+                src={property.photos[0].url}
+                alt={property.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
+                <ImageIcon className="w-3 h-3 text-emerald-400" />
+                <span>{property.photos.length} Verified Photos Attached</span>
+              </div>
+            </div>
+
+            {property.photos.length > 1 && (
+              <div className="grid grid-cols-3 gap-2">
+                {property.photos.slice(1, 4).map((p, idx) => (
+                  <div key={idx} className="h-16 rounded-xl overflow-hidden bg-slate-100">
+                    <img src={p.url} alt="" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-border text-center text-xs text-muted">
+            <ImageIcon className="w-6 h-6 text-muted mx-auto mb-1 opacity-50" />
+            <span>No listing photos attached yet.</span>
+          </div>
+        )}
+
+        {/* Video walkthrough indicator if available */}
+        {(property.videoUrl || property.video?.url) && (
+          <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <Film className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+              <span className="font-bold text-emerald-900 dark:text-emerald-300 text-[11px]">
+                Video Walkthrough Ready
+              </span>
+            </div>
+            <a
+              href={property.videoUrl || property.video?.url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[10px] font-bold text-emerald-700 underline"
+            >
+              Preview Clip
+            </a>
+          </div>
+        )}
 
         {/* Property Highlights */}
         <div className="space-y-2">
@@ -1165,24 +1287,52 @@ export const PropertySharePage: React.FC = () => {
         </div>
 
         {/* Share Action Buttons */}
-        <div className="space-y-2 pt-2">
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full py-3 px-4 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-700/20 transition cursor-pointer"
-          >
-            <Share2 className="w-4 h-4" />
-            <span>Share via WhatsApp (Pre-Filled)</span>
-          </a>
-
+        <div className="space-y-2.5 pt-2">
+          {/* Direct Media Share Button (Native Mobile Share with attached media or auto-download) */}
           <button
-            onClick={handleCopy}
-            className="w-full py-2.5 px-4 rounded-full border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-muted hover:text-ink font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+            onClick={handleShareDirectMedia}
+            disabled={isSharingMedia}
+            className="w-full py-3 px-4 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-700/25 transition cursor-pointer"
           >
-            {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-            <span>{copied ? 'Copied' : 'Copy Clean Flyer Text'}</span>
+            <Send className="w-4 h-4" />
+            <span>
+              {isSharingMedia
+                ? 'Preparing Media...'
+                : 'Share via WhatsApp (Direct Media Attached)'}
+            </span>
           </button>
+
+          {/* Download Photos & Video Pack */}
+          {property.photos && property.photos.length > 0 && (
+            <button
+              onClick={handleDownloadMediaPack}
+              className="w-full py-2.5 px-4 rounded-full bg-surface border border-emerald-600/30 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download Media Pack ({property.photos.length} Photos)</span>
+            </button>
+          )}
+
+          {/* Fallback Pre-filled Text Link */}
+          <div className="grid grid-cols-2 gap-2">
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="py-2.5 px-3 rounded-full border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-ink font-bold text-[11px] flex items-center justify-center gap-1.5 transition text-center cursor-pointer"
+            >
+              <Share2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span>WhatsApp Text Link</span>
+            </a>
+
+            <button
+              onClick={handleCopy}
+              className="py-2.5 px-3 rounded-full border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-muted hover:text-ink font-bold text-[11px] flex items-center justify-center gap-1.5 transition cursor-pointer"
+            >
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copied ? 'Copied' : 'Copy Flyer Text'}</span>
+            </button>
+          </div>
         </div>
       </Card>
     </div>

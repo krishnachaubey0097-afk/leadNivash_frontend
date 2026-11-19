@@ -9,7 +9,6 @@ import {
   Phone,
   MessageCircle,
   Sparkles,
-  Flame,
   CheckCircle2,
   ChevronRight,
   Building2,
@@ -177,16 +176,30 @@ export const BuyersListPage: React.FC = () => {
 
                   <span
                     className={clsx(
-                      'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1',
+                      'px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide flex items-center gap-1.5',
                       buyer.urgency === 'hot'
-                        ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border border-rose-200/60'
+                        ? 'bg-rose-50 text-rose-700 border border-rose-200'
                         : buyer.urgency === 'warm'
-                        ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200/60'
-                        : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        : 'bg-slate-100 text-slate-700 border border-slate-200'
                     )}
                   >
-                    {buyer.urgency === 'hot' && <Flame className="w-3 h-3" />}
-                    {buyer.urgency === 'hot' ? 'Hot' : buyer.urgency === 'warm' ? 'Warm' : 'Cold'}
+                    {buyer.urgency === 'hot' ? (
+                      <>
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                        <span>High Priority</span>
+                      </>
+                    ) : buyer.urgency === 'warm' ? (
+                      <>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        <span>Active Pipeline</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                        <span>Flexible</span>
+                      </>
+                    )}
                   </span>
                 </div>
 
@@ -591,13 +604,14 @@ export const BuyerDetailPage: React.FC = () => {
               </h1>
               <span
                 className={clsx(
-                  'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
+                  'px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide flex items-center gap-1.5',
                   buyer.urgency === 'hot'
-                    ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400'
-                    : 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400'
+                    ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                    : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                 )}
               >
-                {buyer.urgency === 'hot' ? 'Hot Client' : 'Active Buyer'}
+                <span className={clsx('w-1.5 h-1.5 rounded-full', buyer.urgency === 'hot' ? 'bg-rose-500 animate-pulse' : 'bg-emerald-500')} />
+                <span>{buyer.urgency === 'hot' ? 'High Priority Client' : 'Active Pipeline Buyer'}</span>
               </span>
             </div>
             <p className="text-xs text-muted mt-0.5">

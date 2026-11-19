@@ -468,29 +468,29 @@ export const LandingPage: React.FC = () => {
             </p>
 
             {/* 5. CTA Buttons (Apple-Class High Contrast Styling with traveling border shine) */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2 max-w-md mx-auto w-full px-2 sm:px-0">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 max-w-lg mx-auto w-full px-2 sm:px-0">
               <div className="btn-shine-wrapper w-full sm:w-auto flex-1">
                 <div className="btn-shine-border" />
                 <button
                   onClick={scrollToInquiry}
-                  className="relative z-10 w-full group inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-3 sm:py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-600/25 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 min-h-[46px]"
+                  className="relative z-10 w-full group inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-3 h-[52px] rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-lg shadow-emerald-600/30 cursor-pointer focus:outline-none"
                 >
                   <span className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
                     <span>Get Free Demo</span>
                   </span>
-                  <span className="w-8 h-8 rounded-full bg-white text-emerald-800 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs">
+                  <span className="w-7 h-7 rounded-full bg-white text-emerald-800 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs shrink-0">
                     <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                   </span>
                 </button>
               </div>
 
-              <Link to="/register" className="w-full sm:w-auto flex-1">
+              <Link to="/register" className="w-full sm:w-auto flex-1 block">
                 <button
-                  className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-3 sm:py-2.5 rounded-full bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-800 hover:text-slate-900 border border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 min-h-[46px]"
+                  className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-3 h-[52px] rounded-full bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-800 hover:text-slate-900 border-2 border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none"
                 >
                   <span>Start 14-Day Free Trial</span>
-                  <span className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:scale-105">
+                  <span className="w-7 h-7 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:scale-105 shrink-0">
                     <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                   </span>
                 </button>
