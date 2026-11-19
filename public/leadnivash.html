@@ -379,22 +379,11 @@
             </video>
 
             <!-- Video Poster / Play Overlay -->
-            <div id="video-overlay" class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-950/40 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center space-y-4">
+            <div id="video-overlay" class="absolute inset-0 bg-slate-950/40 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center">
               <button onclick="toggleVideoPlay()" class="group/btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-xl shadow-emerald-600/40 hover:shadow-emerald-500/60 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">
                 <span class="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-25"></span>
                 <i data-lucide="play" class="w-7 h-7 sm:w-8 sm:h-8 ml-1"></i>
               </button>
-
-              <div class="max-w-md mx-auto space-y-1.5">
-                <h4 class="text-base sm:text-lg font-black font-heading text-white">leadNivash Real-Time Workflow Demo</h4>
-                <p id="video-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  Watch how a raw WhatsApp message is converted into an organised buyer requirement, matched with property inventory and transformed into a masked property flyer.
-                </p>
-              </div>
-
-              <span id="video-hook-label" class="text-[11px] font-mono bg-amber-950/80 border border-amber-600/60 text-amber-300 px-3.5 py-1.5 rounded-full max-w-xs sm:max-w-md truncate">
-                Asset hook: /assets/videos/leadnivash-desktop-demo.mp4
-              </span>
             </div>
           </div>
         </div>
@@ -2188,7 +2177,6 @@
       const bDesk = document.getElementById('btn-video-desktop');
       const bMob = document.getElementById('btn-video-mobile');
       const hookLabel = document.getElementById('video-hook-label');
-      const desc = document.getElementById('video-desc');
       const video = document.getElementById('demo-video-player');
       const source = document.getElementById('demo-video-source');
 
@@ -2196,16 +2184,12 @@
         frame.className = 'mx-auto aspect-video w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500';
         if (bDesk) bDesk.className = 'px-3.5 py-1.5 rounded-full bg-emerald-700 text-white flex items-center gap-1.5 transition cursor-pointer';
         if (bMob) bMob.className = 'px-3.5 py-1.5 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 transition cursor-pointer';
-        if (hookLabel) hookLabel.innerText = 'Asset hook: /assets/videos/leadnivash-desktop-demo.mp4';
-        if (desc) desc.innerText = 'Watch how a raw WhatsApp message is converted into an organised buyer requirement, matched with property inventory and transformed into a masked property flyer.';
         if (video) video.poster = './assets/images/leadnivash-desktop-poster.webp';
         if (source) source.src = './assets/videos/leadnivash-desktop-demo.mp4';
       } else {
         frame.className = 'mx-auto aspect-[9/16] max-w-[340px] w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500';
         if (bMob) bMob.className = 'px-3.5 py-1.5 rounded-full bg-emerald-700 text-white flex items-center gap-1.5 transition cursor-pointer';
         if (bDesk) bDesk.className = 'px-3.5 py-1.5 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 transition cursor-pointer';
-        if (hookLabel) hookLabel.innerText = 'Asset hook: /assets/videos/leadnivash-mobile-demo.mp4';
-        if (desc) desc.innerText = 'See how easily you can manage buyer requirements and property matches directly from your phone.';
         if (video) video.poster = './assets/images/leadnivash-mobile-poster.webp';
         if (source) source.src = './assets/videos/leadnivash-mobile-demo.mp4';
       }

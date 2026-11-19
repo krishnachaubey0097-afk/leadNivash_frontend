@@ -62,14 +62,12 @@ export const LandingPage: React.FC = () => {
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [videoError, setVideoError] = useState<boolean>(false);
   const [isEnded, setIsEnded] = useState<boolean>(false);
 
   // Sync video source change when switching formats
   useEffect(() => {
     setIsPlaying(false);
     setIsEnded(false);
-    setVideoError(false);
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
@@ -87,12 +85,10 @@ export const LandingPage: React.FC = () => {
         .play()
         .then(() => {
           setIsPlaying(true);
-          setVideoError(false);
           setIsEnded(false);
         })
         .catch((err) => {
           console.warn('Video playback requirement note:', err);
-          setVideoError(true);
           setIsPlaying(false);
         });
     }
@@ -122,7 +118,7 @@ export const LandingPage: React.FC = () => {
         setIsPlaying(true);
         setIsEnded(false);
       })
-      .catch(() => setVideoError(true));
+      .catch(() => setIsPlaying(false));
   };
 
   const formatVideoTime = (secs: number) => {
@@ -630,8 +626,6 @@ export const LandingPage: React.FC = () => {
                   setIsEnded(true);
                 }}
                 onError={() => {
-                  // Graceful fallback for non-existent video asset
-                  setVideoError(true);
                   setIsPlaying(false);
                 }}
                 className="w-full h-full object-cover object-center"
@@ -639,7 +633,7 @@ export const LandingPage: React.FC = () => {
 
               {/* Poster / Play Overlay when video is paused or idle */}
               {!isPlaying && !isEnded && (
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-950/40 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center space-y-4 transition-opacity duration-300">
+                <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center transition-opacity duration-300">
                   {/* Big Glowing Play Button */}
                   <button
                     type="button"
@@ -650,24 +644,6 @@ export const LandingPage: React.FC = () => {
                     <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-25 group-hover/btn:opacity-40" />
                     <Play className="w-7 h-7 sm:w-8 sm:h-8 ml-1 transition-transform group-hover/btn:scale-110" />
                   </button>
-
-                  <div className="max-w-md mx-auto space-y-1.5">
-                    <h3 className="text-base sm:text-lg font-black font-heading text-white">
-                      leadNivash Real-Time Workflow Demo
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                      {videoMode === 'desktop'
-                        ? 'Watch how a raw WhatsApp message is converted into an organised buyer requirement, matched with property inventory and transformed into a masked property flyer.'
-                        : 'See how easily you can manage buyer requirements and property matches directly from your phone.'}
-                    </p>
-                  </div>
-
-                  {/* Asset Requirement Notice if file not yet uploaded */}
-                  {videoError && (
-                    <div className="px-3.5 py-1.5 rounded-full bg-amber-950/80 border border-amber-600/60 text-[11px] font-mono text-amber-300 max-w-xs sm:max-w-md truncate">
-                      Asset hook: {videoMode === 'desktop' ? '/assets/videos/leadnivash-desktop-demo.mp4' : '/assets/videos/leadnivash-mobile-demo.mp4'}
-                    </div>
-                  )}
                 </div>
               )}
 
