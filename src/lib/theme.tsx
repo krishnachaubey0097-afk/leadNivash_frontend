@@ -29,49 +29,23 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [mode, setModeState] = useState<ThemeMode>(() => {
-    const saved = (localStorage.getItem('ln_theme_mode') || localStorage.getItem('ln_theme')) as ThemeMode;
-    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'light';
-  });
+  const [mode] = useState<ThemeMode>('light');
 
   const [accent, setAccentState] = useState<AccentColor>(() => {
     const saved = localStorage.getItem('ln_accent_color') as AccentColor;
     return ACCENT_OPTIONS.some((opt) => opt.id === saved) ? saved : 'emerald';
   });
 
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    const saved = localStorage.getItem('ln_theme_mode') || localStorage.getItem('ln_theme');
-    if (saved === 'dark') return true;
-    if (saved === 'light') return false;
-    return false; // Default to Light Mode
-  });
+  const [isDark] = useState<boolean>(false);
 
-  // Handle Light / Dark Theme
+  // Pure Professional Light Theme Lock
   useEffect(() => {
     const root = document.documentElement;
-    const updateTheme = () => {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const shouldBeDark = mode === 'dark' || (mode === 'system' && prefersDark);
-      
-      setIsDark(shouldBeDark);
-      if (shouldBeDark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    };
-
-    updateTheme();
-    localStorage.setItem('ln_theme_mode', mode);
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const listener = () => {
-      if (mode === 'system') updateTheme();
-    };
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
-  }, [mode]);
+    root.classList.remove('dark');
+    root.setAttribute('data-theme', 'light');
+    localStorage.setItem('ln_theme_mode', 'light');
+    localStorage.setItem('ln_theme', 'light');
+  }, []);
 
   // Handle Accent Color
   useEffect(() => {
@@ -80,8 +54,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('ln_accent_color', accent);
   }, [accent]);
 
-  const setMode = (newMode: ThemeMode) => {
-    setModeState(newMode);
+  const setMode = () => {
+    // Locked to pure light professional theme
   };
 
   const setAccent = (newAccent: AccentColor) => {

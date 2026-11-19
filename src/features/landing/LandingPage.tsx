@@ -10,8 +10,6 @@ import {
   CheckCircle2,
   Share2,
   Check,
-  Moon,
-  Sun,
   Play,
   Pause,
   Volume2,
@@ -33,11 +31,9 @@ import {
   Crown,
   Zap,
 } from 'lucide-react';
-import { useTheme } from '../../lib/theme';
 import { apiClient } from '../../lib/api/client';
 
 export const LandingPage: React.FC = () => {
-  const { mode, setMode } = useTheme();
 
   // Hero Section: Animated 5-Step Visual Process Indicator State
   const [activeProcessStep, setActiveProcessStep] = useState<number>(0);
@@ -256,15 +252,6 @@ export const LandingPage: React.FC = () => {
 
           {/* Right Action Items */}
           <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Theme Toggle */}
-            <button
-              onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-              aria-label="Toggle Theme"
-            >
-              {mode === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
-            </button>
-
             <Link
               to="/login"
               className="text-xs font-bold text-text hover:text-ink px-3 py-2 transition hidden sm:inline-block"
@@ -280,10 +267,10 @@ export const LandingPage: React.FC = () => {
       </header>
 
       {/* ========================================================= */}
-      {/* SECTION 1 — HERO (Phase 1 Visual Upgrade)                 */}
+      {/* SECTION 1 — HERO (Phase 1 Apple-Class Light Upgrade)      */}
       {/* ========================================================= */}
-      <section className="relative overflow-hidden bg-slate-950 text-white pt-16 sm:pt-24 pb-20 px-4 sm:px-6 w-full border-b border-slate-800/80">
-        {/* Dynamic Video Background (bg1.mp4) with Fallback & Decreased Darkness */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50/90 via-white to-emerald-50/20 text-slate-900 pt-16 sm:pt-24 pb-20 px-4 sm:px-6 w-full border-b border-slate-200/80">
+        {/* Dynamic Video Background (bg1.mp4) with Pure Light Overlay */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
           <video
             autoPlay
@@ -291,7 +278,7 @@ export const LandingPage: React.FC = () => {
             muted
             playsInline
             poster="/hero-bg.jpg"
-            className="w-full h-full object-cover object-center opacity-75 animate-hero-bg scale-100 filter brightness-95 contrast-105"
+            className="w-full h-full object-cover object-center opacity-15 animate-hero-bg scale-100 filter brightness-105 contrast-95"
           >
             <source src="/bg1.mp4" type="video/mp4" />
             <img
@@ -301,14 +288,12 @@ export const LandingPage: React.FC = () => {
             />
           </video>
 
-          {/* Decreased Darkness: Balanced soft gradients so the video stays vibrant & clearly visible */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/30 to-slate-950/90" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-slate-950/25 to-slate-950/75" />
+          {/* Light Ambient Gradients: Crisp Apple-Class White Wash */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white/95" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent" />
 
-          {/* Volumetric Sun Rays / Theatrical Light Beam (Nubien & Framer inspired) */}
-          <div className="sun-rays-beam animate-sun-rays absolute -top-8 left-1/2 -translate-x-1/2 w-[900px] sm:w-[1200px] h-[550px] pointer-events-none z-1" />
-          {/* Subtle soft emerald spotlight ray behind it */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[650px] h-[340px] bg-gradient-to-b from-emerald-500/20 via-teal-500/8 to-transparent rounded-full blur-3xl pointer-events-none" />
+          {/* Volumetric Emerald Ambient Spotlight (Subtle Apple-class Glow) */}
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-[900px] sm:w-[1200px] h-[500px] bg-gradient-to-b from-emerald-500/15 via-teal-400/8 to-transparent rounded-full blur-3xl pointer-events-none" />
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto w-full">
@@ -316,40 +301,40 @@ export const LandingPage: React.FC = () => {
           <div className="text-center max-w-3xl mx-auto space-y-6">
             {/* 1. Old Badge completely removed as mandated */}
 
-            {/* 3. Hero Headline with high-contrast text shadow */}
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black font-heading leading-[1.08] tracking-tight text-white animate-hero-up drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
+            {/* 3. Hero Headline with high-contrast emerald typography */}
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black font-heading leading-[1.08] tracking-tight text-slate-900 animate-hero-up">
               Turn Messages into <br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500 bg-clip-text text-transparent drop-shadow-sm">
+              <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 bg-clip-text text-transparent">
                 Property Deals.
               </span>
             </h1>
 
             {/* 4. Supporting Text */}
-            <p className="text-sm sm:text-base md:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed font-normal drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+            <p className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
               Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right property matches faster and manage more opportunities without losing track of your deals.
             </p>
 
-            {/* 5. CTA Buttons (Pure Design & Framer Inspiration with circular badge) */}
+            {/* 5. CTA Buttons (Apple-Class High Contrast Styling) */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2 max-w-md mx-auto w-full">
               <button
                 onClick={scrollToInquiry}
-                className="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-950/60 hover:shadow-emerald-500/35 hover:-translate-y-0.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+                className="group relative w-full sm:w-auto flex-1 inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/40 hover:-translate-y-0.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
               >
                 <span className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
                   <span>Get Free Demo</span>
                 </span>
-                <span className="w-8 h-8 rounded-full bg-white text-slate-950 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-sm">
+                <span className="w-8 h-8 rounded-full bg-white text-emerald-800 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs">
                   <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                 </span>
               </button>
 
               <Link to="/register" className="w-full sm:w-auto flex-1">
                 <button
-                  className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-slate-900/80 hover:bg-slate-800/90 text-slate-200 hover:text-white border border-slate-700/80 hover:border-slate-500 font-extrabold text-xs tracking-wider uppercase backdrop-blur-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-950 shadow-md"
+                  className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 hover:text-slate-900 border border-slate-200/90 hover:border-slate-300 font-extrabold text-xs tracking-wider uppercase shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
                 >
                   <span>Start 14-Day Free Trial</span>
-                  <span className="w-8 h-8 rounded-full bg-slate-800 text-emerald-400 border border-slate-700 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
+                  <span className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105">
                     <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                   </span>
                 </button>
@@ -357,15 +342,15 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Trust points */}
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-2 text-xs text-slate-300 font-medium drop-shadow-sm">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-2 text-xs text-slate-600 font-semibold">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 100% Owner Contact Privacy
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 100% Owner Contact Privacy
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> No credit card required
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> No credit card required
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> WhatsApp integrated
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> WhatsApp integrated
               </span>
             </div>
           </div>
@@ -386,22 +371,22 @@ export const LandingPage: React.FC = () => {
                         type="button"
                         onClick={() => setActiveProcessStep(idx)}
                         className={clsx(
-                          'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer border',
+                          'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer border',
                           isActive
-                            ? 'bg-emerald-950/80 border-emerald-500/70 text-emerald-300 shadow-md shadow-emerald-500/20 ring-1 ring-emerald-500/40 scale-105'
+                            ? 'bg-white border-emerald-500 text-emerald-800 shadow-lg shadow-emerald-600/15 ring-2 ring-emerald-500/25 scale-105 font-bold'
                             : isPassed
-                            ? 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700'
-                            : 'bg-slate-900/40 border-slate-800/60 text-slate-400 hover:text-slate-300'
+                            ? 'bg-white/90 border-emerald-300 text-emerald-700 shadow-2xs'
+                            : 'bg-white/80 border-slate-200/90 text-slate-700 hover:bg-white hover:text-slate-900 shadow-2xs'
                         )}
                       >
                         <span
                           className={clsx(
                             'w-5 h-5 rounded-full flex items-center justify-center transition-colors',
                             isActive
-                              ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                              ? 'bg-emerald-600 text-white shadow-2xs'
                               : isPassed
-                              ? 'bg-slate-800 text-emerald-400'
-                              : 'bg-slate-800/80 text-slate-400'
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : 'bg-slate-100 text-slate-600'
                           )}
                         >
                           <Icon className="w-3 h-3" />
@@ -410,7 +395,7 @@ export const LandingPage: React.FC = () => {
                       </button>
 
                       {idx < PROCESS_STEPS.length - 1 && (
-                        <div className="hidden sm:block w-6 sm:w-10 h-0.5 rounded-full bg-slate-800 relative overflow-hidden shrink-0">
+                        <div className="hidden sm:block w-6 sm:w-10 h-0.5 rounded-full bg-slate-200 relative overflow-hidden shrink-0">
                           <div
                             className={clsx(
                               'absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500',
@@ -425,80 +410,80 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Premium Dashboard-Window Container */}
-            <div className="rounded-2xl border border-slate-800/90 bg-slate-900/85 backdrop-blur-xl p-4 sm:p-6 shadow-2xl shadow-black/80 relative overflow-hidden transition-all duration-300 hover:border-slate-700/80">
+            {/* Apple-Class Crisp White Dashboard-Window Container */}
+            <div className="rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-2xl p-4 sm:p-6 shadow-2xl shadow-emerald-950/10 relative overflow-hidden transition-all duration-300">
               {/* Window Chrome Header Bar with Clean OS Dots & Encrypted Status */}
-              <div className="flex items-center justify-between pb-3 px-1 border-b border-slate-800/80">
+              <div className="flex items-center justify-between pb-3 px-1 border-b border-slate-200/80">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
-                  <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
-                  <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
+                  <span className="w-3 h-3 rounded-full bg-rose-400 inline-block" />
+                  <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
+                  <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-800/50 text-[10px] font-bold text-emerald-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-[10px] font-bold text-emerald-800 shadow-2xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     Encrypted Owner Vault Active
                   </span>
                 </div>
               </div>
 
-              {/* Preserved 3-Part Product Preview with Enhanced Dark Glass Styling */}
+              {/* 3-Part Product Preview with Apple-Class Clean Surfaces */}
               <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                 {/* Card 1: WhatsApp Parser Simulation */}
                 <div
                   className={clsx(
-                    'p-4 rounded-xl bg-slate-950/60 border transition-all duration-300 space-y-3',
+                    'p-4 rounded-2xl bg-slate-50/90 border transition-all duration-300 space-y-3',
                     activeProcessStep === 0 || activeProcessStep === 1
-                      ? 'border-emerald-500/50 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
-                      : 'border-slate-800/80'
+                      ? 'border-emerald-500 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
+                      : 'border-slate-200/80'
                   )}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                       WhatsApp Message
                     </span>
-                    <span className="text-[10px] text-emerald-400 bg-emerald-950/80 border border-emerald-800/40 px-2 py-0.5 rounded-full font-bold">
+                    <span className="text-[10px] text-emerald-800 bg-emerald-100 border border-emerald-200 px-2.5 py-0.5 rounded-full font-bold">
                       1-Tap Parse
                     </span>
                   </div>
-                  <div className="p-3 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-slate-300 line-clamp-3">
+                  <div className="p-3 rounded-xl bg-white border border-slate-200/80 text-[11px] font-mono text-slate-800 line-clamp-3 shadow-2xs leading-relaxed">
                     "3 BHK builder floor, 2nd floor with lift, Model Town Panipat, 200 gaj, demand 1.25 Cr. Owner: 9876543210"
                   </div>
-                  <div className="pt-2 border-t border-slate-800/70 flex items-center justify-between text-xs">
-                    <span className="font-bold text-slate-100">3 BHK · 200 Gaj</span>
-                    <span className="font-extrabold text-emerald-400">₹1.25 Cr</span>
+                  <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-xs">
+                    <span className="font-bold text-slate-900">3 BHK · 200 Gaj</span>
+                    <span className="font-extrabold text-emerald-700">₹1.25 Cr</span>
                   </div>
                 </div>
 
                 {/* Card 2: Smart Property Match Score Indicator */}
                 <div
                   className={clsx(
-                    'p-4 rounded-xl bg-slate-950/60 border transition-all duration-300 space-y-3 flex flex-col justify-between',
+                    'p-4 rounded-2xl bg-slate-50/90 border transition-all duration-300 space-y-3 flex flex-col justify-between',
                     activeProcessStep === 2
-                      ? 'border-emerald-500/50 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
-                      : 'border-slate-800/80'
+                      ? 'border-emerald-500 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
+                      : 'border-slate-200/80'
                   )}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                       Smart Property Match
                     </span>
-                    <span className="text-[10px] text-cyan-400 bg-cyan-950/80 border border-cyan-800/40 px-2 py-0.5 rounded-full font-bold">
+                    <span className="text-[10px] text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full font-bold">
                       Buyer Match
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-full border-4 border-emerald-500/20 border-t-emerald-400 flex items-center justify-center shrink-0">
-                      <span className="text-xs font-black text-emerald-400 font-heading">96%</span>
+                    <div className="w-14 h-14 rounded-full border-4 border-emerald-100 border-t-emerald-600 flex items-center justify-center shrink-0 bg-white shadow-2xs">
+                      <span className="text-xs font-black text-emerald-700 font-heading">96%</span>
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-slate-100">Rajesh Sharma</h4>
-                      <p className="text-[11px] text-slate-400">Budget: ₹1.20 - 1.35 Cr</p>
-                      <span className="text-[10px] font-bold text-emerald-400">Model Town Match</span>
+                      <h4 className="text-xs font-bold text-slate-900">Rajesh Sharma</h4>
+                      <p className="text-[11px] text-slate-600">Budget: ₹1.20 - 1.35 Cr</p>
+                      <span className="text-[10px] font-bold text-emerald-700">Model Town Match</span>
                     </div>
                   </div>
-                  <div className="pt-2 border-t border-slate-800/70 text-[11px] text-slate-400 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  <div className="pt-2 border-t border-slate-200/80 text-[11px] text-slate-500 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Matched instantly across 18 inquiries</span>
                   </div>
                 </div>
@@ -506,29 +491,29 @@ export const LandingPage: React.FC = () => {
                 {/* Card 3: Masked Flyer & Branded Share */}
                 <div
                   className={clsx(
-                    'p-4 rounded-xl bg-slate-950/60 border transition-all duration-300 space-y-3 flex flex-col justify-between',
+                    'p-4 rounded-2xl bg-slate-50/90 border transition-all duration-300 space-y-3 flex flex-col justify-between',
                     activeProcessStep === 3 || activeProcessStep === 4
-                      ? 'border-emerald-500/50 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
-                      : 'border-slate-800/80'
+                      ? 'border-emerald-500 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
+                      : 'border-slate-200/80'
                   )}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                       Masked Flyer Output
                     </span>
-                    <span className="text-[10px] text-amber-400 bg-amber-950/80 border border-amber-800/40 px-2 py-0.5 rounded-full font-bold">
+                    <span className="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-bold">
                       Safe Share
                     </span>
                   </div>
-                  <div className="p-3 rounded-lg bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 text-white space-y-1">
-                    <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold block">
+                  <div className="p-3 rounded-xl bg-white border border-slate-200/80 text-slate-900 space-y-1 shadow-2xs">
+                    <span className="text-[10px] uppercase tracking-wider text-emerald-700 font-bold block">
                       Watermarked Flyer
                     </span>
-                    <p className="text-xs font-bold text-slate-100">3 BHK Luxury Floor · Model Town</p>
-                    <p className="text-[10px] text-slate-400">Marketed by: Sharma Real Estate Agency</p>
+                    <p className="text-xs font-bold text-slate-900">3 BHK Luxury Floor · Model Town</p>
+                    <p className="text-[10px] text-slate-500">Marketed by: Sharma Real Estate Agency</p>
                   </div>
-                  <div className="pt-2 border-t border-slate-800/70 text-[11px] text-emerald-400 font-semibold flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <div className="pt-2 border-t border-slate-200/80 text-[11px] text-emerald-700 font-semibold flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Owner contact 100% hidden</span>
                   </div>
                 </div>
@@ -579,7 +564,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Format Switcher: Desktop 16:9 vs Mobile 9:16 */}
-              <div className="inline-flex items-center p-1 bg-surface dark:bg-slate-900 border border-border/80 dark:border-slate-800 rounded-full text-xs font-bold shadow-xs">
+              <div className="inline-flex items-center p-1 bg-white border border-slate-200 rounded-full text-xs font-bold shadow-xs">
                 <button
                   type="button"
                   onClick={() => setVideoMode('desktop')}
@@ -587,7 +572,7 @@ export const LandingPage: React.FC = () => {
                     'px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-200 cursor-pointer',
                     videoMode === 'desktop'
                       ? 'bg-emerald-600 text-white shadow-sm'
-                      : 'text-muted hover:text-ink'
+                      : 'text-slate-600 hover:text-slate-900'
                   )}
                 >
                   <Monitor className="w-3.5 h-3.5" />
@@ -601,7 +586,7 @@ export const LandingPage: React.FC = () => {
                     'px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-200 cursor-pointer',
                     videoMode === 'mobile'
                       ? 'bg-emerald-600 text-white shadow-sm'
-                      : 'text-muted hover:text-ink'
+                      : 'text-slate-600 hover:text-slate-900'
                   )}
                 >
                   <Smartphone className="w-3.5 h-3.5" />
@@ -610,13 +595,14 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Video Player Container */}
-            <div
-              className={clsx(
-                'mx-auto rounded-2xl sm:rounded-3xl border border-border/90 dark:border-slate-800 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500 group',
-                videoMode === 'desktop' ? 'aspect-video w-full' : 'aspect-[9/16] max-w-[340px] w-full'
-              )}
-            >
+            {/* Apple-Class Framed Video Player Showcase */}
+            <div className="p-2 sm:p-3 bg-white border border-slate-200/90 rounded-3xl sm:rounded-4xl shadow-2xl shadow-slate-200/60 max-w-5xl mx-auto">
+              <div
+                className={clsx(
+                  'mx-auto rounded-2xl sm:rounded-3xl border border-slate-200 bg-slate-900 text-white relative overflow-hidden transition-all duration-500 group shadow-inner',
+                  videoMode === 'desktop' ? 'aspect-video w-full' : 'aspect-[9/16] max-w-[340px] w-full'
+                )}
+              >
               {/* HTML5 Native Video Element */}
               <video
                 ref={videoRef}
@@ -756,9 +742,10 @@ export const LandingPage: React.FC = () => {
                 </div>
               )}
             </div>
+            </div>
           </div>
 
-          {/* 6. Compact Core Capabilities Strip */}
+          {/* 6. Compact Core Capabilities Strip (Apple-Class Light Cards) */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 pt-4">
             {[
               {
@@ -796,16 +783,16 @@ export const LandingPage: React.FC = () => {
               return (
                 <div
                   key={i}
-                  className="group p-4 rounded-2xl bg-surface/90 dark:bg-slate-900/80 border border-border/80 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 text-left cursor-default space-y-2"
+                  className="group p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 text-left cursor-default space-y-2 shadow-2xs"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-2xs">
                     <Icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-ink group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-tight">
+                    <h4 className="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition-colors leading-tight">
                       {cap.title}
                     </h4>
-                    <p className="text-[11px] text-muted leading-tight mt-1">
+                    <p className="text-[11px] text-slate-500 leading-tight mt-1">
                       {cap.desc}
                     </p>
                   </div>
@@ -965,164 +952,164 @@ export const LandingPage: React.FC = () => {
 
                 {/* Right Column: High-Fidelity Interactive Visual Simulation */}
                 <div className="lg:col-span-7">
-                  {/* Step 01 Visual: Realistic WhatsApp Message Bubble */}
+                  {/* Step 01 Visual: Realistic WhatsApp Message Bubble (Apple-Class Light Card) */}
                   {activeWorkflowStep === 0 && (
-                    <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-slate-800 shadow-xl space-y-3.5 animate-hero-up">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xl space-y-3.5 animate-hero-up text-slate-900">
+                      <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                         <div className="flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                          <span className="text-xs font-bold text-slate-300">WhatsApp Incoming Chat</span>
+                          <span className="text-xs font-bold text-slate-700">WhatsApp Incoming Chat</span>
                         </div>
-                        <span className="text-[10px] text-slate-400 font-mono">10:42 AM · NCR Broker Group</span>
+                        <span className="text-[10px] text-slate-500 font-mono">10:42 AM · NCR Broker Group</span>
                       </div>
-                      <div className="p-3.5 rounded-2xl rounded-tl-xs bg-emerald-950/80 border border-emerald-800/60 text-slate-100 text-xs sm:text-sm font-sans leading-relaxed shadow-sm">
+                      <div className="p-3.5 rounded-2xl rounded-tl-xs bg-emerald-50/90 border border-emerald-200 text-slate-900 text-xs sm:text-sm font-sans leading-relaxed shadow-xs">
                         "Need 3 BHK in Model Town, Panipat. Budget 1.25 Cr. Prefer lift and parking."
                       </div>
-                      <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
                         <span className="italic">* Fictional sample data for illustration</span>
-                        <span className="text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded-md border border-emerald-800/40">
+                        <span className="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200">
                           1-Tap Quick Paste Ready
                         </span>
                       </div>
                     </div>
                   )}
 
-                  {/* Step 02 Visual: AI Extraction with Scanning Animation */}
+                  {/* Step 02 Visual: AI Extraction with Scanning Animation (Apple-Class Light Card) */}
                   {activeWorkflowStep === 1 && (
-                    <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-emerald-500/40 shadow-xl space-y-3.5 relative overflow-hidden animate-hero-up">
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white border border-emerald-500/30 shadow-xl space-y-3.5 relative overflow-hidden animate-hero-up text-slate-900">
                       {/* Scanning Light Beam */}
-                      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-pulse" />
+                      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent animate-pulse" />
 
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                      <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                         <div className="flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-emerald-400" />
-                          <span className="text-xs font-bold text-slate-200">AI Entity Extraction Active</span>
+                          <Sparkles className="w-4 h-4 text-emerald-600" />
+                          <span className="text-xs font-bold text-slate-800">AI Entity Extraction Active</span>
                         </div>
-                        <span className="text-[10px] text-emerald-400 font-mono font-bold">4 Attributes Identified</span>
+                        <span className="text-[10px] text-emerald-700 font-mono font-bold">4 Attributes Identified</span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 text-left">
-                        <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Property</span>
-                          <span className="text-xs font-bold text-emerald-400">3 BHK Builder Floor</span>
+                        <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+                          <span className="text-[10px] uppercase font-bold text-slate-500 block">Property</span>
+                          <span className="text-xs font-bold text-emerald-700">3 BHK Builder Floor</span>
                         </div>
-                        <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Locality</span>
-                          <span className="text-xs font-bold text-emerald-400">Model Town, Panipat</span>
+                        <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+                          <span className="text-[10px] uppercase font-bold text-slate-500 block">Locality</span>
+                          <span className="text-xs font-bold text-emerald-700">Model Town, Panipat</span>
                         </div>
-                        <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Budget</span>
-                          <span className="text-xs font-bold text-emerald-400">₹1.25 Cr</span>
+                        <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+                          <span className="text-[10px] uppercase font-bold text-slate-500 block">Budget</span>
+                          <span className="text-xs font-bold text-emerald-700">₹1.25 Cr</span>
                         </div>
-                        <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Amenities</span>
-                          <span className="text-xs font-bold text-emerald-400">Lift + Dedicated Parking</span>
+                        <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+                          <span className="text-[10px] uppercase font-bold text-slate-500 block">Amenities</span>
+                          <span className="text-xs font-bold text-emerald-700">Lift + Dedicated Parking</span>
                         </div>
                       </div>
 
-                      <div className="text-[11px] text-slate-400 pt-1 flex items-center justify-between">
+                      <div className="text-[11px] text-slate-500 pt-1 flex items-center justify-between">
                         <span>Zero manual typing required</span>
-                        <span className="text-emerald-400 font-bold">Confidence: High</span>
+                        <span className="text-emerald-700 font-bold">Confidence: High</span>
                       </div>
                     </div>
                   )}
 
-                  {/* Step 03 Visual: Save & Organise in Vault */}
+                  {/* Step 03 Visual: Save & Organise in Vault (Apple-Class Light Card) */}
                   {activeWorkflowStep === 2 && (
-                    <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-slate-800 shadow-xl space-y-3.5 animate-hero-up">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xl space-y-3.5 animate-hero-up text-slate-900">
+                      <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                         <div className="flex items-center gap-2">
-                          <Layers className="w-4 h-4 text-emerald-400" />
-                          <span className="text-xs font-bold text-slate-200">Buyer Record #LN-8492</span>
+                          <Layers className="w-4 h-4 text-emerald-600" />
+                          <span className="text-xs font-bold text-slate-800">Buyer Record #LN-8492</span>
                         </div>
-                        <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-800">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span className="inline-flex items-center gap-1 text-[10px] text-emerald-800 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                           Saved to Vault
                         </span>
                       </div>
 
-                      <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 text-left">
+                      <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2 text-left shadow-2xs">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-slate-200">Rajesh Sharma (Verified Buyer)</span>
-                          <span className="text-xs font-extrabold text-emerald-400">₹1.25 Cr Max</span>
+                          <span className="text-xs font-bold text-slate-900">Rajesh Sharma (Verified Buyer)</span>
+                          <span className="text-xs font-extrabold text-emerald-700">₹1.25 Cr Max</span>
                         </div>
-                        <p className="text-[11px] text-slate-400">
+                        <p className="text-[11px] text-slate-600">
                           Seeking 3 BHK with lift in Model Town · Contact stored in encrypted vault
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
                         <span>Auto-indexed in 0.4s</span>
-                        <span className="text-slate-300 font-semibold">100% Privacy Preserved</span>
+                        <span className="text-emerald-700 font-semibold">100% Privacy Preserved</span>
                       </div>
                     </div>
                   )}
 
-                  {/* Step 04 Visual: Find Matches with Evaluation Score */}
+                  {/* Step 04 Visual: Find Matches with Evaluation Score (Apple-Class Light Card) */}
                   {activeWorkflowStep === 3 && (
-                    <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-emerald-500/50 shadow-xl space-y-3.5 animate-hero-up">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white border border-emerald-500/30 shadow-xl space-y-3.5 animate-hero-up text-slate-900">
+                      <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                         <div className="flex items-center gap-2">
-                          <Search className="w-4 h-4 text-emerald-400" />
-                          <span className="text-xs font-bold text-slate-200">Matching Engine Evaluation</span>
+                          <Search className="w-4 h-4 text-emerald-600" />
+                          <span className="text-xs font-bold text-slate-800">Matching Engine Evaluation</span>
                         </div>
-                        <span className="text-[10px] font-mono text-emerald-400 font-bold">2 Listings Compared</span>
+                        <span className="text-[10px] font-mono text-emerald-700 font-bold">2 Listings Compared</span>
                       </div>
 
                       {/* Best Matching Listing */}
-                      <div className="p-3.5 rounded-xl bg-slate-900 border-2 border-emerald-500/70 shadow-lg shadow-emerald-500/10 space-y-2 text-left">
+                      <div className="p-3.5 rounded-xl bg-slate-50 border-2 border-emerald-500/60 shadow-md shadow-emerald-500/5 space-y-2 text-left">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-white">3 BHK Luxury Floor · Model Town</span>
-                          <span className="text-xs font-black text-emerald-400 font-heading bg-emerald-950 px-2 py-0.5 rounded-md border border-emerald-800">
+                          <span className="text-xs font-bold text-slate-900">3 BHK Luxury Floor · Model Town</span>
+                          <span className="text-xs font-black text-emerald-800 font-heading bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
                             96% Match*
                           </span>
                         </div>
-                        <div className="text-[11px] text-slate-300 flex items-center justify-between">
+                        <div className="text-[11px] text-slate-600 flex items-center justify-between">
                           <span>Demand: ₹1.22 Cr · 200 Gaj</span>
-                          <span className="text-emerald-400 font-bold">Matches: Locality, Budget, Lift</span>
+                          <span className="text-emerald-700 font-bold">Matches: Locality, Budget, Lift</span>
                         </div>
                       </div>
 
-                      <p className="text-[10px] text-slate-400 italic text-left">
+                      <p className="text-[10px] text-slate-500 italic text-left">
                         * Match score is an illustrative demo value showing multi-criteria correlation.
                       </p>
                     </div>
                   )}
 
-                  {/* Step 05 Visual: Masked Flyer & Pipeline Tracker */}
+                  {/* Step 05 Visual: Masked Flyer & Pipeline Tracker (Apple-Class Light Card) */}
                   {activeWorkflowStep === 4 && (
-                    <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 text-white border border-slate-800 shadow-xl space-y-3.5 animate-hero-up">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xl space-y-3.5 animate-hero-up text-slate-900">
+                      <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                         <div className="flex items-center gap-2">
-                          <Share2 className="w-4 h-4 text-emerald-400" />
-                          <span className="text-xs font-bold text-slate-200">Masked Flyer Output & Deal Tracker</span>
+                          <Share2 className="w-4 h-4 text-emerald-600" />
+                          <span className="text-xs font-bold text-slate-800">Masked Flyer Output & Deal Tracker</span>
                         </div>
-                        <span className="text-[10px] font-bold text-amber-300 bg-amber-950 px-2 py-0.5 rounded-full border border-amber-800">
+                        <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
                           Negotiation Stage
                         </span>
                       </div>
 
-                      <div className="p-3.5 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 space-y-2 text-left">
+                      <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2 text-left shadow-2xs">
                         <div className="flex items-center justify-between">
                           <div>
-                            <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block">
+                            <span className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider block">
                               Sharma Real Estate Agency
                             </span>
-                            <h4 className="text-xs font-bold text-white">3 BHK Builder Floor · Model Town</h4>
+                            <h4 className="text-xs font-bold text-slate-900">3 BHK Builder Floor · Model Town</h4>
                           </div>
-                          <span className="text-xs font-black text-emerald-400">₹1.22 Cr</span>
+                          <span className="text-xs font-black text-emerald-700">₹1.22 Cr</span>
                         </div>
-                        <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-                          <span className="text-emerald-400 flex items-center gap-1 font-semibold">
+                        <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500">
+                          <span className="text-emerald-700 flex items-center gap-1 font-semibold">
                             <ShieldCheck className="w-3.5 h-3.5" /> Owner Contact Hidden
                           </span>
-                          <span className="text-slate-300">Site Visit: Tomorrow 4 PM</span>
+                          <span className="text-slate-600">Site Visit: Tomorrow 4 PM</span>
                         </div>
                       </div>
 
-                      <div className="text-[11px] text-slate-400 flex items-center justify-between pt-1">
+                      <div className="text-[11px] text-slate-500 flex items-center justify-between pt-1">
                         <span>Direct WhatsApp Share Ready</span>
-                        <span className="text-emerald-400 font-bold">Commission Protected</span>
+                        <span className="text-emerald-700 font-bold">Commission Protected</span>
                       </div>
                     </div>
                   )}
@@ -1258,44 +1245,44 @@ export const LandingPage: React.FC = () => {
             <div
               onClick={() => setSelectedFeature(selectedFeature === 0 ? null : 0)}
               className={clsx(
-                'group p-5 sm:p-6 rounded-2xl bg-surface/90 dark:bg-slate-900/90 border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5',
+                'group p-5 sm:p-6 rounded-2xl bg-white border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5 shadow-2xs',
                 selectedFeature === 0
                   ? 'border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/30 -translate-y-1'
-                  : 'border-border/80 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
+                  : 'border-slate-200/90 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
               )}
             >
               <div className="space-y-3 text-left">
                 <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                     <Building2 className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">FEATURE 01</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 01</span>
                 </div>
-                <h3 className="text-base font-bold text-ink group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors font-heading">
                   Smart Property Inventory
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Keep all your property listings organised in one place, with important details and private owner information securely managed.
                 </p>
               </div>
 
-              {/* Lower Mini Product Visual */}
-              <div className="p-3.5 rounded-xl bg-slate-950 text-white border border-slate-800 space-y-2.5 animate-float shadow-inner text-left">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                  <span className="text-[10px] font-mono text-slate-400">Panipat Inventory · Listing #04</span>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-800/60">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              {/* Lower Mini Product Visual (Apple-Class Light Card) */}
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-900 space-y-2.5 animate-float shadow-2xs text-left">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
+                  <span className="text-[10px] font-mono text-slate-500">Panipat Inventory · Listing #04</span>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
                     Available
                   </span>
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-100">3 BHK Luxury Builder Floor</h4>
-                  <p className="text-[11px] text-slate-400">Model Town · 200 Gaj (1800 Sq.Ft)</p>
+                  <h4 className="text-xs font-bold text-slate-900">3 BHK Luxury Builder Floor</h4>
+                  <p className="text-[11px] text-slate-500">Model Town · 200 Gaj (1800 Sq.Ft)</p>
                 </div>
-                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                  <span className="font-extrabold text-emerald-400">₹1.25 Cr</span>
-                  <span className="text-[10px] text-slate-400 flex items-center gap-1">
-                    <Lock className="w-3 h-3 text-emerald-400" /> Owner Contact Encrypted
+                <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-xs">
+                  <span className="font-extrabold text-emerald-700">₹1.25 Cr</span>
+                  <span className="text-[10px] text-slate-500 flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-emerald-600" /> Owner Contact Encrypted
                   </span>
                 </div>
               </div>
@@ -1305,45 +1292,45 @@ export const LandingPage: React.FC = () => {
             <div
               onClick={() => setSelectedFeature(selectedFeature === 1 ? null : 1)}
               className={clsx(
-                'group p-5 sm:p-6 rounded-2xl bg-surface/90 dark:bg-slate-900/90 border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5',
+                'group p-5 sm:p-6 rounded-2xl bg-white border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5 shadow-2xs',
                 selectedFeature === 1
                   ? 'border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/30 -translate-y-1'
-                  : 'border-border/80 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
+                  : 'border-slate-200/90 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
               )}
             >
               <div className="space-y-3 text-left">
                 <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                     <Users className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">FEATURE 02</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 02</span>
                 </div>
-                <h3 className="text-base font-bold text-ink group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors font-heading">
                   Buyer Requirements
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Organise buyer preferences, budgets, preferred localities and property requirements without searching through old chats.
                 </p>
               </div>
 
-              {/* Lower Mini Product Visual */}
-              <div className="p-3.5 rounded-xl bg-slate-950 text-white border border-slate-800 space-y-2.5 shadow-inner text-left">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                  <span className="text-[10px] font-mono text-slate-400">Buyer Profile #LN-8492</span>
-                  <span className="text-[10px] font-bold text-rose-300 bg-rose-950 px-2 py-0.5 rounded-full border border-rose-800/60">
+              {/* Lower Mini Product Visual (Apple-Class Light Card) */}
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-900 space-y-2.5 shadow-2xs text-left">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
+                  <span className="text-[10px] font-mono text-slate-500">Buyer Profile #LN-8492</span>
+                  <span className="text-[10px] font-bold text-rose-800 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
                     Hot Urgency
                   </span>
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold text-slate-100">Rajesh Sharma</h4>
-                    <span className="text-xs font-bold text-emerald-400">₹1.20 - 1.35 Cr</span>
+                    <h4 className="text-xs font-bold text-slate-900">Rajesh Sharma</h4>
+                    <span className="text-xs font-bold text-emerald-700">₹1.20 - 1.35 Cr</span>
                   </div>
-                  <p className="text-[11px] text-slate-400">Preferred: Model Town & Sector 11</p>
+                  <p className="text-[11px] text-slate-500">Preferred: Model Town & Sector 11</p>
                 </div>
-                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
-                  <span className="text-emerald-400 font-semibold">3 BHK Floor · Lift & Parking</span>
-                  <span className="bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-slate-300">Loan Ready</span>
+                <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[10px] text-slate-500">
+                  <span className="text-emerald-700 font-semibold">3 BHK Floor · Lift & Parking</span>
+                  <span className="bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700 shadow-2xs">Loan Ready</span>
                 </div>
               </div>
             </div>
@@ -1352,41 +1339,41 @@ export const LandingPage: React.FC = () => {
             <div
               onClick={() => setSelectedFeature(selectedFeature === 2 ? null : 2)}
               className={clsx(
-                'group p-5 sm:p-6 rounded-2xl bg-surface/90 dark:bg-slate-900/90 border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5',
+                'group p-5 sm:p-6 rounded-2xl bg-white border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5 shadow-2xs',
                 selectedFeature === 2
                   ? 'border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/30 -translate-y-1'
-                  : 'border-border/80 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
+                  : 'border-slate-200/90 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
               )}
             >
               <div className="space-y-3 text-left">
                 <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                     <MessageSquare className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">FEATURE 03</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 03</span>
                 </div>
-                <h3 className="text-base font-bold text-ink group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors font-heading">
                   WhatsApp Message Analyzer
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Convert unstructured WhatsApp messages into structured buyer requirements and property information with AI assistance.
                 </p>
               </div>
 
-              {/* Lower Mini Product Visual */}
-              <div className="p-3.5 rounded-xl bg-slate-950 text-white border border-emerald-500/40 relative overflow-hidden space-y-2 shadow-inner text-left">
-                <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-pulse" />
-                <div className="p-2 rounded bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300 line-clamp-2">
+              {/* Lower Mini Product Visual (Apple-Class Light Card) */}
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-emerald-200 relative overflow-hidden space-y-2 shadow-2xs text-left">
+                <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500 to-transparent animate-pulse" />
+                <div className="p-2 rounded-lg bg-white border border-slate-200 text-[10px] font-mono text-slate-800 line-clamp-2 shadow-2xs">
                   "3 BHK builder floor, 2nd floor with lift, Model Town Panipat, 200 gaj, demand 1.25 Cr. Owner: 9876543210"
                 </div>
                 <div className="flex flex-wrap gap-1 pt-1">
-                  <span className="text-[9px] font-bold bg-emerald-950 border border-emerald-800 text-emerald-300 px-1.5 py-0.5 rounded">3 BHK</span>
-                  <span className="text-[9px] font-bold bg-emerald-950 border border-emerald-800 text-emerald-300 px-1.5 py-0.5 rounded">Model Town</span>
-                  <span className="text-[9px] font-bold bg-emerald-950 border border-emerald-800 text-emerald-300 px-1.5 py-0.5 rounded">₹1.25 Cr</span>
-                  <span className="text-[9px] font-bold bg-emerald-950 border border-emerald-800 text-emerald-300 px-1.5 py-0.5 rounded">200 Gaj</span>
+                  <span className="text-[9px] font-bold bg-emerald-50 border border-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded">3 BHK</span>
+                  <span className="text-[9px] font-bold bg-emerald-50 border border-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded">Model Town</span>
+                  <span className="text-[9px] font-bold bg-emerald-50 border border-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded">₹1.25 Cr</span>
+                  <span className="text-[9px] font-bold bg-emerald-50 border border-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded">200 Gaj</span>
                 </div>
-                <div className="text-[9px] text-slate-400 flex items-center justify-between pt-1">
-                  <span className="text-emerald-400 font-semibold">AI Entity Extraction</span>
+                <div className="text-[9px] text-slate-500 flex items-center justify-between pt-1">
+                  <span className="text-emerald-700 font-semibold">AI Entity Extraction</span>
                   <span className="italic">Visual workflow illustration</span>
                 </div>
               </div>
@@ -1396,43 +1383,43 @@ export const LandingPage: React.FC = () => {
             <div
               onClick={() => setSelectedFeature(selectedFeature === 3 ? null : 3)}
               className={clsx(
-                'group p-5 sm:p-6 rounded-2xl bg-surface/90 dark:bg-slate-900/90 border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5',
+                'group p-5 sm:p-6 rounded-2xl bg-white border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5 shadow-2xs',
                 selectedFeature === 3
                   ? 'border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/30 -translate-y-1'
-                  : 'border-border/80 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
+                  : 'border-slate-200/90 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
               )}
             >
               <div className="space-y-3 text-left">
                 <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                     <Sparkles className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">FEATURE 04</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 04</span>
                 </div>
-                <h3 className="text-base font-bold text-ink group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors font-heading">
                   Intelligent Property Matching
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Compare buyer requirements against your property inventory and understand why a property matches.
                 </p>
               </div>
 
-              {/* Lower Mini Product Visual */}
-              <div className="p-3.5 rounded-xl bg-slate-950 text-white border border-emerald-500/50 space-y-2 shadow-inner text-left">
-                <div className="flex items-center justify-between text-[10px] text-slate-300 border-b border-slate-800 pb-1.5">
+              {/* Lower Mini Product Visual (Apple-Class Light Card) */}
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-emerald-200 space-y-2 shadow-2xs text-left">
+                <div className="flex items-center justify-between text-[10px] text-slate-700 border-b border-slate-200/80 pb-1.5">
                   <span className="font-semibold">Buyer: Rajesh S. (Max ₹1.25 Cr)</span>
-                  <span className="text-emerald-400 font-mono font-bold">1 Inventory Match</span>
+                  <span className="text-emerald-700 font-mono font-bold">1 Inventory Match</span>
                 </div>
-                <div className="p-2 rounded bg-slate-900 border border-emerald-500/60 flex items-center justify-between">
+                <div className="p-2 rounded-lg bg-white border border-emerald-200 flex items-center justify-between shadow-2xs">
                   <div>
-                    <h5 className="text-[11px] font-bold text-white">3 BHK Luxury Floor</h5>
-                    <p className="text-[10px] text-slate-400">Demand: ₹1.22 Cr · Model Town</p>
+                    <h5 className="text-[11px] font-bold text-slate-900">3 BHK Luxury Floor</h5>
+                    <p className="text-[10px] text-slate-500">Demand: ₹1.22 Cr · Model Town</p>
                   </div>
-                  <span className="text-xs font-black text-emerald-400 font-heading bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+                  <span className="text-xs font-black text-emerald-700 font-heading bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                     96% Match*
                   </span>
                 </div>
-                <p className="text-[9px] text-slate-400 italic">
+                <p className="text-[9px] text-slate-500 italic">
                   * Illustrative demo value. Explains match: Locality (Model Town), BHK (3 BHK), Budget (₹1.22 Cr ≤ ₹1.25 Cr).
                 </p>
               </div>
@@ -1442,42 +1429,42 @@ export const LandingPage: React.FC = () => {
             <div
               onClick={() => setSelectedFeature(selectedFeature === 4 ? null : 4)}
               className={clsx(
-                'group p-5 sm:p-6 rounded-2xl bg-surface/90 dark:bg-slate-900/90 border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5',
+                'group p-5 sm:p-6 rounded-2xl bg-white border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5 shadow-2xs',
                 selectedFeature === 4
                   ? 'border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/30 -translate-y-1'
-                  : 'border-border/80 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
+                  : 'border-slate-200/90 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
               )}
             >
               <div className="space-y-3 text-left">
                 <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                     <Share2 className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">FEATURE 05</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 05</span>
                 </div>
-                <h3 className="text-base font-bold text-ink group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors font-heading">
                   Masked Property Flyers
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Create professional, agency-branded property flyers while protecting confidential owner contact information.
                 </p>
               </div>
 
-              {/* Lower Mini Product Visual with 3D Tilt */}
-              <div className="p-3.5 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 text-white border border-slate-800 hover:rotate-1 hover:scale-[1.02] transition-transform duration-300 space-y-2 shadow-inner text-left">
-                <div className="flex items-center justify-between text-[10px] text-emerald-400 font-bold border-b border-slate-800 pb-1.5">
+              {/* Lower Mini Product Visual (Apple-Class Light Card) */}
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:rotate-1 hover:scale-[1.02] transition-transform duration-300 space-y-2 shadow-2xs text-left">
+                <div className="flex items-center justify-between text-[10px] text-emerald-700 font-bold border-b border-slate-200/80 pb-1.5">
                   <span>Sharma Real Estate Agency</span>
-                  <span className="text-slate-400 font-normal">leadNivash Safe Share</span>
+                  <span className="text-slate-500 font-normal">leadNivash Safe Share</span>
                 </div>
                 <div className="space-y-0.5">
-                  <h4 className="text-xs font-bold text-slate-100">3 BHK Luxury Floor · Model Town</h4>
-                  <p className="text-[10px] text-emerald-400 font-extrabold">Demand: ₹1.22 Cr · 200 Gaj</p>
+                  <h4 className="text-xs font-bold text-slate-900">3 BHK Luxury Floor · Model Town</h4>
+                  <p className="text-[10px] text-emerald-700 font-extrabold">Demand: ₹1.22 Cr · 200 Gaj</p>
                 </div>
-                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
-                  <span className="text-emerald-400 flex items-center gap-1 font-semibold">
+                <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[10px] text-slate-500">
+                  <span className="text-emerald-700 flex items-center gap-1 font-semibold">
                     <ShieldCheck className="w-3.5 h-3.5" /> Owner Contact 100% Hidden
                   </span>
-                  <span className="text-slate-300 font-bold">PDF / WhatsApp</span>
+                  <span className="text-slate-700 font-bold">PDF / WhatsApp</span>
                 </div>
               </div>
             </div>
@@ -1486,36 +1473,36 @@ export const LandingPage: React.FC = () => {
             <div
               onClick={() => setSelectedFeature(selectedFeature === 5 ? null : 5)}
               className={clsx(
-                'group p-5 sm:p-6 rounded-2xl bg-surface/90 dark:bg-slate-900/90 border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5',
+                'group p-5 sm:p-6 rounded-2xl bg-white border transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5 shadow-2xs',
                 selectedFeature === 5
                   ? 'border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/30 -translate-y-1'
-                  : 'border-border/80 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
+                  : 'border-slate-200/90 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5'
               )}
             >
               <div className="space-y-3 text-left">
                 <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                     <TrendingUp className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">FEATURE 06</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 06</span>
                 </div>
-                <h3 className="text-base font-bold text-ink group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors font-heading">
                   Deal & Commission Tracking
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Follow opportunities through deal stages and keep track of expected and received brokerage commissions.
                 </p>
               </div>
 
-              {/* Lower Mini Product Visual */}
-              <div className="p-3.5 rounded-xl bg-slate-950 text-white border border-slate-800 space-y-2.5 shadow-inner text-left">
+              {/* Lower Mini Product Visual (Apple-Class Light Card) */}
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2.5 shadow-2xs text-left">
                 {/* 5-Stage Miniature Pipeline Track */}
-                <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 border-b border-slate-800 pb-2">
-                  <span className="text-slate-400">Interested</span>
+                <div className="flex items-center justify-between text-[9px] font-bold text-slate-500 border-b border-slate-200/80 pb-2">
+                  <span className="text-slate-500">Interested</span>
                   <span>→</span>
-                  <span className="text-slate-400">Shown</span>
+                  <span className="text-slate-500">Shown</span>
                   <span>→</span>
-                  <span className="text-emerald-400 font-extrabold bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">
+                  <span className="text-emerald-800 font-extrabold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
                     Negotiation
                   </span>
                   <span>→</span>
@@ -1524,14 +1511,14 @@ export const LandingPage: React.FC = () => {
 
                 <div className="flex items-center justify-between pt-1">
                   <div>
-                    <span className="text-[10px] font-mono text-slate-400 block">Deal: ₹1.25 Cr (1.5% Brokerage)</span>
-                    <span className="text-xs font-black text-emerald-400">₹1,87,500 Expected</span>
+                    <span className="text-[10px] font-mono text-slate-500 block">Deal: ₹1.25 Cr (1.5% Brokerage)</span>
+                    <span className="text-xs font-black text-emerald-700">₹1,87,500 Expected</span>
                   </div>
-                  <span className="text-[10px] font-bold text-slate-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                  <span className="text-[10px] font-bold text-slate-700 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-2xs">
                     In 7 Days
                   </span>
                 </div>
-                <p className="text-[9px] text-slate-400 italic">
+                <p className="text-[9px] text-slate-500 italic">
                   * Clearly identified illustrative sample brokerage calculation.
                 </p>
               </div>
@@ -1749,14 +1736,14 @@ export const LandingPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* 8. Financial Visualization: Velocity Scale */}
-                  <div className="p-4 rounded-xl bg-slate-950 text-white border border-slate-800 space-y-2.5 shadow-inner">
-                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-300">
+                  {/* 8. Financial Visualization: Velocity Scale (Apple-Class Light Card) */}
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-900 space-y-2.5 shadow-2xs">
+                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-700">
                       <span className="flex items-center gap-1">
-                        <BarChart3 className="w-3.5 h-3.5 text-emerald-400" />
+                        <BarChart3 className="w-3.5 h-3.5 text-emerald-700" />
                         Commission Scale Progression
                       </span>
-                      <span className="text-emerald-400 font-mono text-[9px]">
+                      <span className="text-emerald-700 font-mono text-[9px] font-bold">
                         1 Deal → Monthly → Annual
                       </span>
                     </div>
@@ -1765,11 +1752,11 @@ export const LandingPage: React.FC = () => {
                     <div className="space-y-2 text-[10px]">
                       {/* 1 Deal */}
                       <div className="space-y-0.5">
-                        <div className="flex justify-between text-[9px] text-slate-400">
+                        <div className="flex justify-between text-[9px] text-slate-500 font-medium">
                           <span>1 Deal ({commissionRate}%)</span>
-                          <span className="font-mono text-slate-200">{formatINR(commissionPerDeal)}</span>
+                          <span className="font-mono text-slate-800 font-bold">{formatINR(commissionPerDeal)}</span>
                         </div>
-                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                        <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-slate-400 rounded-full transition-all duration-300"
                             style={{ width: `${Math.max(6, Math.min(100, (commissionPerDeal / annualCommission) * 100))}%` }}
@@ -1779,13 +1766,13 @@ export const LandingPage: React.FC = () => {
 
                       {/* Monthly */}
                       <div className="space-y-0.5">
-                        <div className="flex justify-between text-[9px] text-slate-400">
+                        <div className="flex justify-between text-[9px] text-slate-500 font-medium">
                           <span>Monthly ({monthlyDealsCount} Deals)</span>
-                          <span className="font-mono text-emerald-400 font-bold">{formatINR(monthlyCommission)}</span>
+                          <span className="font-mono text-emerald-700 font-bold">{formatINR(monthlyCommission)}</span>
                         </div>
-                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                        <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-emerald-500 rounded-full transition-all duration-300"
+                            className="h-full bg-emerald-600 rounded-full transition-all duration-300"
                             style={{ width: `${Math.max(12, Math.min(100, (monthlyCommission / annualCommission) * 100))}%` }}
                           />
                         </div>
@@ -1793,12 +1780,12 @@ export const LandingPage: React.FC = () => {
 
                       {/* Annual */}
                       <div className="space-y-0.5">
-                        <div className="flex justify-between text-[9px] text-slate-400">
+                        <div className="flex justify-between text-[9px] text-slate-500 font-medium">
                           <span>Annual Velocity (12 Months)</span>
-                          <span className="font-mono text-amber-400 font-bold">{formatINR(annualCommission)}</span>
+                          <span className="font-mono text-amber-700 font-bold">{formatINR(annualCommission)}</span>
                         </div>
-                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                          <div className="h-full bg-gradient-to-r from-emerald-500 to-amber-400 rounded-full w-full transition-all duration-300" />
+                        <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-emerald-600 to-amber-500 rounded-full w-full transition-all duration-300" />
                         </div>
                       </div>
                     </div>
@@ -2095,65 +2082,65 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch text-left">
             
             {/* CARD 1 — NEVER LOSE A MATCH */}
-            <div className="group rounded-3xl bg-surface/90 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
+            <div className="group rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 shadow-2xs">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                  <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
                     <Search className="w-5 h-5 stroke-[2.2]" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                     REASON 01
                   </span>
                 </div>
 
                 <div className="space-y-1.5">
-                  <h3 className="text-lg font-bold text-ink font-heading group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-lg font-bold text-slate-900 font-heading group-hover:text-emerald-700 transition-colors">
                     Never Lose a Match
                   </h3>
-                  <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                  <p className="text-xs font-semibold text-emerald-700">
                     Keep buyer requirements and property inventory organised so relevant opportunities are easier to identify.
                   </p>
-                  <p className="text-xs text-muted leading-relaxed pt-1">
+                  <p className="text-xs text-slate-600 leading-relaxed pt-1">
                     Stop searching through endless conversations to remember who needs what. Keep buyer requirements and property details organised, making it easier to discover relevant property matches.
                   </p>
                 </div>
               </div>
 
-              {/* Miniature Product-Style Illustration */}
-              <div className="p-4 rounded-2xl bg-slate-950 text-white border border-slate-800 space-y-3 shadow-inner">
+              {/* Miniature Product-Style Illustration (Apple-Class Light Card) */}
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-slate-900 space-y-3 shadow-2xs">
                 {/* Micro Buyer Requirement */}
-                <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 flex items-center justify-between shadow-2xs">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-black flex items-center justify-center border border-emerald-800">
+                    <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black flex items-center justify-center border border-emerald-300">
                       RS
                     </div>
                     <div>
-                      <span className="text-[11px] font-bold text-slate-100 block">Rajesh Sharma</span>
-                      <span className="text-[9px] text-slate-400 font-mono">3 BHK · Model Town · ₹1.25 Cr</span>
+                      <span className="text-[11px] font-bold text-slate-900 block">Rajesh Sharma</span>
+                      <span className="text-[9px] text-slate-500 font-mono">3 BHK · Model Town · ₹1.25 Cr</span>
                     </div>
                   </div>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-800/80">
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 font-bold border border-emerald-200">
                     Buyer
                   </span>
                 </div>
 
                 {/* Animated Connection Bridge */}
                 <div className="flex items-center justify-center gap-2 py-0.5">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-emerald-500" />
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-700/80 text-emerald-300 text-[10px] font-extrabold shadow-xs">
-                    <Sparkles className="w-3 h-3 text-emerald-400 animate-pulse" />
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-emerald-400/50 to-emerald-500" />
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white border border-emerald-400 text-emerald-800 text-[10px] font-extrabold shadow-2xs">
+                    <Sparkles className="w-3 h-3 text-emerald-600 animate-pulse" />
                     96% Match
                   </span>
-                  <div className="h-px flex-1 bg-gradient-to-l from-transparent via-emerald-500/50 to-emerald-500" />
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent via-emerald-400/50 to-emerald-500" />
                 </div>
 
                 {/* Micro Property Listing */}
-                <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 flex items-center justify-between shadow-2xs">
                   <div>
-                    <span className="text-[11px] font-bold text-slate-100 block">Luxury Builder Floor</span>
-                    <span className="text-[9px] text-slate-400 font-mono">200 Gaj · Model Town · ₹1.22 Cr</span>
+                    <span className="text-[11px] font-bold text-slate-900 block">Luxury Builder Floor</span>
+                    <span className="text-[9px] text-slate-500 font-mono">200 Gaj · Model Town · ₹1.22 Cr</span>
                   </div>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-bold">
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-bold border border-slate-200">
                     Inventory
                   </span>
                 </div>
@@ -2161,41 +2148,41 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* CARD 2 — PROTECT YOUR BUSINESS RELATIONSHIPS */}
-            <div className="group rounded-3xl bg-surface/90 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
+            <div className="group rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 shadow-2xs">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                  <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
                     <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                     REASON 02
                   </span>
                 </div>
 
                 <div className="space-y-1.5">
-                  <h3 className="text-lg font-bold text-ink font-heading group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-lg font-bold text-slate-900 font-heading group-hover:text-emerald-700 transition-colors">
                     Protect Your Business Relationships
                   </h3>
-                  <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                  <p className="text-xs font-semibold text-emerald-700">
                     Share property information professionally without exposing confidential owner contact details.
                   </p>
-                  <p className="text-xs text-muted leading-relaxed pt-1">
+                  <p className="text-xs text-slate-600 leading-relaxed pt-1">
                     Create branded, shareable property flyers while keeping sensitive owner contact information protected. Present properties professionally and maintain control over how your business information is shared.
                   </p>
                 </div>
               </div>
 
-              {/* Miniature Property Flyer Preview with Masked Owner */}
-              <div className="p-4 rounded-2xl bg-slate-950 text-white border border-slate-800 space-y-3 shadow-inner">
+              {/* Miniature Property Flyer Preview with Masked Owner (Apple-Class Light Card) */}
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-slate-900 space-y-3 shadow-2xs">
                 {/* Agency Flyer Header */}
-                <div className="flex items-center justify-between text-[10px] pb-1.5 border-b border-slate-800">
-                  <span className="font-bold text-emerald-400">Sharma Real Estate Agency</span>
-                  <span className="text-[9px] text-slate-400">Watermarked Flyer</span>
+                <div className="flex items-center justify-between text-[10px] pb-1.5 border-b border-slate-200/80">
+                  <span className="font-bold text-emerald-700">Sharma Real Estate Agency</span>
+                  <span className="text-[9px] text-slate-500">Watermarked Flyer</span>
                 </div>
 
                 {/* Property Card Snippet */}
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-slate-900 border border-slate-800 overflow-hidden shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-white border border-slate-200 overflow-hidden shrink-0 shadow-2xs">
                     <img
                       src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=140&auto=format&fit=crop&q=80"
                       alt="Floor"
@@ -2203,22 +2190,22 @@ export const LandingPage: React.FC = () => {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <span className="text-xs font-bold text-slate-100 block truncate">
+                    <span className="text-xs font-bold text-slate-900 block truncate">
                       3 BHK Floor · Model Town
                     </span>
-                    <span className="text-[10px] font-mono text-emerald-400 font-bold">
+                    <span className="text-[10px] font-mono text-emerald-700 font-bold">
                       Demand: ₹1.25 Cr
                     </span>
                   </div>
                 </div>
 
                 {/* Masked Owner Privacy Vault Box */}
-                <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-[10px]">
-                  <div className="flex items-center gap-1.5 text-slate-300">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 flex items-center justify-between text-[10px] shadow-2xs">
+                  <div className="flex items-center gap-1.5 text-slate-700 font-medium">
                     <Lock className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Owner Contact: <span className="font-mono text-slate-400 tracking-wider">●●●●●●8210</span></span>
+                    <span>Owner Contact: <span className="font-mono text-slate-500 tracking-wider">●●●●●●8210</span></span>
                   </div>
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 font-bold border border-emerald-800">
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-bold border border-emerald-200">
                     Protected
                   </span>
                 </div>
@@ -2226,59 +2213,59 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* CARD 3 — MANAGE MORE, WORK SMARTER */}
-            <div className="group rounded-3xl bg-surface/90 dark:bg-slate-900/90 border border-border/80 dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
+            <div className="group rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 shadow-2xs">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                  <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
                     <TrendingUp className="w-5 h-5 stroke-[2.2]" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                     REASON 03
                   </span>
                 </div>
 
                 <div className="space-y-1.5">
-                  <h3 className="text-lg font-bold text-ink font-heading group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-lg font-bold text-slate-900 font-heading group-hover:text-emerald-700 transition-colors">
                     Manage More, Work Smarter
                   </h3>
-                  <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                  <p className="text-xs font-semibold text-emerald-700">
                     Reduce repetitive manual work and keep deals and commissions organised.
                   </p>
-                  <p className="text-xs text-muted leading-relaxed pt-1">
+                  <p className="text-xs text-slate-600 leading-relaxed pt-1">
                     Spend less time manually entering information and tracking conversations. Organise properties, buyer requirements, deal progress, and commissions in one structured workflow.
                   </p>
                 </div>
               </div>
 
-              {/* Miniature Deal-Management Pipeline Interface */}
-              <div className="p-4 rounded-2xl bg-slate-950 text-white border border-slate-800 space-y-3 shadow-inner">
+              {/* Miniature Deal-Management Pipeline Interface (Apple-Class Light Card) */}
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-slate-900 space-y-3 shadow-2xs">
                 {/* 4 Sample Deal Stages */}
-                <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 border-b border-slate-800 pb-2">
-                  <span className="text-slate-500">Enquiry</span>
+                <div className="flex items-center justify-between text-[9px] font-bold text-slate-500 border-b border-slate-200/80 pb-2">
+                  <span className="text-slate-400">Enquiry</span>
                   <span>→</span>
-                  <span className="text-slate-500">Shown</span>
+                  <span className="text-slate-400">Shown</span>
                   <span>→</span>
-                  <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-extrabold border border-emerald-800">
+                  <span className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 font-extrabold border border-emerald-200">
                     Negotiation
                   </span>
                   <span>→</span>
-                  <span className="text-slate-500">Finalized</span>
+                  <span className="text-slate-400">Finalized</span>
                 </div>
 
                 {/* Active Deal & Commission Record */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-100">Deal: 3 BHK Model Town</span>
-                    <span className="text-[10px] font-mono text-slate-300 font-bold">₹1.25 Cr</span>
+                    <span className="text-xs font-bold text-slate-900">Deal: 3 BHK Model Town</span>
+                    <span className="text-[10px] font-mono text-slate-700 font-bold">₹1.25 Cr</span>
                   </div>
                   <div className="flex items-center justify-between text-[10px] pt-1">
-                    <span className="text-slate-400">Brokerage (1.5%):</span>
-                    <span className="text-xs font-black text-emerald-400 font-mono">₹1,87,500 Expected</span>
+                    <span className="text-slate-500">Brokerage (1.5%):</span>
+                    <span className="text-xs font-black text-emerald-700 font-mono">₹1,87,500 Expected</span>
                   </div>
                 </div>
 
                 {/* Disclaimer */}
-                <span className="text-[9px] text-slate-500 italic block pt-0.5">
+                <span className="text-[9px] text-slate-400 italic block pt-0.5">
                   * Illustrative sample workflow data
                 </span>
               </div>
@@ -2289,29 +2276,29 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================= */}
-      {/* SECTION 7 — FINAL CTA AND FREE DEMO (INQUIRY FORM)        */}
+      {/* SECTION 8 — FINAL CTA AND FREE DEMO (INQUIRY FORM)        */}
       {/* ========================================================= */}
       <section id="demo-inquiry-section" className="py-16 sm:py-24 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-6 sm:p-12 text-white shadow-xl border border-slate-800 text-left relative overflow-hidden">
+        <div className="max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-white via-slate-50 to-emerald-50/40 p-6 sm:p-12 text-slate-900 shadow-2xl border border-emerald-500/25 text-left relative overflow-hidden">
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="max-w-2xl space-y-3 mb-8">
-            <h2 className="text-3xl sm:text-4xl font-black font-heading tracking-tight text-white">
+            <h2 className="text-3xl sm:text-4xl font-black font-heading tracking-tight text-slate-900">
               Ready to Turn Your Enquiries into Deals?
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
               See how leadNivash can simplify your property business. Request a free demo and start your 14-day free trial.
             </p>
           </div>
 
           {/* Inquiry Form */}
           {formSuccess ? (
-            <div className="p-6 rounded-2xl bg-brand-950/60 border border-brand-500/40 space-y-3 text-center">
-              <CheckCircle2 className="w-10 h-10 text-brand-500 mx-auto" />
-              <h3 className="text-base font-black text-white font-heading">
+            <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-300 space-y-3 text-center">
+              <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
+              <h3 className="text-base font-black text-slate-900 font-heading">
                 Demo Request Received!
               </h3>
-              <p className="text-xs text-slate-300 max-w-md mx-auto">
+              <p className="text-xs text-slate-600 max-w-md mx-auto">
                 Thank you! Our onboarding specialist will connect with you on WhatsApp within 1 business hour to schedule your live walkthrough.
               </p>
               <div className="pt-2">
@@ -2325,7 +2312,7 @@ export const LandingPage: React.FC = () => {
           ) : (
             <form onSubmit={handleInquirySubmit} className="space-y-4">
               {formError && (
-                <div className="p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{formError}</span>
                 </div>
@@ -2333,7 +2320,7 @@ export const LandingPage: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
                     Full Name *
                   </label>
                   <input
@@ -2342,12 +2329,12 @@ export const LandingPage: React.FC = () => {
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="e.g. Rajesh Sharma"
-                    className="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
                     WhatsApp Number *
                   </label>
                   <input
@@ -2356,12 +2343,12 @@ export const LandingPage: React.FC = () => {
                     value={formPhone}
                     onChange={(e) => setFormPhone(e.target.value)}
                     placeholder="e.g. 9876543210"
-                    className="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
                     Agency / Business Name *
                   </label>
                   <input
@@ -2370,12 +2357,12 @@ export const LandingPage: React.FC = () => {
                     value={formAgency}
                     onChange={(e) => setFormAgency(e.target.value)}
                     placeholder="e.g. Sharma Real Estate"
-                    className="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
                     City *
                   </label>
                   <input
@@ -2384,20 +2371,20 @@ export const LandingPage: React.FC = () => {
                     value={formCity}
                     onChange={(e) => setFormCity(e.target.value)}
                     placeholder="e.g. Panipat / Gurugram"
-                    className="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
                     Active Properties Managed (Optional)
                   </label>
                   <select
                     value={formActiveProps}
                     onChange={(e) => setFormActiveProps(e.target.value)}
-                    className="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs cursor-pointer"
                   >
                     <option value="1-10">1 to 10 properties</option>
                     <option value="10-50">10 to 50 properties</option>
@@ -2407,7 +2394,7 @@ export const LandingPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
                     Message / Specific Requirement (Optional)
                   </label>
                   <input
@@ -2415,7 +2402,7 @@ export const LandingPage: React.FC = () => {
                     value={formMessage}
                     onChange={(e) => setFormMessage(e.target.value)}
                     placeholder="Any specific questions or locality preferences?"
-                    className="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
                   />
                 </div>
               </div>
@@ -2432,7 +2419,7 @@ export const LandingPage: React.FC = () => {
                   <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Button>
 
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-slate-500">
                   By submitting, you agree to receive product demo updates on WhatsApp. Zero spam guaranteed.
                 </p>
               </div>
