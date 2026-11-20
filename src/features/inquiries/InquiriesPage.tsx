@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Phone,
   MessageCircle,
@@ -7,6 +8,9 @@ import {
   Calendar,
   CheckCircle2,
   Shield,
+  Eye,
+  UserCheck,
+  X,
 } from 'lucide-react';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
@@ -27,6 +31,7 @@ interface PublicInquiry {
 
 export const InquiriesPage: React.FC = () => {
   const { success } = useToast();
+  const [selectedInquiry, setSelectedInquiry] = useState<PublicInquiry | null>(null);
 
   const [inquiries, setInquiries] = useState<PublicInquiry[]>([
     {
@@ -185,7 +190,7 @@ export const InquiriesPage: React.FC = () => {
                     className="px-3.5 py-1.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold flex items-center gap-1.5"
                   >
                     <Phone className="w-3.5 h-3.5" />
-                    <span>Call Client</span>
+                    <span>Call</span>
                   </a>
 
                   <a
@@ -197,6 +202,15 @@ export const InquiriesPage: React.FC = () => {
                     <MessageCircle className="w-3.5 h-3.5" />
                     <span>WhatsApp</span>
                   </a>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedInquiry(inq)}
+                    className="px-3.5 py-1.5 rounded-full border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-ink text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Details</span>
+                  </button>
                 </div>
 
                 <div className="flex items-center gap-1.5">
@@ -206,7 +220,7 @@ export const InquiriesPage: React.FC = () => {
                       className="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline px-2 py-1 cursor-pointer flex items-center gap-1"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Convert to Active Buyer</span>
+                      <span>Convert to Buyer</span>
                     </button>
                   )}
                 </div>
@@ -215,6 +229,117 @@ export const InquiriesPage: React.FC = () => {
           );
         })}
       </div>
+
+      {/* Full Prospect Inquiry Details Modal */}
+      {selectedInquiry && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+          <Card className="w-full max-w-lg p-6 space-y-5 bg-white dark:bg-slate-900 border border-slate-200/90 shadow-2xl rounded-3xl text-left relative">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-border">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-2xl bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center justify-center font-bold text-sm">
+                  {selectedInquiry.clientName.charAt(0)}
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-ink font-heading">
+                    {selectedInquiry.clientName}
+                  </h3>
+                  <span className="text-xs text-muted font-mono">{selectedInquiry.clientPhone}</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedInquiry(null)}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Inquired Property Strip */}
+            <div className="p-3.5 rounded-2xl bg-brand-50/60 dark:bg-brand-950/40 border border-brand-500/20 space-y-1 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  Inquired Property Listing
+                </span>
+                <span className="font-extrabold text-emerald-700">{selectedInquiry.demand}</span>
+              </div>
+              <h4 className="font-bold text-ink text-sm">{selectedInquiry.propertyTitle}</h4>
+              <p className="text-[11px] text-muted">{selectedInquiry.locality}</p>
+            </div>
+
+            {/* Full Message */}
+            <div className="space-y-1.5 text-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted flex items-center justify-between">
+                <span>Prospect Message</span>
+                <span className="font-mono text-slate-400">{selectedInquiry.date}</span>
+              </span>
+              <div className="p-3.5 rounded-xl bg-surface border border-border/80 text-ink leading-relaxed">
+                "{selectedInquiry.message}"
+              </div>
+            </div>
+
+            {/* Status Selector */}
+            <div className="space-y-1.5 text-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                Inquiry Stage
+              </span>
+              <div className="grid grid-cols-3 gap-2">
+                {(['new', 'contacted', 'converted'] as const).map((st) => (
+                  <button
+                    key={st}
+                    type="button"
+                    onClick={() => {
+                      markStatus(selectedInquiry.id, st);
+                      setSelectedInquiry((prev) => (prev ? { ...prev, status: st } : null));
+                    }}
+                    className={clsx(
+                      'py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer border',
+                      selectedInquiry.status === st
+                        ? 'bg-brand-700 text-white border-brand-700 shadow-xs'
+                        : 'bg-surface border-border text-muted hover:text-ink'
+                    )}
+                  >
+                    {st}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Actions Footer */}
+            <div className="pt-3 border-t border-border flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <a
+                  href={`tel:${selectedInquiry.clientPhone}`}
+                  className="px-4 py-2 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold flex items-center gap-1.5"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                  <span>Call</span>
+                </a>
+                <a
+                  href={`https://wa.me/${selectedInquiry.clientPhone.replace(/[^0-9]/g, '')}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>WhatsApp</span>
+                </a>
+              </div>
+
+              <Link
+                to="/app/buyers/new"
+                onClick={() => setSelectedInquiry(null)}
+                className="px-3.5 py-2 rounded-full border border-emerald-600/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 text-xs font-bold flex items-center gap-1"
+              >
+                <UserCheck className="w-3.5 h-3.5" />
+                <span>Save as Buyer</span>
+              </Link>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

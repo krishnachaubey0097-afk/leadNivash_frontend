@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AvatarMenu } from './AvatarMenu';
-import { Bell, Settings } from 'lucide-react';
+import { Bell, Settings, Plus } from 'lucide-react';
 
 export const TopBar: React.FC = () => {
   const location = useLocation();
@@ -45,9 +45,16 @@ export const TopBar: React.FC = () => {
 
         {/* Right side: Quick Actions, Theme Switcher, Notifications, Avatar */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Quick Paste shortcut pill on desktop */}
-          <Link to="/app/paste" className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/40 text-brand-700 dark:text-brand-600 text-xs font-bold transition">
-            <span>＋ Paste Message</span>
+          {/* Quick Paste signature pill button (Reference 2 style) */}
+          <Link
+            to="/app/paste"
+            className="group hidden sm:inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 via-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 active:scale-[0.98] text-white text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-700/25 hover:shadow-lg hover:shadow-emerald-700/35 transition-all"
+          >
+            <span className="w-2 h-2 rounded-full bg-white/95 animate-pulse" />
+            <span>Paste Message</span>
+            <span className="w-5 h-5 rounded-full bg-white text-emerald-700 flex items-center justify-center font-bold text-xs shadow-2xs group-hover:rotate-90 transition-transform">
+              <Plus className="w-3 h-3 stroke-[2.5]" />
+            </span>
           </Link>
 
           {/* Notifications button */}

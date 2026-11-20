@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from '../../components/ui/Button';
@@ -11,11 +11,7 @@ import {
   Share2,
   Check,
   Play,
-  Pause,
-  Volume2,
-  VolumeX,
   Maximize2,
-  RotateCcw,
   Smartphone,
   Monitor,
   Building2,
@@ -75,80 +71,22 @@ export const LandingPage: React.FC = () => {
   ];
 
   // Section 2: Demo Video State & Responsive Selection
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [videoMode, setVideoMode] = useState<'desktop' | 'mobile'>(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 640) return 'mobile';
     return 'desktop';
   });
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [isMuted, setIsMuted] = useState<boolean>(true);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
-  const [isEnded, setIsEnded] = useState<boolean>(false);
+  const isMuted = true;
+  const youtubeVideoId = 'dQw4w9WgXcQ';
 
-  // Sync video source change when switching formats
+  // Automatic 5-second start timer for embedded demo video (muted for browser autoplay policies)
   useEffect(() => {
-    setIsPlaying(false);
-    setIsEnded(false);
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-      videoRef.current.load();
-    }
-  }, [videoMode]);
+    const autoplayTimer = setTimeout(() => {
+      setIsPlaying(true);
+    }, 5000);
 
-  const handleTogglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current
-        .play()
-        .then(() => {
-          setIsPlaying(true);
-          setIsEnded(false);
-        })
-        .catch((err) => {
-          console.warn('Video playback requirement note:', err);
-          setIsPlaying(false);
-        });
-    }
-  };
-
-  const handleToggleMute = () => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = !isMuted;
-    setIsMuted(!isMuted);
-  };
-
-  const handleToggleFullscreen = () => {
-    if (!videoRef.current) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
-    } else {
-      videoRef.current.requestFullscreen().catch(() => {});
-    }
-  };
-
-  const handleReplay = () => {
-    if (!videoRef.current) return;
-    videoRef.current.currentTime = 0;
-    videoRef.current
-      .play()
-      .then(() => {
-        setIsPlaying(true);
-        setIsEnded(false);
-      })
-      .catch(() => setIsPlaying(false));
-  };
-
-  const formatVideoTime = (secs: number) => {
-    if (!secs || isNaN(secs)) return '00:00';
-    const mins = Math.floor(secs / 60);
-    const rem = Math.floor(secs % 60);
-    return `${mins.toString().padStart(2, '0')}:${rem.toString().padStart(2, '0')}`;
-  };
+    return () => clearTimeout(autoplayTimer);
+  }, []);
 
   // Section 3: How It Works Connected Workflow State
   const [activeWorkflowStep, setActiveWorkflowStep] = useState<number>(0);
@@ -240,71 +178,93 @@ export const LandingPage: React.FC = () => {
       <div className="pointer-events-none fixed inset-x-0 top-0 h-[480px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/12 via-brand-500/5 to-transparent blur-3xl dark:from-emerald-500/20" />
 
       {/* ========================================================= */}
-      {/* NAVIGATION HEADER                                         */}
+      {/* FLOATING CAPSULE NAVIGATION (Upper Header Bar)            */}
       {/* ========================================================= */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-3 sm:top-5 z-50 w-full px-3 sm:px-6 flex justify-center pointer-events-none transition-all">
+        <div className="pointer-events-auto max-w-5xl w-full h-14 sm:h-15 px-2.5 sm:px-3.5 rounded-full apple-glass-pill shadow-xl shadow-slate-900/5 flex items-center justify-between gap-2 sm:gap-4 transition-all">
           {/* Logo with strict brand styling: leadNivash */}
-          <Link to="/" className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-xl">
-            <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 p-1.5 shadow-xs group-hover:border-emerald-600/40 transition">
+          <Link to="/" className="flex items-center gap-2.5 pl-1.5 sm:pl-2 group focus:outline-none rounded-full shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200/90 p-1 shadow-2xs group-hover:border-emerald-600/40 transition flex items-center justify-center">
               <img src="/logo-icon.png" alt="leadNivash" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black tracking-tight text-slate-900 font-heading leading-tight">
+              <span className="text-sm sm:text-base font-black tracking-tight text-slate-900 font-heading leading-none">
                 lead<span className="text-emerald-700">Nivash</span>
-              </span>
-              <span className="text-[9px] uppercase tracking-widest text-slate-500 font-bold -mt-0.5">
-                Broker OS
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-8 text-xs font-bold text-slate-600">
-            <a href="#how-it-works" className="hover:text-emerald-700 transition">How It Works</a>
-            <a href="#capabilities" className="hover:text-emerald-700 transition">Features</a>
-            <a href="#financial-impact" className="hover:text-emerald-700 transition">Financial Impact</a>
-            <a href="#pricing" className="hover:text-emerald-700 transition">Pricing</a>
-            <a href="#why-leadnivash" className="hover:text-emerald-700 transition">Why leadNivash</a>
+          {/* Desktop Nav Links: Single-Line Professional Whitespace-Nowrap */}
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 text-[11px] xl:text-xs font-bold uppercase tracking-wider text-slate-600">
+            <a
+              href="#how-it-works"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-full whitespace-nowrap leading-none hover:text-slate-950 hover:bg-slate-100/70 transition-colors"
+            >
+              How It Works
+            </a>
+            <a
+              href="#capabilities"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-full whitespace-nowrap leading-none hover:text-slate-950 hover:bg-slate-100/70 transition-colors"
+            >
+              Features
+            </a>
+            <a
+              href="#financial-impact"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-full whitespace-nowrap leading-none hover:text-slate-950 hover:bg-slate-100/70 transition-colors"
+            >
+              ROI Calculator
+            </a>
+            <a
+              href="#pricing"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-full whitespace-nowrap leading-none hover:text-slate-950 hover:bg-slate-100/70 transition-colors"
+            >
+              Pricing
+            </a>
+            <a
+              href="#why-leadnivash"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-full whitespace-nowrap leading-none hover:text-slate-950 hover:bg-slate-100/70 transition-colors"
+            >
+              Why Us
+            </a>
           </nav>
 
           {/* Right Action Items */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 shrink-0 pr-1">
             <Link
               to="/login"
-              className="text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-2 transition hidden sm:inline-flex items-center gap-1.5"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-1.5 rounded-full hover:bg-slate-100/70 transition-colors whitespace-nowrap leading-none"
             >
-              <LogIn className="w-3.5 h-3.5 text-slate-500" />
+              <LogIn className="w-3.5 h-3.5 text-slate-500 shrink-0" />
               <span>Sign In</span>
             </Link>
 
-            <div className="btn-shine-wrapper hidden sm:inline-flex">
-              <div className="btn-shine-border" />
-              <button
-                onClick={scrollToInquiry}
-                className="relative z-10 px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs min-h-[38px]"
-              >
-                <span>Get Free Demo</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            <button
+              onClick={scrollToInquiry}
+              className="group relative inline-flex items-center gap-2 pl-3.5 sm:pl-4 pr-1.5 sm:pr-2 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-emerald-600 via-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider shadow-md shadow-emerald-700/25 hover:shadow-lg transition-all cursor-pointer whitespace-nowrap leading-none min-h-[36px]"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-white/95 animate-pulse hidden sm:inline-block shrink-0" />
+              <span>Get Free Demo</span>
+              <span className="w-5 h-5 rounded-full bg-white text-emerald-700 flex items-center justify-center font-bold text-xs shadow-2xs group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0">
+                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+              </span>
+            </button>
 
             {/* Mobile Hamburger Toggle Button */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:bg-slate-100 active:scale-95 transition cursor-pointer border border-slate-200/80 shadow-2xs"
+              className="lg:hidden w-8 h-8 rounded-full flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:bg-slate-100 active:scale-95 transition cursor-pointer border border-slate-200/80 shadow-2xs shrink-0"
               aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation Drawer / Overlay */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="pointer-events-auto fixed inset-0 z-50 lg:hidden">
             {/* Backdrop */}
             <div
               className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
@@ -452,9 +412,17 @@ export const LandingPage: React.FC = () => {
         <div className="relative z-10 max-w-6xl mx-auto w-full">
           {/* Main Hero Header Stack */}
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            {/* 1. Old Badge completely removed as mandated */}
+            {/* Apple Glass Pill Badge (Reference 2 'True Growth' Style) */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full apple-glass-pill shadow-xs mx-auto animate-hero-up cursor-default">
+              <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shadow-2xs">
+                ✓
+              </span>
+              <span className="text-xs font-bold text-slate-800 tracking-tight">
+                India's #1 Real Estate Broker Operating System
+              </span>
+            </div>
 
-            {/* 3. Hero Headline with high-contrast emerald typography */}
+            {/* Hero Headline with high-contrast emerald typography */}
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-heading leading-[1.12] sm:leading-[1.08] tracking-tight text-slate-900 animate-hero-up">
               Turn Messages into <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 bg-clip-text text-transparent">
@@ -515,7 +483,7 @@ export const LandingPage: React.FC = () => {
           <div className="mt-10 sm:mt-14 max-w-5xl mx-auto">
             {/* Animated 5-Step Process Indicator (Smooth scrollable with snapping on mobile) */}
             <div className="mb-4">
-              <div className="flex items-center justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 no-scrollbar scroll-smooth snap-x snap-mandatory px-1 sm:px-0">
+              <div className="flex items-center justify-start sm:justify-center gap-2 sm:gap-3.5 overflow-x-auto sm:overflow-visible py-4 sm:py-5 px-4 sm:px-2 no-scrollbar scroll-smooth snap-x snap-mandatory">
                 {PROCESS_STEPS.map((step, idx) => {
                   const Icon = step.icon;
                   const isActive = activeProcessStep === idx;
@@ -527,12 +495,12 @@ export const LandingPage: React.FC = () => {
                         type="button"
                         onClick={() => setActiveProcessStep(idx)}
                         className={clsx(
-                          'flex items-center gap-2 px-3 sm:px-3.5 py-2 sm:py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer border snap-center shrink-0 min-h-[40px]',
+                          'relative z-10 flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer border snap-center shrink-0 min-h-[42px]',
                           isActive
-                            ? 'bg-white border-emerald-500 text-emerald-800 shadow-lg shadow-emerald-600/15 ring-2 ring-emerald-500/25 scale-105 font-bold'
+                            ? 'bg-emerald-50/90 border-2 border-emerald-600 text-emerald-950 font-bold shadow-md shadow-emerald-600/15'
                             : isPassed
-                            ? 'bg-white/90 border-emerald-300 text-emerald-700 shadow-2xs'
-                            : 'bg-white/80 border-slate-200/90 text-slate-700 hover:bg-white hover:text-slate-900 shadow-2xs'
+                            ? 'bg-white border-emerald-300 text-emerald-700 shadow-2xs'
+                            : 'bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:text-slate-900 shadow-2xs'
                         )}
                       >
                         <span
@@ -566,10 +534,15 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Apple-Class Crisp White Dashboard-Window Container */}
-            <div className="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white/95 backdrop-blur-2xl p-3.5 sm:p-6 shadow-2xl shadow-emerald-950/10 relative overflow-hidden transition-all duration-300">
+            {/* Apple-Class Crisp White Dashboard-Window Container with Glossy Blur (Reference 3) */}
+            <div className="rounded-2xl sm:rounded-3xl border border-white/80 bg-white/90 backdrop-blur-3xl p-3.5 sm:p-6 shadow-2xl shadow-emerald-950/15 relative overflow-hidden transition-all duration-300 glossy-specular">
+              {/* Glossy Liquid Refractive Blur Orbs (Reference 3) */}
+              <div className="absolute -top-28 -right-20 w-80 h-80 rounded-full bg-gradient-to-br from-emerald-400/25 via-teal-300/15 to-transparent blur-3xl pointer-events-none animate-liquid-orb" />
+              <div className="absolute -bottom-28 -left-20 w-96 h-96 rounded-full bg-gradient-to-tr from-teal-400/20 via-emerald-500/15 to-transparent blur-3xl pointer-events-none" />
+              <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/70 via-white/20 to-transparent pointer-events-none" />
+
               {/* Window Chrome Header Bar with Clean OS Dots & Encrypted Status */}
-              <div className="flex items-center justify-between pb-3 px-1 border-b border-slate-200/80">
+              <div className="relative z-10 flex items-center justify-between pb-3 px-1 border-b border-slate-200/80">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-rose-400 inline-block" />
                   <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
@@ -712,11 +685,6 @@ export const LandingPage: React.FC = () => {
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   REAL PRODUCT WALKTHROUGH
                 </span>
-                {duration > 0 && (
-                  <span className="text-[11px] font-mono text-muted">
-                    {formatVideoTime(duration)}
-                  </span>
-                )}
               </div>
 
               {/* Format Switcher: Desktop 16:9 vs Mobile 9:16 */}
@@ -759,125 +727,51 @@ export const LandingPage: React.FC = () => {
                   videoMode === 'desktop' ? 'aspect-video w-full' : 'aspect-[9/16] max-w-[340px] w-full'
                 )}
               >
-              {/* HTML5 Native Video Element */}
-              <video
-                ref={videoRef}
-                key={videoMode}
-                src={
-                  videoMode === 'desktop'
-                    ? '/assets/videos/leadnivash-desktop-demo.mp4'
-                    : '/assets/videos/leadnivash-mobile-demo.mp4'
-                }
-                poster={
-                  videoMode === 'desktop'
-                    ? '/assets/images/leadnivash-desktop-poster.webp'
-                    : '/assets/images/leadnivash-mobile-poster.webp'
-                }
-                playsInline
-                muted={isMuted}
-                onTimeUpdate={() => {
-                  if (videoRef.current) setCurrentTime(videoRef.current.currentTime);
-                }}
-                onLoadedMetadata={() => {
-                  if (videoRef.current) setDuration(videoRef.current.duration);
-                }}
-                onEnded={() => {
-                  setIsPlaying(false);
-                  setIsEnded(true);
-                }}
-                onError={() => {
-                  setIsPlaying(false);
-                }}
-                className="w-full h-full object-cover object-center"
-              />
-
-              {/* Poster / Play Overlay when video is paused or idle */}
-              {!isPlaying && !isEnded && (
-                <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center transition-opacity duration-300">
-                  {/* Big Glowing Play Button */}
-                  <button
-                    type="button"
-                    onClick={handleTogglePlay}
-                    className="group/btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-xl shadow-emerald-600/40 hover:shadow-emerald-500/60 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-4 focus:ring-emerald-400/40"
-                    aria-label="Play Product Demonstration Video"
-                  >
-                    <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-25 group-hover/btn:opacity-40" />
-                    <Play className="w-7 h-7 sm:w-8 sm:h-8 ml-1 transition-transform group-hover/btn:scale-110" />
-                  </button>
-                </div>
-              )}
-
-              {/* End State Overlay */}
-              {isEnded && (
-                <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-3">
-                  <button
-                    type="button"
-                    onClick={handleReplay}
-                    className="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-600/30 hover:scale-105 transition-all cursor-pointer"
-                    aria-label="Replay Demo Video"
-                  >
-                    <RotateCcw className="w-6 h-6" />
-                  </button>
-                  <p className="text-xs font-bold text-slate-200">Replay Demonstration</p>
-                </div>
-              )}
-
-              {/* Interactive Player Controls (visible while playing or on hover) */}
-              {isPlaying && (
-                <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-slate-950/95 via-slate-950/70 to-transparent flex items-center gap-3 transition-opacity duration-300 opacity-90 hover:opacity-100">
-                  <button
-                    type="button"
-                    onClick={handleTogglePlay}
-                    className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors cursor-pointer"
-                    aria-label="Pause Video"
-                  >
-                    <Pause className="w-4 h-4" />
-                  </button>
-
-                  {/* Progress Bar Track */}
-                  <div
-                    className="flex-1 h-1.5 rounded-full bg-white/20 relative overflow-hidden cursor-pointer"
-                    onClick={(e) => {
-                      if (!videoRef.current || !duration) return;
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const clickX = e.clientX - rect.left;
-                      const ratio = clickX / rect.width;
-                      videoRef.current.currentTime = ratio * duration;
-                    }}
-                  >
-                    <div
-                      className="absolute inset-y-0 left-0 bg-emerald-500 rounded-full transition-all duration-150"
-                      style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                {/* Embedded YouTube Player when active */}
+                {isPlaying ? (
+                  <iframe
+                    className="w-full h-full border-0"
+                    src={`https://www.youtube-nocookie.com/embed/${youtubeVideoId}?autoplay=1&mute=${isMuted ? 1 : 0}&playsinline=1&rel=0&modestbranding=1&enablejsapi=1`}
+                    title="leadNivash Real-Time Workflow Demonstration"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                ) : (
+                  <div className="relative w-full h-full">
+                    {/* Poster Preview */}
+                    <img
+                      src={
+                        videoMode === 'desktop'
+                          ? '/assets/images/leadnivash-desktop-poster.webp'
+                          : '/assets/images/leadnivash-mobile-poster.webp'
+                      }
+                      alt="leadNivash Workflow Demo"
+                      className="w-full h-full object-cover object-center"
+                      onError={(e) => {
+                        // Fallback to high-res property preview if webp not available
+                        (e.target as HTMLImageElement).src =
+                          'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80';
+                      }}
                     />
+
+                    {/* Dark Glass Overlay with Big Glowing Play Button */}
+                    <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center transition-opacity duration-300">
+                      <button
+                        type="button"
+                        onClick={() => setIsPlaying(true)}
+                        className="group/btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-xl shadow-emerald-600/40 hover:shadow-emerald-500/60 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-4 focus:ring-emerald-400/40"
+                        aria-label="Play YouTube Demonstration Video"
+                      >
+                        <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-25 group-hover/btn:opacity-40" />
+                        <Play className="w-7 h-7 sm:w-8 sm:h-8 ml-1 transition-transform group-hover/btn:scale-110" />
+                      </button>
+                      <span className="mt-3 text-xs font-bold text-white/90 bg-black/40 backdrop-blur-xs px-3 py-1 rounded-full border border-white/10">
+                        Plays directly in browser • Autostarts in 5s
+                      </span>
+                    </div>
                   </div>
-
-                  {/* Time Stamp */}
-                  <span className="text-[11px] font-mono text-slate-300 shrink-0">
-                    {formatVideoTime(currentTime)} / {formatVideoTime(duration)}
-                  </span>
-
-                  {/* Mute Button */}
-                  <button
-                    type="button"
-                    onClick={handleToggleMute}
-                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
-                    aria-label={isMuted ? 'Unmute' : 'Mute'}
-                  >
-                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                  </button>
-
-                  {/* Fullscreen Button */}
-                  <button
-                    type="button"
-                    onClick={handleToggleFullscreen}
-                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
-                    aria-label="Toggle Fullscreen"
-                  >
-                    <Maximize2 className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -1402,26 +1296,6 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Keep all your property listings organised in one place, with important details and private owner information securely managed.
                 </p>
-
-                {/* Structured 4-Point Broker Guide */}
-                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
-                    <span>Encrypted central vault for your residential and commercial listing portfolio.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
-                    <span>Stops owner contacts and key specs from getting lost across scattered chats.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
-                    <span>Add BHK, size in Gaj/sq.ft, price, photos, and locked owner contact in seconds.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
-                    <span className="text-emerald-900 font-semibold">Instant recall on client calls with 100% owner privacy guaranteed.</span>
-                  </div>
-                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1469,26 +1343,6 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Organise buyer preferences, budgets, preferred localities and property requirements without searching through old chats.
                 </p>
-
-                {/* Structured 4-Point Broker Guide */}
-                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
-                    <span>Profiles buyer demand by locality, BHK type, maximum budget, and timeframe.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
-                    <span>Prevents active buyers from getting forgotten when inquiries get buried in WhatsApp.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
-                    <span>Save client parameters and loan status once; system monitors matching stock.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
-                    <span className="text-emerald-900 font-semibold">Immediate match alerts the moment suitable inventory enters your market.</span>
-                  </div>
-                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1536,26 +1390,6 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Convert unstructured WhatsApp messages into structured buyer requirements and property information with AI assistance.
                 </p>
-
-                {/* Structured 4-Point Broker Guide */}
-                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
-                    <span>Extracts BHK, Gaj/Sq.Ft, price, locality, and phone numbers from chat text & voice.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
-                    <span>Saves 2+ hours daily spent re-typing messy forwarded Hinglish messages into Excel.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
-                    <span>Paste forwarded text or speak into Quick Paste; AI detects listing vs buyer.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
-                    <span className="text-emerald-900 font-semibold">One-tap conversion from raw chat into structured, searchable records.</span>
-                  </div>
-                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1600,26 +1434,6 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Compare buyer requirements against your property inventory and understand why a property matches.
                 </p>
-
-                {/* Structured 4-Point Broker Guide */}
-                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
-                    <span>Cross-matches inventory and buyer demand with compatibility percentages.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
-                    <span>Eliminates missed deals when inventory arrives weeks after a buyer's initial visit.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
-                    <span>Review instant match suggestions broken down by locality, BHK, and price fit.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
-                    <span className="text-emerald-900 font-semibold">Fast pairings and proactive follow-ups before the buyer purchases elsewhere.</span>
-                  </div>
-                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1666,26 +1480,6 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Create professional, agency-branded property flyers while protecting confidential owner contact information.
                 </p>
-
-                {/* Structured 4-Point Broker Guide */}
-                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
-                    <span>Generates branded public flyers with photos and video walkthroughs.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
-                    <span>Prevents buyers and other brokers from bypassing you directly to the owner.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
-                    <span>Tap "Share on WhatsApp"; a watermarked flyer link opens with your contact info.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
-                    <span className="text-emerald-900 font-semibold">Share freely across WhatsApp groups while retaining 100% deal control.</span>
-                  </div>
-                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -1730,26 +1524,6 @@ export const LandingPage: React.FC = () => {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Follow opportunities through deal stages and keep track of expected and received brokerage commissions.
                 </p>
-
-                {/* Structured 4-Point Broker Guide */}
-                <div className="pt-3 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">What it does:</span>
-                    <span>5-stage pipeline tracking from initial inquiry to final registry and payment.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">Problem solved:</span>
-                    <span>Prevents forgotten follow-ups, lost commission calculations, and missed client calls.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-slate-900 shrink-0">How you use it:</span>
-                    <span>Advance matched deals, set commission percentages, and schedule site visits.</span>
-                  </div>
-                  <div className="flex items-start gap-1.5">
-                    <span className="font-bold text-emerald-800 shrink-0">Outcome:</span>
-                    <span className="text-emerald-900 font-semibold">Predictable monthly brokerage income and zero deals abandoned mid-way.</span>
-                  </div>
-                </div>
               </div>
 
               {/* Lower Mini Product Visual (Apple-Class Light Card) */}
@@ -2056,6 +1830,79 @@ export const LandingPage: React.FC = () => {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================= */}
+      {/* BROKER CALCULATOR TOOLKIT SPOTLIGHT SECTION               */}
+      {/* ========================================================= */}
+      <section id="broker-toolkit" className="py-16 sm:py-20 px-4 sm:px-6 max-w-5xl mx-auto w-full text-center relative overflow-hidden">
+        <div className="space-y-10">
+          <div className="max-w-2xl mx-auto space-y-3">
+            <span className="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+              ESSENTIAL UTILITIES
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-ink font-heading tracking-tight leading-tight">
+              Broker Calculator{' '}
+              <span className="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">
+                Toolkit
+              </span>
+            </h2>
+            <p className="text-sm sm:text-base text-muted max-w-xl mx-auto leading-relaxed font-normal">
+              Access essential property calculators, including Area Conversion, Registry Charges, Home Loan EMI, and more — all in one place.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
+            <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/40 hover:shadow-lg transition-all space-y-3">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                <Maximize2 className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 font-heading">Area Unit Converter</h3>
+              <p className="text-xs text-muted leading-relaxed">
+                Convert Gaj, Marla (25 / 30.25 local standard), Biswa, Bigha, Kanal, and Sq. Feet instantly for north Indian registries.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/40 hover:shadow-lg transition-all space-y-3">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                <Building2 className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 font-heading">Registry & Stamp Duty</h3>
+              <p className="text-xs text-muted leading-relaxed">
+                Estimate official Haryana & Punjab circle rates, male (7%), female (5%), and joint registration charges with zero manual math.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/40 hover:shadow-lg transition-all space-y-3">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                <Calculator className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 font-heading">Home Loan EMI</h3>
+              <p className="text-xs text-muted leading-relaxed">
+                Calculate accurate monthly EMI, principal-interest breakdown, and client eligibility for instant WhatsApp deal quotes.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/40 hover:shadow-lg transition-all space-y-3">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                <TrendingUp className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 font-heading">Commission Split</h3>
+              <p className="text-xs text-muted leading-relaxed">
+                Compute 1% - 2% brokerage, agent agency share, and 50/50 co-broker splits with clean, shareable settlement sheets.
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <Link to="/app/tools">
+              <Button size="md" pill className="font-bold text-xs shadow-md shadow-emerald-700/20 px-8 py-3">
+                <span>Open Broker Calculator Toolkit</span>
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -2701,37 +2548,30 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================= */}
-      {/* SECTION 8 — FOOTER                                        */}
+      {/* SECTION 8 — MONUMENTAL BRAND FOOTER (Reference 4 Style)   */}
       {/* ========================================================= */}
-      <footer className="mt-auto py-12 border-t border-slate-200 px-4 sm:px-6 bg-white text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2.5">
-                <img src="/logo-icon.png" alt="leadNivash" className="w-6 h-6 object-contain" />
-                <span className="font-black text-slate-900 font-heading text-sm">
-                  lead<span className="text-emerald-700">Nivash</span>
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 max-w-sm leading-relaxed">
-                The mobile-first operating system designed for independent Indian real estate brokers.
-              </p>
-            </div>
+      <footer className="mt-auto relative bg-gradient-to-b from-slate-900 via-emerald-950 to-slate-950 text-white overflow-hidden pt-16 sm:pt-24 pb-8 sm:pb-12 border-t border-emerald-900/40">
+        {/* Ambient Radiant Emerald Glow Pool */}
+        <div className="absolute inset-x-0 bottom-0 h-[450px] bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-emerald-500/20 via-teal-900/10 to-transparent pointer-events-none blur-3xl" />
 
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 font-semibold text-slate-600 text-xs">
-              <a href="#how-it-works" className="py-1 hover:text-emerald-700 transition">How It Works</a>
-              <a href="#capabilities" className="py-1 hover:text-emerald-700 transition">Features</a>
-              <a href="#financial-impact" className="py-1 hover:text-emerald-700 transition">ROI Calculator</a>
-              <a href="#pricing" className="py-1 hover:text-emerald-700 transition">Pricing</a>
-              <a href="#why-leadnivash" className="py-1 hover:text-emerald-700 transition">Why leadNivash</a>
-              <Link to="/privacy" className="py-1 hover:text-emerald-700 transition">Privacy Policy</Link>
-              <Link to="/terms" className="py-1 hover:text-emerald-700 transition">Terms of Service</Link>
-            </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+          {/* Massive Monumental Brand Typography (Reference 4 'Pumpkin' Style) */}
+          <div className="relative w-full overflow-hidden select-none pointer-events-none text-center px-2 py-8 sm:py-16">
+            <h2 className="text-[14vw] sm:text-[16vw] font-black tracking-tighter leading-none font-heading text-transparent bg-clip-text bg-gradient-to-b from-white via-white/80 to-emerald-400/10 drop-shadow-[0_20px_60px_rgba(4,120,87,0.35)]">
+              leadNivash
+            </h2>
           </div>
 
-          <div className="pt-6 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
-            <p>© 2026 leadNivash. All rights reserved.</p>
-            <p>Designed with care for Indian property brokers.</p>
+          {/* Footer Metadata & Legal Links */}
+          <div className="mt-4 sm:mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-emerald-200/60 font-medium">
+            <p>© 2026 leadNivash Inc. · India's #1 Real Estate Broker Operating System</p>
+            <div className="flex items-center gap-4 text-[11px]">
+              <Link to="/privacy" className="hover:text-white transition">Privacy Policy</Link>
+              <span>·</span>
+              <Link to="/terms" className="hover:text-white transition">Terms of Service</Link>
+              <span>·</span>
+              <Link to="/login" className="hover:text-white transition">Broker Portal</Link>
+            </div>
           </div>
         </div>
       </footer>

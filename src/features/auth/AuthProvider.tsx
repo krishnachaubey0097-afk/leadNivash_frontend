@@ -41,6 +41,14 @@ interface AuthContextType {
   isLoading: boolean;
   isServerWaking: boolean;
   login: (email: string, pass: string) => Promise<void>;
+  googleLogin: (payload: {
+    email: string;
+    name: string;
+    googleId?: string;
+    phone?: string;
+    agencyName?: string;
+    city?: string;
+  }) => Promise<{ requiresPhone?: boolean; user?: any }>;
   register: (payload: {
     name: string;
     email: string;
@@ -105,6 +113,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(authUser);
   };
 
+  const googleLogin = async (payload: {
+    email: string;
+    name: string;
+    googleId?: string;
+    phone?: string;
+    agencyName?: string;
+    city?: string;
+  }) => {
+    const res = (await apiClient.post('/auth/google', payload)) as any;
+    if (res?.requiresPhone) {
+      return { requiresPhone: true, user: res.user };
+    }
+    const { accessToken, user: authUser } = res;
+    if (accessToken) {
+      tokenStore.set(accessToken);
+      setUser(authUser);
+    }
+    return { requiresPhone: false, user: authUser };
+  };
+
   const register = async (payload: {
     name: string;
     email: string;
@@ -158,6 +186,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         isServerWaking,
         login,
+        googleLogin,
         register,
         logout,
         refreshUser,

@@ -31,6 +31,7 @@ import { ToolsPage } from './features/tools/ToolsPage';
 import { InquiriesPage } from './features/inquiries/InquiriesPage';
 import { SettingsPage } from './features/settings/SettingsPages';
 import { AdminPage } from './features/admin/AdminPage';
+import { PublicFlyerPage } from './features/flyer/PublicFlyerPage';
 import { NotFoundPage } from './components/layout/NotFoundPage';
 
 export const AppRoutes: React.FC = () => {
@@ -42,6 +43,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/flyer/:id" element={<PublicFlyerPage />} />
 
       {/* Public Auth Pages */}
       <Route path="/login" element={<LoginPage />} />

@@ -824,12 +824,20 @@ export const PropertyDetailPage: React.FC = () => {
   const [property, setProperty] = useState<PropertyItem | null>(null);
   const [isOwnerRevealed, setIsOwnerRevealed] = useState(false);
   const [currentStatus, setCurrentStatus] = useState<PropertyItem['status']>('available');
+  const [activeMediaIndex, setActiveMediaIndex] = useState<number>(0);
+  const [activeMediaType, setActiveMediaType] = useState<'photo' | 'video'>('photo');
 
   useEffect(() => {
     if (id) {
       fetchPropertyById(id).then((p) => {
         setProperty(p);
         setCurrentStatus(p.status);
+        if (p.photos && p.photos.length > 0) {
+          setActiveMediaType('photo');
+          setActiveMediaIndex(0);
+        } else if (p.videoUrl || p.video?.url) {
+          setActiveMediaType('video');
+        }
       });
     }
   }, [id]);
@@ -913,53 +921,89 @@ export const PropertyDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Media Gallery & Video Walkthrough */}
+        {/* Amazon/Flipkart Style Prominent Media Showcase */}
         {(hasPhotos || hasVideo) && (
           <div className="space-y-3">
             <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
               <span className="flex items-center gap-1.5">
                 <ImageIcon className="w-4 h-4 text-emerald-600" />
-                <span>Property Gallery</span>
+                <span>Media Gallery</span>
               </span>
-              {hasVideo && (
-                <span className="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
-                  <Play className="w-3 h-3 fill-current" />
-                  <span>Video Available</span>
-                </span>
-              )}
+              <span className="text-[11px] text-muted">
+                {activeMediaType === 'photo'
+                  ? `Photo ${activeMediaIndex + 1} of ${property.photos?.length || 0}`
+                  : 'Video Walkthrough'}
+              </span>
             </div>
 
-            {/* Video Player */}
-            {hasVideo && (
-              <div className="rounded-2xl overflow-hidden bg-black shadow-md border border-slate-200">
+            {/* Prominent Main Display Stage */}
+            <div className="w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-slate-900 border border-slate-200/90 relative shadow-inner flex items-center justify-center">
+              {activeMediaType === 'photo' && hasPhotos && (
+                <img
+                  src={property.photos![activeMediaIndex]?.url}
+                  alt={`${property.title} preview`}
+                  className="w-full h-full object-contain sm:object-cover transition-all duration-300"
+                />
+              )}
+              {activeMediaType === 'video' && hasVideo && (
                 <video
                   src={property.videoUrl || property.video?.url}
                   controls
+                  autoPlay
                   playsInline
-                  poster={hasPhotos ? property.photos![0].url : undefined}
-                  className="w-full max-h-72 object-contain"
+                  className="w-full h-full object-contain bg-black"
                 />
+              )}
+              <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-slate-950/70 backdrop-blur-xs text-white text-[10px] font-bold">
+                {activeMediaType === 'photo' ? 'High-Res Photo' : 'HD Video Clip'}
               </div>
-            )}
+            </div>
 
-            {/* Photos Strip */}
-            {hasPhotos && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {property.photos!.map((photo, idx) => (
-                  <div
+            {/* Amazon/Flipkart Thumbnails Rail */}
+            <div className="flex items-center gap-2 overflow-x-auto py-2 no-scrollbar">
+              {hasPhotos &&
+                property.photos!.map((photo, idx) => (
+                  <button
                     key={idx}
-                    className="h-28 rounded-2xl overflow-hidden border border-border bg-slate-100 dark:bg-slate-800"
+                    type="button"
+                    onClick={() => {
+                      setActiveMediaType('photo');
+                      setActiveMediaIndex(idx);
+                    }}
+                    className={clsx(
+                      'w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer bg-slate-100',
+                      activeMediaType === 'photo' && activeMediaIndex === idx
+                        ? 'border-emerald-600 ring-2 ring-emerald-500/30 scale-105 shadow-md'
+                        : 'border-slate-200 opacity-70 hover:opacity-100'
+                    )}
                   >
                     <img
                       src={photo.url}
-                      alt={`Property photo ${idx + 1}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
-                      loading="lazy"
+                      alt={`Thumbnail ${idx + 1}`}
+                      className="w-full h-full object-cover"
                     />
-                  </div>
+                  </button>
                 ))}
-              </div>
-            )}
+
+              {/* Video Thumbnail Button in the Rail */}
+              {hasVideo && (
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaType('video')}
+                  className={clsx(
+                    'w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer bg-slate-900 text-white flex flex-col items-center justify-center gap-1',
+                    activeMediaType === 'video'
+                      ? 'border-emerald-600 ring-2 ring-emerald-500/30 scale-105 shadow-md'
+                      : 'border-slate-200 opacity-70 hover:opacity-100'
+                  )}
+                >
+                  <Play className="w-5 h-5 fill-emerald-400 text-emerald-400" />
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-300">
+                    Video
+                  </span>
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -1074,10 +1118,20 @@ export const PropertySharePage: React.FC = () => {
   const [property, setProperty] = useState<PropertyItem | null>(null);
   const [copied, setCopied] = useState(false);
   const [isSharingMedia, setIsSharingMedia] = useState(false);
+  const [flyerMediaIndex, setFlyerMediaIndex] = useState<number>(0);
+  const [flyerMediaType, setFlyerMediaType] = useState<'photo' | 'video'>('photo');
 
   useEffect(() => {
     if (id) {
-      fetchPropertyById(id).then(setProperty);
+      fetchPropertyById(id).then((p) => {
+        setProperty(p);
+        if (p.photos && p.photos.length > 0) {
+          setFlyerMediaType('photo');
+          setFlyerMediaIndex(0);
+        } else if (p.videoUrl || p.video?.url) {
+          setFlyerMediaType('video');
+        }
+      });
     }
   }, [id]);
 
@@ -1195,55 +1249,81 @@ export const PropertySharePage: React.FC = () => {
           </span>
         </div>
 
-        {/* Media Preview Gallery */}
-        {property.photos && property.photos.length > 0 ? (
+        {/* Interactive Media Preview Gallery (Amazon/Flipkart Style) */}
+        {(property.photos && property.photos.length > 0) || property.videoUrl || property.video?.url ? (
           <div className="space-y-2">
-            <div className="w-full h-48 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 relative">
-              <img
-                src={property.photos[0].url}
-                alt={property.title}
-                className="w-full h-full object-cover"
-              />
+            <div className="w-full h-56 sm:h-64 rounded-2xl overflow-hidden bg-slate-900 border border-slate-200/90 relative flex items-center justify-center">
+              {flyerMediaType === 'photo' && property.photos && property.photos.length > 0 && (
+                <img
+                  src={property.photos[flyerMediaIndex]?.url}
+                  alt={property.title}
+                  className="w-full h-full object-contain sm:object-cover transition-all duration-300"
+                />
+              )}
+              {flyerMediaType === 'video' && (property.videoUrl || property.video?.url) && (
+                <video
+                  src={property.videoUrl || property.video?.url}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="w-full h-full object-contain bg-black"
+                />
+              )}
               <div className="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
                 <ImageIcon className="w-3 h-3 text-emerald-400" />
-                <span>{property.photos.length} Verified Photos Attached</span>
+                <span>
+                  {flyerMediaType === 'photo'
+                    ? `Photo ${flyerMediaIndex + 1} of ${property.photos?.length || 0}`
+                    : 'Video Clip'}
+                </span>
               </div>
             </div>
 
-            {property.photos.length > 1 && (
-              <div className="grid grid-cols-3 gap-2">
-                {property.photos.slice(1, 4).map((p, idx) => (
-                  <div key={idx} className="h-16 rounded-xl overflow-hidden bg-slate-100">
-                    <img src={p.url} alt="" className="w-full h-full object-cover" />
-                  </div>
+            {/* Thumbnail Rail */}
+            <div className="flex items-center gap-2 overflow-x-auto py-1 no-scrollbar">
+              {property.photos &&
+                property.photos.map((photo, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setFlyerMediaType('photo');
+                      setFlyerMediaIndex(idx);
+                    }}
+                    className={clsx(
+                      'w-14 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer bg-slate-100',
+                      flyerMediaType === 'photo' && flyerMediaIndex === idx
+                        ? 'border-emerald-600 ring-2 ring-emerald-500/30 scale-105 shadow-md'
+                        : 'border-slate-200 opacity-70 hover:opacity-100'
+                    )}
+                  >
+                    <img src={photo.url} alt="" className="w-full h-full object-cover" />
+                  </button>
                 ))}
-              </div>
-            )}
+
+              {(property.videoUrl || property.video?.url) && (
+                <button
+                  type="button"
+                  onClick={() => setFlyerMediaType('video')}
+                  className={clsx(
+                    'w-14 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer bg-slate-900 text-white flex flex-col items-center justify-center gap-0.5',
+                    flyerMediaType === 'video'
+                      ? 'border-emerald-600 ring-2 ring-emerald-500/30 scale-105 shadow-md'
+                      : 'border-slate-200 opacity-70 hover:opacity-100'
+                  )}
+                >
+                  <Play className="w-4 h-4 fill-emerald-400 text-emerald-400" />
+                  <span className="text-[8px] font-bold uppercase tracking-wider text-emerald-300">
+                    Video
+                  </span>
+                </button>
+              )}
+            </div>
           </div>
         ) : (
           <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-border text-center text-xs text-muted">
             <ImageIcon className="w-6 h-6 text-muted mx-auto mb-1 opacity-50" />
             <span>No listing photos attached yet.</span>
-          </div>
-        )}
-
-        {/* Video walkthrough indicator if available */}
-        {(property.videoUrl || property.video?.url) && (
-          <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-between text-xs">
-            <div className="flex items-center gap-2">
-              <Film className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
-              <span className="font-bold text-emerald-900 dark:text-emerald-300 text-[11px]">
-                Video Walkthrough Ready
-              </span>
-            </div>
-            <a
-              href={property.videoUrl || property.video?.url}
-              target="_blank"
-              rel="noreferrer"
-              className="text-[10px] font-bold text-emerald-700 underline"
-            >
-              Preview Clip
-            </a>
           </div>
         )}
 

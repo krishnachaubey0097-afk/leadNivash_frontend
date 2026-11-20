@@ -21,12 +21,12 @@ export const AppShell: React.FC = () => {
   })();
 
   return (
-    <div className="min-h-screen bg-bg text-text flex">
+    <div className="h-screen w-full overflow-hidden bg-bg text-text flex">
       {/* Desktop Sidebar (lg:flex) */}
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
         {/* Global Alert Banners */}
         {!isOnline && <Banner variant="offline" />}
         {isServerWaking && <Banner variant="server-waking" />}
@@ -43,8 +43,8 @@ export const AppShell: React.FC = () => {
         {/* Top Header */}
         <TopBar />
 
-        {/* Body content */}
-        <main className="flex-1 pb-24 lg:pb-8 max-w-5xl mx-auto w-full px-4 pt-4">
+        {/* Body content with independent scrolling */}
+        <main className="flex-1 overflow-y-auto pb-24 lg:pb-8 max-w-5xl mx-auto w-full px-4 pt-4">
           <Outlet />
         </main>
 

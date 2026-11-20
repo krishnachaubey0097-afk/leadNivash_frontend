@@ -341,8 +341,8 @@
         <div class="mt-14 max-w-5xl mx-auto text-left">
           <!-- Animated 5-Step Process Indicator -->
           <div class="mb-4">
-            <div class="flex items-center justify-between sm:justify-center gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 no-scrollbar" id="htmlProcessSteps">
-              <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap bg-white border-2 border-emerald-500 text-emerald-800 shadow-lg shadow-emerald-600/15 ring-2 ring-emerald-500/20">
+            <div class="flex items-center justify-between sm:justify-center gap-2 sm:gap-3.5 overflow-x-auto py-3.5 px-3 sm:px-2 no-scrollbar" id="htmlProcessSteps">
+              <div class="flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap bg-white border-2 border-emerald-600 text-emerald-900 shadow-lg shadow-emerald-600/20 ring-4 ring-emerald-500/20 my-1">
                 <span class="w-5 h-5 rounded-full flex items-center justify-center bg-emerald-600 text-white"><i data-lucide="message-square" class="w-3 h-3"></i></span>
                 <span>WhatsApp Message</span>
               </div>
@@ -2217,11 +2217,11 @@
           stepElements.forEach((el, idx) => {
             const iconSpan = el.querySelector('span');
             if (idx === currentStepIdx) {
-              el.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap bg-emerald-950/80 border border-emerald-500/70 text-emerald-300 shadow-md shadow-emerald-500/20 ring-1 ring-emerald-500/40 scale-105 transition-all duration-300';
-              if (iconSpan) iconSpan.className = 'w-5 h-5 rounded-full flex items-center justify-center bg-emerald-500 text-slate-950';
+              el.className = 'flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-bold whitespace-nowrap bg-white border-2 border-emerald-600 text-emerald-900 shadow-lg shadow-emerald-600/20 ring-4 ring-emerald-500/20 my-1 transition-all duration-300';
+              if (iconSpan) iconSpan.className = 'w-5 h-5 rounded-full flex items-center justify-center bg-emerald-600 text-white';
             } else {
-              el.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-300 transition-all duration-300';
-              if (iconSpan) iconSpan.className = 'w-5 h-5 rounded-full flex items-center justify-center bg-slate-800 text-emerald-400';
+              el.className = 'flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap bg-white/90 border border-slate-200 text-slate-700 hover:text-slate-900 my-1 transition-all duration-300';
+              if (iconSpan) iconSpan.className = 'w-5 h-5 rounded-full flex items-center justify-center bg-emerald-50 text-emerald-700';
             }
           });
         }, 2800);

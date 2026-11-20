@@ -3,11 +3,21 @@ import {
   Copy,
   Check,
   Sparkles,
+  Maximize2,
+  Building2,
+  Calculator,
+  TrendingUp,
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+  Layers,
+  Send,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
+import { useAuth } from '../auth/AuthProvider';
 import { formatRupees } from '../../lib/money';
 import {
   convertAllUnits,
@@ -21,9 +31,17 @@ import {
 import clsx from 'clsx';
 
 export const ToolsPage: React.FC = () => {
+  const { user } = useAuth();
   const { success } = useToast();
   const [activeTab, setActiveTab] = useState<'area' | 'registry' | 'emi' | 'commission' | 'templates'>('area');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const agencyName = user?.agency?.name?.trim();
+  const ownerName = user?.name?.trim();
+  const agencyOrOwnerName =
+    agencyName && ownerName && agencyName !== ownerName
+      ? `${agencyName} · ${ownerName}`
+      : agencyName || ownerName || 'Sharma Real Estate Agency';
 
   const handleCopyText = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -61,12 +79,79 @@ export const ToolsPage: React.FC = () => {
   );
 
   // -------------------------------------------------------------
-  // Tool 3: EMI Calculator State
+  // Tool 3: EMI Calculator State (Enhanced with Amount, ROI, Tenure & Down Payment)
   // -------------------------------------------------------------
+  const [loanCalcMode, setLoanCalcMode] = useState<'direct' | 'property'>('direct');
   const [loanLakhs, setLoanLakhs] = useState<number>(60);
+  const [propertyPriceLakhs, setPropertyPriceLakhs] = useState<number>(75);
+  const [downPaymentPercent, setDownPaymentPercent] = useState<number>(20);
   const [interestRate, setInterestRate] = useState<number>(8.5);
   const [tenureYears, setTenureYears] = useState<number>(20);
-  const emiCalc = calculateEmi(loanLakhs * 100000, interestRate, tenureYears);
+  const [tenureUnit, setTenureUnit] = useState<'years' | 'months'>('years');
+  const [processingFeePercent, setProcessingFeePercent] = useState<number>(0.5);
+  const [showAmortization, setShowAmortization] = useState<boolean>(false);
+
+  // Compute effective loan principal based on mode
+  const effectiveLoanAmount =
+    loanCalcMode === 'property'
+      ? Math.max(0, propertyPriceLakhs * 100000 * (1 - downPaymentPercent / 100))
+      : loanLakhs * 100000;
+
+  const effectiveTenureYears = tenureUnit === 'months' ? tenureYears / 12 : tenureYears;
+  const emiCalc = calculateEmi(effectiveLoanAmount, interestRate, effectiveTenureYears);
+
+  const estimatedProcessingFee = Math.round(effectiveLoanAmount * (processingFeePercent / 100));
+  const principalPercent =
+    emiCalc.totalPayment > 0 ? Math.round((emiCalc.principal / emiCalc.totalPayment) * 100) : 50;
+  const interestPercent = 100 - principalPercent;
+
+  const getAmortizationMilestones = () => {
+    if (!effectiveLoanAmount || !interestRate || !effectiveTenureYears) return [];
+    const monthlyRate = interestRate / (12 * 100);
+    const totalMonths = Math.round(effectiveTenureYears * 12);
+    const emi = emiCalc.monthlyEmi;
+
+    let balance = effectiveLoanAmount;
+    let totalPrincipalPaid = 0;
+    let totalInterestPaid = 0;
+    const schedule: Array<{ year: number; balance: number; principalPaid: number; interestPaid: number }> = [];
+
+    for (let m = 1; m <= totalMonths; m++) {
+      const interestForMonth = Math.round(balance * monthlyRate);
+      const principalForMonth = Math.min(balance, emi - interestForMonth);
+      balance = Math.max(0, balance - principalForMonth);
+      totalPrincipalPaid += principalForMonth;
+      totalInterestPaid += interestForMonth;
+
+      if (m % 12 === 0 || m === totalMonths) {
+        const year = Math.ceil(m / 12);
+        if (year <= 5 || year % 5 === 0 || m === totalMonths) {
+          schedule.push({
+            year,
+            balance,
+            principalPaid: totalPrincipalPaid,
+            interestPaid: totalInterestPaid,
+          });
+        }
+      }
+    }
+    return schedule;
+  };
+
+  const emiQuoteText = `*Home Loan EMI Quotation*
+━━━━━━━━━━━━━━━━━━━━
+• Loan Amount: ₹${(effectiveLoanAmount / 100000).toFixed(2)} Lakhs
+• Interest Rate (ROI): ${interestRate}% p.a.
+• Loan Tenure: ${tenureUnit === 'months' ? `${tenureYears} Months` : `${tenureYears} Years (${Math.round(tenureYears * 12)} Mos)`}
+${loanCalcMode === 'property' ? `• Property Cost: ₹${propertyPriceLakhs} Lakhs (Down Payment: ${downPaymentPercent}% / ₹${((propertyPriceLakhs * downPaymentPercent) / 100).toFixed(2)}L)\n` : ''}━━━━━━━━━━━━━━━━━━━━
+*Monthly EMI: ₹${emiCalc.monthlyEmi.toLocaleString('en-IN')} / month*
+• Principal Borrowed: ₹${emiCalc.principal.toLocaleString('en-IN')}
+• Total Interest: ₹${emiCalc.totalInterest.toLocaleString('en-IN')}
+• Total Repayment: ₹${emiCalc.totalPayment.toLocaleString('en-IN')}
+• Est. Bank Processing Fee (${processingFeePercent}%): ₹${estimatedProcessingFee.toLocaleString('en-IN')}
+━━━━━━━━━━━━━━━━━━━━
+*LeadNivash Verified Financing Quote*
+${agencyOrOwnerName}`;
 
   // -------------------------------------------------------------
   // Tool 4: Commission Splitter State
@@ -90,19 +175,19 @@ export const ToolsPage: React.FC = () => {
       id: 'site-visit',
       title: 'Site Visit Confirmation',
       desc: 'Send to client confirming inspection time and landmark',
-      text: `Namaste ji, kal sham 4:00 baje Ansal Sushant City Sector 18 Panipat par plot visit confirm hai.\n📍 Location: https://maps.google.com\nKoi badlaav ho to pehle batayein.\n\n— Sharma Real Estate Agency`,
+      text: `Namaste ji, kal sham 4:00 baje Ansal Sushant City Sector 18 Panipat par plot visit confirm hai.\n📍 Location: https://maps.google.com\nKoi badlaav ho to pehle batayein.\n\n— ${agencyOrOwnerName}`,
     },
     {
       id: 'token-receipt',
       title: 'Token Advance Acknowledgment',
       desc: 'Instant receipt for bayana / token received',
-      text: `Receipt Note:\nToken advance ₹50,000 received for Deal: 250 Gaj Plot, Sector 18 Panipat.\nAgreement timeline: 15 Days.\nBalance deal value to be executed as per registry schedule.\n\n— Sharma Real Estate Agency`,
+      text: `Receipt Note:\nToken advance ₹50,000 received for Deal: 250 Gaj Plot, Sector 18 Panipat.\nAgreement timeline: 15 Days.\nBalance deal value to be executed as per registry schedule.\n\n— ${agencyOrOwnerName}`,
     },
     {
       id: 'doc-checklist',
       title: 'Registry Document Checklist',
       desc: 'Checklist for buyer before going to Tehsil',
-      text: `Tehsil Registry Document Checklist:\n1. Buyer & Seller Aadhaar Card (Original + 2 copies)\n2. PAN Card of both parties\n3. 4 Passport size color photos\n4. 2 Witnesses with valid Voter ID / Aadhaar\n5. Circle rate demand draft / stamp receipt\n6. Municipal / HUDA No Objection Certificate (NOC)\n\n— Sharma Real Estate Agency`,
+      text: `Tehsil Registry Document Checklist:\n1. Buyer & Seller Aadhaar Card (Original + 2 copies)\n2. PAN Card of both parties\n3. 4 Passport size color photos\n4. 2 Witnesses with valid Voter ID / Aadhaar\n5. Circle rate demand draft / stamp receipt\n6. Municipal / HUDA No Objection Certificate (NOC)\n\n— ${agencyOrOwnerName}`,
     },
   ];
 
@@ -126,28 +211,32 @@ export const ToolsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Segmented Top Navigation Tabs */}
+      {/* Segmented Top Navigation Tabs with 2D Icons */}
       <div className="flex p-1 bg-slate-200/70 dark:bg-slate-800/80 rounded-full border border-border/80 overflow-x-auto scrollbar-none">
         {[
-          { id: 'area', label: 'Area Converter' },
-          { id: 'registry', label: 'Registry & Stamp' },
-          { id: 'emi', label: 'Home Loan EMI' },
-          { id: 'commission', label: 'Brokerage Split' },
-          { id: 'templates', label: 'WhatsApp Chips' },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={clsx(
-              'px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer',
-              activeTab === tab.id
-                ? 'bg-brand-700 text-white shadow-xs'
-                : 'text-muted hover:text-ink'
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
+          { id: 'area', label: 'Area Converter', icon: Maximize2 },
+          { id: 'registry', label: 'Registry & Stamp', icon: Building2 },
+          { id: 'emi', label: 'Home Loan EMI', icon: Calculator },
+          { id: 'commission', label: 'Brokerage Split', icon: TrendingUp },
+          { id: 'templates', label: 'WhatsApp Chips', icon: MessageSquare },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={clsx(
+                'px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer flex items-center gap-1.5',
+                activeTab === tab.id
+                  ? 'bg-brand-700 text-white shadow-xs'
+                  : 'text-muted hover:text-ink'
+              )}
+            >
+              <Icon className="w-3.5 h-3.5 shrink-0" />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* ======================================================== */}
@@ -411,7 +500,7 @@ export const ToolsPage: React.FC = () => {
               variant="secondary"
               onClick={() =>
                 handleCopyText(
-                  `Haryana Registry Cost Estimate:\nProperty Value: ₹${registryPriceLakhs} Lakhs\nBuyer Ownership: ${buyerGender.toUpperCase()}\nStamp Duty (${registryCalc.stampDutyPercent}%): ₹${registryCalc.stampDutyAmount.toLocaleString('en-IN')}\nGovt Registration Fee: ₹${registryCalc.registrationFee.toLocaleString('en-IN')}\nTotal Govt Expenses: ₹${registryCalc.totalGovtFees.toLocaleString('en-IN')}\n\n— Sharma Real Estate Agency`,
+                  `Haryana Registry Cost Estimate:\nProperty Value: ₹${registryPriceLakhs} Lakhs\nBuyer Ownership: ${buyerGender.toUpperCase()}\nStamp Duty (${registryCalc.stampDutyPercent}%): ₹${registryCalc.stampDutyAmount.toLocaleString('en-IN')}\nGovt Registration Fee: ₹${registryCalc.registrationFee.toLocaleString('en-IN')}\nTotal Govt Expenses: ₹${registryCalc.totalGovtFees.toLocaleString('en-IN')}\n\n— ${agencyOrOwnerName}`,
                   'copy-registry'
                 )
               }
@@ -425,121 +514,511 @@ export const ToolsPage: React.FC = () => {
       )}
 
       {/* ======================================================== */}
-      {/* TOOL 3: HOME LOAN & MONTHLY EMI CALCULATOR               */}
+      {/* TOOL 3: HOME LOAN & MONTHLY EMI CALCULATOR (ENHANCED)    */}
       {/* ======================================================== */}
       {activeTab === 'emi' && (
-        <Card className="p-5 sm:p-6 space-y-5 border-emerald-500/30 shadow-card animate-in fade-in duration-200">
-          <div>
-            <h2 className="text-base font-black text-ink font-heading">
-              Home Loan & Monthly EMI Calculator
-            </h2>
-            <p className="text-xs text-muted mt-0.5">
-              Calculate exact monthly installments and total interest outflow for buyers.
-            </p>
+        <Card className="p-5 sm:p-6 space-y-6 border-emerald-500/30 shadow-card animate-in fade-in duration-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/70">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                  <Calculator className="w-4 h-4" />
+                </span>
+                <h2 className="text-base font-black text-ink font-heading">
+                  Home Loan & Monthly EMI Calculator
+                </h2>
+              </div>
+              <p className="text-xs text-muted mt-1">
+                Customize exact loan amount, interest rate (ROI), tenure, and down payment for buyers.
+              </p>
+            </div>
+
+            {/* Mode Switcher */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-full text-[11px] font-bold shrink-0 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setLoanCalcMode('direct')}
+                className={clsx(
+                  'px-3 py-1 rounded-full transition-all cursor-pointer',
+                  loanCalcMode === 'direct'
+                    ? 'bg-white dark:bg-slate-700 text-ink shadow-xs'
+                    : 'text-muted hover:text-ink'
+                )}
+              >
+                Direct Loan
+              </button>
+              <button
+                type="button"
+                onClick={() => setLoanCalcMode('property')}
+                className={clsx(
+                  'px-3 py-1 rounded-full transition-all cursor-pointer',
+                  loanCalcMode === 'property'
+                    ? 'bg-white dark:bg-slate-700 text-ink shadow-xs'
+                    : 'text-muted hover:text-ink'
+                )}
+              >
+                From Property Cost
+              </button>
+            </div>
           </div>
 
-          <div className="space-y-4 text-xs">
-            {/* Loan Amount */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
-                  Loan Principal Amount
-                </label>
-                <span className="font-black text-brand-700 dark:text-brand-600 text-sm">
-                  ₹{loanLakhs} Lakhs
-                </span>
-              </div>
-              <input
-                type="range"
-                min={10}
-                max={300}
-                step={5}
-                value={loanLakhs}
-                onChange={(e) => setLoanLakhs(Number(e.target.value))}
-                className="w-full accent-emerald-700 h-2 bg-slate-200 rounded-lg cursor-pointer"
-              />
-            </div>
+          <div className="space-y-5 text-xs">
+            {/* Conditional Property Cost & Down Payment Inputs if 'property' mode */}
+            {loanCalcMode === 'property' && (
+              <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-500/20 space-y-3">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                  <Building2 className="w-4 h-4" />
+                  <span>Property Cost & Down Payment Planning</span>
+                </div>
 
-            {/* Interest Rate */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
-                  Annual Interest Rate (% p.a.)
-                </label>
-                <span className="font-black text-ink text-sm">{interestRate}%</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Property Cost Input */}
+                  <div className="space-y-1.5">
+                    <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
+                      Total Property Cost (₹ Lakhs)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-2.5 text-muted font-bold">₹</span>
+                      <input
+                        type="number"
+                        min={5}
+                        max={1000}
+                        step={1}
+                        value={propertyPriceLakhs}
+                        onChange={(e) => setPropertyPriceLakhs(Math.max(1, Number(e.target.value)))}
+                        className="w-full bg-surface border border-border rounded-xl pl-8 pr-16 py-2 text-xs font-bold text-ink focus:border-brand-500 focus:outline-none"
+                      />
+                      <span className="absolute right-3 top-2.5 text-[11px] text-muted font-bold">Lakhs</span>
+                    </div>
+                  </div>
+
+                  {/* Down Payment % */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between items-center text-[10px]">
+                      <label className="font-bold text-ink uppercase tracking-wider">
+                        Down Payment (% & Cash)
+                      </label>
+                      <span className="font-black text-brand-700 dark:text-brand-400">
+                        ₹{((propertyPriceLakhs * downPaymentPercent) / 100).toFixed(2)} Lakhs ({downPaymentPercent}%)
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="range"
+                        min={10}
+                        max={60}
+                        step={5}
+                        value={downPaymentPercent}
+                        onChange={(e) => setDownPaymentPercent(Number(e.target.value))}
+                        className="flex-1 accent-emerald-700 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer"
+                      />
+                      <div className="relative w-20 shrink-0">
+                        <input
+                          type="number"
+                          min={5}
+                          max={90}
+                          value={downPaymentPercent}
+                          onChange={(e) => setDownPaymentPercent(Number(e.target.value))}
+                          className="w-full bg-surface border border-border rounded-xl px-2 py-1.5 text-xs font-bold text-ink text-center pr-5"
+                        />
+                        <span className="absolute right-2 top-2 text-[10px] text-muted font-bold">%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-emerald-500/20 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                  <span className="text-muted">
+                    Buyer Cash Needed: <strong className="text-ink">₹{((propertyPriceLakhs * downPaymentPercent) / 100).toFixed(2)} Lakhs</strong>
+                  </span>
+                  <span className="font-bold text-emerald-800 dark:text-emerald-300 bg-white dark:bg-emerald-900/50 px-2.5 py-1 rounded-full border border-emerald-300 dark:border-emerald-700">
+                    Net Bank Loan Required: ₹{(effectiveLoanAmount / 100000).toFixed(2)} Lakhs
+                  </span>
+                </div>
               </div>
+            )}
+
+            {/* Loan Principal Input (if direct mode) */}
+            {loanCalcMode === 'direct' && (
+              <div className="space-y-2 p-4 rounded-2xl bg-surface border border-border/80">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
+                      Loan Principal Amount
+                    </label>
+                    <p className="text-[10px] text-muted">Enter exact loan amount or adjust slider</p>
+                  </div>
+                  <div className="relative w-44">
+                    <span className="absolute left-3 top-2.5 text-muted font-bold">₹</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={2000}
+                      step={0.5}
+                      value={loanLakhs}
+                      onChange={(e) => setLoanLakhs(Math.max(1, Number(e.target.value)))}
+                      className="w-full bg-white dark:bg-slate-900 border border-border rounded-xl pl-7 pr-14 py-2 text-xs font-black text-brand-700 dark:text-brand-400 focus:border-brand-500 focus:outline-none"
+                    />
+                    <span className="absolute right-3 top-2.5 text-[10px] text-muted font-bold">Lakhs</span>
+                  </div>
+                </div>
+
+                <input
+                  type="range"
+                  min={5}
+                  max={300}
+                  step={1}
+                  value={loanLakhs}
+                  onChange={(e) => setLoanLakhs(Number(e.target.value))}
+                  className="w-full accent-emerald-700 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer"
+                />
+
+                {/* Quick Presets */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-[10px] text-muted font-bold uppercase mr-1">Quick Presets:</span>
+                  {[25, 40, 60, 80, 100, 150, 200].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => setLoanLakhs(preset)}
+                      className={clsx(
+                        'px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer',
+                        loanLakhs === preset
+                          ? 'bg-emerald-600 text-white shadow-2xs'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                      )}
+                    >
+                      {preset >= 100 ? `₹${(preset / 100).toFixed(preset % 100 === 0 ? 0 : 1)} Cr` : `₹${preset}L`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Interest Rate (ROI) Input */}
+            <div className="space-y-2 p-4 rounded-2xl bg-surface border border-border/80">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
+                    Rate of Interest (ROI % p.a.)
+                  </label>
+                  <p className="text-[10px] text-muted">Direct input or select popular bank benchmark</p>
+                </div>
+                <div className="relative w-36">
+                  <input
+                    type="number"
+                    min={4.0}
+                    max={20.0}
+                    step={0.05}
+                    value={interestRate}
+                    onChange={(e) => setInterestRate(Math.max(1, Number(e.target.value)))}
+                    className="w-full bg-white dark:bg-slate-900 border border-border rounded-xl px-3 py-2 text-xs font-black text-ink text-right pr-7 focus:border-brand-500 focus:outline-none"
+                  />
+                  <span className="absolute right-3 top-2.5 text-[10px] text-muted font-bold">%</span>
+                </div>
+              </div>
+
               <input
                 type="range"
-                min={7.0}
-                max={12.0}
-                step={0.1}
+                min={6.5}
+                max={14.0}
+                step={0.05}
                 value={interestRate}
                 onChange={(e) => setInterestRate(Number(e.target.value))}
-                className="w-full accent-emerald-700 h-2 bg-slate-200 rounded-lg cursor-pointer"
+                className="w-full accent-emerald-700 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer"
               />
+
+              {/* Bank Benchmarks */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                <span className="text-[10px] text-muted font-bold uppercase mr-1">Bank Rates:</span>
+                {[
+                  { name: 'SBI', rate: 8.5 },
+                  { name: 'HDFC', rate: 8.7 },
+                  { name: 'ICICI', rate: 8.75 },
+                  { name: 'PNB', rate: 8.4 },
+                  { name: 'Axis', rate: 8.9 },
+                ].map((bank) => (
+                  <button
+                    key={bank.name}
+                    type="button"
+                    onClick={() => setInterestRate(bank.rate)}
+                    className={clsx(
+                      'px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer',
+                      interestRate === bank.rate
+                        ? 'bg-emerald-600 text-white shadow-2xs'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                    )}
+                  >
+                    {bank.name} ({bank.rate}%)
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Tenure Years */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
-                  Loan Tenure (Years)
-                </label>
-                <span className="font-black text-ink text-sm">{tenureYears} Years</span>
+            {/* Tenure Input */}
+            <div className="space-y-2 p-4 rounded-2xl bg-surface border border-border/80">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div>
+                    <label className="font-bold text-ink uppercase tracking-wider text-[10px]">
+                      Loan Tenure
+                    </label>
+                    <p className="text-[10px] text-muted">
+                      {tenureUnit === 'years'
+                        ? `${tenureYears} Years (${Math.round(tenureYears * 12)} Monthly EMIs)`
+                        : `${tenureYears} Months (${(tenureYears / 12).toFixed(1)} Years)`}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[10px] font-bold">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (tenureUnit === 'months') {
+                          setTenureYears(Math.max(1, Math.round(tenureYears / 12)));
+                          setTenureUnit('years');
+                        }
+                      }}
+                      className={clsx(
+                        'px-2 py-1 rounded-md transition-all cursor-pointer',
+                        tenureUnit === 'years' ? 'bg-white dark:bg-slate-700 text-ink shadow-xs' : 'text-muted'
+                      )}
+                    >
+                      Years
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (tenureUnit === 'years') {
+                          setTenureYears(Math.round(tenureYears * 12));
+                          setTenureUnit('months');
+                        }
+                      }}
+                      className={clsx(
+                        'px-2 py-1 rounded-md transition-all cursor-pointer',
+                        tenureUnit === 'months' ? 'bg-white dark:bg-slate-700 text-ink shadow-xs' : 'text-muted'
+                      )}
+                    >
+                      Months
+                    </button>
+                  </div>
+
+                  <div className="relative w-28">
+                    <input
+                      type="number"
+                      min={1}
+                      max={tenureUnit === 'years' ? 35 : 420}
+                      value={tenureYears}
+                      onChange={(e) => setTenureYears(Math.max(1, Number(e.target.value)))}
+                      className="w-full bg-white dark:bg-slate-900 border border-border rounded-xl px-3 py-2 text-xs font-black text-ink text-right pr-9 focus:border-brand-500 focus:outline-none"
+                    />
+                    <span className="absolute right-2.5 top-2.5 text-[10px] text-muted font-bold">
+                      {tenureUnit === 'years' ? 'Yrs' : 'Mos'}
+                    </span>
+                  </div>
+                </div>
               </div>
+
               <input
                 type="range"
-                min={5}
-                max={30}
-                step={1}
+                min={tenureUnit === 'years' ? 3 : 36}
+                max={tenureUnit === 'years' ? 30 : 360}
+                step={tenureUnit === 'years' ? 1 : 12}
                 value={tenureYears}
                 onChange={(e) => setTenureYears(Number(e.target.value))}
-                className="w-full accent-emerald-700 h-2 bg-slate-200 rounded-lg cursor-pointer"
+                className="w-full accent-emerald-700 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer"
               />
+
+              {/* Quick Tenure Presets */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                <span className="text-[10px] text-muted font-bold uppercase mr-1">Tenure Presets:</span>
+                {(tenureUnit === 'years' ? [5, 10, 15, 20, 25, 30] : [60, 120, 180, 240, 300, 360]).map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setTenureYears(preset)}
+                    className={clsx(
+                      'px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer',
+                      tenureYears === preset
+                        ? 'bg-emerald-600 text-white shadow-2xs'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                    )}
+                  >
+                    {tenureUnit === 'years' ? `${preset} Yrs` : `${preset} Mos`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Additional Details: Processing Fee & Charges */}
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 flex items-center justify-center font-bold">
+                  %
+                </div>
+                <div>
+                  <span className="font-bold text-ink text-[11px] block">Est. Bank Processing Fee</span>
+                  <span className="text-[10px] text-muted">Standard 0.25% - 1.00% charged by lending institutions</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div className="relative w-24">
+                  <input
+                    type="number"
+                    min={0}
+                    max={3}
+                    step={0.1}
+                    value={processingFeePercent}
+                    onChange={(e) => setProcessingFeePercent(Math.max(0, Number(e.target.value)))}
+                    className="w-full bg-white dark:bg-slate-900 border border-border rounded-xl px-2 py-1.5 text-xs font-bold text-ink text-center pr-5"
+                  />
+                  <span className="absolute right-2 top-1.5 text-[10px] text-muted font-bold">%</span>
+                </div>
+                <span className="font-bold text-ink text-xs whitespace-nowrap">
+                  = ₹{estimatedProcessingFee.toLocaleString('en-IN')}
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Results KPI Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
-            <div className="p-4 rounded-2xl bg-brand-50/60 dark:bg-brand-950/40 border border-brand-500/30 space-y-1">
-              <span className="text-[10px] font-bold uppercase text-muted">Monthly EMI</span>
-              <span className="text-xl font-black text-brand-700 dark:text-brand-600 block">
-                ₹{emiCalc.monthlyEmi.toLocaleString('en-IN')} <span className="text-xs font-normal text-muted">/ month</span>
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2 text-xs">
+            <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border-2 border-emerald-500/40 space-y-1 shadow-sm">
+              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
+                Monthly EMI
               </span>
+              <span className="text-2xl font-black text-emerald-700 dark:text-emerald-300 block font-heading">
+                ₹{emiCalc.monthlyEmi.toLocaleString('en-IN')}{' '}
+                <span className="text-xs font-normal text-slate-500">/ mo</span>
+              </span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-surface border border-border space-y-1">
+              <span className="text-[10px] font-bold uppercase text-muted">Principal Borrowed</span>
+              <span className="text-lg font-bold text-ink block font-heading">
+                ₹{emiCalc.principal.toLocaleString('en-IN')}
+              </span>
+              <span className="text-[10px] text-emerald-600 font-semibold">{principalPercent}% of total</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-surface border border-border space-y-1">
               <span className="text-[10px] font-bold uppercase text-muted">Total Interest</span>
-              <span className="text-lg font-bold text-ink block">
+              <span className="text-lg font-bold text-amber-700 dark:text-amber-400 block font-heading">
                 ₹{emiCalc.totalInterest.toLocaleString('en-IN')}
               </span>
+              <span className="text-[10px] text-amber-600 font-semibold">{interestPercent}% of total</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-surface border border-border space-y-1">
-              <span className="text-[10px] font-bold uppercase text-muted">Total Payment</span>
-              <span className="text-lg font-bold text-ink block">
+              <span className="text-[10px] font-bold uppercase text-muted">Total Amount Payable</span>
+              <span className="text-lg font-black text-ink block font-heading">
                 ₹{emiCalc.totalPayment.toLocaleString('en-IN')}
               </span>
+              <span className="text-[10px] text-muted">Over {Math.round(effectiveTenureYears * 12)} months</span>
             </div>
           </div>
 
-          {/* Copy EMI quotation button */}
-          <div className="pt-2 flex justify-end">
-            <Button
-              size="sm"
-              pill
-              variant="secondary"
-              onClick={() =>
-                handleCopyText(
-                  `Home Loan Estimate:\nLoan Amount: ₹${loanLakhs} Lakhs @ ${interestRate}%\nTenure: ${tenureYears} Years\nMonthly EMI: ₹${emiCalc.monthlyEmi.toLocaleString('en-IN')}/mo\nTotal Interest: ₹${emiCalc.totalInterest.toLocaleString('en-IN')}\n\n— Sharma Real Estate Agency`,
-                  'copy-emi'
-                )
-              }
-              className="text-xs font-bold flex items-center gap-1.5"
+          {/* Visual Principal vs Interest Ratio Progress Bar */}
+          <div className="p-4 rounded-2xl bg-surface border border-border/80 space-y-2">
+            <div className="flex justify-between text-xs font-bold">
+              <span className="text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block" />
+                Principal: ₹{emiCalc.principal.toLocaleString('en-IN')} ({principalPercent}%)
+              </span>
+              <span className="text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
+                Interest: ₹{emiCalc.totalInterest.toLocaleString('en-IN')} ({interestPercent}%)
+              </span>
+            </div>
+            <div className="w-full h-3 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden flex">
+              <div
+                style={{ width: `${principalPercent}%` }}
+                className="h-full bg-emerald-600 transition-all duration-300"
+              />
+              <div
+                style={{ width: `${interestPercent}%` }}
+                className="h-full bg-amber-500 transition-all duration-300"
+              />
+            </div>
+          </div>
+
+          {/* Amortization Milestone Schedule Toggle */}
+          <div className="border border-border/80 rounded-2xl overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setShowAmortization(!showAmortization)}
+              className="w-full p-3.5 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 flex items-center justify-between text-xs font-bold text-ink cursor-pointer transition-colors"
             >
-              {copiedId === 'copy-emi' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copiedId === 'copy-emi' ? 'Copied' : 'Copy Loan EMI Quote'}</span>
-            </Button>
+              <span className="flex items-center gap-2">
+                <Layers className="w-4 h-4 text-emerald-600" />
+                <span>View Loan Repayment Schedule & Balance Payoff</span>
+              </span>
+              {showAmortization ? <ChevronUp className="w-4 h-4 text-muted" /> : <ChevronDown className="w-4 h-4 text-muted" />}
+            </button>
+
+            {showAmortization && (
+              <div className="p-4 bg-surface text-xs space-y-3 animate-in fade-in duration-200 overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-border text-[10px] font-bold uppercase text-muted">
+                      <th className="py-2 pr-3">Year</th>
+                      <th className="py-2 px-3">Principal Repaid</th>
+                      <th className="py-2 px-3">Interest Paid</th>
+                      <th className="py-2 pl-3 text-right">Remaining Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 text-[11px]">
+                    {getAmortizationMilestones().map((row) => (
+                      <tr key={row.year} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                        <td className="py-2 pr-3 font-black text-ink">Year {row.year}</td>
+                        <td className="py-2 px-3 text-emerald-700 dark:text-emerald-400 font-semibold">
+                          ₹{row.principalPaid.toLocaleString('en-IN')}
+                        </td>
+                        <td className="py-2 px-3 text-amber-700 dark:text-amber-400 font-semibold">
+                          ₹{row.interestPaid.toLocaleString('en-IN')}
+                        </td>
+                        <td className="py-2 pl-3 text-right font-black text-ink">
+                          ₹{row.balance.toLocaleString('en-IN')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Action Buttons: WhatsApp Share & Copy Quote */}
+          <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-border/70">
+            <span className="text-[11px] text-muted">
+              Auto-calculates standard Indian diminishing balance amortization.
+            </span>
+
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                pill
+                variant="secondary"
+                onClick={() => handleCopyText(emiQuoteText, 'copy-emi')}
+                className="text-xs font-bold flex items-center gap-1.5"
+              >
+                {copiedId === 'copy-emi' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedId === 'copy-emi' ? 'Copied' : 'Copy Quote'}</span>
+              </Button>
+
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(emiQuoteText)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white text-xs font-extrabold shadow-sm transition-all cursor-pointer"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>Share on WhatsApp</span>
+              </a>
+            </div>
           </div>
         </Card>
       )}

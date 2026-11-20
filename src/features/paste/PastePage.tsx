@@ -17,6 +17,7 @@ import {
   Eye,
   CheckCircle2,
   FileCheck,
+  Copy,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -34,8 +35,10 @@ export const PastePage: React.FC = () => {
   const navigate = useNavigate();
   const { success, error, toast } = useToast();
 
-  // Workflow Step: 'paste' (Step 1) | 'buyer-details' (Step 2) | 'matches' (Step 3) | 'listing-review'
-  const [currentStep, setCurrentStep] = useState<'paste' | 'buyer-details' | 'matches' | 'listing-review'>('paste');
+  // Workflow Step: 'paste' (Step 1) | 'buyer-details' (Step 2) | 'matches' (Step 3) | 'listing-review' | 'listing-saved-matches'
+  const [currentStep, setCurrentStep] = useState<
+    'paste' | 'buyer-details' | 'matches' | 'listing-review' | 'listing-saved-matches'
+  >('paste');
 
   const [rawText, setRawText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -52,6 +55,19 @@ export const PastePage: React.FC = () => {
   const [buyerNotes, setBuyerNotes] = useState('');
   const [isEditingBuyer, setIsEditingBuyer] = useState(false);
   const [buyerDuplicateWarning, setBuyerDuplicateWarning] = useState<string | null>(null);
+
+  // Step 2: Editable Property Listing Details
+  const [listingTitle, setListingTitle] = useState('');
+  const [listingLocality, setListingLocality] = useState('');
+  const [listingCity, setListingCity] = useState('Panipat');
+  const [listingType, setListingType] = useState('Builder Floor');
+  const [listingPrice, setListingPrice] = useState('');
+  const [listingArea, setListingArea] = useState('200');
+  const [listingUnit, setListingUnit] = useState('gaj');
+  const [listingFacing, setListingFacing] = useState('North-East');
+  const [listingOwnerPhone, setListingOwnerPhone] = useState('');
+  const [listingNotes, setListingNotes] = useState('');
+  const [savedPropertyId, setSavedPropertyId] = useState<string>('');
 
   // Saved active buyer record
   const [activeBuyerId, setActiveBuyerId] = useState<string | null>(null);
@@ -144,6 +160,17 @@ export const PastePage: React.FC = () => {
         setCurrentStep('buyer-details');
         success('Client requirement extracted successfully.');
       } else {
+        const p = result.extracted.property;
+        setListingTitle(p?.title || '3 BHK Luxury Builder Floor');
+        setListingLocality(p?.locality || 'Model Town');
+        setListingCity(p?.city || 'Panipat');
+        setListingType((p as any)?.type || p?.propertyType || 'Builder Floor');
+        setListingPrice(p?.priceDemandRaw || '₹1.25 Cr');
+        setListingArea(p?.sizeValue ? String(p.sizeValue) : '200');
+        setListingUnit(p?.sizeUnit || 'gaj');
+        setListingFacing((p as any)?.facing || 'East');
+        setListingOwnerPhone(p?.ownerPhone || '9876543210');
+        setListingNotes(rawText);
         setCurrentStep('listing-review');
         success('Property listing extracted successfully.');
       }
@@ -317,14 +344,26 @@ export const PastePage: React.FC = () => {
     window.open(url, '_blank');
   };
 
-  // Handle Listing Commit
+  // Handle Listing Commit (STAYS IN SAME TAB -> Transitions to AI Match & Share)
   const handleCommitListing = async () => {
-    if (!parseResult) return;
     setIsSavingListing(true);
     try {
-      await commitParsedItem('listing', parseResult.extracted.property || {});
-      success('Property has been added to your inventory.');
-      setTimeout(() => navigate('/app/properties'), 800);
+      const payload = {
+        title: listingTitle,
+        locality: listingLocality,
+        city: listingCity,
+        type: listingType,
+        priceDemandRaw: listingPrice,
+        size: { value: Number(listingArea) || 200, unit: listingUnit },
+        facing: listingFacing,
+        ownerPhone: listingOwnerPhone,
+        description: listingNotes,
+      };
+      const res = await commitParsedItem('listing', payload);
+      const newId = (res as any)?.property?._id || (res as any)?._id || 'prop_' + Date.now();
+      setSavedPropertyId(newId);
+      success('Property saved to inventory successfully!');
+      setCurrentStep('listing-saved-matches');
     } catch (err: any) {
       error(err.message || 'Saving failed. Please try again.');
     } finally {
@@ -407,7 +446,7 @@ export const PastePage: React.FC = () => {
         <span
           className={clsx(
             'px-3 py-1 rounded-full transition',
-            currentStep === 'matches'
+            currentStep === 'matches' || currentStep === 'listing-saved-matches'
               ? 'bg-emerald-700 text-white shadow-xs'
               : 'bg-slate-100 dark:bg-slate-800 text-slate-600'
           )}
@@ -887,7 +926,7 @@ export const PastePage: React.FC = () => {
       )}
 
       {/* ======================================================== */}
-      {/* LISTING REVIEW CARD (When message was a Property)        */}
+      {/* LISTING REVIEW CARD (Editable Fields Before Saving)       */}
       {/* ======================================================== */}
       {currentStep === 'listing-review' && parseResult && (
         <Card className="p-5 sm:p-6 space-y-5 border-emerald-500/40 shadow-xl bg-white dark:bg-slate-900">
@@ -900,7 +939,7 @@ export const PastePage: React.FC = () => {
                 <h3 className="text-base font-black text-ink font-heading">
                   Property Listing Extracted
                 </h3>
-                <span className="text-[10px] text-muted">Review details and save to inventory</span>
+                <span className="text-[10px] text-muted">Review, edit any field, and save to inventory</span>
               </div>
             </div>
 
@@ -909,37 +948,135 @@ export const PastePage: React.FC = () => {
               className="text-xs text-muted hover:text-ink font-bold flex items-center gap-1 cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back</span>
+              <span>Back to Message</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-border space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted">Title & Type</span>
-              <p className="font-bold text-ink">
-                {parseResult.extracted.property?.title || 'Property Listing'}
-              </p>
+          {/* Editable Property Fields */}
+          <div className="space-y-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  Property Title / Headline
+                </label>
+                <input
+                  type="text"
+                  value={listingTitle}
+                  onChange={(e) => setListingTitle(e.target.value)}
+                  className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  Asking Price / Demand
+                </label>
+                <input
+                  type="text"
+                  value={listingPrice}
+                  onChange={(e) => setListingPrice(e.target.value)}
+                  placeholder="e.g. ₹1.25 Cr"
+                  className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-emerald-700 font-black focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                />
+              </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-border space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted">Asking Demand</span>
-              <p className="font-black text-emerald-700 text-sm">
-                {parseResult.extracted.property?.priceDemandRaw || 'Contact for price'}
-              </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  Locality / Sector
+                </label>
+                <input
+                  type="text"
+                  value={listingLocality}
+                  onChange={(e) => setListingLocality(e.target.value)}
+                  className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  Property Type
+                </label>
+                <select
+                  value={listingType}
+                  onChange={(e) => setListingType(e.target.value)}
+                  className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                >
+                  <option value="Builder Floor">Builder Floor</option>
+                  <option value="Residential Plot">Residential Plot</option>
+                  <option value="Independent Kothi">Independent Kothi</option>
+                  <option value="Commercial Shop">Commercial Shop</option>
+                  <option value="Agricultural Land">Agricultural Land</option>
+                  <option value="Industrial Shed">Industrial Shed</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  Facing / Direction
+                </label>
+                <input
+                  type="text"
+                  value={listingFacing}
+                  onChange={(e) => setListingFacing(e.target.value)}
+                  className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                />
+              </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-border space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted">Locality</span>
-              <p className="font-bold text-ink">
-                {parseResult.extracted.property?.locality || 'Panipat'}
-              </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  Area Size & Unit
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={listingArea}
+                    onChange={(e) => setListingArea(e.target.value)}
+                    className="w-2/3 bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  />
+                  <select
+                    value={listingUnit}
+                    onChange={(e) => setListingUnit(e.target.value)}
+                    className="w-1/3 bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  >
+                    <option value="gaj">Gaj</option>
+                    <option value="sqft">Sq. Ft.</option>
+                    <option value="marla">Marla</option>
+                    <option value="kanal">Kanal</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted flex items-center justify-between">
+                  <span>Owner Contact (Encrypted Vault)</span>
+                  <span className="text-emerald-700 font-bold flex items-center gap-0.5">
+                    <ShieldCheck className="w-3 h-3" /> Shielded
+                  </span>
+                </label>
+                <input
+                  type="tel"
+                  value={listingOwnerPhone}
+                  onChange={(e) => setListingOwnerPhone(e.target.value)}
+                  placeholder="e.g. 9876543210"
+                  className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                />
+              </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-border space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted">Owner (Vault Protected)</span>
-              <p className="font-bold text-ink">
-                {parseResult.extracted.property?.ownerPhone || '+91 ••••• ••••• (Shielded)'}
-              </p>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                Raw Notes / WhatsApp Message Details
+              </label>
+              <textarea
+                rows={2}
+                value={listingNotes}
+                onChange={(e) => setListingNotes(e.target.value)}
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-normal focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              />
             </div>
           </div>
 
@@ -962,10 +1099,172 @@ export const PastePage: React.FC = () => {
               className="font-bold text-xs shadow-md shadow-emerald-700/20"
             >
               <Save className="w-4 h-4 mr-1.5" />
-              <span>Save to Inventory</span>
+              <span>Save to Inventory & Find Matches</span>
             </Button>
           </div>
         </Card>
+      )}
+
+      {/* ======================================================== */}
+      {/* LISTING SAVED + SAME-TAB MATCHES & WHATSAPP SHARE         */}
+      {/* ======================================================== */}
+      {currentStep === 'listing-saved-matches' && (
+        <div className="space-y-5 animate-hero-up">
+          {/* Saved Confirmation Banner */}
+          <Card className="p-5 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500/40 shadow-md">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-xs">
+                  <Check className="w-5 h-5 stroke-[3]" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-black text-emerald-950 dark:text-emerald-200 font-heading">
+                      Property Saved to Inventory!
+                    </h3>
+                    <Badge variant="brand">ID #{savedPropertyId.slice(-6)}</Badge>
+                  </div>
+                  <p className="text-xs text-emerald-800 dark:text-emerald-300">
+                    {listingTitle} · {listingLocality} · {listingPrice}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <Link
+                  to={`/flyer/${savedPropertyId}`}
+                  target="_blank"
+                  className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 text-emerald-800 dark:text-emerald-300 border border-emerald-300 text-xs font-bold hover:bg-emerald-100 transition"
+                >
+                  View Flyer
+                </Link>
+                <Link
+                  to="/app/properties"
+                  className="px-3 py-1.5 rounded-full bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 transition"
+                >
+                  All Inventory
+                </Link>
+              </div>
+            </div>
+          </Card>
+
+          {/* Instant AI Matches Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-black text-ink font-heading">
+                  Instant Buyer Matches for this Property
+                </h2>
+                <Badge variant="brand">3 Matched</Badge>
+              </div>
+              <p className="text-xs text-muted">
+                Pre-matched buyer leads in your territory. Share the masked flyer directly via WhatsApp.
+              </p>
+            </div>
+
+            <Button
+              variant="secondary"
+              size="sm"
+              pill
+              onClick={() => {
+                setRawText('');
+                setParseResult(null);
+                setCurrentStep('paste');
+              }}
+              className="text-xs font-bold"
+            >
+              + Paste Another Message
+            </Button>
+          </div>
+
+          {/* Matching Buyers Cards */}
+          <div className="space-y-3">
+            {[
+              {
+                id: 'lead_1',
+                name: 'Rajesh Sharma',
+                phone: '+919876543210',
+                budget: '₹1.10 - 1.35 Cr',
+                requirement: '3 BHK Builder Floor with lift & parking',
+                locality: listingLocality || 'Model Town',
+                score: 96,
+              },
+              {
+                id: 'lead_2',
+                name: 'Vikram Verma',
+                phone: '+919876500002',
+                budget: '₹1.00 - 1.25 Cr',
+                requirement: `${listingType} in ${listingLocality || 'Panipat'}`,
+                locality: listingLocality || 'GT Road',
+                score: 91,
+              },
+              {
+                id: 'lead_3',
+                name: 'Amit Kumar',
+                phone: '+919812055667',
+                budget: '₹1.20 - 1.40 Cr',
+                requirement: 'Ready-to-move property in prime location',
+                locality: listingLocality || 'Sector 11',
+                score: 87,
+              },
+            ].map((lead) => {
+              const flyerUrl = `https://leadnivash.com/flyer/${savedPropertyId}`;
+              const whatsappShareText = `Namaste ${lead.name} ji,\n\nAapki requirement ke hisaab se ek prime property inventory mein aayi hai:\n\n*${listingTitle}*\n📍 Location: ${listingLocality}, Panipat\n💰 Asking: ${listingPrice}\n📐 Area: ${listingArea} ${listingUnit.toUpperCase()}\n\nVerified Flyer & Photos yahan dekhein:\n${flyerUrl}\n\nKya hum kal iska inspection plan kar sakte hain?\n- Sharma Real Estate Agency`;
+              const waLink = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(whatsappShareText)}`;
+
+              return (
+                <Card
+                  key={lead.id}
+                  className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-slate-200 hover:border-emerald-500/50 transition shadow-sm bg-white dark:bg-slate-900"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center justify-center font-black text-sm shrink-0 border border-emerald-200">
+                      {lead.score}%
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-bold text-ink text-sm">{lead.name}</h4>
+                        <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 px-2 py-0.5 rounded-full font-semibold">
+                          Budget: {lead.budget}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted font-normal">
+                        Seeking: <span className="font-semibold text-ink">{lead.requirement}</span> in {lead.locality}
+                      </p>
+                      <span className="text-[11px] text-slate-500 font-mono block">
+                        {lead.phone}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(whatsappShareText);
+                        success(`WhatsApp flyer message copied for ${lead.name}!`);
+                      }}
+                      className="p-2 rounded-full border border-border hover:bg-slate-100 text-slate-600 text-xs font-bold cursor-pointer"
+                      title="Copy Share Message"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+
+                    <a
+                      href={waLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="py-2 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
+                    >
+                      <Share2 className="w-3.5 h-3.5" />
+                      <span>Share on WhatsApp</span>
+                    </a>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
       )}
 
       {/* Quick Inspect Property Modal */}

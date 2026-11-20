@@ -27,7 +27,7 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 bg-surface/90 backdrop-blur-md border-r border-border shrink-0 min-h-screen p-5 justify-between">
+    <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 bg-surface/95 backdrop-blur-md border-r border-border shrink-0 p-5 justify-between overflow-y-auto select-none">
       <div className="space-y-6">
         {/* Brand Header with Logo */}
         <Link to="/app" className="flex items-center gap-3 px-2 py-1 group">
