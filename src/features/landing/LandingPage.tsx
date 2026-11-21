@@ -29,6 +29,12 @@ import {
   Menu,
   X,
   LogIn,
+  ChevronDown,
+  ChevronUp,
+  Phone,
+  Mail,
+  ArrowUp,
+  HelpCircle,
 } from 'lucide-react';
 import { apiClient } from '../../lib/api/client';
 
@@ -135,6 +141,24 @@ export const LandingPage: React.FC = () => {
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+
+  // FAQ Accordion State
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  // Back to Top Scroll State
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleInquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -2393,6 +2417,83 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================= */}
+      {/* SECTION 7.5 — FREQUENTLY ASKED QUESTIONS (ACCORDION)      */}
+      {/* ========================================================= */}
+      <section id="faq-section" className="py-16 sm:py-24 px-4 sm:px-6 relative">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center space-y-3 mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-[11px] font-bold tracking-wider uppercase">
+              <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Got Questions? We Have Answers</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black font-heading tracking-tight text-slate-900">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
+              Everything property brokers, realtors, and agency owners need to know about leadNivash.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              {
+                q: 'How does leadNivash protect my client and owner data from competitors?',
+                a: 'Owner Vault Data Isolation guarantees that your listings, client inquiries, phone numbers, and commission agreements are strictly encrypted and visible ONLY to your authenticated account. No other broker or agency on the platform can ever view or access your private inventory.',
+              },
+              {
+                q: 'What is Quick Chat and how does AI requirement matching work?',
+                a: 'Quick Chat lets you speak or paste raw WhatsApp client messages (e.g., "3 BHK flat in Gurgaon under 1.5 Cr near Metro"). Our built-in intelligence instantly extracts budget, bedroom counts, property type, and location filters, automatically scoring and displaying genuine matching properties from your portfolio.',
+              },
+              {
+                q: 'Can I use leadNivash on my phone without downloading from the App Store or Play Store?',
+                a: 'Yes! leadNivash is engineered as an installable Progressive Web App (PWA). Simply open leadnivash.com on Chrome (Android) or Safari (iOS) and tap "Add to Home Screen" for an instant, native full-screen app experience with offline resilience.',
+              },
+              {
+                q: 'Does data synchronize across my laptop and mobile phone in real time?',
+                a: 'Yes. Any property or buyer added or updated in the field from your mobile immediately reflects on your office desktop or tablet, powered by cloud database synchronization and strict session management.',
+              },
+              {
+                q: 'Can I share property flyers on WhatsApp without revealing the owner’s direct contact?',
+                a: 'Absolutely. With one click, generate Masked Marketing Flyers and shareable cards containing your agency logo, property photos, pricing, and specs while completely concealing owner phone numbers and private addresses.',
+              },
+              {
+                q: 'What tools are included in the 14-day free trial?',
+                a: 'You get unrestricted access to all 4 broker utility engines: Stamp Duty & Circle Rate Calculator across major Indian states, EMI & Loan Eligibility Estimator, Commission Invoice Generator, and Land Unit Converter (Gaj, Bigha, Sq. Yd, Marla, Biswa).',
+              },
+            ].map((faq, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm shadow-2xs overflow-hidden transition-all duration-200"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className="w-full px-5 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/80 transition-colors focus:outline-none"
+                  aria-expanded={openFaq === idx}
+                >
+                  <span className="text-sm sm:text-base font-bold text-slate-900 font-heading">
+                    {faq.q}
+                  </span>
+                  <div className="shrink-0 w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-700">
+                    {openFaq === idx ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </div>
+                </button>
+                {openFaq === idx && (
+                  <div className="px-5 sm:px-6 pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================= */}
       {/* SECTION 8 — FINAL CTA AND FREE DEMO (INQUIRY FORM)        */}
       {/* ========================================================= */}
       <section id="demo-inquiry-section" className="py-16 sm:py-24 px-4 sm:px-6">
@@ -2551,13 +2652,85 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================= */}
-      {/* SECTION 8 — MONUMENTAL BRAND FOOTER (Reference 4 Style)   */}
+      {/* SECTION 9 — MONUMENTAL BRAND FOOTER                       */}
       {/* ========================================================= */}
       <footer className="mt-auto relative bg-gradient-to-b from-slate-900 via-emerald-950 to-slate-950 text-white overflow-hidden pt-16 sm:pt-24 pb-8 sm:pb-12 border-t border-emerald-900/40">
         {/* Ambient Radiant Emerald Glow Pool */}
         <div className="absolute inset-x-0 bottom-0 h-[450px] bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-emerald-500/20 via-teal-900/10 to-transparent pointer-events-none blur-3xl" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+          {/* Top Footer Grid: Brand + Quick Links + Support Channels */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-white/10 text-left">
+            <div className="md:col-span-1 space-y-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-white p-1 flex items-center justify-center shadow">
+                  <img src="/logo-icon.png" alt="leadNivash" className="w-full h-full object-contain" />
+                </div>
+                <span className="text-lg font-black tracking-tight text-white font-heading">
+                  lead<span className="text-emerald-400">Nivash</span>
+                </span>
+              </div>
+              <p className="text-xs text-emerald-200/70 leading-relaxed">
+                India's #1 Real Estate Broker Operating System. AI-powered property matching, buyer CRM, and owner inventory protection.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-3 font-heading">
+                Platform
+              </h4>
+              <ul className="space-y-2 text-xs text-emerald-200/70">
+                <li><a href="#capabilities" className="hover:text-white transition">Core Features</a></li>
+                <li><a href="#how-it-works" className="hover:text-white transition">How It Works</a></li>
+                <li><Link to="/pricing" className="hover:text-white transition">Subscription Plans</Link></li>
+                <li><a href="#demo-inquiry-section" className="hover:text-white transition">Book Live Demo</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-3 font-heading">
+                Broker Utilities
+              </h4>
+              <ul className="space-y-2 text-xs text-emerald-200/70">
+                <li><Link to="/tools" className="hover:text-white transition">Circle Rate & Stamp Duty</Link></li>
+                <li><Link to="/tools" className="hover:text-white transition">EMI & Loan Eligibility</Link></li>
+                <li><Link to="/tools" className="hover:text-white transition">Invoice Generator</Link></li>
+                <li><Link to="/tools" className="hover:text-white transition">Land Area Unit Converter</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-3 font-heading">
+                Direct Contact & Support
+              </h4>
+              <ul className="space-y-2.5 text-xs text-emerald-200/70">
+                <li>
+                  <a
+                    href="tel:+919876543210"
+                    className="inline-flex items-center gap-2 hover:text-white transition text-white/90"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>+91 98765 43210</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="mailto:contact@leadnivash.com"
+                    className="inline-flex items-center gap-2 hover:text-white transition text-white/90"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>contact@leadnivash.com</span>
+                  </a>
+                </li>
+                <li>
+                  <Link to="/contact" className="hover:text-white transition">
+                    Contact & Inquiry Desk &rarr;
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
           {/* Massive Monumental Brand Typography (Reference 4 'Pumpkin' Style) */}
           <div className="relative w-full overflow-hidden select-none pointer-events-none text-center px-2 py-8 sm:py-16">
             <h2 className="text-[14vw] sm:text-[16vw] font-black tracking-tighter leading-none font-heading text-transparent bg-clip-text bg-gradient-to-b from-white via-white/80 to-emerald-400/10 drop-shadow-[0_20px_60px_rgba(4,120,87,0.35)]">
@@ -2567,17 +2740,43 @@ export const LandingPage: React.FC = () => {
 
           {/* Footer Metadata & Legal Links */}
           <div className="mt-4 sm:mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-emerald-200/60 font-medium">
-            <p>© 2026 leadNivash Inc. · India's #1 Real Estate Broker Operating System</p>
+            <p>© {new Date().getFullYear()} leadNivash Inc. · India's #1 Real Estate Broker Operating System</p>
             <div className="flex items-center gap-4 text-[11px]">
               <Link to="/privacy" className="hover:text-white transition">Privacy Policy</Link>
               <span>·</span>
               <Link to="/terms" className="hover:text-white transition">Terms of Service</Link>
+              <span>·</span>
+              <Link to="/contact" className="hover:text-white transition">Support</Link>
               <span>·</span>
               <Link to="/login" className="hover:text-white transition">Broker Portal</Link>
             </div>
           </div>
         </div>
       </footer>
+
+      {/* Floating Back to Top Button */}
+      {showBackToTop && (
+        <button
+          type="button"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+          className="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-emerald-700 hover:bg-emerald-600 text-white shadow-xl shadow-emerald-950/30 transition-all duration-200 focus:outline-none cursor-pointer hover:scale-105 active:scale-95"
+        >
+          <ArrowUp className="w-5 h-5" />
+        </button>
+      )}
+
+      {/* Floating WhatsApp Quick Consultation Pill (Visible on sm screens and above) */}
+      <a
+        href="https://wa.me/919876543210?text=Hi%20LeadNivash,%20I%20am%20interested%20in%20a%20demo%20of%20the%20Broker%20Platform."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 left-6 z-40 hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-xl shadow-emerald-950/25 transition hover:scale-105 active:scale-95 cursor-pointer"
+        aria-label="Chat on WhatsApp"
+      >
+        <span className="w-2 h-2 rounded-full bg-emerald-200 animate-pulse" />
+        <span>Chat on WhatsApp</span>
+      </a>
     </div>
   );
 };
