@@ -107,7 +107,7 @@ export const DashboardPage: React.FC = () => {
   const [dbBuyers, setDbBuyers] = useState<BuyerItem[]>([]);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
 
-  useEffect(() => {
+  const loadDashboardData = () => {
     Promise.all([fetchProperties(), fetchBuyers()])
       .then(([props, byrs]) => {
         setDbProperties(props);
@@ -115,14 +115,27 @@ export const DashboardPage: React.FC = () => {
       })
       .catch((err) => console.warn('Could not load dynamic dashboard stats:', err))
       .finally(() => setIsLoadingStats(false));
+  };
+
+  useEffect(() => {
+    loadDashboardData();
+
+    // Listen for data changes across tabs/actions so counts update dynamically
+    window.addEventListener('leadnivash_data_changed', loadDashboardData);
+    window.addEventListener('focus', loadDashboardData);
+
+    return () => {
+      window.removeEventListener('leadnivash_data_changed', loadDashboardData);
+      window.removeEventListener('focus', loadDashboardData);
+    };
   }, []);
 
-  const totalPropertiesCount = dbProperties.length || 24;
-  const activePropertiesCount = dbProperties.filter((p) => p.status === 'available').length || 18;
-  const totalBuyersCount = dbBuyers.length || 18;
-  const activeBuyersCount = dbBuyers.filter((b) => b.status === 'active').length || 14;
-  const matchesWaitingCount = Math.max(3, Math.min(totalPropertiesCount, totalBuyersCount));
-  const totalPipelinePaise = dbProperties.reduce((sum, p) => sum + (p.priceDemandPaise || 0), 0) || 5450000000;
+  const totalPropertiesCount = dbProperties.length;
+  const activePropertiesCount = dbProperties.filter((p) => p.status === 'available').length;
+  const totalBuyersCount = dbBuyers.length;
+  const activeBuyersCount = dbBuyers.filter((b) => b.status === 'active').length;
+  const matchesWaitingCount = Math.min(totalPropertiesCount, totalBuyersCount);
+  const totalPipelinePaise = dbProperties.reduce((sum, p) => sum + (p.priceDemandPaise || 0), 0);
   const projectedCommissionPaise = Math.round(totalPipelinePaise * 0.01);
 
   const advanceDealStage = (dealId: string) => {
@@ -179,22 +192,22 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-5 pb-12">
-      {/* Executive Welcome & Status Strip with Rich Gradient (white + black + green) */}
-      <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 text-white border border-emerald-500/30 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Apple Glass White + Green Gradient Welcome Banner (Zero dark/black) */}
+      <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-white/95 via-emerald-50/70 to-emerald-100/40 backdrop-blur-xl border border-emerald-500/25 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center font-black text-white text-base shadow-sm shrink-0 border border-emerald-400/30">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center font-black text-white text-base shadow-sm shrink-0">
             {user?.name?.charAt(0) || 'L'}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg sm:text-xl font-black font-heading tracking-tight text-white">
+              <h1 className="text-lg sm:text-xl font-black font-heading tracking-tight text-ink">
                 Welcome back, {user?.name?.split(' ')[0] || 'Broker'}
               </h1>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30">
+              <span className="px-2 py-0.5 rounded-full bg-emerald-100/80 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-[10px] font-extrabold border border-emerald-300/60 shadow-2xs">
                 PRO ACTIVE
               </span>
             </div>
-            <p className="text-xs text-slate-300 mt-0.5">
+            <p className="text-xs text-muted mt-0.5 font-medium">
               {user?.agency?.name || 'leadNivash Partner Agency'} · Haryana & NCR Hub
             </p>
           </div>
@@ -202,8 +215,8 @@ export const DashboardPage: React.FC = () => {
 
         {/* Right side controls: Date pill & Segmented Toggle */}
         <div className="flex items-center gap-2.5">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-xs border border-white/10 text-xs font-semibold text-slate-200">
-            <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-xs border border-border/70 text-xs font-semibold text-muted shadow-2xs">
+            <Calendar className="w-3.5 h-3.5 text-brand-600" />
             <span>
               {new Date().toLocaleDateString('en-IN', {
                 day: 'numeric',
@@ -213,15 +226,15 @@ export const DashboardPage: React.FC = () => {
             </span>
           </div>
 
-          {/* Segmented Control Pill (Quixotic Style) */}
-          <div className="flex p-1 bg-black/40 backdrop-blur-sm rounded-full border border-white/10">
+          {/* Segmented Control Pill (Apple Glass Frosted Style) */}
+          <div className="flex p-1 bg-slate-200/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full border border-border/80 shadow-2xs">
             <button
               onClick={() => setActiveSegment('today')}
               className={clsx(
                 'px-4 py-1.5 text-xs font-bold rounded-full transition-all cursor-pointer',
                 activeSegment === 'today'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-xs'
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-muted hover:text-ink'
               )}
             >
               Today
@@ -232,7 +245,7 @@ export const DashboardPage: React.FC = () => {
                 'px-4 py-1.5 text-xs font-bold rounded-full transition-all cursor-pointer',
                 activeSegment === 'track-record'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-xs'
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-muted hover:text-ink'
               )}
             >
               Track Record

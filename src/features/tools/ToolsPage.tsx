@@ -10,6 +10,7 @@ import {
   MessageSquare,
   ChevronDown,
   ChevronUp,
+  ChevronRight,
   Layers,
   Send,
   ArrowLeft,
@@ -247,9 +248,9 @@ ${agencyOrOwnerName}`;
   ];
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-16 text-left">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="space-y-5 max-w-4xl mx-auto pb-16 text-left">
+      {/* Top Header with Apple Glass Gradient */}
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-white/95 via-emerald-50/70 to-emerald-100/40 backdrop-blur-xl border border-emerald-500/25 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
@@ -266,8 +267,8 @@ ${agencyOrOwnerName}`;
         </div>
       </div>
 
-      {/* Desktop Top Navigation Tabs (Quixotic Segmented Control) */}
-      <div className="hidden lg:flex p-1 bg-slate-200/70 dark:bg-slate-800/80 rounded-full border border-border/80 overflow-x-auto scrollbar-none">
+      {/* Desktop Top Navigation Tabs (Apple Glass Segmented Control) */}
+      <div className="hidden lg:flex p-1 bg-slate-200/80 dark:bg-slate-800/80 rounded-full border border-border/80 overflow-x-auto scrollbar-none shadow-2xs">
         {toolsList.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -280,7 +281,7 @@ ${agencyOrOwnerName}`;
               className={clsx(
                 'px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer flex items-center gap-1.5',
                 activeTab === tab.id
-                  ? 'bg-brand-700 text-white shadow-xs'
+                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-xs'
                   : 'text-muted hover:text-ink'
               )}
             >
@@ -292,21 +293,21 @@ ${agencyOrOwnerName}`;
       </div>
 
       {/* ======================================================== */}
-      {/* MOBILE & TABLET: DEDICATED TOOL BUTTONS (User Requirement 4) */}
+      {/* MOBILE & TABLET: DEDICATED APPLE GLASS TOOL CARDS        */}
       {/* ======================================================== */}
       <div className="lg:hidden">
         {mobileSelectedTool === null ? (
           <div className="space-y-3">
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-black uppercase tracking-wider text-muted">
-                Tap Any Tool to Open
+                Select a Broker Tool
               </span>
               <span className="text-[11px] font-bold text-brand-700 dark:text-brand-400">
                 5 Calculators Ready
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="space-y-3">
               {toolsList.map((tool) => {
                 const Icon = tool.icon;
                 return (
@@ -317,33 +318,37 @@ ${agencyOrOwnerName}`;
                       setActiveTab(tool.id);
                       setMobileSelectedTool(tool.id);
                     }}
-                    className={clsx(
-                      'w-full text-left p-4.5 rounded-3xl border transition-all cursor-pointer shadow-sm hover:shadow-md active:scale-[0.98] flex flex-col justify-between gap-3 bg-gradient-to-br',
-                      tool.gradient,
-                      tool.borderColor
-                    )}
+                    className="w-full text-left p-4 rounded-2xl bg-gradient-to-br from-white/95 via-white/90 to-emerald-50/40 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-emerald-950/20 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 hover:border-emerald-500/50 shadow-xs hover:shadow-md active:scale-[0.99] transition-all flex items-center justify-between gap-3.5 group cursor-pointer"
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className={clsx('w-10 h-10 rounded-2xl flex items-center justify-center shadow-xs', tool.iconBg)}>
-                        <Icon className="w-5 h-5 stroke-[2.2]" />
+                    <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                      <div
+                        className={clsx(
+                          'w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs shrink-0 transition-transform group-hover:scale-105 border border-emerald-500/20',
+                          tool.iconBg
+                        )}
+                      >
+                        <Icon className="w-6 h-6 stroke-[2.2]" />
                       </div>
-                      <span className="px-2.5 py-0.5 rounded-full bg-white/85 dark:bg-slate-800/85 text-ink text-[10px] font-black border border-border/60 shadow-2xs">
-                        {tool.badge}
-                      </span>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-black text-ink font-heading truncate">
+                            {tool.label}
+                          </h3>
+                        </div>
+                        <p className="text-[11px] text-muted mt-0.5 line-clamp-1">
+                          {tool.desc}
+                        </p>
+                        <div className="mt-1.5 flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300 border border-border/60">
+                            {tool.badge}
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
-                    <div>
-                      <h3 className="text-sm font-black text-ink font-heading leading-snug">
-                        {tool.label}
-                      </h3>
-                      <p className="text-[11px] text-muted mt-1 leading-relaxed">
-                        {tool.desc}
-                      </p>
-                    </div>
-
-                    <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs font-bold text-brand-700 dark:text-brand-400">
-                      <span>Open Calculator</span>
-                      <span className="text-sm font-black">→</span>
+                    <div className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-950/50 group-hover:bg-emerald-600 group-hover:text-white text-emerald-700 dark:text-emerald-400 flex items-center justify-center transition-colors shrink-0 border border-emerald-500/20">
+                      <ChevronRight className="w-4 h-4 stroke-[2.5]" />
                     </div>
                   </button>
                 );
@@ -351,12 +356,12 @@ ${agencyOrOwnerName}`;
             </div>
           </div>
         ) : (
-          /* When a tool is selected on Mobile/Tablet: Clean Header with Back Button */
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-gradient-to-r from-emerald-50/70 via-white to-emerald-100/30 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border border-emerald-500/25 mb-4 shadow-xs">
+          /* When a tool is selected on Mobile/Tablet: Apple Glass Header with Back Button */
+          <div className="flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-white/95 via-emerald-50/70 to-emerald-100/40 backdrop-blur-md border border-emerald-500/25 mb-4 shadow-xs">
             <button
               type="button"
               onClick={() => setMobileSelectedTool(null)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 text-xs font-black text-ink hover:bg-slate-100 transition cursor-pointer border border-border shadow-2xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 text-xs font-black text-ink hover:bg-slate-100 transition cursor-pointer border border-border/80 shadow-2xs"
             >
               <ArrowLeft className="w-3.5 h-3.5 text-brand-700" />
               <span>← All Tools</span>

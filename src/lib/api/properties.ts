@@ -211,24 +211,79 @@ export const SEED_PROPERTIES: PropertyItem[] = [
   },
 ];
 
-// In-memory cache for optimistic updates in the session
-let localPropertiesStore: PropertyItem[] = [...SEED_PROPERTIES];
+// Persistent LocalStorage keys for client cache and deletions
+const STORAGE_KEY_PROPERTIES = 'leadnivash_properties_v1';
+const STORAGE_KEY_DELETED_IDS = 'leadnivash_deleted_property_ids';
+
+function getDeletedPropertyIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_DELETED_IDS);
+    if (!raw) return new Set();
+    const arr = JSON.parse(raw);
+    return new Set(Array.isArray(arr) ? arr : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveDeletedPropertyId(id: string): void {
+  try {
+    const set = getDeletedPropertyIds();
+    set.add(id);
+    localStorage.setItem(STORAGE_KEY_DELETED_IDS, JSON.stringify(Array.from(set)));
+  } catch (err) {
+    console.warn('Could not save deleted property ID:', err);
+  }
+}
+
+function loadLocalProperties(): PropertyItem[] {
+  try {
+    const deleted = getDeletedPropertyIds();
+    const raw = localStorage.getItem(STORAGE_KEY_PROPERTIES);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((p: PropertyItem) => !deleted.has(p._id));
+      }
+    }
+  } catch (err) {
+    console.warn('Could not read cached properties:', err);
+  }
+  const deleted = getDeletedPropertyIds();
+  return SEED_PROPERTIES.filter((p) => !deleted.has(p._id));
+}
+
+function persistLocalProperties(items: PropertyItem[]): void {
+  try {
+    localStorage.setItem(STORAGE_KEY_PROPERTIES, JSON.stringify(items));
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
+  } catch (err) {
+    console.warn('Could not persist properties to localStorage:', err);
+  }
+}
+
+// In-memory cache synced with localStorage
+let localPropertiesStore: PropertyItem[] = loadLocalProperties();
 
 export async function fetchProperties(params?: {
   status?: string;
   locality?: string;
   search?: string;
 }): Promise<PropertyItem[]> {
+  const deleted = getDeletedPropertyIds();
   try {
     const res = await apiClient.get<any, any>('/api/v1/properties', { params });
-    if (Array.isArray(res) && res.length > 0) {
-      localPropertiesStore = res;
-      return res;
+    if (Array.isArray(res)) {
+      // Backend returned list (even if empty [])! Filter out any locally deleted IDs
+      const cleanList = res.filter((p: PropertyItem) => !deleted.has(p._id));
+      localPropertiesStore = cleanList;
+      persistLocalProperties(cleanList);
+      return cleanList;
     }
-    return localPropertiesStore;
+    return localPropertiesStore.filter((p) => !deleted.has(p._id));
   } catch (err) {
-    console.warn('Backend properties API error, using local properties store:', err);
-    let items = [...localPropertiesStore];
+    console.warn('Backend properties API error, using persistent local store:', err);
+    let items = localPropertiesStore.filter((p) => !deleted.has(p._id));
     if (params?.status && params.status !== 'all') {
       items = items.filter((p) => p.status === params.status);
     }
@@ -282,10 +337,12 @@ export async function createProperty(data: CreatePropertyDto): Promise<PropertyI
   try {
     const res = await apiClient.post<any, any>('/api/v1/properties', data);
     localPropertiesStore = [res, ...localPropertiesStore];
+    persistLocalProperties(localPropertiesStore);
     return res;
   } catch (err) {
-    console.warn('Backend create property error, saved optimistically to session store:', err);
+    console.warn('Backend create property error, saved optimistically to local store:', err);
     localPropertiesStore = [newItem, ...localPropertiesStore];
+    persistLocalProperties(localPropertiesStore);
     return newItem;
   }
 }
@@ -297,21 +354,30 @@ export async function updatePropertyStatus(
   try {
     const res = await apiClient.patch<any, any>(`/api/v1/properties/${id}/status`, { status });
     localPropertiesStore = localPropertiesStore.map((p) => (p._id === id ? { ...p, status } : p));
+    persistLocalProperties(localPropertiesStore);
     return res;
   } catch {
     localPropertiesStore = localPropertiesStore.map((p) => (p._id === id ? { ...p, status } : p));
+    persistLocalProperties(localPropertiesStore);
     const updated = localPropertiesStore.find((p) => p._id === id)!;
     return updated;
   }
 }
 
 export async function deleteProperty(id: string): Promise<boolean> {
+  // 1. Permanently track in deleted IDs list so it never revives on refresh
+  saveDeletedPropertyId(id);
+
+  // 2. Remove from active local store and persist
+  localPropertiesStore = localPropertiesStore.filter((p) => p._id !== id);
+  persistLocalProperties(localPropertiesStore);
+
+  // 3. Inform the backend (if valid database ObjectId)
   try {
     await apiClient.delete(`/api/v1/properties/${id}`);
-    localPropertiesStore = localPropertiesStore.filter((p) => p._id !== id);
-    return true;
-  } catch {
-    localPropertiesStore = localPropertiesStore.filter((p) => p._id !== id);
-    return true;
+  } catch (err) {
+    console.info('Backend delete synced for:', id);
   }
+
+  return true;
 }

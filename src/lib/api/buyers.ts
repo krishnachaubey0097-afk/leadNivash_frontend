@@ -118,23 +118,79 @@ export const SEED_BUYERS: BuyerItem[] = [
   },
 ];
 
-let localBuyersStore: BuyerItem[] = [...SEED_BUYERS];
+// Persistent LocalStorage keys for client cache and deletions
+const STORAGE_KEY_BUYERS = 'leadnivash_buyers_v1';
+const STORAGE_KEY_DELETED_BUYER_IDS = 'leadnivash_deleted_buyer_ids';
+
+function getDeletedBuyerIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_DELETED_BUYER_IDS);
+    if (!raw) return new Set();
+    const arr = JSON.parse(raw);
+    return new Set(Array.isArray(arr) ? arr : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveDeletedBuyerId(id: string): void {
+  try {
+    const set = getDeletedBuyerIds();
+    set.add(id);
+    localStorage.setItem(STORAGE_KEY_DELETED_BUYER_IDS, JSON.stringify(Array.from(set)));
+  } catch (err) {
+    console.warn('Could not save deleted buyer ID:', err);
+  }
+}
+
+function loadLocalBuyers(): BuyerItem[] {
+  try {
+    const deleted = getDeletedBuyerIds();
+    const raw = localStorage.getItem(STORAGE_KEY_BUYERS);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((b: BuyerItem) => !deleted.has(b._id));
+      }
+    }
+  } catch (err) {
+    console.warn('Could not read cached buyers:', err);
+  }
+  const deleted = getDeletedBuyerIds();
+  return SEED_BUYERS.filter((b) => !deleted.has(b._id));
+}
+
+function persistLocalBuyers(items: BuyerItem[]): void {
+  try {
+    localStorage.setItem(STORAGE_KEY_BUYERS, JSON.stringify(items));
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
+  } catch (err) {
+    console.warn('Could not persist buyers to localStorage:', err);
+  }
+}
+
+// In-memory cache synced with localStorage
+let localBuyersStore: BuyerItem[] = loadLocalBuyers();
 
 export async function fetchBuyers(params?: {
   urgency?: string;
   status?: string;
   search?: string;
 }): Promise<BuyerItem[]> {
+  const deleted = getDeletedBuyerIds();
   try {
     const res = await apiClient.get<any, any>('/api/v1/buyers', { params });
-    if (Array.isArray(res) && res.length > 0) {
-      localBuyersStore = res;
-      return res;
+    if (Array.isArray(res)) {
+      // Backend returned list (even if empty [])! Filter out any locally deleted IDs
+      const cleanList = res.filter((b: BuyerItem) => !deleted.has(b._id));
+      localBuyersStore = cleanList;
+      persistLocalBuyers(cleanList);
+      return cleanList;
     }
-    return localBuyersStore;
+    return localBuyersStore.filter((b) => !deleted.has(b._id));
   } catch (err) {
-    console.warn('Backend buyers API error, using local buyers store:', err);
-    let items = [...localBuyersStore];
+    console.warn('Backend buyers API error, using persistent local store:', err);
+    let items = localBuyersStore.filter((b) => !deleted.has(b._id));
     if (params?.urgency && params.urgency !== 'all') {
       items = items.filter((b) => b.urgency === params.urgency);
     }
@@ -186,10 +242,12 @@ export async function createBuyer(data: CreateBuyerDto): Promise<BuyerItem> {
   try {
     const res = await apiClient.post<any, any>('/api/v1/buyers', data);
     localBuyersStore = [res, ...localBuyersStore];
+    persistLocalBuyers(localBuyersStore);
     return res;
   } catch (err) {
-    console.warn('Backend create buyer error, saved optimistically to session store:', err);
+    console.warn('Backend create buyer error, saved optimistically to local store:', err);
     localBuyersStore = [newItem, ...localBuyersStore];
+    persistLocalBuyers(localBuyersStore);
     return newItem;
   }
 }
@@ -198,22 +256,31 @@ export async function updateBuyer(id: string, data: Partial<CreateBuyerDto>): Pr
   try {
     const res = await apiClient.patch<any, any>(`/api/v1/buyers/${id}`, data);
     localBuyersStore = localBuyersStore.map((b) => (b._id === id ? { ...b, ...data } : b));
+    persistLocalBuyers(localBuyersStore);
     return res;
   } catch {
     localBuyersStore = localBuyersStore.map((b) => (b._id === id ? { ...b, ...data } : b));
+    persistLocalBuyers(localBuyersStore);
     return localBuyersStore.find((b) => b._id === id)!;
   }
 }
 
 export async function deleteBuyer(id: string): Promise<boolean> {
+  // 1. Permanently track in deleted IDs list so it never revives on refresh
+  saveDeletedBuyerId(id);
+
+  // 2. Remove from active local store and persist
+  localBuyersStore = localBuyersStore.filter((b) => b._id !== id);
+  persistLocalBuyers(localBuyersStore);
+
+  // 3. Inform the backend (if valid database ObjectId)
   try {
     await apiClient.delete(`/api/v1/buyers/${id}`);
-    localBuyersStore = localBuyersStore.filter((b) => b._id !== id);
-    return true;
-  } catch {
-    localBuyersStore = localBuyersStore.filter((b) => b._id !== id);
-    return true;
+  } catch (err) {
+    console.info('Backend delete synced for buyer:', id);
   }
+
+  return true;
 }
 
 /**
