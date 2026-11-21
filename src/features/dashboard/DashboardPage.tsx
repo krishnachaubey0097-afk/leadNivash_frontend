@@ -18,6 +18,7 @@ import {
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
+import { StatCardSkeleton } from '../../components/ui/Skeleton';
 import clsx from 'clsx';
 import { formatRupees } from '../../lib/money';
 import { parseMessage, type ParseResult } from '../../lib/api/parse';
@@ -67,14 +68,20 @@ export const DashboardPage: React.FC = () => {
   const [dbProperties, setDbProperties] = useState<PropertyItem[]>([]);
   const [dbBuyers, setDbBuyers] = useState<BuyerItem[]>([]);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [statsError, setStatsError] = useState<string | null>(null);
 
   const loadDashboardData = () => {
+    setIsLoadingStats(true);
+    setStatsError(null);
     Promise.all([fetchProperties(), fetchBuyers()])
       .then(([props, byrs]) => {
         setDbProperties(props);
         setDbBuyers(byrs);
       })
-      .catch((err) => console.warn('Could not load dynamic dashboard stats:', err))
+      .catch((err) => {
+        console.warn('Could not load dynamic dashboard stats:', err);
+        setStatsError('Unable to sync live inventory and leads. Please check connection and retry.');
+      })
       .finally(() => setIsLoadingStats(false));
   };
 
@@ -426,13 +433,35 @@ export const DashboardPage: React.FC = () => {
             )}
           </Card>
 
+          {/* Error Banner with Retry if Loading Failed */}
+          {statsError && (
+            <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900 text-xs text-rose-800 dark:text-rose-300 flex items-center justify-between gap-3 shadow-xs">
+              <span>{statsError}</span>
+              <button
+                type="button"
+                onClick={loadDashboardData}
+                className="px-3 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shrink-0 cursor-pointer shadow-2xs"
+              >
+                Retry Sync
+              </button>
+            </div>
+          )}
+
           {/* 4 Financial & Operational Stat Cards with Rich Gradients & Zero Mobile Truncation */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {/* 1. Total Properties */}
-            <Card
-              className="p-3.5 sm:p-5 flex flex-col justify-between rounded-3xl bg-gradient-to-br from-white via-white to-emerald-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border-emerald-500/25 shadow-xs hover:shadow-md transition-all"
-              interactive
-            >
+          {isLoadingStats ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <StatCardSkeleton />
+              <StatCardSkeleton />
+              <StatCardSkeleton />
+              <StatCardSkeleton />
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              {/* 1. Total Properties */}
+              <Card
+                className="p-3.5 sm:p-5 flex flex-col justify-between rounded-3xl bg-gradient-to-br from-white via-white to-emerald-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border-emerald-500/25 shadow-xs hover:shadow-md transition-all"
+                interactive
+              >
               <div>
                 <div className="flex items-center justify-between gap-1">
                   <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-muted truncate">
@@ -555,6 +584,7 @@ export const DashboardPage: React.FC = () => {
               </div>
             </Card>
           </div>
+          )}
 
           {/* Deal Activity & Engagement Visualizer - Only rendered when inventory or buyers exist */}
           {totalPropertiesCount > 0 || totalBuyersCount > 0 ? (

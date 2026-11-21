@@ -10,9 +10,11 @@ export interface ConfirmDialogProps {
   title: string;
   description: string;
   confirmText?: string;
-  expectedConfirmationPhrase?: string; // e.g. "DELETE PERMANENTLY"
+  cancelText?: string;
+  expectedConfirmationPhrase?: string;
   isLoading?: boolean;
-  onConfirm: () => void;
+  variant?: 'danger' | 'primary';
+  onConfirm: () => void | Promise<void>;
 }
 
 export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
@@ -20,9 +22,11 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   onOpenChange,
   title,
   description,
-  confirmText = 'Hamesha ke liye Delete karein',
+  confirmText = 'Delete',
+  cancelText = 'Cancel',
   expectedConfirmationPhrase,
   isLoading,
+  variant = 'danger',
   onConfirm,
 }) => {
   const [typedPhrase, setTypedPhrase] = useState('');
@@ -36,10 +40,17 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     onOpenChange(newOpen);
   };
 
+  const handleConfirmClick = async () => {
+    await onConfirm();
+    if (!isLoading) {
+      handleClose(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleClose} title={title}>
       <div className="space-y-4">
-        <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-input flex items-start gap-2.5 text-xs text-danger">
+        <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-2xl flex items-start gap-2.5 text-xs text-danger">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{description}</span>
         </div>
@@ -47,7 +58,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         {expectedConfirmationPhrase && (
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-text">
-              Confirmation ke liye <span className="font-bold text-ink">{expectedConfirmationPhrase}</span> type karein:
+              Type <span className="font-bold text-ink">{expectedConfirmationPhrase}</span> to confirm:
             </label>
             <Input
               value={typedPhrase}
@@ -58,17 +69,16 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         )}
 
         <div className="flex items-center justify-end gap-2.5 pt-2">
-          <Button variant="ghost" onClick={() => handleClose(false)} disabled={isLoading}>
-            Cancel
+          <Button variant="ghost" size="sm" pill onClick={() => handleClose(false)} disabled={isLoading}>
+            {cancelText}
           </Button>
           <Button
-            variant="danger"
-            disabled={!isConfirmed}
+            variant={variant}
+            size="sm"
+            pill
+            disabled={!isConfirmed || isLoading}
             isLoading={isLoading}
-            onClick={() => {
-              onConfirm();
-              handleClose(false);
-            }}
+            onClick={handleConfirmClick}
           >
             {confirmText}
           </Button>

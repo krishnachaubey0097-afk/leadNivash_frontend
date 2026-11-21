@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, RotateCcw } from 'lucide-react';
 import { Button } from './Button';
 
 export interface ErrorStateProps {
@@ -10,24 +10,29 @@ export interface ErrorStateProps {
 }
 
 export const ErrorState: React.FC<ErrorStateProps> = ({
-  title = 'Data load nahi ho paaya',
-  message = 'Server se connect karte waqt dikkat aayi. Kripya dobara koshish karein.',
+  title = 'Unable to Load Records',
+  message = 'A network issue or server delay occurred. Please check your connection and try again.',
   onRetry,
   className,
 }) => {
   return (
     <div
-      className={`text-center py-10 px-4 bg-red-50/50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-card max-w-lg mx-auto ${
+      className={`text-center py-10 px-6 bg-gradient-to-br from-red-50/70 via-white to-red-50/40 dark:from-red-950/30 dark:via-slate-900 dark:to-red-950/20 border border-red-200 dark:border-red-900/60 rounded-3xl max-w-lg mx-auto shadow-xs ${
         className || ''
       }`}
     >
-      <AlertCircle className="w-8 h-8 text-danger mx-auto mb-2 opacity-80" />
-      <h3 className="text-sm font-bold text-danger">{title}</h3>
-      <p className="text-xs text-text mt-1 max-w-sm mx-auto">{message}</p>
+      <div className="w-12 h-12 rounded-2xl bg-red-100 dark:bg-red-950/80 text-rose-600 flex items-center justify-center mx-auto mb-3 shadow-2xs">
+        <AlertCircle className="w-6 h-6 stroke-[2.2]" />
+      </div>
+      <h3 className="text-base font-black text-rose-700 dark:text-rose-400 font-heading">{title}</h3>
+      <p className="text-xs text-muted mt-1 max-w-sm mx-auto leading-relaxed">{message}</p>
       {onRetry && (
-        <Button onClick={onRetry} variant="secondary" size="sm" className="mt-4">
-          Dobara Koshish Karein (Retry)
-        </Button>
+        <div className="pt-4">
+          <Button onClick={onRetry} variant="secondary" size="sm" pill className="font-bold text-xs gap-1.5 shadow-2xs">
+            <RotateCcw className="w-3.5 h-3.5 text-muted" />
+            <span>Try Again</span>
+          </Button>
+        </div>
       )}
     </div>
   );

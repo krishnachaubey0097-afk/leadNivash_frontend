@@ -18,6 +18,9 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
+import { ErrorState } from '../../components/ui/ErrorState';
+import { BuyerCardSkeleton } from '../../components/ui/Skeleton';
 import { formatRupees } from '../../lib/money';
 import {
   fetchBuyers,
@@ -40,29 +43,37 @@ export const BuyersListPage: React.FC = () => {
   const [urgencyFilter, setUrgencyFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [buyerToDelete, setBuyerToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [isDeletingBuyer, setIsDeletingBuyer] = useState<boolean>(false);
 
-  const handleDeleteBuyer = async (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to delete buyer requirement for "${name}"?`)) {
-      try {
-        await deleteBuyer(id);
-        setBuyers((prev) => prev.filter((b) => b._id !== id));
-        success('Buyer inquiry deleted successfully');
-      } catch {
-        error('Failed to delete buyer inquiry');
-      }
+  const confirmDeleteBuyer = async () => {
+    if (!buyerToDelete) return;
+    setIsDeletingBuyer(true);
+    try {
+      await deleteBuyer(buyerToDelete.id);
+      setBuyers((prev) => prev.filter((b) => b._id !== buyerToDelete.id));
+      success(`Buyer requirement for "${buyerToDelete.name}" deleted successfully`);
+      setBuyerToDelete(null);
+    } catch {
+      error('Failed to delete buyer inquiry');
+    } finally {
+      setIsDeletingBuyer(false);
     }
   };
 
   const loadBuyers = async () => {
     setIsLoading(true);
+    setFetchError(null);
     try {
       const data = await fetchBuyers({
         urgency: urgencyFilter === 'all' ? undefined : urgencyFilter,
         search: searchQuery || undefined,
       });
       setBuyers(data);
-    } catch (err) {
+    } catch (err: any) {
       console.warn('Could not load buyers:', err);
+      setFetchError(err?.message || 'Unable to load buyer inquiries. Please check your connection.');
     } finally {
       setIsLoading(false);
     }
@@ -144,11 +155,13 @@ export const BuyersListPage: React.FC = () => {
       </div>
 
       {/* Grid of Buyer Cards */}
-      {isLoading ? (
+      {fetchError ? (
+        <ErrorState onRetry={loadBuyers} message={fetchError} />
+      ) : isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-56 rounded-3xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
-          ))}
+          <BuyerCardSkeleton />
+          <BuyerCardSkeleton />
+          <BuyerCardSkeleton />
         </div>
       ) : buyers.length === 0 ? (
         <Card className="p-8 sm:p-12 text-center space-y-4 rounded-3xl bg-gradient-to-br from-white via-blue-50/30 to-white dark:from-slate-900 dark:via-blue-950/20 dark:to-slate-900 border-blue-500/20">
@@ -280,7 +293,7 @@ export const BuyersListPage: React.FC = () => {
                   {/* Delete Buyer Button */}
                   <button
                     type="button"
-                    onClick={() => handleDeleteBuyer(buyer._id, buyer.name)}
+                    onClick={() => setBuyerToDelete({ id: buyer._id, name: buyer.name })}
                     className="p-1.5 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 transition cursor-pointer"
                     title="Delete Buyer Inquiry"
                   >
@@ -300,6 +313,19 @@ export const BuyersListPage: React.FC = () => {
           ))}
         </div>
       )}
+
+      {/* Confirmation Dialog before deleting buyer inquiry */}
+      <ConfirmDialog
+        open={Boolean(buyerToDelete)}
+        onOpenChange={(open) => {
+          if (!open) setBuyerToDelete(null);
+        }}
+        title="Delete Buyer Requirement"
+        description={`Are you sure you want to delete the buyer inquiry for "${buyerToDelete?.name}"? This client requirement will be removed from your active leads.`}
+        confirmText="Yes, Delete Buyer"
+        isLoading={isDeletingBuyer}
+        onConfirm={confirmDeleteBuyer}
+      />
     </div>
   );
 };

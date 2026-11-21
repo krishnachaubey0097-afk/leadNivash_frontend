@@ -32,6 +32,9 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { useToast } from '../../components/ui/Toast';
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
+import { ErrorState } from '../../components/ui/ErrorState';
+import { PropertyCardSkeleton } from '../../components/ui/Skeleton';
 import {
   fetchProperties,
   fetchPropertyById,
@@ -51,31 +54,39 @@ export const PropertiesListPage: React.FC = () => {
   const { success, error } = useToast();
   const [properties, setProperties] = useState<PropertyItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [propertyToDelete, setPropertyToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [isDeletingProperty, setIsDeletingProperty] = useState(false);
 
-  const handleDeleteProperty = async (id: string, title: string) => {
-    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-      try {
-        await deleteProperty(id);
-        setProperties((prev) => prev.filter((p) => p._id !== id));
-        success('Property listing deleted successfully');
-      } catch {
-        error('Failed to delete property listing');
-      }
+  const confirmDeleteProperty = async () => {
+    if (!propertyToDelete) return;
+    setIsDeletingProperty(true);
+    try {
+      await deleteProperty(propertyToDelete.id);
+      setProperties((prev) => prev.filter((p) => p._id !== propertyToDelete.id));
+      success(`Property listing "${propertyToDelete.title}" deleted successfully`);
+      setPropertyToDelete(null);
+    } catch {
+      error('Failed to delete property listing');
+    } finally {
+      setIsDeletingProperty(false);
     }
   };
 
   const loadProperties = async () => {
     setIsLoading(true);
+    setFetchError(null);
     try {
       const data = await fetchProperties({
         search: searchQuery || undefined,
         status: filterStatus === 'all' ? undefined : filterStatus,
       });
       setProperties(data);
-    } catch (err) {
+    } catch (err: any) {
       console.warn('Failed to fetch properties:', err);
+      setFetchError(err?.message || 'Unable to load property inventory. Please check your connection.');
     } finally {
       setIsLoading(false);
     }
@@ -157,11 +168,13 @@ export const PropertiesListPage: React.FC = () => {
       </div>
 
       {/* Grid of Property Cards */}
-      {isLoading ? (
+      {fetchError ? (
+        <ErrorState onRetry={loadProperties} message={fetchError} />
+      ) : isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-64 rounded-3xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
-          ))}
+          <PropertyCardSkeleton />
+          <PropertyCardSkeleton />
+          <PropertyCardSkeleton />
         </div>
       ) : properties.length === 0 ? (
         <Card className="p-12 text-center space-y-4">
@@ -316,7 +329,7 @@ export const PropertiesListPage: React.FC = () => {
                   {/* Delete Property Button */}
                   <button
                     type="button"
-                    onClick={() => handleDeleteProperty(prop._id, prop.title)}
+                    onClick={() => setPropertyToDelete({ id: prop._id, title: prop.title })}
                     className="p-1.5 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 transition cursor-pointer"
                     title="Delete Listing"
                   >
@@ -336,6 +349,19 @@ export const PropertiesListPage: React.FC = () => {
           ))}
         </div>
       )}
+
+      {/* Confirmation Dialog before deleting property */}
+      <ConfirmDialog
+        open={Boolean(propertyToDelete)}
+        onOpenChange={(open) => {
+          if (!open) setPropertyToDelete(null);
+        }}
+        title="Delete Property Listing"
+        description={`Are you sure you want to delete "${propertyToDelete?.title}"? This listing will be moved to trash and removed from instant client matching.`}
+        confirmText="Yes, Delete Property"
+        isLoading={isDeletingProperty}
+        onConfirm={confirmDeleteProperty}
+      />
     </div>
   );
 };

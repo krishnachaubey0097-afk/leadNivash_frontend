@@ -23,6 +23,7 @@ import {
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { apiClient } from '../../lib/api/client';
 import clsx from 'clsx';
 
@@ -122,6 +123,20 @@ export const InquiriesPage: React.FC = () => {
   // Buyer Inquiries (Inbound buyer requirements from WhatsApp/Portal)
   const [buyerInquiries, setBuyerInquiries] = useState<BuyerInquiry[]>([]);
 
+  const [inquiryToDelete, setInquiryToDelete] = useState<{ id: string; clientName: string; type: 'property' | 'buyer' } | null>(null);
+
+  const confirmDeleteInquiry = () => {
+    if (!inquiryToDelete) return;
+    if (inquiryToDelete.type === 'property') {
+      setPropertyInquiries((prev) => prev.filter((i) => i.id !== inquiryToDelete.id));
+      success(`Property inquiry from "${inquiryToDelete.clientName}" removed`);
+    } else {
+      setBuyerInquiries((prev) => prev.filter((i) => i.id !== inquiryToDelete.id));
+      success(`Buyer inquiry from "${inquiryToDelete.clientName}" removed`);
+    }
+    setInquiryToDelete(null);
+  };
+
   const markPropertyStatus = (id: string, status: PropertyInquiry['status']) => {
     setPropertyInquiries((prev) =>
       prev.map((item) => (item.id === id ? { ...item, status } : item))
@@ -129,21 +144,11 @@ export const InquiriesPage: React.FC = () => {
     success(`Inquiry marked as ${status.toUpperCase()}`);
   };
 
-  const deletePropertyInquiry = (id: string) => {
-    setPropertyInquiries((prev) => prev.filter((i) => i.id !== id));
-    success('Property inquiry removed');
-  };
-
   const markBuyerStatus = (id: string, status: BuyerInquiry['status']) => {
     setBuyerInquiries((prev) =>
       prev.map((item) => (item.id === id ? { ...item, status } : item))
     );
     success(`Buyer inquiry marked as ${status.toUpperCase()}`);
-  };
-
-  const deleteBuyerInquiry = (id: string) => {
-    setBuyerInquiries((prev) => prev.filter((i) => i.id !== id));
-    success('Buyer inquiry removed');
   };
 
   const handleExportCsv = () => {
@@ -406,7 +411,7 @@ export const InquiriesPage: React.FC = () => {
                         {/* Delete Inquiry */}
                         <button
                           type="button"
-                          onClick={() => deletePropertyInquiry(inq.id)}
+                          onClick={() => setInquiryToDelete({ id: inq.id, clientName: inq.clientName, type: 'property' })}
                           className="p-1 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
                           title="Delete inquiry"
                         >
@@ -554,7 +559,7 @@ export const InquiriesPage: React.FC = () => {
                         {/* Delete Buyer Inquiry */}
                         <button
                           type="button"
-                          onClick={() => deleteBuyerInquiry(bInq.id)}
+                          onClick={() => setInquiryToDelete({ id: bInq.id, clientName: bInq.clientName, type: 'buyer' })}
                           className="p-1 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
                           title="Delete inquiry"
                         >
@@ -947,6 +952,18 @@ export const InquiriesPage: React.FC = () => {
           </Card>
         </div>
       )}
+
+      {/* Confirmation Dialog before deleting inquiry */}
+      <ConfirmDialog
+        open={Boolean(inquiryToDelete)}
+        onOpenChange={(open) => {
+          if (!open) setInquiryToDelete(null);
+        }}
+        title="Delete Inbound Inquiry"
+        description={`Are you sure you want to remove the ${inquiryToDelete?.type === 'property' ? 'property' : 'buyer'} inquiry from "${inquiryToDelete?.clientName}"?`}
+        confirmText="Yes, Delete Inquiry"
+        onConfirm={confirmDeleteInquiry}
+      />
     </div>
   );
 };
