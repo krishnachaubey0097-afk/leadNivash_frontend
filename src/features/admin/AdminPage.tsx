@@ -7,6 +7,7 @@ import {
   MessageSquare,
   Clock,
   Database,
+  Download,
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
@@ -43,6 +44,28 @@ export const AdminPage: React.FC = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const handleExportCsv = () => {
+    if (contacts.length === 0) return;
+    const headers = ['Name', 'Phone', 'Email', 'Agency Name', 'City', 'Message', 'Created At'];
+    const rows = contacts.map((c) => [
+      `"${(c.name || '').replace(/"/g, '""')}"`,
+      `"${(c.phone || c.phoneE164 || '').replace(/"/g, '""')}"`,
+      `"${(c.email || '').replace(/"/g, '""')}"`,
+      `"${(c.agencyName || '').replace(/"/g, '""')}"`,
+      `"${(c.city || '').replace(/"/g, '""')}"`,
+      `"${(c.message || '').replace(/"/g, '""')}"`,
+      `"${new Date(c.createdAt).toLocaleString()}"`,
+    ]);
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', `leadnivash-leads-${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-6 pb-16 text-left max-w-6xl mx-auto">
       {/* Header */}
@@ -60,6 +83,15 @@ export const AdminPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2 text-xs">
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            disabled={contacts.length === 0}
+            className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 text-ink font-bold flex items-center gap-1.5 border border-border shadow-2xs hover:bg-slate-50 disabled:opacity-50 transition cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Export Leads (CSV)</span>
+          </button>
           <Badge variant="brand" dot>
             {totalCount} Total Leads
           </Badge>

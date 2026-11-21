@@ -70,11 +70,11 @@ export const ContactPage: React.FC = () => {
 
     setLoading(true);
     try {
-      await apiClient.post('/contact', {
+      await apiClient.post('/public/contact', {
         name,
         phone,
         email: email || undefined,
-        agency: agency || undefined,
+        agencyName: agency || undefined,
         message,
         website: honeypot,
       });

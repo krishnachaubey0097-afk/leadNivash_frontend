@@ -18,6 +18,7 @@ import {
   Clock,
   Plus,
   Inbox,
+  Download,
 } from 'lucide-react';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
@@ -62,7 +63,7 @@ interface ContactLeadItem {
 }
 
 export const InquiriesPage: React.FC = () => {
-  const { success } = useToast();
+  const { success, toast } = useToast();
 
   // Top Centered Segmented Control State: Property | Buyer | Landing Page Leads
   const [activeInquiryType, setActiveInquiryType] = useState<'property' | 'buyer' | 'contact'>('property');
@@ -199,6 +200,83 @@ export const InquiriesPage: React.FC = () => {
     success('Buyer inquiry removed');
   };
 
+  const handleExportCsv = () => {
+    let rows: any[] = [];
+    let filename = 'inquiries_export.csv';
+
+    if (activeInquiryType === 'property') {
+      rows = propertyInquiries.map((p) => ({
+        Type: 'Property Inquiry',
+        ClientName: p.clientName,
+        Phone: p.clientPhone,
+        Property: p.propertyTitle,
+        Locality: p.locality,
+        Demand: p.demand,
+        Status: p.status,
+        Message: p.message,
+        Date: p.date,
+      }));
+      filename = 'property_inquiries.csv';
+    } else if (activeInquiryType === 'buyer') {
+      rows = buyerInquiries.map((b) => ({
+        Type: 'Buyer Inquiry',
+        ClientName: b.clientName,
+        Phone: b.clientPhone,
+        Requirement: b.requirement,
+        Locality: b.locality,
+        BudgetRange: b.budgetRange,
+        Urgency: b.urgency,
+        Status: b.status,
+        Message: b.message,
+        Date: b.date,
+      }));
+      filename = 'buyer_inquiries.csv';
+    } else {
+      rows = contactLeads.map((c) => ({
+        Type: 'Landing Page Lead',
+        Name: c.name,
+        Phone: c.phone,
+        Agency: c.agencyName || '',
+        City: c.city || '',
+        Message: c.message,
+        Date: c.createdAt,
+      }));
+      filename = 'landing_page_leads.csv';
+    }
+
+    if (!rows.length) {
+      toast('No data to export for this section', 'info');
+      return;
+    }
+
+    const separator = ',';
+    const keys = Object.keys(rows[0]);
+    const csvContent =
+      keys.join(separator) +
+      '\n' +
+      rows
+        .map((row) =>
+          keys
+            .map((k) => {
+              let cell = row[k] === null || row[k] === undefined ? '' : row[k];
+              cell = cell.toString().replace(/"/g, '""');
+              if (cell.search(/("|,|\n)/g) >= 0) cell = `"${cell}"`;
+              return cell;
+            })
+            .join(separator)
+        )
+        .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    success(`Exported ${rows.length} records to ${filename}!`);
+  };
+
   return (
     <div className="space-y-5 max-w-4xl mx-auto pb-16 text-left">
       {/* Top Header with Gradient Accent */}
@@ -219,6 +297,14 @@ export const InquiriesPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2 text-xs">
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 text-ink font-bold flex items-center gap-1.5 border border-border shadow-2xs hover:bg-slate-50 transition cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Export CSV</span>
+          </button>
           <span className="px-3 py-1.5 rounded-full bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 text-white font-bold flex items-center gap-1.5 shadow-xs border border-emerald-500/30">
             <Shield className="w-3.5 h-3.5 text-emerald-400" />
             <span>Direct Broker Pipeline</span>
