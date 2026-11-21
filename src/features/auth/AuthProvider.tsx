@@ -65,9 +65,36 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const STORAGE_USER_KEY = 'leadnivesh_user';
+const STORAGE_SESSION_KEY = 'leadnivesh_has_session';
+
+const getInitialUser = (): User | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const hasSession =
+      localStorage.getItem(STORAGE_SESSION_KEY) === 'true' ||
+      document.cookie.includes('leadnivesh_logged_in=true');
+    if (hasSession) {
+      const saved = localStorage.getItem(STORAGE_USER_KEY);
+      if (saved) return JSON.parse(saved);
+    }
+  } catch {
+    // Ignore JSON parse errors
+  }
+  return null;
+};
+
+const hasSavedSessionMarker = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return (
+    localStorage.getItem(STORAGE_SESSION_KEY) === 'true' ||
+    document.cookie.includes('leadnivesh_logged_in=true')
+  );
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(getInitialUser);
+  const [isLoading, setIsLoading] = useState<boolean>(hasSavedSessionMarker);
 
   // Cold start banner hook: triggers if loading exceeds 4s
   const isServerWaking = useServerWaking(isLoading, 4000);
@@ -83,33 +110,66 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Silent refresh bootstrap on initial app mount
   useEffect(() => {
-    const initAuth = async () => {
+    let isMounted = true;
+
+    const initAuth = async (retryCount = 0) => {
+      // If there's no cookie and no stored session marker, mark loading complete immediately
+      if (!hasSavedSessionMarker() && !user) {
+        if (isMounted) setIsLoading(false);
+        return;
+      }
+
       try {
-        // Silent warm-up probe & refresh attempt
+        // Silent warm-up probe & refresh attempt with cookie
         const res = await refreshClient.post('/auth/refresh');
+        if (!isMounted) return;
+
         const { accessToken, user: refreshedUser } = res.data?.data || {};
         if (accessToken) {
           tokenStore.set(accessToken);
-          if (refreshedUser) {
-            setUser(refreshedUser);
+          const finalUser = refreshedUser || (await fetchCurrentUser());
+          if (finalUser) {
+            setUser(finalUser);
+            localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(finalUser));
+            localStorage.setItem(STORAGE_SESSION_KEY, 'true');
           } else {
-            const userData = await fetchCurrentUser();
-            if (userData) {
-              setUser(userData);
-            } else {
-              tokenStore.clear();
-            }
+            tokenStore.clear();
           }
+        } else {
+          tokenStore.clear();
+          localStorage.removeItem(STORAGE_USER_KEY);
+          localStorage.removeItem(STORAGE_SESSION_KEY);
+          setUser(null);
         }
-      } catch {
-        tokenStore.clear();
-        setUser(null);
+      } catch (err: any) {
+        if (!isMounted) return;
+        const status = err?.response?.status;
+        
+        // If server explicitly returned 401 or 403, the session is definitely expired/revoked
+        if (status === 401 || status === 403) {
+          tokenStore.clear();
+          localStorage.removeItem(STORAGE_USER_KEY);
+          localStorage.removeItem(STORAGE_SESSION_KEY);
+          setUser(null);
+        } else if (retryCount < 2 && (!status || status >= 500 || err.code === 'ECONNABORTED')) {
+          // Server cold-starting or temporary glitch: retry after 2s without dropping user
+          setTimeout(() => {
+            if (isMounted) initAuth(retryCount + 1);
+          }, 2000);
+          return;
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     initAuth();
+
+    return () => {
+      isMounted = false;
+    };
   }, [fetchCurrentUser]);
 
   const login = async (email: string, pass: string) => {
@@ -119,6 +179,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { accessToken, user: authUser } = res as any;
     tokenStore.set(accessToken);
     setUser(authUser);
+    localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(authUser));
+    localStorage.setItem(STORAGE_SESSION_KEY, 'true');
   };
 
   const googleLogin = async (payload: {
@@ -139,6 +201,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (accessToken) {
       tokenStore.set(accessToken);
       setUser(authUser);
+      localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(authUser));
+      localStorage.setItem(STORAGE_SESSION_KEY, 'true');
     }
     return { requiresPhone: false, user: authUser };
   };
@@ -172,6 +236,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { accessToken, user: registeredUser } = res as any;
     tokenStore.set(accessToken);
     setUser(registeredUser);
+    localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(registeredUser));
+    localStorage.setItem(STORAGE_SESSION_KEY, 'true');
   };
 
   const logout = async () => {
@@ -183,13 +249,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       clearLocalPropertiesCache();
       clearLocalBuyersCache();
       tokenStore.clear();
+      localStorage.removeItem(STORAGE_USER_KEY);
+      localStorage.removeItem(STORAGE_SESSION_KEY);
       setUser(null);
     }
   };
 
   const refreshUser = async () => {
     const data = await fetchCurrentUser();
-    if (data) setUser(data);
+    if (data) {
+      setUser(data);
+      localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(data));
+      localStorage.setItem(STORAGE_SESSION_KEY, 'true');
+    }
   };
 
   return (

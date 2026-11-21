@@ -37,8 +37,10 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import { apiClient } from '../../lib/api/client';
+import { useAuth } from '../auth/AuthProvider';
 
 export const LandingPage: React.FC = () => {
+  const { isAuthenticated } = useAuth();
   // Mobile Navigation Drawer State
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
@@ -257,13 +259,23 @@ export const LandingPage: React.FC = () => {
 
           {/* Right Action Items */}
           <div className="flex items-center gap-2 shrink-0 pr-1">
-            <Link
-              to="/login"
-              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-1.5 rounded-full hover:bg-slate-100/70 transition-colors whitespace-nowrap leading-none"
-            >
-              <LogIn className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-              <span>Sign In</span>
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                to="/app"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full hover:bg-emerald-100 transition-colors whitespace-nowrap leading-none"
+              >
+                <span>Dashboard</span>
+                <ArrowRight className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-1.5 rounded-full hover:bg-slate-100/70 transition-colors whitespace-nowrap leading-none"
+              >
+                <LogIn className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                <span>Sign In</span>
+              </Link>
+            )}
 
             <button
               onClick={scrollToInquiry}
@@ -384,22 +396,35 @@ export const LandingPage: React.FC = () => {
                   <span>Get Free Demo</span>
                 </button>
 
-                <Link
-                  to="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-800 font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer border border-slate-200 min-h-[46px]"
-                >
-                  <span>Start 14-Day Free Trial</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </Link>
+                {isAuthenticated ? (
+                  <Link
+                    to="/app"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-3 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer shadow-sm min-h-[46px]"
+                  >
+                    <span>Open Dashboard</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-800 font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer border border-slate-200 min-h-[46px]"
+                    >
+                      <span>Start 14-Day Free Trial</span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
 
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-xs text-center text-slate-500 hover:text-slate-900 block font-bold py-2 transition"
-                >
-                  Already have an account? Sign In
-                </Link>
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-xs text-center text-slate-500 hover:text-slate-900 block font-bold py-2 transition"
+                    >
+                      Already have an account? Sign In
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

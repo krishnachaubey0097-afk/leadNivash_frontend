@@ -21,9 +21,18 @@ import { apiClient } from '../../lib/api/client';
 import clsx from 'clsx';
 
 export const LoginPage: React.FC = () => {
-  const { login, googleLogin } = useAuth();
+  const { login, googleLogin, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const from = (location.state as any)?.from?.pathname || '/app';
+
+  // Automatically redirect if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, isLoading, navigate, from]);
 
   const [authMethod, setAuthMethod] = useState<'password' | 'google'>('password');
   const [loginMode, setLoginMode] = useState<'password' | 'email-otp' | 'forgot'>('password');
@@ -53,7 +62,6 @@ export const LoginPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const hasGoogleClientId = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
-  const from = (location.state as any)?.from?.pathname || '/app';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

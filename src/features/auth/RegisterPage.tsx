@@ -21,8 +21,15 @@ import { normalizeToE164 } from '../../lib/phone';
 import clsx from 'clsx';
 
 export const RegisterPage: React.FC = () => {
-  const { register, googleLogin } = useAuth();
+  const { register, googleLogin, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+
+  // Automatically redirect if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      navigate('/app', { replace: true });
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   // Registration Mode: 'google' | 'direct'
   const [activeTab, setActiveTab] = useState<'google' | 'direct'>('google');
