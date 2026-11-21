@@ -130,11 +130,15 @@ export const SettingsPage: React.FC = () => {
     }
   };
 
-  // Derive dynamic initials from Agency Name or User Name
-  const displayTitle = agencyName.trim() || name.trim() || user?.agency?.name || user?.name || 'My Agency Profile';
-  const displayInitials = (agencyName.trim() || name.trim() || user?.name || 'LN')
+  // Derive dynamic initials from Agency Name, Broker Name, or User Email (matching TopBar)
+  const displayTitle = agencyName.trim() || name.trim() || user?.agency?.name || user?.name || user?.email?.split('@')[0] || 'My Agency Profile';
+  const displayInitials = (user?.name || name || agencyName || user?.email?.slice(0, 2) || 'BR')
+    .split(' ')
+    .filter(Boolean)
+    .map((n) => n[0])
     .slice(0, 2)
-    .toUpperCase();
+    .join('')
+    .toUpperCase() || 'BR';
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto pb-16 text-left px-2 sm:px-0">
@@ -184,7 +188,7 @@ export const SettingsPage: React.FC = () => {
               <input
                 type="text"
                 value={agencyName}
-                placeholder="e.g. Skyline Realty / Property Point"
+                placeholder="Enter agency or firm name (e.g. Prime Realty)"
                 onChange={(e) => setAgencyName(e.target.value)}
                 className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
@@ -197,7 +201,7 @@ export const SettingsPage: React.FC = () => {
               <input
                 type="text"
                 value={reraNo}
-                placeholder="e.g. HR/PNP/RERA-2024/..."
+                placeholder="Enter RERA registration number (optional)"
                 onChange={(e) => setReraNo(e.target.value)}
                 className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
@@ -213,7 +217,7 @@ export const SettingsPage: React.FC = () => {
               <input
                 type="text"
                 value={name}
-                placeholder="e.g. Pawan Sharma"
+                placeholder="Enter broker contact person name"
                 onChange={(e) => setName(e.target.value)}
                 className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
@@ -226,7 +230,7 @@ export const SettingsPage: React.FC = () => {
               <input
                 type="text"
                 value={agencyCity}
-                placeholder="e.g. Panipat"
+                placeholder="Enter primary operating city (e.g. Panipat)"
                 onChange={(e) => setAgencyCity(e.target.value)}
                 className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
@@ -249,18 +253,31 @@ export const SettingsPage: React.FC = () => {
 
             <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
-                Regional Marla Standard
+                Registered Account Email
               </label>
-              <select
-                value={marlaStandard}
-                onChange={(e) => setMarlaStandard(e.target.value as any)}
-                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
-              >
-                <option value="25">25 Gaj / Marla (Panipat Local Standard)</option>
-                <option value="30.25">30.25 Gaj / Marla (Haryana Official Standard)</option>
-              </select>
-              <span className="text-[10px] text-muted">Sets default conversion unit across Quick Chat and tools.</span>
+              <input
+                type="email"
+                disabled
+                value={user?.email || 'Registered Email'}
+                className="w-full bg-slate-100 dark:bg-slate-800 border border-border rounded-xl p-2.5 text-xs text-muted cursor-not-allowed font-mono"
+              />
+              <span className="text-[10px] text-muted">Email address for login & security alerts.</span>
             </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+              Regional Marla Standard
+            </label>
+            <select
+              value={marlaStandard}
+              onChange={(e) => setMarlaStandard(e.target.value as any)}
+              className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
+            >
+              <option value="25">25 Gaj / Marla (Panipat Local Standard)</option>
+              <option value="30.25">30.25 Gaj / Marla (Haryana Official Standard)</option>
+            </select>
+            <span className="text-[10px] text-muted">Sets default conversion unit across Quick Chat and tools.</span>
           </div>
 
           <div className="flex justify-end pt-2">

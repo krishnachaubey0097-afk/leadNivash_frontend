@@ -25,6 +25,7 @@ import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { apiClient } from '../../lib/api/client';
+import { useAuth } from '../auth/AuthProvider';
 import clsx from 'clsx';
 
 interface PropertyInquiry {
@@ -64,7 +65,9 @@ interface ContactLeadItem {
 }
 
 export const InquiriesPage: React.FC = () => {
+  const { user } = useAuth();
   const { success, toast } = useToast();
+  const agencyDisplayName = user?.agency?.name?.trim() || user?.name?.trim() || 'Verified Broker';
 
   // Top Centered Segmented Control State: Property | Buyer | Landing Page Leads
   const [activeInquiryType, setActiveInquiryType] = useState<'property' | 'buyer' | 'contact'>('property');
@@ -369,7 +372,7 @@ export const InquiriesPage: React.FC = () => {
             <div className="space-y-4">
               {propertyInquiries.map((inq) => {
                 const whatsappUrl = `https://wa.me/${inq.clientPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                  `Namaste ${inq.clientName} ji, maine aapki inquiry dekhi for ${inq.propertyTitle} in ${inq.locality}. Main Sharma Real Estate se baat kar raha hoon. Kab baat kar sakte hain?`
+                  `Namaste ${inq.clientName} ji, maine aapki inquiry dekhi for ${inq.propertyTitle} in ${inq.locality}. Main ${agencyDisplayName} se baat kar raha hoon. Kab baat kar sakte hain?`
                 )}`;
 
                 return (

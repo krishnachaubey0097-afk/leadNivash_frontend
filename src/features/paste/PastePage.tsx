@@ -181,7 +181,7 @@ export const PastePage: React.FC = () => {
         setListingArea(p?.sizeValue ? String(p.sizeValue) : '200');
         setListingUnit(p?.sizeUnit || 'gaj');
         setListingFacing((p as any)?.facing || 'East');
-        setListingOwnerPhone(p?.ownerPhone || '9876543210');
+        setListingOwnerPhone(p?.ownerPhone || '');
         setListingNotes(rawText);
         setCurrentStep('listing-review');
         success('Property listing extracted successfully.');
@@ -214,7 +214,7 @@ export const PastePage: React.FC = () => {
       const budgetMinPaise = Math.round(budgetMaxPaise * 0.85);
       await createBuyer({
         name: buyerName || 'Direct Client',
-        phone: buyerPhone || '+919876543210',
+        phone: buyerPhone || user?.phone || '',
         localities: [buyerLocation],
         types: [buyerType],
         budget: {
@@ -245,7 +245,7 @@ export const PastePage: React.FC = () => {
 
       const buyerRecord = await createBuyer({
         name: buyerName || 'Direct Client',
-        phone: buyerPhone || '+919876543210',
+        phone: buyerPhone || user?.phone || '',
         localities: [buyerLocation],
         types: [buyerType],
         budget: {
@@ -459,10 +459,10 @@ export const PastePage: React.FC = () => {
       </div>
 
       {/* Workflow Progress Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs font-bold text-slate-500 overflow-x-auto pb-1">
+      <div className="flex items-center gap-2 text-xs font-bold text-slate-500 overflow-x-auto no-scrollbar py-1">
         <span
           className={clsx(
-            'px-3 py-1 rounded-full transition',
+            'px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-xs font-bold shrink-0',
             currentStep === 'paste'
               ? 'bg-emerald-700 text-white shadow-xs'
               : 'bg-slate-100 dark:bg-slate-800 text-slate-600'
@@ -473,7 +473,7 @@ export const PastePage: React.FC = () => {
         <ArrowRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
         <span
           className={clsx(
-            'px-3 py-1 rounded-full transition',
+            'px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-xs font-bold shrink-0',
             currentStep === 'buyer-details' || currentStep === 'listing-review'
               ? 'bg-emerald-700 text-white shadow-xs'
               : 'bg-slate-100 dark:bg-slate-800 text-slate-600'
@@ -484,7 +484,7 @@ export const PastePage: React.FC = () => {
         <ArrowRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
         <span
           className={clsx(
-            'px-3 py-1 rounded-full transition',
+            'px-3.5 py-1.5 rounded-full transition whitespace-nowrap text-xs font-bold shrink-0',
             currentStep === 'matches' || currentStep === 'listing-saved-matches'
               ? 'bg-emerald-700 text-white shadow-xs'
               : 'bg-slate-100 dark:bg-slate-800 text-slate-600'
@@ -1329,7 +1329,7 @@ export const PastePage: React.FC = () => {
           </Card>
 
           {/* Instant AI Matches Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-border/60">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border/60">
             <div className="space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base sm:text-lg font-black text-ink font-heading leading-tight">
@@ -1353,7 +1353,7 @@ export const PastePage: React.FC = () => {
                 setParseResult(null);
                 setCurrentStep('paste');
               }}
-              className="text-xs font-bold whitespace-nowrap self-start sm:self-auto shrink-0 shadow-2xs"
+              className="text-xs font-bold whitespace-nowrap self-stretch sm:self-auto justify-center shrink-0 shadow-2xs py-2 px-4"
             >
               + Paste Another Message
             </Button>
@@ -1374,12 +1374,12 @@ export const PastePage: React.FC = () => {
               <div className="space-y-1">
                 <h4 className="text-sm font-bold text-ink">
                   {totalBuyersCount === 0
-                    ? 'No Buyer Requirements Added Yet'
+                    ? 'Please add your client buyers first'
                     : 'No Matching Buyers Found in Your Database'}
                 </h4>
                 <p className="text-xs text-muted max-w-md mx-auto leading-relaxed">
                   {totalBuyersCount === 0
-                    ? 'This property has been saved to your inventory. Add your client requirements in Buyer Leads, and Quick Chat will automatically match them here!'
+                    ? 'No client recommendations are available to display yet because no buyer requirements have been added. Add your buyers in Buyer Leads, and Quick Chat will automatically match them here!'
                     : `None of your active buyers currently match ${listingLocality || 'this location'} within ${listingPrice || 'asking price'}. You can still share this property flyer directly with clients on WhatsApp.`}
                 </p>
               </div>

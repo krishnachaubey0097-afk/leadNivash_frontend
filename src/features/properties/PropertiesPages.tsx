@@ -282,8 +282,8 @@ export const PropertiesListPage: React.FC = () => {
                       prop.status === 'available'
                         ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
                         : prop.status === 'hold'
-                        ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'
-                        : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                          ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'
+                          : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                     )}
                   >
                     {prop.status}
@@ -355,7 +355,7 @@ export const PropertiesListPage: React.FC = () => {
                     )}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 transition"
+                    className="p-2 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 transition cursor-pointer shrink-0"
                     title="Quick 1-Tap WhatsApp Share"
                   >
                     <Send className="w-3.5 h-3.5" />
@@ -365,7 +365,7 @@ export const PropertiesListPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setPropertyToDelete({ id: prop._id, title: prop.title })}
-                    className="p-1.5 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                    className="p-2 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 transition cursor-pointer shrink-0"
                     title="Delete Listing"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -1051,8 +1051,8 @@ export const PropertyDetailPage: React.FC = () => {
                     ? st === 'available'
                       ? 'bg-brand-700 text-white shadow-xs'
                       : st === 'hold'
-                      ? 'bg-amber-600 text-white shadow-xs'
-                      : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+                        ? 'bg-amber-600 text-white shadow-xs'
+                        : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
                     : 'text-muted hover:text-ink'
                 )}
               >

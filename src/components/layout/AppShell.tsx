@@ -44,8 +44,8 @@ export const AppShell: React.FC = () => {
         {/* Top Header */}
         <TopBar />
 
-        {/* Body content with independent scrolling */}
-        <main className="flex-1 overflow-y-auto pb-24 lg:pb-8 max-w-5xl mx-auto w-full px-4 pt-4">
+        {/* Body content with independent scrolling & strict horizontal boundary */}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 lg:pb-8 max-w-5xl mx-auto w-full px-3.5 sm:px-4 pt-4">
           <Outlet />
         </main>
 

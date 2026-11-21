@@ -632,7 +632,7 @@ export const DashboardPage: React.FC = () => {
                 </div>
 
                 {/* Dynamic Summary Cards instead of fake month bars */}
-                <div className="grid grid-cols-3 gap-3 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-2">
                   <div className="p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-500/20 text-center">
                     <span className="text-[10px] uppercase font-bold text-muted block">Available Inventory</span>
                     <span className="text-xl sm:text-2xl font-black text-emerald-800 dark:text-emerald-300 font-heading">
@@ -857,23 +857,23 @@ export const DashboardPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between gap-2">
+                    <div className="mt-4 pt-3 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-2">
                       <a
                         href={`https://wa.me/?text=${encodeURIComponent(
                           `Hello! Here is a great property matching your requirement: ${match.propertyTitle} in ${match.locality}. Price: ${formatRupees(match.propertyPrice)}. Let me know if you would like to schedule a site visit!`
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1"
+                        className="w-full sm:flex-1"
                       >
-                        <Button size="sm" pill className="w-full text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white">
+                        <Button size="sm" pill className="w-full text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white min-h-[40px] justify-center">
                           <Send className="w-3.5 h-3.5 mr-1" />
                           <span>Send on WhatsApp</span>
                         </Button>
                       </a>
 
-                      <Link to="/app/properties">
-                        <Button variant="secondary" size="sm" pill className="text-xs font-bold">
+                      <Link to="/app/properties" className="w-full sm:w-auto">
+                        <Button variant="secondary" size="sm" pill className="w-full sm:w-auto text-xs font-bold min-h-[40px] justify-center">
                           View Flyer
                         </Button>
                       </Link>
