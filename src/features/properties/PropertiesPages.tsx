@@ -76,8 +76,8 @@ export const PropertiesListPage: React.FC = () => {
     }
   };
 
-  const loadProperties = async () => {
-    setIsLoading(true);
+  const loadProperties = async (silent = false) => {
+    if (!silent) setIsLoading(true);
     setFetchError(null);
     try {
       const data = await fetchProperties({
@@ -86,15 +86,49 @@ export const PropertiesListPage: React.FC = () => {
       });
       setProperties(data);
     } catch (err: any) {
-      console.warn('Failed to fetch properties:', err);
-      setFetchError(err?.message || 'Unable to load property inventory. Please check your connection.');
+      if (!silent) {
+        console.warn('Failed to fetch properties:', err);
+        setFetchError(err?.message || 'Unable to load property inventory. Please check your connection.');
+      }
     } finally {
-      setIsLoading(false);
+      if (!silent) setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    // 1. Initial ground-truth load
     loadProperties();
+
+    // 2. Real-time cross-device synchronization handlers
+    const handleSync = () => {
+      loadProperties(true);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        handleSync();
+      }
+    };
+
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleSync);
+    window.addEventListener('online', handleSync);
+    window.addEventListener('leadnivash_data_changed', handleSync);
+
+    // 3. Heartbeat sync: check backend every 8s while tab is visible
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        handleSync();
+      }
+    }, 8000);
+
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleSync);
+      window.removeEventListener('online', handleSync);
+      window.removeEventListener('leadnivash_data_changed', handleSync);
+      clearInterval(interval);
+    };
   }, [filterStatus]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -877,6 +911,7 @@ export const PropertyDetailPage: React.FC = () => {
   const { success, error } = useToast();
 
   const [property, setProperty] = useState<PropertyItem | null>(null);
+  const [isNotFound, setIsNotFound] = useState(false);
   const [isOwnerRevealed, setIsOwnerRevealed] = useState(false);
   const [currentStatus, setCurrentStatus] = useState<PropertyItem['status']>('available');
   const [activeMediaIndex, setActiveMediaIndex] = useState<number>(0);
@@ -897,18 +932,44 @@ export const PropertyDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetchPropertyById(id).then((p) => {
-        setProperty(p);
-        setCurrentStatus(p.status);
-        if (p.photos && p.photos.length > 0) {
-          setActiveMediaType('photo');
-          setActiveMediaIndex(0);
-        } else if (p.videoUrl || p.video?.url) {
-          setActiveMediaType('video');
-        }
-      });
+      fetchPropertyById(id)
+        .then((p) => {
+          setProperty(p);
+          setCurrentStatus(p.status);
+          setIsNotFound(false);
+          if (p.photos && p.photos.length > 0) {
+            setActiveMediaType('photo');
+            setActiveMediaIndex(0);
+          } else if (p.videoUrl || p.video?.url) {
+            setActiveMediaType('video');
+          }
+        })
+        .catch(() => {
+          setIsNotFound(true);
+        });
     }
   }, [id]);
+
+  if (isNotFound) {
+    return (
+      <div className="p-8 text-center max-w-md mx-auto space-y-4 my-12 bg-surface border border-border rounded-2xl shadow-xs">
+        <div className="w-12 h-12 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 flex items-center justify-center mx-auto text-xl">
+          ⚠️
+        </div>
+        <h2 className="text-base font-bold text-ink">Property Listing Removed</h2>
+        <p className="text-xs text-muted">
+          This property listing has been deleted or moved to trash on your account.
+        </p>
+        <Link
+          to="/app/properties"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Property Inventory</span>
+        </Link>
+      </div>
+    );
+  }
 
   if (!property) {
     return (

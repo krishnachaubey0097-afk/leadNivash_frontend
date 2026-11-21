@@ -62,8 +62,8 @@ export const BuyersListPage: React.FC = () => {
     }
   };
 
-  const loadBuyers = async () => {
-    setIsLoading(true);
+  const loadBuyers = async (silent = false) => {
+    if (!silent) setIsLoading(true);
     setFetchError(null);
     try {
       const data = await fetchBuyers({
@@ -72,15 +72,49 @@ export const BuyersListPage: React.FC = () => {
       });
       setBuyers(data);
     } catch (err: any) {
-      console.warn('Could not load buyers:', err);
-      setFetchError(err?.message || 'Unable to load buyer inquiries. Please check your connection.');
+      if (!silent) {
+        console.warn('Could not load buyers:', err);
+        setFetchError(err?.message || 'Unable to load buyer inquiries. Please check your connection.');
+      }
     } finally {
-      setIsLoading(false);
+      if (!silent) setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    // 1. Initial ground truth load
     loadBuyers();
+
+    // 2. Real-time cross-device synchronization handlers
+    const handleSync = () => {
+      loadBuyers(true);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        handleSync();
+      }
+    };
+
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleSync);
+    window.addEventListener('online', handleSync);
+    window.addEventListener('leadnivash_data_changed', handleSync);
+
+    // 3. Heartbeat sync: check backend every 8s while tab is visible
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        handleSync();
+      }
+    }, 8000);
+
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleSync);
+      window.removeEventListener('online', handleSync);
+      window.removeEventListener('leadnivash_data_changed', handleSync);
+      clearInterval(interval);
+    };
   }, [urgencyFilter]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {

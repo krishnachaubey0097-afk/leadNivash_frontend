@@ -70,8 +70,8 @@ export const DashboardPage: React.FC = () => {
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [statsError, setStatsError] = useState<string | null>(null);
 
-  const loadDashboardData = () => {
-    setIsLoadingStats(true);
+  const loadDashboardData = (silent = false) => {
+    if (!silent) setIsLoadingStats(true);
     setStatsError(null);
     Promise.all([fetchProperties(), fetchBuyers()])
       .then(([props, byrs]) => {
@@ -79,22 +79,47 @@ export const DashboardPage: React.FC = () => {
         setDbBuyers(byrs);
       })
       .catch((err) => {
-        console.warn('Could not load dynamic dashboard stats:', err);
-        setStatsError('Unable to sync live inventory and leads. Please check connection and retry.');
+        if (!silent) {
+          console.warn('Could not load dynamic dashboard stats:', err);
+          setStatsError('Unable to sync live inventory and leads. Please check connection and retry.');
+        }
       })
-      .finally(() => setIsLoadingStats(false));
+      .finally(() => {
+        if (!silent) setIsLoadingStats(false);
+      });
   };
 
   useEffect(() => {
     loadDashboardData();
 
-    // Listen for data changes across tabs/actions so counts update dynamically
-    window.addEventListener('leadnivash_data_changed', loadDashboardData);
-    window.addEventListener('focus', loadDashboardData);
+    const handleSync = () => {
+      loadDashboardData(true);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        handleSync();
+      }
+    };
+
+    // Listen for data changes across tabs/actions/devices
+    window.addEventListener('leadnivash_data_changed', handleSync);
+    window.addEventListener('focus', handleSync);
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('online', handleSync);
+
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        handleSync();
+      }
+    }, 8000);
 
     return () => {
-      window.removeEventListener('leadnivash_data_changed', loadDashboardData);
-      window.removeEventListener('focus', loadDashboardData);
+      window.removeEventListener('leadnivash_data_changed', handleSync);
+      window.removeEventListener('focus', handleSync);
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('online', handleSync);
+      clearInterval(interval);
     };
   }, []);
 
@@ -439,7 +464,7 @@ export const DashboardPage: React.FC = () => {
               <span>{statsError}</span>
               <button
                 type="button"
-                onClick={loadDashboardData}
+                onClick={() => loadDashboardData(false)}
                 className="px-3 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shrink-0 cursor-pointer shadow-2xs"
               >
                 Retry Sync

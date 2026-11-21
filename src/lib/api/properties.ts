@@ -211,70 +211,46 @@ export const SEED_PROPERTIES: PropertyItem[] = [
   },
 ];
 
-// Persistent LocalStorage keys for client cache and deletions
+// Persistent LocalStorage key for offline read fallback
 const STORAGE_KEY_PROPERTIES = 'leadnivash_properties_v1';
-const STORAGE_KEY_DELETED_IDS = 'leadnivash_deleted_property_ids';
-
-function getDeletedPropertyIds(): Set<string> {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_DELETED_IDS);
-    if (!raw) return new Set();
-    const arr = JSON.parse(raw);
-    return new Set(Array.isArray(arr) ? arr : []);
-  } catch {
-    return new Set();
-  }
-}
-
-function saveDeletedPropertyId(id: string): void {
-  try {
-    const set = getDeletedPropertyIds();
-    set.add(id);
-    localStorage.setItem(STORAGE_KEY_DELETED_IDS, JSON.stringify(Array.from(set)));
-  } catch (err) {
-    console.warn('Could not save deleted property ID:', err);
-  }
-}
 
 function loadLocalProperties(): PropertyItem[] {
+  if (typeof window === 'undefined') return [];
   try {
-    const deleted = getDeletedPropertyIds();
     const raw = localStorage.getItem(STORAGE_KEY_PROPERTIES);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        // Only return real user properties (exclude seed data and deleted items)
-        return parsed.filter(
-          (p: PropertyItem) => !p._id?.startsWith('prop_seed_') && !deleted.has(p._id)
-        );
+        return parsed.filter((p: PropertyItem) => !p._id?.startsWith('prop_seed_'));
       }
     }
   } catch (err) {
     console.warn('Could not read cached properties:', err);
   }
-  // Brand new account starts with zero listings (no fake data)
   return [];
 }
 
 function persistLocalProperties(items: PropertyItem[]): void {
+  if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(STORAGE_KEY_PROPERTIES, JSON.stringify(items));
-    window.dispatchEvent(new Event('leadnivash_data_changed'));
   } catch (err) {
     console.warn('Could not persist properties to localStorage:', err);
   }
 }
 
-// In-memory cache synced with localStorage
+// In-memory cache synced with backend
 let localPropertiesStore: PropertyItem[] = loadLocalProperties();
 
 export function clearLocalPropertiesCache(): void {
   localPropertiesStore = [];
-  try {
-    localStorage.removeItem(STORAGE_KEY_PROPERTIES);
-    localStorage.removeItem(STORAGE_KEY_DELETED_IDS);
-  } catch {
-    // Ignore
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.removeItem(STORAGE_KEY_PROPERTIES);
+      localStorage.removeItem('leadnivash_deleted_property_ids');
+    } catch {
+      // Ignore
+    }
   }
 }
 
@@ -283,20 +259,26 @@ export async function fetchProperties(params?: {
   locality?: string;
   search?: string;
 }): Promise<PropertyItem[]> {
-  const deleted = getDeletedPropertyIds();
   try {
-    const res = await apiClient.get<any, any>('/properties', { params });
+    const res = await apiClient.get<any, any>('/properties', {
+      params: {
+        ...params,
+        limit: 100, // Fetch full active inventory so list is always complete
+      },
+    });
+
     if (Array.isArray(res)) {
-      // Backend MongoDB is the single source of truth. Filter out legacy seeds and soft-deleted IDs
-      const cleanList = res.filter((p: PropertyItem) => !p._id?.startsWith('prop_seed_') && !deleted.has(p._id));
+      // Backend MongoDB is the single source of truth:
+      // Filter out legacy test seeds and immediately synchronize local memory and cache
+      const cleanList = res.filter((p: PropertyItem) => !p._id?.startsWith('prop_seed_'));
       localPropertiesStore = cleanList;
       persistLocalProperties(cleanList);
       return cleanList;
     }
-    return localPropertiesStore.filter((p) => !deleted.has(p._id));
+    return localPropertiesStore;
   } catch (err) {
-    console.warn('Backend properties API error, using persistent local store:', err);
-    let items = localPropertiesStore.filter((p) => !deleted.has(p._id));
+    console.warn('Backend properties API error, using offline store:', err);
+    let items = [...localPropertiesStore];
     if (params?.status && params.status !== 'all') {
       items = items.filter((p) => p.status === params.status);
     }
@@ -304,9 +286,9 @@ export async function fetchProperties(params?: {
       const q = params.search.toLowerCase();
       items = items.filter(
         (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.locality.toLowerCase().includes(q) ||
-          p.type.toLowerCase().includes(q)
+          p.title?.toLowerCase().includes(q) ||
+          p.locality?.toLowerCase().includes(q) ||
+          p.type?.toLowerCase().includes(q)
       );
     }
     return items;
@@ -316,88 +298,57 @@ export async function fetchProperties(params?: {
 export async function fetchPropertyById(id: string): Promise<PropertyItem> {
   try {
     const res = await apiClient.get<any, any>(`/properties/${id}`);
-    return res;
-  } catch {
-    const found = localPropertiesStore.find((p) => p._id === id);
-    if (found) return found;
-    return localPropertiesStore[0];
+    if (res && res._id) {
+      localPropertiesStore = [res, ...localPropertiesStore.filter((p) => p._id !== res._id)];
+      persistLocalProperties(localPropertiesStore);
+      return res;
+    }
+  } catch (err) {
+    // If backend 404s (e.g. deleted), purge it from local cache immediately
+    localPropertiesStore = localPropertiesStore.filter((p) => p._id !== id);
+    persistLocalProperties(localPropertiesStore);
+    throw err;
   }
+  localPropertiesStore = localPropertiesStore.filter((p) => p._id !== id);
+  persistLocalProperties(localPropertiesStore);
+  throw new Error('Property not found or has been deleted');
 }
 
 export async function createProperty(data: CreatePropertyDto): Promise<PropertyItem> {
-  const newItem: PropertyItem = {
-    _id: 'prop_' + Date.now(),
-    title: data.title || `${data.size.value} ${data.size.unit} ${data.type} in ${data.locality}`,
-    type: data.type,
-    category: data.category || 'Residential',
-    purpose: data.purpose || 'Sale',
-    locality: data.locality,
-    city: data.city || 'Panipat',
-    landmark: data.landmark,
-    size: data.size,
-    priceDemandPaise: data.priceDemandPaise,
-    facing: data.facing,
-    tags: data.tags || [],
-    description: data.description,
-    status: data.status || 'available',
-    photos: data.photos,
-    videoUrl: data.videoUrl,
-    video: data.video,
-    owner: data.owner,
-    createdAt: new Date().toISOString(),
-  };
-
-  try {
-    const res = await apiClient.post<any, any>('/properties', data);
-    localPropertiesStore = [res, ...localPropertiesStore.filter((p) => p._id !== res._id)];
-    persistLocalProperties(localPropertiesStore);
+  const res = await apiClient.post<any, any>('/properties', data);
+  localPropertiesStore = [res, ...localPropertiesStore.filter((p) => p._id !== res._id)];
+  persistLocalProperties(localPropertiesStore);
+  if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('leadnivash_data_changed'));
-    return res;
-  } catch (err) {
-    console.warn('Backend create property error, saved optimistically to local store:', err);
-    localPropertiesStore = [newItem, ...localPropertiesStore];
-    persistLocalProperties(localPropertiesStore);
-    window.dispatchEvent(new Event('leadnivash_data_changed'));
-    return newItem;
   }
+  return res;
 }
 
 export async function updatePropertyStatus(
   id: string,
   status: 'available' | 'hold' | 'sold' | 'rented'
 ): Promise<PropertyItem> {
-  try {
-    const res = await apiClient.patch<any, any>(`/properties/${id}/status`, { status });
-    localPropertiesStore = localPropertiesStore.map((p) => (p._id === id ? { ...p, status } : p));
-    persistLocalProperties(localPropertiesStore);
+  const res = await apiClient.patch<any, any>(`/properties/${id}/status`, { status });
+  localPropertiesStore = localPropertiesStore.map((p) => (p._id === id ? { ...p, status } : p));
+  persistLocalProperties(localPropertiesStore);
+  if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('leadnivash_data_changed'));
-    return res;
-  } catch {
-    localPropertiesStore = localPropertiesStore.map((p) => (p._id === id ? { ...p, status } : p));
-    persistLocalProperties(localPropertiesStore);
-    window.dispatchEvent(new Event('leadnivash_data_changed'));
-    const updated = localPropertiesStore.find((p) => p._id === id)!;
-    return updated;
   }
+  return res;
 }
 
 export async function deleteProperty(id: string): Promise<boolean> {
-  // 1. Permanently track in deleted IDs list so it never revives on refresh
-  saveDeletedPropertyId(id);
+  // 1. Immediately inform the backend (single source of truth)
+  await apiClient.delete(`/properties/${id}`);
 
-  // 2. Remove from active local store and persist
+  // 2. Remove from active store & localStorage
   localPropertiesStore = localPropertiesStore.filter((p) => p._id !== id);
   persistLocalProperties(localPropertiesStore);
 
-  // 3. Inform the backend database (primary source of truth)
-  try {
-    await apiClient.delete(`/properties/${id}`);
-  } catch (err) {
-    console.info('Backend delete synced for:', id);
+  // 3. Notify all listeners in the window
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
   }
-
-  // 4. Notify all components and dashboard of updated inventory
-  window.dispatchEvent(new Event('leadnivash_data_changed'));
 
   return true;
 }
