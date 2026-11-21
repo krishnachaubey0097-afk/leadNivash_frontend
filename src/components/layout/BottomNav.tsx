@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Building2, Users, Inbox, Wrench } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, Sparkles, Wrench } from 'lucide-react';
 import clsx from 'clsx';
 
 export const BottomNav: React.FC = () => {
@@ -71,9 +71,9 @@ export const BottomNav: React.FC = () => {
           )}
         </NavLink>
 
-        {/* 4. Inquiries (Property & Buyer unified) */}
+        {/* 4. Quick Chat (Voice & Text Match) */}
         <NavLink
-          to="/app/inquiries"
+          to="/app/paste"
           className={({ isActive }) =>
             clsx(
               'flex flex-col items-center justify-center flex-1 py-1 text-[10px] font-bold transition-colors relative',
@@ -83,8 +83,8 @@ export const BottomNav: React.FC = () => {
         >
           {({ isActive }) => (
             <>
-              <Inbox className={clsx('w-5 h-5 mb-0.5', isActive && 'stroke-[2.5]')} />
-              <span>Inquiries</span>
+              <Sparkles className={clsx('w-5 h-5 mb-0.5', isActive && 'stroke-[2.5]')} />
+              <span>Quick Chat</span>
               {isActive && (
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-600 absolute bottom-0" />
               )}

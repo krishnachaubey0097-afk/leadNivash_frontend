@@ -150,14 +150,17 @@ function loadLocalBuyers(): BuyerItem[] {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        return parsed.filter((b: BuyerItem) => !deleted.has(b._id));
+        // Only return real user buyers (exclude seed data and deleted items)
+        return parsed.filter(
+          (b: BuyerItem) => !b._id?.startsWith('buyer_seed_') && !deleted.has(b._id)
+        );
       }
     }
   } catch (err) {
     console.warn('Could not read cached buyers:', err);
   }
-  const deleted = getDeletedBuyerIds();
-  return SEED_BUYERS.filter((b) => !deleted.has(b._id));
+  // Brand new account starts with zero buyer inquiries (no fake data)
+  return [];
 }
 
 function persistLocalBuyers(items: BuyerItem[]): void {
@@ -181,13 +184,13 @@ export async function fetchBuyers(params?: {
   try {
     const res = await apiClient.get<any, any>('/api/v1/buyers', { params });
     if (Array.isArray(res)) {
-      // Backend returned list (even if empty [])! Filter out any locally deleted IDs
-      const cleanList = res.filter((b: BuyerItem) => !deleted.has(b._id));
+      // Backend returned list (even if empty [])! Filter out any locally deleted IDs or legacy seeds
+      const cleanList = res.filter((b: BuyerItem) => !b._id?.startsWith('buyer_seed_') && !deleted.has(b._id));
       localBuyersStore = cleanList;
       persistLocalBuyers(cleanList);
       return cleanList;
     }
-    return localBuyersStore.filter((b) => !deleted.has(b._id));
+    return localBuyersStore.filter((b) => !b._id?.startsWith('buyer_seed_') && !deleted.has(b._id));
   } catch (err) {
     console.warn('Backend buyers API error, using persistent local store:', err);
     let items = localBuyersStore.filter((b) => !deleted.has(b._id));

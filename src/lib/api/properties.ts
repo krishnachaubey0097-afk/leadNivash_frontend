@@ -243,14 +243,17 @@ function loadLocalProperties(): PropertyItem[] {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        return parsed.filter((p: PropertyItem) => !deleted.has(p._id));
+        // Only return real user properties (exclude seed data and deleted items)
+        return parsed.filter(
+          (p: PropertyItem) => !p._id?.startsWith('prop_seed_') && !deleted.has(p._id)
+        );
       }
     }
   } catch (err) {
     console.warn('Could not read cached properties:', err);
   }
-  const deleted = getDeletedPropertyIds();
-  return SEED_PROPERTIES.filter((p) => !deleted.has(p._id));
+  // Brand new account starts with zero listings (no fake data)
+  return [];
 }
 
 function persistLocalProperties(items: PropertyItem[]): void {
@@ -274,8 +277,8 @@ export async function fetchProperties(params?: {
   try {
     const res = await apiClient.get<any, any>('/api/v1/properties', { params });
     if (Array.isArray(res)) {
-      // Backend returned list (even if empty [])! Filter out any locally deleted IDs
-      const cleanList = res.filter((p: PropertyItem) => !deleted.has(p._id));
+      // Backend returned list (even if empty [])! Filter out any locally deleted IDs or legacy seed IDs
+      const cleanList = res.filter((p: PropertyItem) => !p._id?.startsWith('prop_seed_') && !deleted.has(p._id));
       localPropertiesStore = cleanList;
       persistLocalProperties(cleanList);
       return cleanList;

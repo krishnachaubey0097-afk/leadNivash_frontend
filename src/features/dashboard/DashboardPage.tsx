@@ -12,6 +12,8 @@ import {
   Send,
   CheckCircle2,
   Calendar,
+  Building2,
+  Plus,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -49,7 +51,7 @@ export const DashboardPage: React.FC = () => {
     }
   };
 
-  // Interactive Deal Pipeline State
+  // Interactive Deal Pipeline State (defaults to empty for real user accounts)
   const [pipelineDeals, setPipelineDeals] = useState<Array<{
     id: string;
     title: string;
@@ -59,48 +61,7 @@ export const DashboardPage: React.FC = () => {
     brokerageAmount: number;
     stage: 'token' | 'agreement' | 'registry' | 'won';
     date: string;
-  }>>([
-    {
-      id: 'deal_1',
-      title: '3 BHK Luxury Floor',
-      locality: 'Model Town, Panipat',
-      clientName: 'Rajesh Sharma',
-      propertyPrice: 12500000,
-      brokerageAmount: 125000,
-      stage: 'agreement',
-      date: 'Due: 24 Nov',
-    },
-    {
-      id: 'deal_2',
-      title: '250 Gaj Residential Plot',
-      locality: 'Ansals Sushant City',
-      clientName: 'Vikram Verma',
-      propertyPrice: 8500000,
-      brokerageAmount: 85000,
-      stage: 'token',
-      date: 'Due: 28 Nov',
-    },
-    {
-      id: 'deal_3',
-      title: 'Commercial Shop Main Market',
-      locality: 'GT Road, Panipat',
-      clientName: 'Ashok Bansal',
-      propertyPrice: 9500000,
-      brokerageAmount: 95000,
-      stage: 'registry',
-      date: 'Tehsil: Tomorrow',
-    },
-    {
-      id: 'deal_4',
-      title: '4 BHK Independent Designer Kothi',
-      locality: 'Sector 18, Panipat',
-      clientName: 'Anjali Gupta',
-      propertyPrice: 24000000,
-      brokerageAmount: 240000,
-      stage: 'won',
-      date: 'Closed: 12 Nov',
-    },
-  ]);
+  }>>([]);
 
   // Real-Time Database Data Integration
   const [dbProperties, setDbProperties] = useState<PropertyItem[]>([]);
@@ -130,11 +91,55 @@ export const DashboardPage: React.FC = () => {
     };
   }, []);
 
+  // Dynamic Real Inventory & Client Matches
+  const matchesWaiting = React.useMemo(() => {
+    if (dbProperties.length === 0 || dbBuyers.length === 0) return [];
+    const results: Array<{
+      id: string;
+      score: number;
+      badge: 'perfect' | 'good';
+      propertyTitle: string;
+      locality: string;
+      propertyPrice: number;
+      buyerName: string;
+      buyerBudget: string;
+      date: string;
+    }> = [];
+
+    for (const p of dbProperties) {
+      for (const b of dbBuyers) {
+        let score = 55;
+        const pLoc = (p.locality || '').toLowerCase();
+        const hasLocMatch = b.localities?.some((loc) => {
+          const l = typeof loc === 'string' ? loc.toLowerCase() : loc.display.toLowerCase();
+          return pLoc.includes(l) || l.includes(pLoc);
+        });
+        if (hasLocMatch) score += 25;
+        if (b.types?.some((t) => t.toLowerCase() === p.type?.toLowerCase())) score += 15;
+
+        if (score >= 70) {
+          results.push({
+            id: `match_${p._id}_${b._id}`,
+            score: Math.min(score, 98),
+            badge: score >= 85 ? 'perfect' : 'good',
+            propertyTitle: p.title,
+            locality: `${p.locality}, ${p.city || 'Panipat'}`,
+            propertyPrice: p.priceDemandPaise,
+            buyerName: b.name,
+            buyerBudget: b.budget?.maxPaise ? formatRupees(b.budget.maxPaise) : 'Budget Flexible',
+            date: 'Active',
+          });
+        }
+      }
+    }
+    return results.slice(0, 4);
+  }, [dbProperties, dbBuyers]);
+
   const totalPropertiesCount = dbProperties.length;
   const activePropertiesCount = dbProperties.filter((p) => p.status === 'available').length;
   const totalBuyersCount = dbBuyers.length;
   const activeBuyersCount = dbBuyers.filter((b) => b.status === 'active').length;
-  const matchesWaitingCount = Math.min(totalPropertiesCount, totalBuyersCount);
+  const matchesWaitingCount = matchesWaiting.length;
   const totalPipelinePaise = dbProperties.reduce((sum, p) => sum + (p.priceDemandPaise || 0), 0);
   const projectedCommissionPaise = Math.round(totalPipelinePaise * 0.01);
 
@@ -163,32 +168,6 @@ export const DashboardPage: React.FC = () => {
   const [trackRecordSubTab, setTrackRecordSubTab] = useState<
     'active' | 'wins' | 'lost' | 'insights' | 'deleted'
   >('active');
-
-  // Sample Top Matches Waiting (for high visual SaaS appeal matching the PRD)
-  const matchesWaiting = [
-    {
-      id: 'm1',
-      score: 96,
-      badge: 'perfect',
-      propertyTitle: '3 BHK Luxury Builder Floor',
-      locality: 'Model Town, Panipat',
-      propertyPrice: 12500000,
-      buyerName: 'Rajesh Sharma',
-      buyerBudget: '₹1.20 - 1.35 Cr',
-      date: 'Today, 11:30 AM',
-    },
-    {
-      id: 'm2',
-      score: 88,
-      badge: 'good',
-      propertyTitle: '250 Gaj Residential Plot',
-      locality: 'Ansals Sushant City, Panipat',
-      propertyPrice: 8500000,
-      buyerName: 'Vikram Verma',
-      buyerBudget: '₹80 - 90 Lakhs',
-      date: 'Yesterday',
-    },
-  ];
 
   return (
     <div className="space-y-5 pb-12">
@@ -257,6 +236,39 @@ export const DashboardPage: React.FC = () => {
       {/* TODAY SEGMENT (§5.3.1) */}
       {activeSegment === 'today' && (
         <div className="space-y-6">
+          {/* Empty Account Banner Prompting User to Add Properties */}
+          {dbProperties.length === 0 && !isLoadingStats && (
+            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-white via-emerald-50/60 to-emerald-100/40 border border-emerald-500/30 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+              <div className="flex flex-col sm:flex-row items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Building2 className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-ink font-heading">
+                    Please add your properties first
+                  </h3>
+                  <p className="text-xs text-muted mt-0.5 max-w-md">
+                    No data is available to display yet. Start by adding your first property listing or speak/type client messages in Quick Chat to find matches.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Link to="/app/properties/new">
+                  <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">
+                    <Plus className="w-3.5 h-3.5 mr-1" />
+                    <span>Add Property</span>
+                  </Button>
+                </Link>
+                <Link to="/app/paste">
+                  <Button variant="secondary" size="sm" pill className="font-bold text-xs">
+                    <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                    <span>Quick Chat</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
+
           {/* Quick Paste Hero Card (Integrated directly into Dashboard with Green+White Gradient) */}
           <Card className="p-4 sm:p-5 bg-gradient-to-br from-white via-emerald-50/25 to-emerald-100/35 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border-emerald-500/30 shadow-card space-y-3">
             <div className="flex items-center justify-between">
@@ -539,7 +551,7 @@ export const DashboardPage: React.FC = () => {
                 <span className="px-2 py-0.5 rounded-full bg-amber-100/80 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 font-bold shrink-0">
                   1% avg fee
                 </span>
-                <span className="text-muted font-medium">4 active</span>
+                <span className="text-muted font-medium">{dbProperties.length} active</span>
               </div>
             </Card>
           </div>
@@ -666,63 +678,95 @@ export const DashboardPage: React.FC = () => {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {matchesWaiting.map((match) => (
-                <Card key={match.id} className="p-5 flex flex-col justify-between" interactive>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Badge variant={match.badge as any} pill dot>
-                        {match.score}% Match
-                      </Badge>
-                      <span className="text-[11px] text-muted">{match.date}</span>
-                    </div>
+            {matchesWaiting.length === 0 ? (
+              <Card className="p-8 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 flex items-center justify-center mx-auto">
+                  <Building2 className="w-6 h-6" />
+                </div>
+                <h4 className="text-sm font-bold text-ink">
+                  {dbProperties.length === 0
+                    ? 'Please add your properties first'
+                    : 'No Active Matches Waiting'}
+                </h4>
+                <p className="text-xs text-muted max-w-sm mx-auto">
+                  {dbProperties.length === 0
+                    ? 'No data is available to display yet. Add properties to your inventory so matches can be generated automatically.'
+                    : 'All current buyer requirements have been processed. Add new properties or paste inquiries to discover matches.'}
+                </p>
+                <div className="pt-2 flex items-center justify-center gap-2">
+                  <Link to="/app/properties/new">
+                    <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+                      <Plus className="w-3.5 h-3.5 mr-1" />
+                      <span>Add Property</span>
+                    </Button>
+                  </Link>
+                  <Link to="/app/paste">
+                    <Button variant="secondary" size="sm" pill className="font-bold text-xs">
+                      <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                      <span>Quick Chat</span>
+                    </Button>
+                  </Link>
+                </div>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {matchesWaiting.map((match) => (
+                  <Card key={match.id} className="p-5 flex flex-col justify-between" interactive>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Badge variant={match.badge as any} pill dot>
+                          {match.score}% Match
+                        </Badge>
+                        <span className="text-[11px] text-muted">{match.date}</span>
+                      </div>
 
-                    <div>
-                      <h3 className="text-sm font-bold text-ink hover:text-brand-700 transition">
-                        {match.propertyTitle}
-                      </h3>
-                      <p className="text-xs text-muted mt-0.5">{match.locality}</p>
-                      <span className="text-xs font-black text-brand-700 mt-1 block">
-                        {formatRupees(match.propertyPrice)}
-                      </span>
-                    </div>
-
-                    <div className="p-3 rounded-xl bg-bg border border-border/60 flex items-center justify-between text-xs">
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-muted block">Client Lead</span>
-                        <span className="font-bold text-ink">{match.buyerName}</span>
+                        <h3 className="text-sm font-bold text-ink hover:text-brand-700 transition">
+                          {match.propertyTitle}
+                        </h3>
+                        <p className="text-xs text-muted mt-0.5">{match.locality}</p>
+                        <span className="text-xs font-black text-brand-700 mt-1 block">
+                          {formatRupees(match.propertyPrice)}
+                        </span>
                       </div>
-                      <div className="text-right">
-                        <span className="text-[10px] uppercase font-bold text-muted block">Target Budget</span>
-                        <span className="font-semibold text-text">{match.buyerBudget}</span>
+
+                      <div className="p-3 rounded-xl bg-bg border border-border/60 flex items-center justify-between text-xs">
+                        <div>
+                          <span className="text-[10px] uppercase font-bold text-muted block">Client Lead</span>
+                          <span className="font-bold text-ink">{match.buyerName}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[10px] uppercase font-bold text-muted block">Target Budget</span>
+                          <span className="font-semibold text-text">{match.buyerBudget}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between gap-2">
-                    <a
-                      href={`https://wa.me/?text=${encodeURIComponent(
-                        `Hello! Here is a great property matching your requirement: ${match.propertyTitle} in ${match.locality}. Price: ${formatRupees(match.propertyPrice)}. Let me know if you would like to schedule a site visit!`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1"
-                    >
-                      <Button size="sm" pill className="w-full text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white">
-                        <Send className="w-3.5 h-3.5 mr-1" />
-                        <span>Send on WhatsApp</span>
-                      </Button>
-                    </a>
+                    <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between gap-2">
+                      <a
+                        href={`https://wa.me/?text=${encodeURIComponent(
+                          `Hello! Here is a great property matching your requirement: ${match.propertyTitle} in ${match.locality}. Price: ${formatRupees(match.propertyPrice)}. Let me know if you would like to schedule a site visit!`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1"
+                      >
+                        <Button size="sm" pill className="w-full text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white">
+                          <Send className="w-3.5 h-3.5 mr-1" />
+                          <span>Send on WhatsApp</span>
+                        </Button>
+                      </a>
 
-                    <Link to="/app/properties">
-                      <Button variant="secondary" size="sm" pill className="text-xs font-bold">
-                        View Flyer
-                      </Button>
-                    </Link>
-                  </div>
-                </Card>
-              ))}
-            </div>
+                      <Link to="/app/properties">
+                        <Button variant="secondary" size="sm" pill className="text-xs font-bold">
+                          View Flyer
+                        </Button>
+                      </Link>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -767,66 +811,86 @@ export const DashboardPage: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {pipelineDeals
-                    .filter((d) => d.stage !== 'won')
-                    .map((deal) => (
-                      <Card
-                        key={deal.id}
-                        className="p-5 flex flex-col justify-between border-emerald-500/30 hover:border-brand-600/60 transition shadow-sm space-y-4"
-                      >
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span
-                              className={clsx(
-                                'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
-                                deal.stage === 'token'
-                                  ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400'
-                                  : deal.stage === 'agreement'
-                                  ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400'
-                                  : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400'
-                              )}
-                            >
-                              {deal.stage === 'token'
-                                ? 'Token Bayana'
-                                : deal.stage === 'agreement'
-                                ? 'Agreement Done'
-                                : 'Registry Ready'}
-                            </span>
-                            <span className="text-[11px] text-muted">{deal.date}</span>
-                          </div>
-
-                          <div>
-                            <h4 className="text-sm font-bold text-ink">{deal.title}</h4>
-                            <p className="text-xs text-muted">{deal.locality}</p>
-                          </div>
-
-                          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border flex items-center justify-between text-xs">
-                            <div>
-                              <span className="text-[10px] text-muted uppercase font-bold block">Client</span>
-                              <span className="font-bold text-ink">{deal.clientName}</span>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-[10px] text-muted uppercase font-bold block">Brokerage</span>
-                              <span className="font-black text-brand-700 dark:text-brand-600">
-                                ₹{deal.brokerageAmount.toLocaleString('en-IN')}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <Button
-                          size="sm"
-                          pill
-                          onClick={() => advanceDealStage(deal.id)}
-                          className="w-full text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs"
-                        >
-                          <span>Advance Milestone</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
+                {pipelineDeals.filter((d) => d.stage !== 'won').length === 0 ? (
+                  <Card className="p-8 text-center space-y-3">
+                    <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 flex items-center justify-center mx-auto">
+                      <Building2 className="w-6 h-6" />
+                    </div>
+                    <h4 className="text-sm font-bold text-ink">Please add your properties first</h4>
+                    <p className="text-xs text-muted max-w-sm mx-auto">
+                      No data is available to display yet. Start by adding your properties to track deals and milestones.
+                    </p>
+                    <div className="pt-2 flex items-center justify-center gap-2">
+                      <Link to="/app/properties/new">
+                        <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+                          <Plus className="w-3.5 h-3.5 mr-1" />
+                          <span>Add Property</span>
                         </Button>
-                      </Card>
-                    ))}
-                </div>
+                      </Link>
+                    </div>
+                  </Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {pipelineDeals
+                      .filter((d) => d.stage !== 'won')
+                      .map((deal) => (
+                        <Card
+                          key={deal.id}
+                          className="p-5 flex flex-col justify-between border-emerald-500/30 hover:border-brand-600/60 transition shadow-sm space-y-4"
+                        >
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span
+                                className={clsx(
+                                  'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
+                                  deal.stage === 'token'
+                                    ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400'
+                                    : deal.stage === 'agreement'
+                                    ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400'
+                                    : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400'
+                                )}
+                              >
+                                {deal.stage === 'token'
+                                  ? 'Token Bayana'
+                                  : deal.stage === 'agreement'
+                                  ? 'Agreement Done'
+                                  : 'Registry Ready'}
+                              </span>
+                              <span className="text-[11px] text-muted">{deal.date}</span>
+                            </div>
+
+                            <div>
+                              <h4 className="text-sm font-bold text-ink">{deal.title}</h4>
+                              <p className="text-xs text-muted">{deal.locality}</p>
+                            </div>
+
+                            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border flex items-center justify-between text-xs">
+                              <div>
+                                <span className="text-[10px] text-muted uppercase font-bold block">Client</span>
+                                <span className="font-bold text-ink">{deal.clientName}</span>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-[10px] text-muted uppercase font-bold block">Brokerage</span>
+                                <span className="font-black text-brand-700 dark:text-brand-600">
+                                  ₹{deal.brokerageAmount.toLocaleString('en-IN')}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            pill
+                            onClick={() => advanceDealStage(deal.id)}
+                            className="w-full text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs"
+                          >
+                            <span>Advance Milestone</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Button>
+                        </Card>
+                      ))}
+                  </div>
+                )}
               </div>
             )}
 

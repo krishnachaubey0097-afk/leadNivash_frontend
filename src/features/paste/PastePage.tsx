@@ -25,7 +25,7 @@ import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
 import { parseMessage, commitParsedItem, type ParseResult } from '../../lib/api/parse';
 import { useVoiceDictation } from '../../lib/hooks/useVoiceDictation';
-import { fetchProperties, SEED_PROPERTIES, type PropertyItem } from '../../lib/api/properties';
+import { fetchProperties, type PropertyItem } from '../../lib/api/properties';
 import { createBuyer, fetchBuyers } from '../../lib/api/buyers';
 import { createDeal } from '../../lib/api/deals';
 import { formatRupees } from '../../lib/money';
@@ -245,10 +245,10 @@ export const PastePage: React.FC = () => {
 
       setActiveBuyerId(buyerRecord._id);
 
-      // Query real property inventory with seed fallback
+      // Query real property inventory
       let properties = await fetchProperties();
-      if (!properties || properties.length === 0) {
-        properties = SEED_PROPERTIES;
+      if (!properties) {
+        properties = [];
       }
 
       // Transparent scoring against inventory
@@ -800,13 +800,13 @@ export const PastePage: React.FC = () => {
           {matchedProperties.length === 0 ? (
             <Card className="p-8 text-center space-y-3">
               <Building2 className="w-8 h-8 text-muted mx-auto" />
-              <h4 className="text-sm font-bold text-ink">No Direct Inventory Matches Found</h4>
+              <h4 className="text-sm font-bold text-ink">Please add your properties first</h4>
               <p className="text-xs text-muted max-w-sm mx-auto">
-                No currently available listings matched {buyerLocation} at ₹{buyerBudgetLakhs} Lakhs. Add a new listing to inventory or broadcast this buyer request.
+                No data is available to display yet. Add properties to your inventory so Quick Chat can automatically match client requirements.
               </p>
               <Link to="/app/properties/new">
                 <Button size="sm" pill className="font-bold text-xs mt-2">
-                  + Add New Property Listing
+                  + Add Property
                 </Button>
               </Link>
             </Card>

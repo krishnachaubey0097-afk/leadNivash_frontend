@@ -169,16 +169,18 @@ export const PropertiesListPage: React.FC = () => {
             <Building2 className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-ink">No Properties Found</h3>
+            <h3 className="text-base font-bold text-ink">
+              {searchQuery ? 'No Properties Found' : 'Please add your properties first'}
+            </h3>
             <p className="text-xs text-muted max-w-sm mx-auto mt-1">
               {searchQuery
                 ? `No properties matched "${searchQuery}". Try a different locality or clear filter.`
-                : 'Your inventory is currently empty. Add your first listing or paste a WhatsApp forward.'}
+                : 'No data is available to display yet. Start by adding your first property listing.'}
             </p>
           </div>
           <Link to="/app/properties/new">
             <Button size="sm" pill className="font-bold text-xs">
-              + Add First Listing
+              + Add Property
             </Button>
           </Link>
         </Card>

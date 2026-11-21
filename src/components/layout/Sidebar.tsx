@@ -3,7 +3,7 @@ import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   Building2,
-  Plus,
+  Sparkles,
   Users,
   Wrench,
   Inbox,
@@ -19,7 +19,7 @@ export const Sidebar: React.FC = () => {
   const navLinks = [
     { to: '/app', label: 'Dashboard', icon: LayoutDashboard, end: true },
     { to: '/app/properties', label: 'Properties', icon: Building2 },
-    { to: '/app/paste', label: 'Quick Paste', icon: Plus, highlight: true },
+    { to: '/app/paste', label: 'Quick Chat', icon: Sparkles, highlight: true },
     { to: '/app/buyers', label: 'Buyers', icon: Users },
     { to: '/app/tools', label: 'Broker Tools', icon: Wrench },
     { to: '/app/inquiries', label: 'Inquiries', icon: Inbox },
