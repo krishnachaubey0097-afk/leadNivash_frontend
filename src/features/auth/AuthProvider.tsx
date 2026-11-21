@@ -87,14 +87,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         // Silent warm-up probe & refresh attempt
         const res = await refreshClient.post('/auth/refresh');
-        const token = res.data?.data?.accessToken;
-        if (token) {
-          tokenStore.set(token);
-          const userData = await fetchCurrentUser();
-          if (userData) {
-            setUser(userData);
+        const { accessToken, user: refreshedUser } = res.data?.data || {};
+        if (accessToken) {
+          tokenStore.set(accessToken);
+          if (refreshedUser) {
+            setUser(refreshedUser);
           } else {
-            tokenStore.clear();
+            const userData = await fetchCurrentUser();
+            if (userData) {
+              setUser(userData);
+            } else {
+              tokenStore.clear();
+            }
           }
         }
       } catch {
