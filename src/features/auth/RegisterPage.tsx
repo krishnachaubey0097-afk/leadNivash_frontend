@@ -45,7 +45,7 @@ export const RegisterPage: React.FC = () => {
     phone: '',
     agencyName: '',
     city: 'Panipat',
-    termsAccepted: true,
+    termsAccepted: false,
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -371,7 +371,6 @@ export const RegisterPage: React.FC = () => {
                     <input
                       type="checkbox"
                       id="terms-google"
-                      defaultChecked
                       required
                       className="mt-0.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                     />
@@ -384,7 +383,7 @@ export const RegisterPage: React.FC = () => {
                       <Link to="/privacy" className="text-emerald-700 underline font-semibold">
                         Privacy Policy
                       </Link>
-                      .
+                      , and confirm that I am 18 years of age or older.
                     </label>
                   </div>
 
@@ -536,7 +535,7 @@ export const RegisterPage: React.FC = () => {
                   <Link to="/privacy" className="text-emerald-700 underline font-semibold">
                     Privacy Policy
                   </Link>
-                  .
+                  , and confirm that I am 18 years of age or older.
                 </label>
               </div>
 

@@ -434,6 +434,11 @@ export const PublicFlyerPage: React.FC = () => {
                   <Send className="w-3.5 h-3.5 mr-1.5" />
                   <span>Submit Inquiry to Broker</span>
                 </Button>
+
+                <p className="text-[11px] text-slate-500 text-center pt-1 leading-normal">
+                  By submitting, your details will be securely shared only with the listing broker in accordance with our{' '}
+                  <Link to="/privacy" className="underline font-semibold text-emerald-700">Privacy Policy</Link>.
+                </p>
               </form>
             )}
           </div>

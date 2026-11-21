@@ -5,7 +5,14 @@ import { AppShell } from './components/layout/AppShell';
 
 // Auth & Landing Pages
 import { LandingPage } from './features/landing/LandingPage';
-import { PricingPage, PrivacyPage, TermsPage, ContactPage } from './features/landing/LegalPages';
+import {
+  PricingPage,
+  PrivacyPage,
+  TermsPage,
+  ContactPage,
+  RefundPolicyPage,
+  CookiePolicyPage,
+} from './features/landing/LegalPages';
 import { LoginPage } from './features/auth/LoginPage';
 import { RegisterPage } from './features/auth/RegisterPage';
 import { ForgotPasswordPage } from './features/auth/ForgotPasswordPage';
@@ -42,6 +49,8 @@ export const AppRoutes: React.FC = () => {
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
+      <Route path="/refund" element={<RefundPolicyPage />} />
+      <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/flyer/:id" element={<PublicFlyerPage />} />
 

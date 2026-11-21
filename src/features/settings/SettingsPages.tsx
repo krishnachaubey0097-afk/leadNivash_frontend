@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
+import { apiClient } from '../../lib/api/client';
 import {
   Settings as SettingsIcon,
   ShieldCheck,
@@ -13,17 +14,42 @@ import {
   ChevronRight,
   Check,
   HelpCircle,
+  Download,
+  Trash2,
+  Lock,
 } from 'lucide-react';
 import { startInteractiveTour } from '../onboarding/OnboardingTour';
 
 export const SettingsPage: React.FC = () => {
   const { user, logout } = useAuth();
-  const { success } = useToast();
+  const { success, error } = useToast();
 
   const [agencyName, setAgencyName] = useState('Sharma Real Estate Agency');
   const [reraNo, setReraNo] = useState('HR/PNP/RERA-2024/889');
   const [marlaStandard, setMarlaStandard] = useState<'30.25' | '25'>('25');
   const [isSaved, setIsSaved] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportData = async () => {
+    setIsExporting(true);
+    try {
+      const res = await apiClient.get('/users/me/export');
+      const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `leadnivash-broker-data-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      success('Your broker account data was exported successfully!');
+    } catch {
+      error('Failed to export data. Please try again or contact support.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -201,6 +227,74 @@ export const SettingsPage: React.FC = () => {
             <ChevronRight className="w-4 h-4 text-muted" />
           </div>
         </button>
+      </Card>
+
+      {/* Privacy, Data Export & Account Deletion */}
+      <Card className="p-4 sm:p-5 space-y-4 border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-2 pb-1 border-b border-border/80">
+          <Lock className="w-4 h-4 text-emerald-600" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
+            Data Ownership & Privacy Rights
+          </h3>
+        </div>
+
+        <p className="text-xs text-muted leading-relaxed">
+          You retain 100% ownership of your listings, owner contacts, and buyer requirements under our Owner Vault Isolation architecture.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          {/* Data Export */}
+          <div className="p-3.5 rounded-2xl bg-surface border border-border space-y-2 flex flex-col justify-between">
+            <div className="space-y-1">
+              <span className="font-bold text-ink text-xs block">Export Account Data</span>
+              <p className="text-[11px] text-muted">
+                Download a complete, machine-readable JSON archive of all your properties, buyers, and deals.
+              </p>
+            </div>
+            <Button
+              size="sm"
+              pill
+              variant="secondary"
+              onClick={handleExportData}
+              isLoading={isExporting}
+              className="w-full text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Export JSON Archive</span>
+            </Button>
+          </div>
+
+          {/* Account Deletion */}
+          <div className="p-3.5 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40 space-y-2 flex flex-col justify-between">
+            <div className="space-y-1">
+              <span className="font-bold text-rose-800 dark:text-rose-300 text-xs block">Request Account Erasure</span>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">
+                Permanently purge your account, Owner Vault records, and buyer leads under DPDPA 2023 regulations.
+              </p>
+            </div>
+            <a
+              href="mailto:privacy@leadnivash.com?subject=Account%20and%20Data%20Deletion%20Request%20-%20leadNivash&body=Hello%20leadNivash%20Privacy%20Team,%0A%0APlease%20permanently%20delete%20my%20account%20and%20all%20associated%20data.%0A%0ARegistered%20Phone:%20%0AAgency%20Name:%20"
+              className="w-full py-1.5 px-3 rounded-full border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-center text-xs font-bold hover:bg-rose-100 dark:hover:bg-rose-900/40 transition flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Request Data Erasure</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Legal Policies Links */}
+        <div className="pt-2 border-t border-border flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted">
+          <span>Legal & Compliance:</span>
+          <div className="flex items-center gap-3">
+            <Link to="/privacy" className="text-emerald-700 dark:text-emerald-400 hover:underline">Privacy Policy</Link>
+            <span>·</span>
+            <Link to="/terms" className="text-emerald-700 dark:text-emerald-400 hover:underline">Terms</Link>
+            <span>·</span>
+            <Link to="/cookies" className="text-emerald-700 dark:text-emerald-400 hover:underline">Cookies</Link>
+            <span>·</span>
+            <Link to="/refund" className="text-emerald-700 dark:text-emerald-400 hover:underline">Refund Policy</Link>
+          </div>
+        </div>
       </Card>
 
       {/* Sign Out Card */}

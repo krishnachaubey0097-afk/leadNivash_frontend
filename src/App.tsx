@@ -6,6 +6,7 @@ import { AuthProvider } from './features/auth/AuthProvider';
 import { ToastProvider } from './components/ui/Toast';
 import { ErrorBoundary } from './components/layout/ErrorBoundary';
 import { AppRoutes } from './routes';
+import { CookieConsentBanner } from './components/layout/CookieConsentBanner';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
 const queryClient = new QueryClient({
@@ -26,6 +27,7 @@ export const App: React.FC = () => {
             <ToastProvider>
               <BrowserRouter>
                 <AppRoutes />
+                <CookieConsentBanner />
                 <SpeedInsights />
               </BrowserRouter>
             </ToastProvider>

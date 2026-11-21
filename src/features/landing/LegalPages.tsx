@@ -4,48 +4,82 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { PhoneInput } from '../../components/ui/PhoneInput';
 import { apiClient } from '../../lib/api/client';
-import { CheckCircle2, ArrowLeft, Phone, Mail, MessageCircle, ShieldCheck } from 'lucide-react';
+import {
+  CheckCircle2,
+  ArrowLeft,
+  Phone,
+  Mail,
+  MessageCircle,
+  ShieldCheck,
+  Lock,
+  Cookie,
+  RefreshCw,
+  Scale,
+  AlertCircle,
+} from 'lucide-react';
 
+/* =========================================================================
+   1. PRICING PAGE
+   ========================================================================= */
 export const PricingPage: React.FC = () => {
   useEffect(() => {
     document.title = 'Pricing Plans & High-ROI Subscriptions | leadNivash';
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6">
-      <Link to="/" className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
+    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-left">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+      >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
+
       <div>
         <h1 className="text-2xl sm:text-3xl font-black text-ink font-heading tracking-tight">
           Simple, Transparent Broker Pricing
         </h1>
         <p className="text-xs text-muted mt-1">
-          Invest once, close more deals every month. All plans include full mobile access and encrypted cloud backup.
+          Invest once, close more deals every month. All plans include full mobile access, Owner Vault data isolation, and encrypted cloud backup.
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+        {/* Starter Pilot */}
         <div className="p-6 bg-surface border border-border rounded-3xl space-y-4 shadow-xs flex flex-col justify-between">
           <div className="space-y-3">
-            <span className="text-xs font-black uppercase tracking-wider text-muted">Starter Pilot</span>
-            <h2 className="text-3xl font-black text-ink font-heading">₹0 <span className="text-xs font-normal text-muted">/ 14 Days</span></h2>
+            <span className="text-xs font-black uppercase tracking-wider text-muted">
+              Starter Pilot
+            </span>
+            <h2 className="text-3xl font-black text-ink font-heading">
+              ₹0 <span className="text-xs font-normal text-muted">/ 14 Days</span>
+            </h2>
             <p className="text-xs text-muted leading-relaxed">
-              Full access trial for single brokers. Test Quick Chat voice parsing, add up to 25 properties, and generate branded WhatsApp flyers.
+              Full access trial for single brokers. Test Quick Chat voice parsing, add up to 25 properties, and generate branded WhatsApp flyers without credit card.
             </p>
             <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-2 pt-2">
               <li className="flex items-center gap-2">✓ Quick Chat AI requirement matching</li>
               <li className="flex items-center gap-2">✓ WhatsApp masked flyers & brochures</li>
               <li className="flex items-center gap-2">✓ 4 Dedicated broker land calculators</li>
+              <li className="flex items-center gap-2">✓ Owner Vault data isolation</li>
             </ul>
           </div>
-          <Link to="/register"><Button pill className="w-full font-bold text-xs">Start 14-Day Free Trial</Button></Link>
+          <Link to="/register">
+            <Button pill className="w-full font-bold text-xs">
+              Start 14-Day Free Trial
+            </Button>
+          </Link>
         </div>
 
+        {/* Annual Pass */}
         <div className="p-6 bg-gradient-to-br from-white via-emerald-50/30 to-emerald-100/30 dark:from-slate-900 dark:via-emerald-950/20 dark:to-slate-900 border-2 border-emerald-600 rounded-3xl space-y-4 shadow-md relative flex flex-col justify-between">
           <div className="space-y-3">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider inline-block">Most Popular</span>
-            <h2 className="text-3xl font-black text-ink font-heading">₹3,999 <span className="text-xs font-normal text-muted">/ Year</span></h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider inline-block">
+              Most Popular
+            </span>
+            <h2 className="text-3xl font-black text-ink font-heading">
+              ₹3,999 <span className="text-xs font-normal text-muted">/ Year</span>
+            </h2>
             <p className="text-xs text-muted leading-relaxed">
               Unlimited power for high-volume agencies and active brokers closing multiple deals each month.
             </p>
@@ -54,95 +88,449 @@ export const PricingPage: React.FC = () => {
               <li className="flex items-center gap-2 font-semibold">✓ Multi-device real-time MongoDB cloud sync</li>
               <li className="flex items-center gap-2 font-semibold">✓ Custom agency branding & RERA verified badge</li>
               <li className="flex items-center gap-2 font-semibold">✓ Priority WhatsApp technical support</li>
+              <li className="flex items-center gap-2 font-semibold">✓ 7-Day Unconditional Refund Guarantee</li>
             </ul>
           </div>
-          <Link to="/register"><Button pill className="w-full font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">Get Annual Pass</Button></Link>
+          <Link to="/register">
+            <Button pill className="w-full font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">
+              Get Annual Pass
+            </Button>
+          </Link>
         </div>
+      </div>
+
+      {/* Assurance Footer */}
+      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>7-Day Money-Back Guarantee. Check our full <Link to="/refund" className="underline font-bold text-emerald-700 dark:text-emerald-400">Refund Policy</Link>.</span>
+        </div>
+        <Link to="/contact" className="text-emerald-700 dark:text-emerald-400 font-bold hover:underline shrink-0">
+          Need a Custom Agency Plan? Contact Us &rarr;
+        </Link>
       </div>
     </div>
   );
 };
 
+/* =========================================================================
+   2. PRIVACY POLICY PAGE (DPDPA 2023 & IT ACT COMPLIANT)
+   ========================================================================= */
 export const PrivacyPage: React.FC = () => {
   useEffect(() => {
     document.title = 'Privacy Policy & Owner Vault Isolation | leadNivash';
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-3xl mx-auto space-y-5 text-xs leading-relaxed text-left">
-      <Link to="/" className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2">
+    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2"
+      >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
+
       <div className="space-y-1">
-        <h1 className="text-2xl font-black text-ink font-heading tracking-tight">Privacy Policy</h1>
-        <p className="text-muted">Last updated: November 2026</p>
-      </div>
-
-      <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 flex items-start gap-3">
-        <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-        <div>
-          <h3 className="font-bold text-ink">Owner Vault Isolation Guarantee</h3>
-          <p className="text-muted text-[11px] mt-0.5">
-            leadNivash isolates all owner phone numbers and private notes strictly within your authenticated account. Owner contacts are never exposed to other brokers, never indexed publicly, and never shared with third parties.
-          </p>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-[11px] border border-emerald-500/30">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          <span>DPDPA 2023 Compliant · Owner Vault Isolation</span>
         </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-ink font-heading tracking-tight">
+          Privacy Policy
+        </h1>
+        <p className="text-muted">Last Updated: November 2026 · Effective Date: November 2026</p>
       </div>
 
-      <div className="space-y-3 bg-surface p-6 rounded-3xl border border-border">
-        <h2 className="text-sm font-bold text-ink">1. Data We Collect</h2>
-        <p className="text-muted">
-          We collect account information (name, phone number, firm name, city) and property listings you choose to input for flyer generation and client requirement matching.
+      {/* Owner Vault Isolation Highlight */}
+      <div className="p-5 rounded-3xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 space-y-2">
+        <div className="flex items-center gap-2">
+          <Lock className="w-5 h-5 text-emerald-600 shrink-0" />
+          <h2 className="text-sm font-bold text-ink">The Owner Vault Isolation Guarantee</h2>
+        </div>
+        <p className="text-muted text-[11px] leading-relaxed">
+          At leadNivash, we recognize that your property listings, owner contact numbers, commission agreements, and buyer requirements are the lifeblood of your brokerage business. Under our <strong>Owner Vault Data Isolation architecture</strong>, all private owner details and internal notes are encrypted at rest and logically separated by tenant account boundaries. They are <strong>never indexed publicly, never accessible to other brokers, and never shared or sold to third parties</strong>.
         </p>
+      </div>
 
-        <h2 className="text-sm font-bold text-ink pt-2">2. How Data Is Used</h2>
-        <p className="text-muted">
-          Your inventory and buyer contacts are used exclusively to provide your brokerage features, including exact match computation, stamp duty calculations, and commission tracking.
-        </p>
+      {/* Structured Policy Body */}
+      <div className="space-y-6 bg-surface p-6 sm:p-8 rounded-3xl border border-border">
+        {/* Section 1 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">1</span>
+            Data We Collect & Data Minimization
+          </h2>
+          <p className="text-muted">
+            We adhere strictly to the principle of data minimization—we only collect data that is necessary to provide real estate brokerage management services:
+          </p>
+          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+            <li><strong>Broker Account Information:</strong> Full name, phone number, agency name, city/hub, and optional RERA registration number.</li>
+            <li><strong>Property Inventory (Owner Vault):</strong> Property type, location/colony, bedrooms, demand price, and private owner contact details (for your exclusive use).</li>
+            <li><strong>Buyer Requirements:</strong> Client budget, preferred localities, bedroom preferences, and contact phone number.</li>
+            <li><strong>Calculations & Usage Logs:</strong> Stamp duty, EMI, and land unit conversions saved locally or synchronized to your account.</li>
+            <li><strong>Technical Diagnostics:</strong> IP address, browser user-agent, and session timestamps used solely for session fraud prevention and multi-device synchronization.</li>
+          </ul>
+        </section>
 
-        <h2 className="text-sm font-bold text-ink pt-2">3. Data Security & Storage</h2>
-        <p className="text-muted">
-          All data is transmitted using modern TLS encryption and stored in secure cloud databases with strict tenant isolation and role-based access controls.
-        </p>
+        {/* Section 2 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">2</span>
+            Lawful Basis & How Data Is Used
+          </h2>
+          <p className="text-muted">
+            Your data is processed in accordance with the Digital Personal Data Protection Act (DPDPA 2023) and the Information Technology (SPDI) Rules 2011 on the following lawful bases:
+          </p>
+          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+            <li><strong>Contractual Performance:</strong> Providing Quick Chat requirement matching, deal pipeline tracking, and masked flyer creation.</li>
+            <li><strong>Broker-Directed Disclosures:</strong> When you generate a shareable property flyer, leadNivash generates a masked marketing card that hides the owner’s private phone number and address, displaying only your agency’s contact details.</li>
+            <li><strong>Consent:</strong> Sending onboarding walk-throughs and customer support communications over WhatsApp.</li>
+          </ul>
+        </section>
+
+        {/* Section 3 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">3</span>
+            Third-Party Sub-Processors & Infrastructure
+          </h2>
+          <p className="text-muted">
+            We partner only with vetted cloud infrastructure providers who comply with industry-standard encryption protocols:
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <h3 className="font-bold text-ink">MongoDB Atlas</h3>
+              <p className="text-[11px] text-muted mt-0.5">Encrypted cloud database storage with TLS 1.3 in-transit and AES-256 at-rest encryption.</p>
+            </div>
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <h3 className="font-bold text-ink">Cloudinary Media</h3>
+              <p className="text-[11px] text-muted mt-0.5">Secure, signed property photo uploads with automated watermark protection.</p>
+            </div>
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <h3 className="font-bold text-ink">Vercel Edge Network</h3>
+              <p className="text-[11px] text-muted mt-0.5">Global edge hosting and SSL termination with automated DDoS defense.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 4 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">4</span>
+            Your Rights: Data Export, Correction & Deletion
+          </h2>
+          <p className="text-muted">
+            Under applicable data protection laws, you retain full ownership of your data and have the following rights:
+          </p>
+          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+            <li><strong>Right to Access & Export:</strong> You can export all your properties, buyers, and deals in JSON or CSV format directly from the <Link to="/app/settings" className="underline font-bold text-emerald-700 dark:text-emerald-400">Settings</Link> page at any time.</li>
+            <li><strong>Right to Rectification:</strong> You can edit and update property listings, buyer criteria, and profile details directly within the app.</li>
+            <li><strong>Right to Erasure (Account Deletion):</strong> You can request permanent account and data deletion by clicking "Request Account Deletion" in Settings or by emailing <a href="mailto:privacy@leadnivash.com" className="underline font-bold text-emerald-700 dark:text-emerald-400">privacy@leadnivash.com</a>. Upon verification, all your data will be permanently purged within 30 days.</li>
+          </ul>
+        </section>
+
+        {/* Section 5 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">5</span>
+            Protection of Minors
+          </h2>
+          <p className="text-muted">
+            leadNivash is a B2B platform exclusively designed for practicing adult real estate brokers and agency owners aged 18 and older. We do not knowingly solicit or collect personal information from individuals under the age of 18. If we discover that personal data of a minor has been collected, it is immediately deleted.
+          </p>
+        </section>
+
+        {/* Section 6 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">6</span>
+            Grievance Officer & Inquiries
+          </h2>
+          <p className="text-muted">
+            For any inquiries, privacy concerns, or data erasure requests, please contact our Data Protection Officer:
+          </p>
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1 text-[11px]">
+            <p><strong>Grievance & Privacy Officer:</strong> leadNivash Legal & Compliance Team</p>
+            <p><strong>Email:</strong> <a href="mailto:privacy@leadnivash.com" className="underline font-bold text-emerald-700 dark:text-emerald-400">privacy@leadnivash.com</a></p>
+            <p><strong>Support Telephone:</strong> <a href="tel:+919876543210" className="underline font-bold text-emerald-700 dark:text-emerald-400">+91 98765 43210</a></p>
+            <p><strong>Operating Territory:</strong> Panipat & Gurugram, Haryana, India</p>
+          </div>
+        </section>
       </div>
     </div>
   );
 };
 
+/* =========================================================================
+   3. TERMS OF SERVICE PAGE
+   ========================================================================= */
 export const TermsPage: React.FC = () => {
   useEffect(() => {
     document.title = 'Terms of Service | leadNivash';
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-3xl mx-auto space-y-5 text-xs leading-relaxed text-left">
-      <Link to="/" className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2">
+    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2"
+      >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
+
       <div className="space-y-1">
-        <h1 className="text-2xl font-black text-ink font-heading tracking-tight">Terms of Service</h1>
-        <p className="text-muted">Last updated: November 2026</p>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-[11px] border border-emerald-500/30">
+          <Scale className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Commercial Broker Agreement · India Jurisdiction</span>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-ink font-heading tracking-tight">
+          Terms of Service
+        </h1>
+        <p className="text-muted">Last Updated: November 2026 · Effective Date: November 2026</p>
       </div>
 
-      <div className="space-y-3 bg-surface p-6 rounded-3xl border border-border">
-        <h2 className="text-sm font-bold text-ink">1. Platform Usage</h2>
-        <p className="text-muted">
-          leadNivash is designed for licensed and practicing real estate professionals. You agree to ensure factual accuracy when inputting property prices, sizes, and ownership status.
-        </p>
+      <div className="space-y-6 bg-surface p-6 sm:p-8 rounded-3xl border border-border">
+        {/* Section 1 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">1. Acceptance of Terms & Eligibility</h2>
+          <p className="text-muted">
+            By creating an account, accessing, or using the leadNivash platform, you acknowledge that you have read, understood, and agreed to be bound by these Terms of Service. This platform is strictly intended for licensed real estate brokers, property dealers, consultants, and real estate agencies aged 18 years or older.
+          </p>
+        </section>
 
-        <h2 className="text-sm font-bold text-ink pt-2">2. Calculations & Approximations</h2>
-        <p className="text-muted">
-          Our land unit converters (Gaj, Marla, Kanal) and Tehsil registry stamp duty calculators provide estimates according to prevailing Haryana and NCR guidelines. Final registration figures depend on the sub-registrar office at registry execution.
-        </p>
+        {/* Section 2 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">2. Calculations, Stamp Duty & Circle Rate Disclaimer</h2>
+          <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-900 space-y-1.5">
+            <div className="flex items-center gap-2 text-amber-900 dark:text-amber-200 font-bold">
+              <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
+              <span>Important Regulatory Disclaimer</span>
+            </div>
+            <p className="text-[11px] text-amber-800 dark:text-amber-300 leading-relaxed">
+              The Circle Rate, Tehsil Stamp Duty, Loan EMI, and Land Unit Conversion (Gaj, Marla, Kanal, Bigha) tools provided on leadNivash are automated calculation engines based on published municipal notifications and general sub-registrar guidelines. Because circle rates and registration charges may vary based on colony classifications, collector rate updates, and sub-registrar discretionary verification, <strong>all calculations must be verified with the competent Tehsil or Sub-Registrar office prior to deed execution</strong>. leadNivash shall not be held liable for any registry discrepancy or financial loss arising from reliance on automated estimates.
+            </p>
+          </div>
+        </section>
 
-        <h2 className="text-sm font-bold text-ink pt-2">3. Subscription & Cancellation</h2>
-        <p className="text-muted">
-          Paid annual subscriptions can be managed from your Settings portal. Accounts maintain full ownership and can export all records in CSV format anytime.
-        </p>
+        {/* Section 3 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">3. Data Ownership & Marketing Flyers</h2>
+          <p className="text-muted">
+            You retain 100% intellectual property ownership of all property listings, photos, client contact lists, and notes entered into your account. By uploading property details, you grant leadNivash a non-exclusive, limited license solely to host, process, and generate masked flyers and AI matches on your behalf. leadNivash does not sell, share, or broker your listings to other platform users.
+          </p>
+        </section>
+
+        {/* Section 4 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">4. Subscription Billing, Free Trial & Cancellations</h2>
+          <p className="text-muted">
+            leadNivash provides a 14-day free trial on initial registration without requiring payment information. Annual subscriptions (₹3,999/year) grant unrestricted access to multi-device sync, cloud storage, and priority support. Subscriptions may be cancelled anytime from your Settings. For refund guidelines, please review our <Link to="/refund" className="underline font-bold text-emerald-700 dark:text-emerald-400">Refund Policy</Link>.
+          </p>
+        </section>
+
+        {/* Section 5 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">5. Acceptable Use Policy</h2>
+          <p className="text-muted">
+            You agree not to use leadNivash to:
+          </p>
+          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+            <li>Post fraudulent, deceptive, or non-existent property listings.</li>
+            <li>Interfere with, reverse-engineer, or breach tenant isolation boundaries.</li>
+            <li>Send unsolicited, spam, or harassing communications to buyers or brokers.</li>
+            <li>Scrape platform data or extract proprietary calculation engines.</li>
+          </ul>
+        </section>
+
+        {/* Section 6 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">6. Limitation of Liability</h2>
+          <p className="text-muted">
+            To the maximum extent permitted under applicable law, leadNivash and its operators shall not be liable for any indirect, incidental, punitive, or consequential damages, including loss of profits, deal commissions, or business goodwill, arising from platform downtime, network latency, or third-party service interruptions.
+          </p>
+        </section>
+
+        {/* Section 7 */}
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">7. Governing Law & Dispute Resolution</h2>
+          <p className="text-muted">
+            These Terms shall be governed by and construed in accordance with the laws of the Republic of India. Any disputes or claims arising out of or in connection with these Terms shall be subject to the exclusive jurisdiction of the competent courts in Panipat / Gurugram, Haryana.
+          </p>
+        </section>
       </div>
     </div>
   );
 };
 
+/* =========================================================================
+   4. REFUND & CANCELLATION POLICY PAGE
+   ========================================================================= */
+export const RefundPolicyPage: React.FC = () => {
+  useEffect(() => {
+    document.title = 'Refund & Cancellation Policy | leadNivash';
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back to Home
+      </Link>
+
+      <div className="space-y-1">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-[11px] border border-emerald-500/30">
+          <RefreshCw className="w-3.5 h-3.5 text-emerald-600" />
+          <span>7-Day Money-Back Guarantee · Zero Risk</span>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-ink font-heading tracking-tight">
+          Refund & Cancellation Policy
+        </h1>
+        <p className="text-muted">Last Updated: November 2026 · Effective Date: November 2026</p>
+      </div>
+
+      <div className="space-y-6 bg-surface p-6 sm:p-8 rounded-3xl border border-border">
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">1. 14-Day Free Pilot (No Payment Needed)</h2>
+          <p className="text-muted">
+            Every new broker is entitled to a 14-day zero-risk trial of leadNivash. No credit card or upfront deposit is required to start your pilot. You can explore all premium features, test Quick Chat voice matching, and evaluate the platform before making any financial commitment.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">2. 7-Day Unconditional Refund Window</h2>
+          <p className="text-muted">
+            If you upgrade to our Annual Pass (₹3,999/year) and find that the platform does not meet your agency’s operational expectations, you may request a <strong>100% full refund within 7 calendar days</strong> of your initial payment date.
+          </p>
+          <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 text-[11px] text-slate-700 dark:text-slate-300">
+            <strong>Fair Use Condition:</strong> The refund will be granted in full provided the account has not exported bulk proprietary database reports exceeding normal trial usage.
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">3. How to Request a Refund</h2>
+          <p className="text-muted">
+            To initiate a refund, simply send an email to <a href="mailto:billing@leadnivash.com" className="underline font-bold text-emerald-700 dark:text-emerald-400">billing@leadnivash.com</a> or message our WhatsApp Support at <a href="https://wa.me/919876543210" className="underline font-bold text-emerald-700 dark:text-emerald-400">+91 98765 43210</a> with:
+          </p>
+          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+            <li>Your registered broker mobile number or login email.</li>
+            <li>Payment transaction ID / invoice reference.</li>
+            <li>A brief description of why the platform was not a fit (for our engineering improvement).</li>
+          </ul>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">4. Processing Timelines</h2>
+          <p className="text-muted">
+            Once approved, refunds are credited back to the original payment source (UPI, Debit Card, Credit Card, or Net Banking) within <strong>5 to 7 business days</strong>, depending on your bank's clearing cycle.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">5. Subscription Cancellation</h2>
+          <p className="text-muted">
+            You may cancel future renewals of your subscription at any time via your <Link to="/app/settings" className="underline font-bold text-emerald-700 dark:text-emerald-400">Settings</Link> portal. Upon cancellation, your account will remain active until the end of the paid annual term, after which it will safely downgrade to read-only access.
+          </p>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+/* =========================================================================
+   5. COOKIE & TRACKING POLICY PAGE
+   ========================================================================= */
+export const CookiePolicyPage: React.FC = () => {
+  useEffect(() => {
+    document.title = 'Cookie Policy & Web Storage | leadNivash';
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back to Home
+      </Link>
+
+      <div className="space-y-1">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-[11px] border border-emerald-500/30">
+          <Cookie className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Zero Third-Party Ad Trackers</span>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-ink font-heading tracking-tight">
+          Cookie & Web Storage Policy
+        </h1>
+        <p className="text-muted">Last Updated: November 2026 · Effective Date: November 2026</p>
+      </div>
+
+      <div className="space-y-6 bg-surface p-6 sm:p-8 rounded-3xl border border-border">
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">1. What Are Cookies and Local Storage?</h2>
+          <p className="text-muted">
+            Cookies and web storage tokens are small text records stored on your browser or device when you navigate a website. leadNivash utilizes essential session storage to authenticate brokers, maintain state across page transitions, and store user preferences.
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-sm font-bold text-ink">2. Categories of Cookies We Use</h2>
+          
+          <div className="space-y-3">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <h3 className="font-bold text-ink flex items-center justify-between">
+                <span>Strictly Essential Tokens</span>
+                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/80 px-2 py-0.5 rounded-full">Mandatory</span>
+              </h3>
+              <p className="text-[11px] text-muted mt-1">
+                Required for core authentication and security. Includes JWT authentication headers, cross-site request forgery defenses, and multi-device session continuity. These tokens cannot be deactivated without logging you out.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <h3 className="font-bold text-ink flex items-center justify-between">
+                <span>Functional & Preference Tokens</span>
+                <span className="text-[10px] font-bold text-brand-700 dark:text-brand-400 bg-brand-100 dark:bg-brand-950/80 px-2 py-0.5 rounded-full">Functional</span>
+              </h3>
+              <p className="text-[11px] text-muted mt-1">
+                Remembers your regional calculation preferences (e.g., 25 Gaj vs 30.25 Gaj per Marla for Panipat/Haryana), UI theme (Dark/Light mode), and cookie consent state.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <h3 className="font-bold text-ink flex items-center justify-between">
+                <span>Performance & Speed Telemetry</span>
+                <span className="text-[10px] font-bold text-slate-700 dark:text-slate-400 bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-full">Anonymized</span>
+              </h3>
+              <p className="text-[11px] text-muted mt-1">
+                Powered by Vercel Speed Insights to monitor Core Web Vitals and page render latency. All metrics are aggregated and anonymous.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">3. Zero Advertising or Cross-Site Tracking</h2>
+          <p className="text-muted">
+            leadNivash <strong>never uses third-party advertising tracking cookies, retargeting pixels, or behavioral marketing beacons</strong>. Your activity on our platform is never sold or made available to commercial data brokers.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-bold text-ink">4. How to Control and Clear Cookies</h2>
+          <p className="text-muted">
+            You can configure your browser (Google Chrome, Apple Safari, Mozilla Firefox, Microsoft Edge) to reject or delete cookies at any time. Note that clearing essential authentication cookies will terminate your active session and require you to log in again.
+          </p>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+/* =========================================================================
+   6. CONTACT FOUNDER & SUPPORT PAGE
+   ========================================================================= */
 export const ContactPage: React.FC = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -150,6 +538,7 @@ export const ContactPage: React.FC = () => {
   const [agency, setAgency] = useState('');
   const [message, setMessage] = useState('');
   const [honeypot, setHoneypot] = useState('');
+  const [consentAccepted, setConsentAccepted] = useState(true);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -161,6 +550,11 @@ export const ContactPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (honeypot) return;
+
+    if (!consentAccepted) {
+      setErrorMsg('Please agree to the privacy consent to submit your message.');
+      return;
+    }
 
     setErrorMsg(null);
     setLoading(true);
@@ -188,11 +582,17 @@ export const ContactPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-xl mx-auto space-y-6 text-left">
-      <Link to="/" className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+      >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
+
       <div>
-        <h1 className="text-2xl font-black text-ink font-heading tracking-tight">Contact Founder & Support</h1>
+        <h1 className="text-2xl font-black text-ink font-heading tracking-tight">
+          Contact Founder & Support
+        </h1>
         <p className="text-xs text-muted mt-1">
           Have questions about the platform, onboarding, or custom agency setups? Connect with our team directly.
         </p>
@@ -257,18 +657,87 @@ export const ContactPage: React.FC = () => {
           </p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="p-5 sm:p-6 bg-surface border border-border rounded-3xl space-y-3.5 shadow-sm">
-          <Input label="Your Name *" required value={name} onChange={(e) => setName(e.target.value)} />
-          <PhoneInput label="WhatsApp Number *" required value={phone} onChange={setPhone} />
-          <Input label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <Input label="Agency / Firm Name" value={agency} onChange={(e) => setAgency(e.target.value)} />
+        <form
+          onSubmit={handleSubmit}
+          className="p-5 sm:p-6 bg-surface border border-border rounded-3xl space-y-3.5 shadow-sm"
+        >
+          <Input
+            label="Your Name *"
+            id="contact-name"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <PhoneInput
+            label="WhatsApp Number *"
+            required
+            value={phone}
+            onChange={setPhone}
+          />
+          <Input
+            label="Email Address"
+            id="contact-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            label="Agency / Firm Name"
+            id="contact-agency"
+            value={agency}
+            onChange={(e) => setAgency(e.target.value)}
+          />
+
           {/* Honeypot field (hidden from real users) */}
-          <input type="text" name="website" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} className="hidden" tabIndex={-1} autoComplete="off" />
+          <input
+            type="text"
+            name="website"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
+
           <div className="space-y-1">
-            <label className="block text-xs font-semibold text-text uppercase">Message *</label>
-            <textarea required rows={3} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="How can we assist your agency?" className="w-full bg-surface border border-border rounded-xl p-3 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+            <label htmlFor="contact-msg" className="block text-xs font-semibold text-text uppercase">
+              Message *
+            </label>
+            <textarea
+              id="contact-msg"
+              required
+              rows={3}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="How can we assist your agency?"
+              className="w-full bg-surface border border-border rounded-xl p-3 text-xs text-ink focus:outline-none focus:ring-2 focus:ring-emerald-600"
+            />
           </div>
-          <Button type="submit" pill isLoading={loading} className="w-full font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">
+
+          <div className="flex items-start gap-2 pt-1 text-[11px] text-slate-600 dark:text-slate-400">
+            <input
+              type="checkbox"
+              id="contact-consent"
+              checked={consentAccepted}
+              onChange={(e) => setConsentAccepted(e.target.checked)}
+              className="mt-0.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+            />
+            <label htmlFor="contact-consent">
+              I agree to the{' '}
+              <Link to="/privacy" className="text-emerald-700 dark:text-emerald-400 underline font-semibold">
+                Privacy Policy
+              </Link>{' '}
+              and consent to being contacted regarding this inquiry.
+            </label>
+          </div>
+
+          <Button
+            type="submit"
+            pill
+            isLoading={loading}
+            className="w-full font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+          >
             Send Message
           </Button>
         </form>

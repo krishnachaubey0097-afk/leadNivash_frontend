@@ -2643,7 +2643,11 @@ export const LandingPage: React.FC = () => {
                 </Button>
 
                 <p className="text-[11px] text-slate-500 text-center sm:text-left">
-                  By submitting, you agree to receive product demo updates on WhatsApp. Zero spam guaranteed.
+                  By submitting, you agree to our{' '}
+                  <Link to="/terms" className="underline font-semibold text-emerald-700">Terms of Service</Link>{' '}
+                  and{' '}
+                  <Link to="/privacy" className="underline font-semibold text-emerald-700">Privacy Policy</Link>.
+                  Zero spam guaranteed.
                 </p>
               </div>
             </form>
@@ -2741,10 +2745,14 @@ export const LandingPage: React.FC = () => {
           {/* Footer Metadata & Legal Links */}
           <div className="mt-4 sm:mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-emerald-200/60 font-medium">
             <p>© {new Date().getFullYear()} leadNivash Inc. · India's #1 Real Estate Broker Operating System</p>
-            <div className="flex items-center gap-4 text-[11px]">
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[11px]">
               <Link to="/privacy" className="hover:text-white transition">Privacy Policy</Link>
               <span>·</span>
               <Link to="/terms" className="hover:text-white transition">Terms of Service</Link>
+              <span>·</span>
+              <Link to="/refund" className="hover:text-white transition">Refund Policy</Link>
+              <span>·</span>
+              <Link to="/cookies" className="hover:text-white transition">Cookie Policy</Link>
               <span>·</span>
               <Link to="/contact" className="hover:text-white transition">Support</Link>
               <span>·</span>
