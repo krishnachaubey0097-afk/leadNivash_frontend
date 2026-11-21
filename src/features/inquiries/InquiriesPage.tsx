@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Phone,
@@ -17,10 +17,12 @@ import {
   MapPin,
   Clock,
   Plus,
+  Inbox,
 } from 'lucide-react';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
+import { apiClient } from '../../lib/api/client';
 import clsx from 'clsx';
 
 interface PropertyInquiry {
@@ -48,15 +50,42 @@ interface BuyerInquiry {
   status: 'active' | 'contacted' | 'closed';
 }
 
+interface ContactLeadItem {
+  _id: string;
+  name: string;
+  phone: string;
+  phoneE164: string;
+  agencyName?: string;
+  city?: string;
+  message: string;
+  createdAt: string;
+}
+
 export const InquiriesPage: React.FC = () => {
   const { success } = useToast();
 
-  // Top Centered Segmented Control State per user request:
-  // "Add property and buyer inquiries in one tab in mobile screen but in different section give button upper side like dashboard today and track record but this is center upper side"
-  const [activeInquiryType, setActiveInquiryType] = useState<'property' | 'buyer'>('property');
+  // Top Centered Segmented Control State: Property | Buyer | Landing Page Leads
+  const [activeInquiryType, setActiveInquiryType] = useState<'property' | 'buyer' | 'contact'>('property');
 
   const [selectedPropertyInquiry, setSelectedPropertyInquiry] = useState<PropertyInquiry | null>(null);
   const [selectedBuyerInquiry, setSelectedBuyerInquiry] = useState<BuyerInquiry | null>(null);
+
+  // Live Contact Leads from Landing Page Form
+  const [contactLeads, setContactLeads] = useState<ContactLeadItem[]>([]);
+  const [isLoadingContacts, setIsLoadingContacts] = useState(false);
+
+  useEffect(() => {
+    setIsLoadingContacts(true);
+    apiClient
+      .get<any, any>('/public/contact')
+      .then((res) => {
+        if (res?.items && Array.isArray(res.items)) {
+          setContactLeads(res.items);
+        }
+      })
+      .catch((err) => console.warn('Could not load landing page leads:', err))
+      .finally(() => setIsLoadingContacts(false));
+  }, []);
 
   // Property Inquiries (Inbound flyer leads)
   const [propertyInquiries, setPropertyInquiries] = useState<PropertyInquiry[]>([
@@ -201,12 +230,12 @@ export const InquiriesPage: React.FC = () => {
       {/* CENTERED UPPER SEGMENTED CONTROL PILL (Quixotic Style)  */}
       {/* ======================================================== */}
       <div className="flex justify-center pt-1 pb-1">
-        <div className="flex p-1 bg-slate-200/75 dark:bg-slate-800/85 rounded-full border border-border/70 shadow-xs">
+        <div className="flex flex-wrap items-center justify-center p-1 bg-slate-200/75 dark:bg-slate-800/85 rounded-full border border-border/70 shadow-xs gap-1">
           <button
             type="button"
             onClick={() => setActiveInquiryType('property')}
             className={clsx(
-              'px-4 sm:px-6 py-2 text-xs font-black rounded-full transition-all cursor-pointer flex items-center gap-2',
+              'px-3.5 sm:px-5 py-2 text-xs font-black rounded-full transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2',
               activeInquiryType === 'property'
                 ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-xs'
                 : 'text-muted hover:text-ink'
@@ -230,7 +259,7 @@ export const InquiriesPage: React.FC = () => {
             type="button"
             onClick={() => setActiveInquiryType('buyer')}
             className={clsx(
-              'px-4 sm:px-6 py-2 text-xs font-black rounded-full transition-all cursor-pointer flex items-center gap-2',
+              'px-3.5 sm:px-5 py-2 text-xs font-black rounded-full transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2',
               activeInquiryType === 'buyer'
                 ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-xs'
                 : 'text-muted hover:text-ink'
@@ -247,6 +276,30 @@ export const InquiriesPage: React.FC = () => {
               )}
             >
               {buyerInquiries.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveInquiryType('contact')}
+            className={clsx(
+              'px-3.5 sm:px-5 py-2 text-xs font-black rounded-full transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2',
+              activeInquiryType === 'contact'
+                ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-xs'
+                : 'text-muted hover:text-ink'
+            )}
+          >
+            <Inbox className="w-3.5 h-3.5" />
+            <span>Landing Page Leads</span>
+            <span
+              className={clsx(
+                'px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none',
+                activeInquiryType === 'contact'
+                  ? 'bg-white/25 text-white'
+                  : 'bg-slate-300 dark:bg-slate-700 text-muted'
+              )}
+            >
+              {contactLeads.length}
             </span>
           </button>
         </div>
@@ -535,6 +588,133 @@ export const InquiriesPage: React.FC = () => {
                           <Sparkles className="w-3.5 h-3.5" />
                           <span>Check Inventory Matches</span>
                         </Link>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* SECTION 3: LANDING PAGE DEMO & CONTACT LEADS             */}
+      {/* ======================================================== */}
+      {activeInquiryType === 'contact' && (
+        <div className="space-y-4 animate-in fade-in duration-200">
+          <div className="flex items-center justify-between px-1">
+            <div>
+              <h2 className="text-sm font-black text-ink font-heading">
+                Landing Page Inbound Form Submissions ({contactLeads.length})
+              </h2>
+              <p className="text-xs text-muted">
+                Prospective brokers and clients who filled out the demo inquiry form on leadNivash.com
+              </p>
+            </div>
+          </div>
+
+          {isLoadingContacts ? (
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-32 rounded-2xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+              ))}
+            </div>
+          ) : contactLeads.length === 0 ? (
+            <Card className="p-12 text-center space-y-3">
+              <Inbox className="w-8 h-8 text-muted mx-auto" />
+              <h4 className="text-sm font-bold text-ink">No Landing Page Leads Yet</h4>
+              <p className="text-xs text-muted max-w-sm mx-auto">
+                Whenever someone fills out the demo request form on the landing page, their contact details and message will appear here in real-time.
+              </p>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {contactLeads.map((lead) => {
+                const whatsappUrl = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                  `Namaste ${lead.name} ji, thank you for reaching out to leadNivash regarding your agency ${lead.agencyName || ''} in ${lead.city || ''}. We would love to give you a live product walkthrough. When is a good time to connect?`
+                )}`;
+
+                const formattedDate = lead.createdAt
+                  ? new Date(lead.createdAt).toLocaleString('en-IN', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
+                  : 'Recent';
+
+                return (
+                  <Card
+                    key={lead._id}
+                    className="p-5 space-y-4 border-emerald-500/25 hover:border-emerald-600/60 transition shadow-card bg-gradient-to-br from-white via-white to-emerald-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/15"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border/70">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-100 to-teal-50 dark:from-emerald-950 dark:to-slate-900 flex items-center justify-center font-black text-emerald-800 dark:text-emerald-300 text-sm shadow-2xs border border-emerald-500/20">
+                          {lead.name.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-base font-black text-ink font-heading leading-tight">
+                              {lead.name}
+                            </h3>
+                            {lead.agencyName && (
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-100/80 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-[10px] font-bold">
+                                {lead.agencyName}
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-xs text-muted font-medium">{lead.phone}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] text-muted flex items-center gap-1 font-medium">
+                          <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                          {formattedDate}
+                        </span>
+
+                        {lead.city && (
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                            {lead.city}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Message / Query */}
+                    <div className="text-xs text-slate-700 dark:text-slate-300 p-3 rounded-xl bg-surface border border-border/70 leading-relaxed flex items-start gap-2">
+                      <MessageSquare className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <span>"{lead.message}"</span>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={`tel:${lead.phone}`}
+                          className="px-3.5 py-1.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold flex items-center gap-1.5"
+                        >
+                          <Phone className="w-3.5 h-3.5" />
+                          <span>Call</span>
+                        </a>
+
+                        <a
+                          href={whatsappUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>Reply on WhatsApp</span>
+                        </a>
+                      </div>
+
+                      <div className="text-[11px] text-muted flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Saved to MongoDB Atlas</span>
                       </div>
                     </div>
                   </Card>

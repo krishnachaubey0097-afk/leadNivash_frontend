@@ -2660,19 +2660,58 @@
       updateLandingCalc();
     }
 
-    // Inquiry Form
-    function handleInquirySubmit(e) {
+    // Inquiry Form - Live Backend Submission to MongoDB Atlas
+    async function handleInquirySubmit(e) {
       e.preventDefault();
+      const name = document.getElementById('inq-name')?.value?.trim();
+      const phone = document.getElementById('inq-phone')?.value?.trim();
+      const agencyName = document.getElementById('inq-agency')?.value?.trim();
+      const city = document.getElementById('inq-city')?.value?.trim();
       const btn = document.getElementById('inq-btn');
       const success = document.getElementById('inq-success');
+
+      if (!name || !phone || !agencyName || !city) {
+        alert('Please fill in all required fields (Name, WhatsApp, Agency, and City).');
+        return;
+      }
+
       btn.innerText = 'Submitting...';
       btn.disabled = true;
 
-      setTimeout(() => {
-        btn.parentElement.classList.add('hidden');
-        success.classList.remove('hidden');
-        lucide.createIcons();
-      }, 600);
+      try {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const endpoint = isLocal
+          ? 'http://localhost:5000/api/v1/public/contact'
+          : 'https://leadnivash.onrender.com/api/v1/public/contact';
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            phone,
+            agencyName,
+            city,
+            message: `[Demo Request] Inbound form lead from landing page for ${agencyName} (${city}).`,
+          }),
+        });
+
+        const json = await res.json();
+        if (res.ok && json.success) {
+          btn.parentElement.classList.add('hidden');
+          success.classList.remove('hidden');
+          if (window.lucide) {
+            window.lucide.createIcons();
+          }
+        } else {
+          throw new Error(json?.error?.message || 'Failed to submit demo request.');
+        }
+      } catch (err) {
+        console.error('Demo inquiry submission error:', err);
+        alert('Could not submit demo request: ' + (err.message || 'Please check your connection and try again.'));
+        btn.innerText = 'Request My Free Demo';
+        btn.disabled = false;
+      }
     }
 
     // Mobile Navigation Drawer Toggle

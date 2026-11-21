@@ -148,7 +148,7 @@ export const LandingPage: React.FC = () => {
 
     setFormSubmitting(true);
     try {
-      await apiClient.post('/contact', {
+      await apiClient.post('/public/contact', {
         name: formName.trim(),
         phone: formPhone.trim(),
         agencyName: formAgency.trim(),
@@ -157,9 +157,12 @@ export const LandingPage: React.FC = () => {
       });
       setFormSuccess(true);
     } catch (err: any) {
-      console.warn('Backend inquiry submission note:', err);
-      // Graceful fallback to guarantee zero lost leads
-      setFormSuccess(true);
+      console.warn('Backend inquiry submission error:', err);
+      const errMsg =
+        err?.response?.data?.error?.message ||
+        err?.message ||
+        'Could not submit demo request. Please verify your phone number and try again.';
+      setFormError(errMsg);
     } finally {
       setFormSubmitting(false);
     }
