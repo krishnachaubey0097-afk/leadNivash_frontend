@@ -26,6 +26,7 @@ import {
   ShieldCheck,
   Download,
   Send,
+  Trash2,
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -36,6 +37,7 @@ import {
   fetchPropertyById,
   createProperty,
   updatePropertyStatus,
+  deleteProperty,
   type PropertyItem,
   type CreatePropertyDto,
 } from '../../lib/api/properties';
@@ -46,10 +48,23 @@ import clsx from 'clsx';
 // 1. PROPERTY LIST & INVENTORY OVERVIEW PAGE
 // =========================================================================
 export const PropertiesListPage: React.FC = () => {
+  const { success, error } = useToast();
   const [properties, setProperties] = useState<PropertyItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+
+  const handleDeleteProperty = async (id: string, title: string) => {
+    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
+      try {
+        await deleteProperty(id);
+        setProperties((prev) => prev.filter((p) => p._id !== id));
+        success('Property listing deleted successfully');
+      } catch {
+        error('Failed to delete property listing');
+      }
+    }
+  };
 
   const loadProperties = async () => {
     setIsLoading(true);
@@ -295,6 +310,16 @@ export const PropertiesListPage: React.FC = () => {
                   >
                     <Send className="w-3.5 h-3.5" />
                   </a>
+
+                  {/* Delete Property Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteProperty(prop._id, prop.title)}
+                    className="p-1.5 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                    title="Delete Listing"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
 
                 <Link
@@ -819,13 +844,27 @@ export const PropertyNewPage: React.FC = () => {
 // =========================================================================
 export const PropertyDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { success } = useToast();
+  const navigate = useNavigate();
+  const { success, error } = useToast();
 
   const [property, setProperty] = useState<PropertyItem | null>(null);
   const [isOwnerRevealed, setIsOwnerRevealed] = useState(false);
   const [currentStatus, setCurrentStatus] = useState<PropertyItem['status']>('available');
   const [activeMediaIndex, setActiveMediaIndex] = useState<number>(0);
   const [activeMediaType, setActiveMediaType] = useState<'photo' | 'video'>('photo');
+
+  const handleDelete = async () => {
+    if (!property) return;
+    if (window.confirm(`Are you sure you want to permanently delete this listing ("${property.title}")?`)) {
+      try {
+        await deleteProperty(property._id);
+        success('Property listing deleted successfully');
+        navigate('/app/properties');
+      } catch {
+        error('Failed to delete property listing');
+      }
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -871,12 +910,24 @@ export const PropertyDetailPage: React.FC = () => {
           <span>Back to Inventory</span>
         </Link>
 
-        <Link to={`/app/properties/${property._id}/share`}>
-          <Button size="sm" pill className="font-bold text-xs flex items-center gap-1.5">
-            <Share2 className="w-3.5 h-3.5" />
-            <span>Generate Masked Flyer</span>
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="px-3 py-1.5 rounded-full border border-rose-200 dark:border-rose-900/60 bg-rose-50/70 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 text-xs font-bold flex items-center gap-1.5 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition cursor-pointer"
+            title="Delete Listing"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Delete</span>
+          </button>
+
+          <Link to={`/app/properties/${property._id}/share`}>
+            <Button size="sm" pill className="font-bold text-xs flex items-center gap-1.5">
+              <Share2 className="w-3.5 h-3.5" />
+              <span>Generate Masked Flyer</span>
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Main Detail Card */}

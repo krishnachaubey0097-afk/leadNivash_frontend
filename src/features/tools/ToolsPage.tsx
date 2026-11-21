@@ -12,6 +12,7 @@ import {
   ChevronUp,
   Layers,
   Send,
+  ArrowLeft,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -34,7 +35,61 @@ export const ToolsPage: React.FC = () => {
   const { user } = useAuth();
   const { success } = useToast();
   const [activeTab, setActiveTab] = useState<'area' | 'registry' | 'emi' | 'commission' | 'templates'>('area');
+  const [mobileSelectedTool, setMobileSelectedTool] = useState<'area' | 'registry' | 'emi' | 'commission' | 'templates' | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const toolsList = [
+    {
+      id: 'area' as const,
+      label: 'Area Converter',
+      icon: Maximize2,
+      badge: 'Gaj · Sq Ft · Kanal',
+      desc: 'Instant Haryana land unit conversion with 1-click WhatsApp quotes',
+      gradient: 'from-emerald-500/10 via-white to-emerald-100/30 dark:from-emerald-950/40 dark:via-slate-900 dark:to-slate-900',
+      borderColor: 'border-emerald-500/30',
+      iconBg: 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
+    },
+    {
+      id: 'registry' as const,
+      label: 'Haryana Registry & Stamp Duty',
+      icon: Building2,
+      badge: 'Circle Rate · 5% - 7%',
+      desc: 'Official Tehsil stamp fee calculator with male/female concessions',
+      gradient: 'from-teal-500/10 via-white to-teal-100/30 dark:from-teal-950/40 dark:via-slate-900 dark:to-slate-900',
+      borderColor: 'border-teal-500/30',
+      iconBg: 'bg-teal-500/10 text-teal-700 dark:bg-teal-950 dark:text-teal-300',
+    },
+    {
+      id: 'emi' as const,
+      label: 'Home Loan EMI Calculator',
+      icon: Calculator,
+      badge: 'Amount · ROI · Tenure',
+      desc: 'Detailed monthly installments, interest breakdown & client WhatsApp quotation',
+      gradient: 'from-emerald-600/10 via-white to-emerald-100/30 dark:from-emerald-950/40 dark:via-slate-900 dark:to-slate-900',
+      borderColor: 'border-emerald-600/30',
+      iconBg: 'bg-emerald-600/10 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
+    },
+    {
+      id: 'commission' as const,
+      label: 'Brokerage & Commission Splitter',
+      icon: TrendingUp,
+      badge: '1% - 2% Deals · Co-Brokers',
+      desc: 'Calculate total brokerage earned and accurate co-brokerage shares',
+      gradient: 'from-blue-500/10 via-white to-blue-100/30 dark:from-blue-950/40 dark:via-slate-900 dark:to-slate-900',
+      borderColor: 'border-blue-500/30',
+      iconBg: 'bg-blue-500/10 text-blue-700 dark:bg-blue-950 dark:text-blue-300',
+    },
+    {
+      id: 'templates' as const,
+      label: 'WhatsApp Deal Templates',
+      icon: MessageSquare,
+      badge: 'Pre-formatted Chips',
+      desc: 'Instant deal pitch chips, bayana receipts & Tehsil document checklists',
+      gradient: 'from-slate-900/5 via-white to-emerald-500/10 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20',
+      borderColor: 'border-slate-500/30',
+      iconBg: 'bg-slate-900/10 text-slate-800 dark:bg-slate-800 dark:text-slate-200',
+    },
+  ];
 
   const agencyName = user?.agency?.name?.trim();
   const ownerName = user?.name?.trim();
@@ -211,20 +266,17 @@ ${agencyOrOwnerName}`;
         </div>
       </div>
 
-      {/* Segmented Top Navigation Tabs with 2D Icons */}
-      <div className="flex p-1 bg-slate-200/70 dark:bg-slate-800/80 rounded-full border border-border/80 overflow-x-auto scrollbar-none">
-        {[
-          { id: 'area', label: 'Area Converter', icon: Maximize2 },
-          { id: 'registry', label: 'Registry & Stamp', icon: Building2 },
-          { id: 'emi', label: 'Home Loan EMI', icon: Calculator },
-          { id: 'commission', label: 'Brokerage Split', icon: TrendingUp },
-          { id: 'templates', label: 'WhatsApp Chips', icon: MessageSquare },
-        ].map((tab) => {
+      {/* Desktop Top Navigation Tabs (Quixotic Segmented Control) */}
+      <div className="hidden lg:flex p-1 bg-slate-200/70 dark:bg-slate-800/80 rounded-full border border-border/80 overflow-x-auto scrollbar-none">
+        {toolsList.map((tab) => {
           const Icon = tab.icon;
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                setMobileSelectedTool(tab.id);
+              }}
               className={clsx(
                 'px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer flex items-center gap-1.5',
                 activeTab === tab.id
@@ -238,6 +290,90 @@ ${agencyOrOwnerName}`;
           );
         })}
       </div>
+
+      {/* ======================================================== */}
+      {/* MOBILE & TABLET: DEDICATED TOOL BUTTONS (User Requirement 4) */}
+      {/* ======================================================== */}
+      <div className="lg:hidden">
+        {mobileSelectedTool === null ? (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-xs font-black uppercase tracking-wider text-muted">
+                Tap Any Tool to Open
+              </span>
+              <span className="text-[11px] font-bold text-brand-700 dark:text-brand-400">
+                5 Calculators Ready
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              {toolsList.map((tool) => {
+                const Icon = tool.icon;
+                return (
+                  <button
+                    key={tool.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveTab(tool.id);
+                      setMobileSelectedTool(tool.id);
+                    }}
+                    className={clsx(
+                      'w-full text-left p-4.5 rounded-3xl border transition-all cursor-pointer shadow-sm hover:shadow-md active:scale-[0.98] flex flex-col justify-between gap-3 bg-gradient-to-br',
+                      tool.gradient,
+                      tool.borderColor
+                    )}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className={clsx('w-10 h-10 rounded-2xl flex items-center justify-center shadow-xs', tool.iconBg)}>
+                        <Icon className="w-5 h-5 stroke-[2.2]" />
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full bg-white/85 dark:bg-slate-800/85 text-ink text-[10px] font-black border border-border/60 shadow-2xs">
+                        {tool.badge}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm font-black text-ink font-heading leading-snug">
+                        {tool.label}
+                      </h3>
+                      <p className="text-[11px] text-muted mt-1 leading-relaxed">
+                        {tool.desc}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs font-bold text-brand-700 dark:text-brand-400">
+                      <span>Open Calculator</span>
+                      <span className="text-sm font-black">→</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          /* When a tool is selected on Mobile/Tablet: Clean Header with Back Button */
+          <div className="flex items-center justify-between p-3 rounded-2xl bg-gradient-to-r from-emerald-50/70 via-white to-emerald-100/30 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border border-emerald-500/25 mb-4 shadow-xs">
+            <button
+              type="button"
+              onClick={() => setMobileSelectedTool(null)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 text-xs font-black text-ink hover:bg-slate-100 transition cursor-pointer border border-border shadow-2xs"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 text-brand-700" />
+              <span>← All Tools</span>
+            </button>
+
+            <div className="text-right">
+              <span className="text-[10px] uppercase font-bold text-muted block">Active Tool</span>
+              <span className="text-xs font-black text-brand-700 dark:text-brand-400">
+                {toolsList.find((t) => t.id === activeTab)?.label}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Tool Workspaces Container (Visible on Desktop always; on Mobile/Tab when a tool is selected) */}
+      <div className={clsx(mobileSelectedTool === null ? 'hidden lg:block' : 'block')}>
 
       {/* ======================================================== */}
       {/* TOOL 1: AREA UNIT CONVERTER                              */}
@@ -1172,6 +1308,7 @@ ${agencyOrOwnerName}`;
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

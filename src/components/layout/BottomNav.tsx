@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Building2, Users, Wrench } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, Inbox, Wrench } from 'lucide-react';
 import clsx from 'clsx';
 
 export const BottomNav: React.FC = () => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-xl border-t border-border/80 pb-safe shadow-2xl lg:hidden transition-all select-none">
-      <div className="max-w-md mx-auto px-4 h-16 flex items-center justify-around">
+      <div className="max-w-md mx-auto px-2 h-16 flex items-center justify-around">
         {/* 1. Dashboard */}
         <NavLink
           to="/app"
@@ -71,7 +71,28 @@ export const BottomNav: React.FC = () => {
           )}
         </NavLink>
 
-        {/* 4. Tools */}
+        {/* 4. Inquiries (Property & Buyer unified) */}
+        <NavLink
+          to="/app/inquiries"
+          className={({ isActive }) =>
+            clsx(
+              'flex flex-col items-center justify-center flex-1 py-1 text-[10px] font-bold transition-colors relative',
+              isActive ? 'text-brand-700 dark:text-brand-600' : 'text-muted hover:text-ink'
+            )
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <Inbox className={clsx('w-5 h-5 mb-0.5', isActive && 'stroke-[2.5]')} />
+              <span>Inquiries</span>
+              {isActive && (
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-600 absolute bottom-0" />
+              )}
+            </>
+          )}
+        </NavLink>
+
+        {/* 5. Tools */}
         <NavLink
           to="/app/tools"
           className={({ isActive }) =>

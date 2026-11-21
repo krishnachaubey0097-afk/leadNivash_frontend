@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   ChevronRight,
   Building2,
+  Trash2,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -23,6 +24,7 @@ import {
   fetchBuyerById,
   createBuyer,
   fetchBuyerMatches,
+  deleteBuyer,
   type BuyerItem,
   type CreateBuyerDto,
   type BuyerMatchResult,
@@ -33,10 +35,23 @@ import clsx from 'clsx';
 // 1. BUYERS LIST PAGE
 // =========================================================================
 export const BuyersListPage: React.FC = () => {
+  const { success, error } = useToast();
   const [buyers, setBuyers] = useState<BuyerItem[]>([]);
   const [urgencyFilter, setUrgencyFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const handleDeleteBuyer = async (id: string, name: string) => {
+    if (window.confirm(`Are you sure you want to delete buyer requirement for "${name}"?`)) {
+      try {
+        await deleteBuyer(id);
+        setBuyers((prev) => prev.filter((b) => b._id !== id));
+        success('Buyer inquiry deleted successfully');
+      } catch {
+        error('Failed to delete buyer inquiry');
+      }
+    }
+  };
 
   const loadBuyers = async () => {
     setIsLoading(true);
@@ -241,15 +256,27 @@ export const BuyersListPage: React.FC = () => {
 
               {/* Action Strip */}
               <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between gap-2">
-                <a
-                  href={`https://wa.me/${buyer.phone.replace(/[^0-9]/g, '')}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold flex items-center gap-1 transition"
-                >
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  <span>WhatsApp</span>
-                </a>
+                <div className="flex items-center gap-1.5">
+                  <a
+                    href={`https://wa.me/${buyer.phone.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold flex items-center gap-1 transition"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>WhatsApp</span>
+                  </a>
+
+                  {/* Delete Buyer Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteBuyer(buyer._id, buyer.name)}
+                    className="p-1.5 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                    title="Delete Buyer Inquiry"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
 
                 <Link
                   to={`/app/buyers/${buyer._id}`}
@@ -550,9 +577,24 @@ export const BuyerNewPage: React.FC = () => {
 // =========================================================================
 export const BuyerDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { success, error } = useToast();
   const [buyer, setBuyer] = useState<BuyerItem | null>(null);
   const [matches, setMatches] = useState<BuyerMatchResult[]>([]);
   const [isLoadingMatches, setIsLoadingMatches] = useState(true);
+
+  const handleDelete = async () => {
+    if (!buyer) return;
+    if (window.confirm(`Are you sure you want to permanently delete buyer requirement for "${buyer.name}"?`)) {
+      try {
+        await deleteBuyer(buyer._id);
+        success('Buyer inquiry deleted successfully');
+        navigate('/app/buyers');
+      } catch {
+        error('Failed to delete buyer inquiry');
+      }
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -583,15 +625,27 @@ export const BuyerDetailPage: React.FC = () => {
           <span>Back to Inquiries</span>
         </Link>
 
-        <a
-          href={`https://wa.me/${buyer.phone.replace(/[^0-9]/g, '')}`}
-          target="_blank"
-          rel="noreferrer"
-          className="px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
-        >
-          <MessageCircle className="w-3.5 h-3.5" />
-          <span>Chat on WhatsApp</span>
-        </a>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="px-3 py-1.5 rounded-full border border-rose-200 dark:border-rose-900/60 bg-rose-50/70 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 text-xs font-bold flex items-center gap-1.5 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition cursor-pointer"
+            title="Delete Buyer Inquiry"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Delete</span>
+          </button>
+
+          <a
+            href={`https://wa.me/${buyer.phone.replace(/[^0-9]/g, '')}`}
+            target="_blank"
+            rel="noreferrer"
+            className="px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
+          >
+            <MessageCircle className="w-3.5 h-3.5" />
+            <span>Chat on WhatsApp</span>
+          </a>
+        </div>
       </div>
 
       {/* Buyer Overview Card */}
