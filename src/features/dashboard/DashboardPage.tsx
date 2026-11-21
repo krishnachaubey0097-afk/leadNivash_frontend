@@ -14,6 +14,7 @@ import {
   Calendar,
   Building2,
   Plus,
+  HelpCircle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -25,6 +26,7 @@ import { parseMessage, type ParseResult } from '../../lib/api/parse';
 import { fetchProperties, type PropertyItem } from '../../lib/api/properties';
 import { fetchBuyers, type BuyerItem } from '../../lib/api/buyers';
 import { useToast } from '../../components/ui/Toast';
+import { startInteractiveTour } from '../onboarding/OnboardingTour';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -224,8 +226,18 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right side controls: Date pill & Segmented Toggle */}
-        <div className="flex items-center gap-2.5">
+        {/* Right side controls: Tour, Date pill & Segmented Toggle */}
+        <div className="flex items-center gap-2.5 flex-wrap justify-end">
+          <button
+            type="button"
+            onClick={() => startInteractiveTour()}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition shadow-2xs cursor-pointer"
+            title="Start Interactive Product Tour"
+          >
+            <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Product Tour</span>
+          </button>
+
           <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-xs border border-border/70 text-xs font-semibold text-muted shadow-2xs">
             <Calendar className="w-3.5 h-3.5 text-brand-600" />
             <span>
@@ -284,7 +296,7 @@ export const DashboardPage: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0 flex-wrap justify-center sm:justify-start">
                 <Link to="/app/properties/new">
                   <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">
                     <Plus className="w-3.5 h-3.5 mr-1" />
@@ -297,6 +309,14 @@ export const DashboardPage: React.FC = () => {
                     <span>Quick Chat</span>
                   </Button>
                 </Link>
+                <button
+                  type="button"
+                  onClick={() => startInteractiveTour()}
+                  className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-slate-700 border border-emerald-500/30 text-xs font-bold text-emerald-800 dark:text-emerald-300 transition shadow-2xs flex items-center gap-1.5 cursor-pointer"
+                >
+                  <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Take Guided Tour</span>
+                </button>
               </div>
             </div>
           )}
