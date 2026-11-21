@@ -1907,45 +1907,77 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
-            <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/40 hover:shadow-lg transition-all space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+            <Link
+              to="/app/tools/area"
+              className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/50 hover:shadow-lg transition-all space-y-3 group cursor-pointer block"
+            >
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold group-hover:scale-105 transition-transform">
                 <Maximize2 className="w-5 h-5 stroke-[2.2]" />
               </div>
-              <h3 className="text-base font-bold text-slate-900 font-heading">Area Unit Converter</h3>
+              <h3 className="text-base font-bold text-slate-900 font-heading group-hover:text-emerald-700 transition">
+                Area Unit Converter
+              </h3>
               <p className="text-xs text-muted leading-relaxed">
                 Convert Gaj, Marla (25 / 30.25 local standard), Biswa, Bigha, Kanal, and Sq. Feet instantly for north Indian registries.
               </p>
-            </div>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 group-hover:underline pt-1">
+                Open Converter →
+              </span>
+            </Link>
 
-            <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/40 hover:shadow-lg transition-all space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+            <Link
+              to="/app/tools/registry"
+              className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/50 hover:shadow-lg transition-all space-y-3 group cursor-pointer block"
+            >
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold group-hover:scale-105 transition-transform">
                 <Building2 className="w-5 h-5 stroke-[2.2]" />
               </div>
-              <h3 className="text-base font-bold text-slate-900 font-heading">Registry & Stamp Duty</h3>
+              <h3 className="text-base font-bold text-slate-900 font-heading group-hover:text-emerald-700 transition">
+                Registry & Stamp Duty
+              </h3>
               <p className="text-xs text-muted leading-relaxed">
                 Estimate official Haryana & Punjab circle rates, male (7%), female (5%), and joint registration charges with zero manual math.
               </p>
-            </div>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 group-hover:underline pt-1">
+                Estimate Registry Fees →
+              </span>
+            </Link>
 
-            <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/40 hover:shadow-lg transition-all space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+            <Link
+              to="/app/tools/emi"
+              className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/50 hover:shadow-lg transition-all space-y-3 group cursor-pointer block"
+            >
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold group-hover:scale-105 transition-transform">
                 <Calculator className="w-5 h-5 stroke-[2.2]" />
               </div>
-              <h3 className="text-base font-bold text-slate-900 font-heading">Home Loan EMI</h3>
+              <h3 className="text-base font-bold text-slate-900 font-heading group-hover:text-emerald-700 transition">
+                Home Loan EMI
+              </h3>
               <p className="text-xs text-muted leading-relaxed">
                 Calculate accurate monthly EMI, principal-interest breakdown, and client eligibility for instant WhatsApp deal quotes.
               </p>
-            </div>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 group-hover:underline pt-1">
+                Calculate Loan EMI →
+              </span>
+            </Link>
 
-            <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/40 hover:shadow-lg transition-all space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+            <Link
+              to="/app/tools/commission"
+              className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:border-emerald-500/50 hover:shadow-lg transition-all space-y-3 group cursor-pointer block"
+            >
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold group-hover:scale-105 transition-transform">
                 <TrendingUp className="w-5 h-5 stroke-[2.2]" />
               </div>
-              <h3 className="text-base font-bold text-slate-900 font-heading">Commission Split</h3>
+              <h3 className="text-base font-bold text-slate-900 font-heading group-hover:text-emerald-700 transition">
+                Commission Split
+              </h3>
               <p className="text-xs text-muted leading-relaxed">
                 Compute 1% - 2% brokerage, agent agency share, and 50/50 co-broker splits with clean, shareable settlement sheets.
               </p>
-            </div>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 group-hover:underline pt-1">
+                Split Commission →
+              </span>
+            </Link>
           </div>
 
           <div className="pt-2">

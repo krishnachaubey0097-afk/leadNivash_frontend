@@ -14,7 +14,14 @@ export const TopBar: React.FC = () => {
     if (pathname === '/app/paste') return { title: 'Quick Paste', subtitle: 'AI WhatsApp Parser' };
     if (pathname === '/app/buyers/new') return { title: 'New Buyer', subtitle: 'Add Requirement' };
     if (pathname.startsWith('/app/buyers')) return { title: 'Buyers', subtitle: 'Active Inquiries' };
-    if (pathname.startsWith('/app/tools')) return { title: 'Tools', subtitle: 'Calculators & Watermark' };
+    if (pathname.startsWith('/app/tools')) {
+      if (pathname.includes('/emi')) return { title: 'EMI Calculator', subtitle: 'Home Loan & Quotation' };
+      if (pathname.includes('/area')) return { title: 'Area Converter', subtitle: 'Gaj, Marla, Kanal' };
+      if (pathname.includes('/registry')) return { title: 'Haryana Registry', subtitle: 'Stamp Duty & Fees' };
+      if (pathname.includes('/commission')) return { title: 'Commission Split', subtitle: 'Brokerage & Payouts' };
+      if (pathname.includes('/templates')) return { title: 'WhatsApp Templates', subtitle: 'Quick Deal Chips' };
+      return { title: 'Tools', subtitle: 'Calculators & Toolkit' };
+    }
     if (pathname.startsWith('/app/inquiries')) return { title: 'Inquiries', subtitle: 'Lead Inbox' };
     if (pathname.startsWith('/app/settings')) return { title: 'Settings', subtitle: 'Agency & Profile' };
     if (pathname.startsWith('/app/admin')) return { title: 'Admin Console', subtitle: 'System Control' };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Copy,
   Check,
@@ -14,6 +15,7 @@ import {
   Layers,
   Send,
   ArrowLeft,
+  CheckCircle2,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -32,63 +34,115 @@ import {
 } from '../../lib/calculators';
 import clsx from 'clsx';
 
+export type ToolId = 'area' | 'registry' | 'emi' | 'commission' | 'templates';
+
 export const ToolsPage: React.FC = () => {
+  const { toolId } = useParams<{ toolId?: string }>();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
   const { user } = useAuth();
   const { success } = useToast();
-  const [activeTab, setActiveTab] = useState<'area' | 'registry' | 'emi' | 'commission' | 'templates'>('area');
-  const [mobileSelectedTool, setMobileSelectedTool] = useState<'area' | 'registry' | 'emi' | 'commission' | 'templates' | null>(null);
+
+  const validTools: ToolId[] = ['emi', 'registry', 'area', 'commission', 'templates'];
+  const rawToolId = (toolId || searchParams.get('tool') || searchParams.get('tab')) as ToolId | undefined;
+  const activeTool: ToolId | null = rawToolId && validTools.includes(rawToolId) ? rawToolId : null;
+
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleSelectTool = (id: ToolId) => {
+    navigate(`/app/tools/${id}`);
+  };
+
+  const handleBackToHub = () => {
+    navigate('/app/tools');
+  };
 
   const toolsList = [
     {
-      id: 'area' as const,
-      label: 'Area Converter',
-      icon: Maximize2,
-      badge: 'Gaj · Sq Ft · Kanal',
-      desc: 'Instant Haryana land unit conversion with 1-click WhatsApp quotes',
-      gradient: 'from-emerald-500/10 via-white to-emerald-100/30 dark:from-emerald-950/40 dark:via-slate-900 dark:to-slate-900',
-      borderColor: 'border-emerald-500/30',
-      iconBg: 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
+      id: 'emi' as const,
+      label: 'Home Loan EMI Calculator',
+      icon: Calculator,
+      badge: 'Amount · ROI · Tenure',
+      desc: 'Detailed monthly installments, interest breakdown, down payment planning & client WhatsApp quotation.',
+      features: [
+        'Adjust Loan Principal, ROI (8.5% benchmark) & Tenure (5 - 30 yrs)',
+        'Property Cost & Down Payment Planning Mode',
+        'Year-by-Year Amortization Schedule & Balance Payoff',
+        '1-Tap Client WhatsApp Quotation Generator',
+      ],
+      gradient: 'from-emerald-600/10 via-white to-emerald-100/30 dark:from-emerald-950/40 dark:via-slate-900 dark:to-slate-900',
+      borderColor: 'border-emerald-600/30',
+      iconBg: 'bg-emerald-600/10 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
+      tag: 'Most Popular',
     },
     {
       id: 'registry' as const,
       label: 'Haryana Registry & Stamp Duty',
       icon: Building2,
       badge: 'Circle Rate · 5% - 7%',
-      desc: 'Official Tehsil stamp fee calculator with male/female concessions',
+      desc: 'Official Tehsil stamp fee estimator with female concession (5%), male rate (7%), and municipal cess.',
+      features: [
+        'Property Circle Rate & Total Consideration Value',
+        'Female (5%), Male (7%) & Joint (6%) Ownership Concessions',
+        'Urban Municipal Area (+2%) vs Rural Gram Panchayat',
+        'Itemized Government Registration Fees & Stamp Breakdown',
+      ],
       gradient: 'from-teal-500/10 via-white to-teal-100/30 dark:from-teal-950/40 dark:via-slate-900 dark:to-slate-900',
       borderColor: 'border-teal-500/30',
       iconBg: 'bg-teal-500/10 text-teal-700 dark:bg-teal-950 dark:text-teal-300',
+      tag: 'Tehsil Standard',
     },
     {
-      id: 'emi' as const,
-      label: 'Home Loan EMI Calculator',
-      icon: Calculator,
-      badge: 'Amount · ROI · Tenure',
-      desc: 'Detailed monthly installments, interest breakdown & client WhatsApp quotation',
-      gradient: 'from-emerald-600/10 via-white to-emerald-100/30 dark:from-emerald-950/40 dark:via-slate-900 dark:to-slate-900',
-      borderColor: 'border-emerald-600/30',
-      iconBg: 'bg-emerald-600/10 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
+      id: 'area' as const,
+      label: 'Area Unit Converter',
+      icon: Maximize2,
+      badge: 'Gaj · Sq Ft · Kanal',
+      desc: 'Instant Haryana land unit conversion between Gaj, Marla (25 / 30.25 local standard), Kanal, and Sq. Feet.',
+      features: [
+        'Instant multi-unit conversion grid (Gaj, Sq.Ft, Sq.Mt, Marla, Bigha, Acre)',
+        'One-click quick presets: 100, 180, 250, 350, 500 Gaj & 1 Kanal',
+        'Panipat 25 Gaj local & 30.25 Haryana standard calculation',
+        '1-Tap WhatsApp Plot Size Statement Generator',
+      ],
+      gradient: 'from-emerald-500/10 via-white to-emerald-100/30 dark:from-emerald-950/40 dark:via-slate-900 dark:to-slate-900',
+      borderColor: 'border-emerald-500/30',
+      iconBg: 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
+      tag: 'Field Essential',
     },
     {
       id: 'commission' as const,
       label: 'Brokerage & Commission Splitter',
       icon: TrendingUp,
       badge: '1% - 2% Deals · Co-Brokers',
-      desc: 'Calculate total brokerage earned and accurate co-brokerage shares',
+      desc: 'Calculate total brokerage earned, partner co-broker splits, and net agency take-home payout.',
+      features: [
+        '1.0% (Single Side), 2.0% (Both Sides), 0.5% (Large Ticket)',
+        '50/50 Equal Co-Broker & 60/40 Lead Broker Splits',
+        'Agency House Share Cut (0% Solo, 10%, 20%, 30%)',
+        'Transparent Deal Settlement Figures for Partners',
+      ],
       gradient: 'from-blue-500/10 via-white to-blue-100/30 dark:from-blue-950/40 dark:via-slate-900 dark:to-slate-900',
       borderColor: 'border-blue-500/30',
       iconBg: 'bg-blue-500/10 text-blue-700 dark:bg-blue-950 dark:text-blue-300',
+      tag: 'Co-Brokering',
     },
     {
       id: 'templates' as const,
       label: 'WhatsApp Deal Templates',
       icon: MessageSquare,
       badge: 'Pre-formatted Chips',
-      desc: 'Instant deal pitch chips, bayana receipts & Tehsil document checklists',
+      desc: 'Instant deal pitch chips, bayana advance receipts & Tehsil document checklists ready to forward.',
+      features: [
+        'Site Visit Confirmation with Google Maps Location Pin',
+        'Token Advance / Bayana Formal Receipt Note',
+        'Tehsil Registry Document Checklist (Aadhaar, PAN, Witnesses, NOC)',
+        '1-Click Copy and Direct Share to WhatsApp',
+      ],
       gradient: 'from-slate-900/5 via-white to-emerald-500/10 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20',
       borderColor: 'border-slate-500/30',
       iconBg: 'bg-slate-900/10 text-slate-800 dark:bg-slate-800 dark:text-slate-200',
+      tag: '1-Tap Messages',
     },
   ];
 
@@ -249,78 +303,38 @@ ${agencyOrOwnerName}`;
 
   return (
     <div className="space-y-5 max-w-4xl mx-auto pb-16 text-left">
-      {/* Top Header with Apple Glass Gradient */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-white/95 via-emerald-50/70 to-emerald-100/40 backdrop-blur-xl border border-emerald-500/25 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
-              Broker Toolkit & Calculators
-            </h1>
-            <Badge variant="brand">
-              <Sparkles className="w-3 h-3 mr-1 inline" />
-              Calculators
-            </Badge>
-          </div>
-          <p className="text-xs text-muted mt-0.5">
-            Instant Haryana land unit conversion, registry stamp duty, EMI math & co-broker splits.
-          </p>
-        </div>
-      </div>
-
-      {/* Desktop Top Navigation Tabs (Apple Glass Segmented Control) */}
-      <div className="hidden lg:flex p-1 bg-slate-200/80 dark:bg-slate-800/80 rounded-full border border-border/80 overflow-x-auto scrollbar-none shadow-2xs">
-        {toolsList.map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => {
-                setActiveTab(tab.id);
-                setMobileSelectedTool(tab.id);
-              }}
-              className={clsx(
-                'px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer flex items-center gap-1.5',
-                activeTab === tab.id
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-xs'
-                  : 'text-muted hover:text-ink'
-              )}
-            >
-              <Icon className="w-3.5 h-3.5 shrink-0" />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* ======================================================== */}
-      {/* MOBILE & TABLET: DEDICATED APPLE GLASS TOOL CARDS        */}
-      {/* ======================================================== */}
-      <div className="lg:hidden">
-        {mobileSelectedTool === null ? (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-black uppercase tracking-wider text-muted">
-                Select a Broker Tool
-              </span>
-              <span className="text-[11px] font-bold text-brand-700 dark:text-brand-400">
-                5 Calculators Ready
-              </span>
+      {activeTool === null ? (
+        <div className="space-y-6 animate-hero-up">
+          {/* Top Header with Apple Glass Gradient */}
+          <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-white/95 via-emerald-50/70 to-emerald-100/40 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-emerald-950/20 backdrop-blur-xl border border-emerald-500/25 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
+                  Broker Toolkit & Calculators
+                </h1>
+                <Badge variant="brand">
+                  <Sparkles className="w-3 h-3 mr-1 inline" />
+                  5 Dedicated Tools
+                </Badge>
+              </div>
+              <p className="text-xs text-muted mt-1 max-w-xl">
+                Choose any tool below to launch its dedicated calculation workspace on desktop or mobile. Fast Haryana circle rates, EMI quotations, unit conversions & brokerage splits.
+              </p>
             </div>
+          </div>
 
-            <div className="space-y-3">
-              {toolsList.map((tool) => {
-                const Icon = tool.icon;
-                return (
-                  <button
-                    key={tool.id}
-                    type="button"
-                    onClick={() => {
-                      setActiveTab(tool.id);
-                      setMobileSelectedTool(tool.id);
-                    }}
-                    className="w-full text-left p-4 rounded-2xl bg-gradient-to-br from-white/95 via-white/90 to-emerald-50/40 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-emerald-950/20 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 hover:border-emerald-500/50 shadow-xs hover:shadow-md active:scale-[0.99] transition-all flex items-center justify-between gap-3.5 group cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3.5 min-w-0 flex-1">
+          {/* Grid of Dedicated Tool Cards (Responsive: 1-col on mobile, 2-col on desktop) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {toolsList.map((tool) => {
+              const Icon = tool.icon;
+              return (
+                <div
+                  key={tool.id}
+                  onClick={() => handleSelectTool(tool.id)}
+                  className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between space-y-4 group cursor-pointer text-left"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
                       <div
                         className={clsx(
                           'w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs shrink-0 transition-transform group-hover:scale-105 border border-emerald-500/20',
@@ -329,61 +343,110 @@ ${agencyOrOwnerName}`;
                       >
                         <Icon className="w-6 h-6 stroke-[2.2]" />
                       </div>
-
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-black text-ink font-heading truncate">
-                            {tool.label}
-                          </h3>
-                        </div>
-                        <p className="text-[11px] text-muted mt-0.5 line-clamp-1">
-                          {tool.desc}
-                        </p>
-                        <div className="mt-1.5 flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300 border border-border/60">
-                            {tool.badge}
-                          </span>
-                        </div>
-                      </div>
+                      <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30">
+                        {tool.tag}
+                      </span>
                     </div>
 
-                    <div className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-950/50 group-hover:bg-emerald-600 group-hover:text-white text-emerald-700 dark:text-emerald-400 flex items-center justify-center transition-colors shrink-0 border border-emerald-500/20">
-                      <ChevronRight className="w-4 h-4 stroke-[2.5]" />
+                    <div>
+                      <h3 className="text-base font-black text-ink font-heading group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                        {tool.label}
+                      </h3>
+                      <p className="text-xs text-muted mt-1 leading-relaxed">
+                        {tool.desc}
+                      </p>
                     </div>
+
+                    {/* Features List */}
+                    <div className="space-y-1.5 pt-1">
+                      {tool.features.map((feat, fIdx) => (
+                        <div key={fIdx} className="flex items-center gap-2 text-[11px] text-slate-600 dark:text-slate-400">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span className="truncate">{feat}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-border/70 flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-muted uppercase tracking-wider">
+                      {tool.badge}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelectTool(tool.id);
+                      }}
+                      className="px-4 py-2 rounded-full bg-emerald-600 group-hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer"
+                    >
+                      <span>Open Tool</span>
+                      <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        /* DEDICATED TOOL WORKSPACE INTERFACE */
+        <div className="space-y-5 animate-hero-up">
+          {/* Dedicated Header Bar with Back Button & Quick Switcher */}
+          <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-white/95 via-emerald-50/70 to-emerald-100/40 dark:from-slate-900/95 dark:via-slate-900/80 dark:to-emerald-950/30 backdrop-blur-md border border-emerald-500/25 shadow-xs space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={handleBackToHub}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-xs font-black text-ink hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer border border-border shadow-2xs self-start"
+              >
+                <ArrowLeft className="w-4 h-4 text-emerald-700" />
+                <span>← All Tools & Calculators</span>
+              </button>
+
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <span className="text-[10px] uppercase font-bold text-muted">Dedicated Tool:</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-extrabold text-xs border border-emerald-500/30">
+                  {toolsList.find((t) => t.id === activeTool)?.label}
+                </span>
+              </div>
+            </div>
+
+            {/* Quick Switcher Bar across all 5 tools */}
+            <div className="pt-2 border-t border-emerald-500/20 flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
+              <span className="text-[10px] font-bold uppercase text-muted whitespace-nowrap shrink-0">
+                Quick Switch:
+              </span>
+              {toolsList.map((t) => {
+                const Icon = t.icon;
+                const isSelected = activeTool === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => handleSelectTool(t.id)}
+                    className={clsx(
+                      'px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 shrink-0 border',
+                      isSelected
+                        ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs'
+                        : 'bg-white dark:bg-slate-800 text-muted hover:text-ink border-border/80'
+                    )}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{t.label}</span>
                   </button>
                 );
               })}
             </div>
           </div>
-        ) : (
-          /* When a tool is selected on Mobile/Tablet: Apple Glass Header with Back Button */
-          <div className="flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-white/95 via-emerald-50/70 to-emerald-100/40 backdrop-blur-md border border-emerald-500/25 mb-4 shadow-xs">
-            <button
-              type="button"
-              onClick={() => setMobileSelectedTool(null)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 text-xs font-black text-ink hover:bg-slate-100 transition cursor-pointer border border-border/80 shadow-2xs"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 text-brand-700" />
-              <span>← All Tools</span>
-            </button>
 
-            <div className="text-right">
-              <span className="text-[10px] uppercase font-bold text-muted block">Active Tool</span>
-              <span className="text-xs font-black text-brand-700 dark:text-brand-400">
-                {toolsList.find((t) => t.id === activeTab)?.label}
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Tool Workspaces Container (Visible on Desktop always; on Mobile/Tab when a tool is selected) */}
-      <div className={clsx(mobileSelectedTool === null ? 'hidden lg:block' : 'block')}>
+          {/* DEDICATED TOOL COMPONENT CONTAINER */}
+          <div>
 
       {/* ======================================================== */}
       {/* TOOL 1: AREA UNIT CONVERTER                              */}
       {/* ======================================================== */}
-      {activeTab === 'area' && (
+      {activeTool === 'area' && (
         <Card className="p-5 sm:p-6 space-y-5 border-emerald-500/30 shadow-card animate-in fade-in duration-200">
           <div>
             <h2 className="text-base font-black text-ink font-heading">
@@ -513,7 +576,7 @@ ${agencyOrOwnerName}`;
       {/* ======================================================== */}
       {/* TOOL 2: HARYANA REGISTRY & STAMP DUTY CALCULATOR         */}
       {/* ======================================================== */}
-      {activeTab === 'registry' && (
+      {activeTool === 'registry' && (
         <Card className="p-5 sm:p-6 space-y-5 border-emerald-500/30 shadow-card animate-in fade-in duration-200">
           <div>
             <h2 className="text-base font-black text-ink font-heading">
@@ -657,7 +720,7 @@ ${agencyOrOwnerName}`;
       {/* ======================================================== */}
       {/* TOOL 3: HOME LOAN & MONTHLY EMI CALCULATOR (ENHANCED)    */}
       {/* ======================================================== */}
-      {activeTab === 'emi' && (
+      {activeTool === 'emi' && (
         <Card className="p-5 sm:p-6 space-y-6 border-emerald-500/30 shadow-card animate-in fade-in duration-200">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/70">
             <div>
@@ -1167,7 +1230,7 @@ ${agencyOrOwnerName}`;
       {/* ======================================================== */}
       {/* TOOL 4: CO-BROKER COMMISSION SPLITTER                    */}
       {/* ======================================================== */}
-      {activeTab === 'commission' && (
+      {activeTool === 'commission' && (
         <Card className="p-5 sm:p-6 space-y-5 border-emerald-500/30 shadow-card animate-in fade-in duration-200">
           <div>
             <h2 className="text-base font-black text-ink font-heading">
@@ -1274,7 +1337,7 @@ ${agencyOrOwnerName}`;
       {/* ======================================================== */}
       {/* TOOL 5: WHATSAPP ACTION CHIPS & TEMPLATES                */}
       {/* ======================================================== */}
-      {activeTab === 'templates' && (
+      {activeTool === 'templates' && (
         <div className="space-y-4 animate-in fade-in duration-200">
           <div>
             <h2 className="text-base font-black text-ink font-heading">
@@ -1313,7 +1376,9 @@ ${agencyOrOwnerName}`;
           </div>
         </div>
       )}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
