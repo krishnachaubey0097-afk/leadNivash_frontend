@@ -63,11 +63,13 @@ export const ContactPage: React.FC = () => {
   const [honeypot, setHoneypot] = useState(''); // Hidden website field per PRD §5.1
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (honeypot) return; // Silent discard for bot spam
 
+    setErrorMsg(null);
     setLoading(true);
     try {
       await apiClient.post('/public/contact', {
@@ -79,9 +81,13 @@ export const ContactPage: React.FC = () => {
         website: honeypot,
       });
       setSubmitted(true);
-    } catch {
-      // Show fallback confirmation
-      setSubmitted(true);
+    } catch (err: any) {
+      console.warn('Contact inquiry submission failed:', err);
+      const msg =
+        err?.response?.data?.error?.message ||
+        err?.message ||
+        'Could not submit contact request. Please check your network and phone number.';
+      setErrorMsg(msg);
     } finally {
       setLoading(false);
     }
@@ -93,6 +99,12 @@ export const ContactPage: React.FC = () => {
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
       <h1 className="text-xl font-bold text-ink font-heading">Contact Founder & Support</h1>
+
+      {errorMsg && (
+        <div className="p-3.5 bg-rose-50 border border-rose-200 dark:bg-rose-950/40 dark:border-rose-900 rounded-card text-xs text-rose-700 dark:text-rose-300">
+          {errorMsg}
+        </div>
+      )}
 
       {submitted ? (
         <div className="p-4 bg-brand-50 border border-brand-600/30 rounded-card space-y-2 text-xs">

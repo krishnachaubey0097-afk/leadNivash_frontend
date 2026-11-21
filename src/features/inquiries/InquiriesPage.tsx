@@ -88,93 +88,39 @@ export const InquiriesPage: React.FC = () => {
       .finally(() => setIsLoadingContacts(false));
   }, []);
 
-  // Property Inquiries (Inbound flyer leads)
-  const [propertyInquiries, setPropertyInquiries] = useState<PropertyInquiry[]>([
-    {
-      id: 'prop_inq_1',
-      clientName: 'Amit Kumar',
-      clientPhone: '+919812055667',
-      propertyTitle: '3 BHK Luxury Builder Floor',
-      locality: 'Model Town, Panipat',
-      demand: '₹1.25 Cr',
-      date: 'Today, 10:15 AM',
-      message: 'Interested in 2nd floor with car parking. Can we visit tomorrow evening around 5 PM?',
-      status: 'new',
-    },
-    {
-      id: 'prop_inq_2',
-      clientName: 'Sanjay Singhal',
-      clientPhone: '+919416088990',
-      propertyTitle: '250 Gaj Residential Plot',
-      locality: 'Ansals Sushant City',
-      demand: '₹85 Lakhs',
-      date: 'Yesterday, 4:30 PM',
-      message: 'Looking for north-facing plot. Is the price negotiable for immediate cheque payment?',
-      status: 'new',
-    },
-    {
-      id: 'prop_inq_3',
-      clientName: 'Rohit Batra',
-      clientPhone: '+919896011223',
-      propertyTitle: '4 BHK Independent Designer Kothi',
-      locality: 'Sector 18, Panipat',
-      demand: '₹2.40 Cr',
-      date: '2 days ago',
-      message: 'Please send video walkthrough and circle rate details on WhatsApp.',
-      status: 'contacted',
-    },
-    {
-      id: 'prop_inq_4',
-      clientName: 'Deepak Chopra',
-      clientPhone: '+919813099887',
-      propertyTitle: 'Prime Main Market Commercial Shop',
-      locality: 'GT Road, Panipat',
-      demand: '₹95 Lakhs',
-      date: '3 days ago',
-      message: 'What is the current monthly rental yield and tenant status?',
-      status: 'converted',
-    },
-  ]);
+  // Property Inquiries (Inbound flyer leads fetched live from MongoDB)
+  const [propertyInquiries, setPropertyInquiries] = useState<PropertyInquiry[]>([]);
+  const [isLoadingPropertyInquiries, setIsLoadingPropertyInquiries] = useState(false);
+
+  useEffect(() => {
+    setIsLoadingPropertyInquiries(true);
+    apiClient
+      .get<any, any>('/inquiries')
+      .then((res) => {
+        const items = res?.items || (Array.isArray(res) ? res : []);
+        if (Array.isArray(items)) {
+          const mapped = items.map((inq: any) => ({
+            id: inq._id || inq.id,
+            clientName: inq.name || 'Inbound Lead',
+            clientPhone: inq.phoneE164 || inq.phone || '',
+            propertyTitle: inq.propertyId?.title || 'Shared Property Listing',
+            locality: inq.propertyId?.locality || 'Panipat',
+            demand: inq.propertyId?.priceDemandPaise
+              ? '₹' + (inq.propertyId.priceDemandPaise / 10000000).toFixed(2) + ' Cr'
+              : 'Available',
+            date: inq.createdAt ? new Date(inq.createdAt).toLocaleDateString() : 'Recent',
+            message: inq.message || 'Expressed interest via shared property flyer.',
+            status: (inq.status || 'new') as 'new' | 'contacted' | 'converted',
+          }));
+          setPropertyInquiries(mapped);
+        }
+      })
+      .catch((err) => console.warn('Could not load broker property inquiries:', err))
+      .finally(() => setIsLoadingPropertyInquiries(false));
+  }, []);
 
   // Buyer Inquiries (Inbound buyer requirements from WhatsApp/Portal)
-  const [buyerInquiries, setBuyerInquiries] = useState<BuyerInquiry[]>([
-    {
-      id: 'buyer_inq_1',
-      clientName: 'Sunil Jaglan',
-      clientPhone: '+919876500004',
-      requirement: 'Corner Commercial Shop for Retail',
-      locality: 'GT Road / Chandni Bagh',
-      budgetRange: '₹80 L - ₹1.10 Cr',
-      urgency: 'Immediate',
-      date: 'Today, 09:30 AM',
-      message: 'Urgent requirement. Cash ready. Need 40-60 Gaj commercial ground floor with good footfall.',
-      status: 'active',
-    },
-    {
-      id: 'buyer_inq_2',
-      clientName: 'Vikram Verma',
-      clientPhone: '+919876500002',
-      requirement: '200 to 250 Gaj Plot',
-      locality: 'Ansals Sushant City, Sector 18',
-      budgetRange: '₹75 L - ₹90 L',
-      urgency: 'Within Month',
-      date: 'Yesterday, 2:15 PM',
-      message: 'Wants wide road facing plot. Registry clear title only.',
-      status: 'active',
-    },
-    {
-      id: 'buyer_inq_3',
-      clientName: 'Anjali Gupta',
-      clientPhone: '+919876500003',
-      requirement: '4 BHK Modern Kothi / Villa',
-      locality: 'Sector 18, Panipat',
-      budgetRange: '₹2.00 Cr - ₹2.50 Cr',
-      urgency: 'Immediate',
-      date: '3 days ago',
-      message: 'High net worth client looking for ready-to-move bungalow with modern elevation.',
-      status: 'contacted',
-    },
-  ]);
+  const [buyerInquiries, setBuyerInquiries] = useState<BuyerInquiry[]>([]);
 
   const markPropertyStatus = (id: string, status: PropertyInquiry['status']) => {
     setPropertyInquiries((prev) =>
@@ -405,7 +351,11 @@ export const InquiriesPage: React.FC = () => {
             </span>
           </div>
 
-          {propertyInquiries.length === 0 ? (
+          {isLoadingPropertyInquiries ? (
+            <Card className="p-8 text-center space-y-2">
+              <p className="text-xs text-muted">Loading live broker inquiries...</p>
+            </Card>
+          ) : propertyInquiries.length === 0 ? (
             <Card className="p-8 text-center space-y-2">
               <Building2 className="w-8 h-8 text-muted mx-auto" />
               <p className="text-xs text-muted">No property inquiries yet.</p>

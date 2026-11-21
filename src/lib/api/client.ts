@@ -13,8 +13,11 @@ export const apiClient = axios.create({
   },
 });
 
-// Request Interceptor: Attach in-memory Bearer Token
+// Request Interceptor: Normalize redundant /api/v1/ prefix and attach in-memory Bearer Token
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (config.url && config.url.startsWith('/api/v1/')) {
+    config.url = config.url.substring(7); // Normalize '/api/v1/xyz' -> '/xyz'
+  }
   const token = tokenStore.get();
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;

@@ -90,7 +90,7 @@ export const LoginPage: React.FC = () => {
 
     setIsSendingOtp(true);
     try {
-      await apiClient.post('/api/v1/auth/send-otp', { email });
+      await apiClient.post('/auth/send-otp', { email });
       setOtpSent(true);
     } catch (err: any) {
       setErrorMsg(err?.message || 'Could not send verification code.');
@@ -110,7 +110,7 @@ export const LoginPage: React.FC = () => {
 
     setLoading(true);
     try {
-      await apiClient.post('/api/v1/auth/verify-otp', { email, otp: otpCode.trim() });
+      await apiClient.post('/auth/verify-otp', { email, otp: otpCode.trim() });
       await login(email, password || 'Broker@123456');
       navigate(from, { replace: true });
     } catch (err: any) {

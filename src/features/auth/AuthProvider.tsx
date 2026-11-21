@@ -3,6 +3,8 @@ import { apiClient } from '../../lib/api/client';
 import { refreshClient } from '../../lib/api/refreshClient';
 import { tokenStore } from '../../lib/api/tokenStore';
 import { useServerWaking } from '../../lib/hooks/useServerWaking';
+import { clearLocalPropertiesCache } from '../../lib/api/properties';
+import { clearLocalBuyersCache } from '../../lib/api/buyers';
 
 export interface UserPlan {
   tier: 'trial' | 'free' | 'pro' | 'agency';
@@ -107,6 +109,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [fetchCurrentUser]);
 
   const login = async (email: string, pass: string) => {
+    clearLocalPropertiesCache();
+    clearLocalBuyersCache();
     const res = await apiClient.post('/auth/login', { email, password: pass });
     const { accessToken, user: authUser } = res as any;
     tokenStore.set(accessToken);
@@ -121,6 +125,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     agencyName?: string;
     city?: string;
   }) => {
+    clearLocalPropertiesCache();
+    clearLocalBuyersCache();
     const res = (await apiClient.post('/auth/google', payload)) as any;
     if (res?.requiresPhone) {
       return { requiresPhone: true, user: res.user };
@@ -141,6 +147,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     agencyName?: string;
     city?: string;
   }) => {
+    clearLocalPropertiesCache();
+    clearLocalBuyersCache();
     const requestBody = {
       name: payload.name.trim(),
       email: payload.email.trim().toLowerCase(),
@@ -168,6 +176,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {
       // Ignore network errors on logout
     } finally {
+      clearLocalPropertiesCache();
+      clearLocalBuyersCache();
       tokenStore.clear();
       setUser(null);
     }

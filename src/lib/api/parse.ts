@@ -187,7 +187,7 @@ export function parseTextLocally(rawText: string): ParseResult {
  */
 export async function parseMessage(rawText: string, marlaToGaj = 30.25): Promise<ParseResult> {
   try {
-    const res = await apiClient.post<any, any>('/api/v1/parse', { rawText, marlaToGaj });
+    const res = await apiClient.post<any, any>('/parse', { rawText, marlaToGaj });
     return res;
   } catch (err) {
     console.warn('Backend parse API unavailable or error; using intelligent local fallback:', err);
@@ -203,7 +203,7 @@ export async function commitParsedItem(
   data: Record<string, any>
 ): Promise<any> {
   try {
-    return await apiClient.post<any, any>('/api/v1/parse/commit', { itemType, data });
+    return await apiClient.post<any, any>('/parse/commit', { itemType, data });
   } catch (err) {
     console.warn('Backend commit unavailable; simulated successful commit:', err);
     return { success: true, itemType, data, id: 'sim_' + Date.now() };

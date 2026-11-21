@@ -175,6 +175,16 @@ function persistLocalBuyers(items: BuyerItem[]): void {
 // In-memory cache synced with localStorage
 let localBuyersStore: BuyerItem[] = loadLocalBuyers();
 
+export function clearLocalBuyersCache(): void {
+  localBuyersStore = [];
+  try {
+    localStorage.removeItem(STORAGE_KEY_BUYERS);
+    localStorage.removeItem(STORAGE_KEY_DELETED_BUYER_IDS);
+  } catch {
+    // Ignore
+  }
+}
+
 export async function fetchBuyers(params?: {
   urgency?: string;
   status?: string;
@@ -182,9 +192,9 @@ export async function fetchBuyers(params?: {
 }): Promise<BuyerItem[]> {
   const deleted = getDeletedBuyerIds();
   try {
-    const res = await apiClient.get<any, any>('/api/v1/buyers', { params });
+    const res = await apiClient.get<any, any>('/buyers', { params });
     if (Array.isArray(res)) {
-      // Backend returned list (even if empty [])! Filter out any locally deleted IDs or legacy seeds
+      // Backend MongoDB is the single source of truth. Filter out legacy seeds and soft-deleted IDs
       const cleanList = res.filter((b: BuyerItem) => !b._id?.startsWith('buyer_seed_') && !deleted.has(b._id));
       localBuyersStore = cleanList;
       persistLocalBuyers(cleanList);
@@ -216,7 +226,7 @@ export async function fetchBuyers(params?: {
 
 export async function fetchBuyerById(id: string): Promise<BuyerItem> {
   try {
-    const res = await apiClient.get<any, any>(`/api/v1/buyers/${id}`);
+    const res = await apiClient.get<any, any>(`/buyers/${id}`);
     return res;
   } catch {
     const found = localBuyersStore.find((b) => b._id === id);
@@ -243,27 +253,31 @@ export async function createBuyer(data: CreateBuyerDto): Promise<BuyerItem> {
   };
 
   try {
-    const res = await apiClient.post<any, any>('/api/v1/buyers', data);
-    localBuyersStore = [res, ...localBuyersStore];
+    const res = await apiClient.post<any, any>('/buyers', data);
+    localBuyersStore = [res, ...localBuyersStore.filter((b) => b._id !== res._id)];
     persistLocalBuyers(localBuyersStore);
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
     return res;
   } catch (err) {
     console.warn('Backend create buyer error, saved optimistically to local store:', err);
     localBuyersStore = [newItem, ...localBuyersStore];
     persistLocalBuyers(localBuyersStore);
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
     return newItem;
   }
 }
 
 export async function updateBuyer(id: string, data: Partial<CreateBuyerDto>): Promise<BuyerItem> {
   try {
-    const res = await apiClient.patch<any, any>(`/api/v1/buyers/${id}`, data);
+    const res = await apiClient.patch<any, any>(`/buyers/${id}`, data);
     localBuyersStore = localBuyersStore.map((b) => (b._id === id ? { ...b, ...data } : b));
     persistLocalBuyers(localBuyersStore);
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
     return res;
   } catch {
     localBuyersStore = localBuyersStore.map((b) => (b._id === id ? { ...b, ...data } : b));
     persistLocalBuyers(localBuyersStore);
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
     return localBuyersStore.find((b) => b._id === id)!;
   }
 }
@@ -276,12 +290,15 @@ export async function deleteBuyer(id: string): Promise<boolean> {
   localBuyersStore = localBuyersStore.filter((b) => b._id !== id);
   persistLocalBuyers(localBuyersStore);
 
-  // 3. Inform the backend (if valid database ObjectId)
+  // 3. Inform the backend database (primary source of truth)
   try {
-    await apiClient.delete(`/api/v1/buyers/${id}`);
+    await apiClient.delete(`/buyers/${id}`);
   } catch (err) {
     console.info('Backend delete synced for buyer:', id);
   }
+
+  // 4. Notify all components and dashboard of updated buyers count
+  window.dispatchEvent(new Event('leadnivash_data_changed'));
 
   return true;
 }

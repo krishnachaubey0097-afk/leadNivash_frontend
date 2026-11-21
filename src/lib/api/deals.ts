@@ -56,7 +56,7 @@ export async function createDeal(dto: CreateDealDto): Promise<DealItem> {
   };
 
   try {
-    const res = await apiClient.post<any, any>('/api/v1/deals', dto);
+    const res = await apiClient.post<any, any>('/deals', dto);
     localDealsStore.unshift(res);
     return res;
   } catch (err) {
@@ -68,7 +68,7 @@ export async function createDeal(dto: CreateDealDto): Promise<DealItem> {
 
 export async function fetchDeals(): Promise<DealItem[]> {
   try {
-    const res = await apiClient.get<any, any>('/api/v1/deals');
+    const res = await apiClient.get<any, any>('/deals');
     if (Array.isArray(res)) {
       localDealsStore = res;
       return res;

@@ -268,6 +268,16 @@ function persistLocalProperties(items: PropertyItem[]): void {
 // In-memory cache synced with localStorage
 let localPropertiesStore: PropertyItem[] = loadLocalProperties();
 
+export function clearLocalPropertiesCache(): void {
+  localPropertiesStore = [];
+  try {
+    localStorage.removeItem(STORAGE_KEY_PROPERTIES);
+    localStorage.removeItem(STORAGE_KEY_DELETED_IDS);
+  } catch {
+    // Ignore
+  }
+}
+
 export async function fetchProperties(params?: {
   status?: string;
   locality?: string;
@@ -275,9 +285,9 @@ export async function fetchProperties(params?: {
 }): Promise<PropertyItem[]> {
   const deleted = getDeletedPropertyIds();
   try {
-    const res = await apiClient.get<any, any>('/api/v1/properties', { params });
+    const res = await apiClient.get<any, any>('/properties', { params });
     if (Array.isArray(res)) {
-      // Backend returned list (even if empty [])! Filter out any locally deleted IDs or legacy seed IDs
+      // Backend MongoDB is the single source of truth. Filter out legacy seeds and soft-deleted IDs
       const cleanList = res.filter((p: PropertyItem) => !p._id?.startsWith('prop_seed_') && !deleted.has(p._id));
       localPropertiesStore = cleanList;
       persistLocalProperties(cleanList);
@@ -305,7 +315,7 @@ export async function fetchProperties(params?: {
 
 export async function fetchPropertyById(id: string): Promise<PropertyItem> {
   try {
-    const res = await apiClient.get<any, any>(`/api/v1/properties/${id}`);
+    const res = await apiClient.get<any, any>(`/properties/${id}`);
     return res;
   } catch {
     const found = localPropertiesStore.find((p) => p._id === id);
@@ -338,14 +348,16 @@ export async function createProperty(data: CreatePropertyDto): Promise<PropertyI
   };
 
   try {
-    const res = await apiClient.post<any, any>('/api/v1/properties', data);
-    localPropertiesStore = [res, ...localPropertiesStore];
+    const res = await apiClient.post<any, any>('/properties', data);
+    localPropertiesStore = [res, ...localPropertiesStore.filter((p) => p._id !== res._id)];
     persistLocalProperties(localPropertiesStore);
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
     return res;
   } catch (err) {
     console.warn('Backend create property error, saved optimistically to local store:', err);
     localPropertiesStore = [newItem, ...localPropertiesStore];
     persistLocalProperties(localPropertiesStore);
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
     return newItem;
   }
 }
@@ -355,13 +367,15 @@ export async function updatePropertyStatus(
   status: 'available' | 'hold' | 'sold' | 'rented'
 ): Promise<PropertyItem> {
   try {
-    const res = await apiClient.patch<any, any>(`/api/v1/properties/${id}/status`, { status });
+    const res = await apiClient.patch<any, any>(`/properties/${id}/status`, { status });
     localPropertiesStore = localPropertiesStore.map((p) => (p._id === id ? { ...p, status } : p));
     persistLocalProperties(localPropertiesStore);
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
     return res;
   } catch {
     localPropertiesStore = localPropertiesStore.map((p) => (p._id === id ? { ...p, status } : p));
     persistLocalProperties(localPropertiesStore);
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
     const updated = localPropertiesStore.find((p) => p._id === id)!;
     return updated;
   }
@@ -375,12 +389,15 @@ export async function deleteProperty(id: string): Promise<boolean> {
   localPropertiesStore = localPropertiesStore.filter((p) => p._id !== id);
   persistLocalProperties(localPropertiesStore);
 
-  // 3. Inform the backend (if valid database ObjectId)
+  // 3. Inform the backend database (primary source of truth)
   try {
-    await apiClient.delete(`/api/v1/properties/${id}`);
+    await apiClient.delete(`/properties/${id}`);
   } catch (err) {
     console.info('Backend delete synced for:', id);
   }
+
+  // 4. Notify all components and dashboard of updated inventory
+  window.dispatchEvent(new Event('leadnivash_data_changed'));
 
   return true;
 }
