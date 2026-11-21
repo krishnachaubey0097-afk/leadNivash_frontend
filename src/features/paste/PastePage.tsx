@@ -1329,7 +1329,7 @@ export const PastePage: React.FC = () => {
           </Card>
 
           {/* Instant AI Matches Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border/60">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
             <div className="space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base sm:text-lg font-black text-ink font-heading leading-tight">
@@ -1353,7 +1353,7 @@ export const PastePage: React.FC = () => {
                 setParseResult(null);
                 setCurrentStep('paste');
               }}
-              className="text-xs font-bold whitespace-nowrap self-stretch sm:self-auto justify-center shrink-0 shadow-2xs py-2 px-4"
+              className="w-full sm:w-auto text-xs font-bold justify-center shrink-0 shadow-xs py-2 px-4"
             >
               + Paste Another Message
             </Button>
@@ -1444,14 +1444,14 @@ export const PastePage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end sm:justify-start shrink-0 pt-2 sm:pt-0 border-t sm:border-0 border-border/40">
                       <button
                         type="button"
                         onClick={() => {
                           navigator.clipboard.writeText(whatsappShareText);
                           success(`WhatsApp flyer message copied for ${lead.name}!`);
                         }}
-                        className="p-2 rounded-full border border-border hover:bg-slate-100 text-slate-600 text-xs font-bold cursor-pointer"
+                        className="p-2.5 rounded-full border border-border hover:bg-slate-100 text-slate-600 text-xs font-bold cursor-pointer transition shrink-0"
                         title="Copy Share Message"
                       >
                         <Copy className="w-3.5 h-3.5" />
@@ -1461,7 +1461,7 @@ export const PastePage: React.FC = () => {
                         href={waLink}
                         target="_blank"
                         rel="noreferrer"
-                        className="py-2 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
+                        className="flex-1 sm:flex-initial py-2 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition"
                       >
                         <Share2 className="w-3.5 h-3.5" />
                         <span>Share on WhatsApp</span>

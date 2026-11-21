@@ -130,9 +130,9 @@ export const SettingsPage: React.FC = () => {
     }
   };
 
-  // Derive dynamic initials from Agency Name, Broker Name, or User Email (matching TopBar)
+  // Derive dynamic initials from Broker Name, User Email, or Agency Name (matching TopBar & Avatar)
   const displayTitle = agencyName.trim() || name.trim() || user?.agency?.name || user?.name || user?.email?.split('@')[0] || 'My Agency Profile';
-  const displayInitials = (user?.name || name || agencyName || user?.email?.slice(0, 2) || 'BR')
+  const displayInitials = (user?.name || name || user?.email?.split('@')[0] || agencyName || 'BR')
     .split(' ')
     .filter(Boolean)
     .map((n) => n[0])
