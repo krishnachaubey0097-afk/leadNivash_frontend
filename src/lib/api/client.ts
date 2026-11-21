@@ -13,8 +13,19 @@ export const apiClient = axios.create({
   },
 });
 
+let activeRequestsCount = 0;
+const notifyLoading = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('leadnivesh_api_loading', { detail: { active: activeRequestsCount > 0 } })
+    );
+  }
+};
+
 // Request Interceptor: Normalize redundant /api/v1/ prefix and attach in-memory Bearer Token
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  activeRequestsCount++;
+  notifyLoading();
   if (config.url && config.url.startsWith('/api/v1/')) {
     config.url = config.url.substring(7); // Normalize '/api/v1/xyz' -> '/xyz'
   }
@@ -46,6 +57,8 @@ const processQueue = (error: unknown, token: string | null = null) => {
 // Response Interceptor: Single-flight 401 refresh & envelope unwrapping
 apiClient.interceptors.response.use(
   (response) => {
+    activeRequestsCount = Math.max(0, activeRequestsCount - 1);
+    notifyLoading();
     // Backend standard envelope: { success: true, data: ... }
     if (response.data && typeof response.data === 'object' && 'success' in response.data) {
       if (response.data.success) {
@@ -57,6 +70,8 @@ apiClient.interceptors.response.use(
     return response.data;
   },
   async (error) => {
+    activeRequestsCount = Math.max(0, activeRequestsCount - 1);
+    notifyLoading();
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
     // Pass through auth endpoints directly without refresh recursion

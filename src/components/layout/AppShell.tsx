@@ -4,6 +4,7 @@ import { TopBar } from './TopBar';
 import { BottomNav } from './BottomNav';
 import { Sidebar } from './Sidebar';
 import { Banner } from '../ui/Banner';
+import { TopLoadingBar } from '../ui/LoadingBar';
 import { OnboardingTour } from '../../features/onboarding/OnboardingTour';
 import { useOnline } from '../../lib/hooks/useOnline';
 import { useAuth } from '../../features/auth/AuthProvider';
@@ -23,6 +24,9 @@ export const AppShell: React.FC = () => {
 
   return (
     <div className="h-screen w-full overflow-hidden bg-bg text-text flex">
+      {/* Global Top Loading Progress Bar */}
+      <TopLoadingBar />
+
       {/* Desktop Sidebar (lg:flex) */}
       <Sidebar />
 

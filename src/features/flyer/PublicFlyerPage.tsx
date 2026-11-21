@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
+import { FlyerSkeleton } from '../../components/ui/Skeleton';
+import { TopLoadingBar } from '../../components/ui/LoadingBar';
 import { formatRupees } from '../../lib/money';
 import { fetchPropertyById, type PropertyItem } from '../../lib/api/properties';
 import { apiClient } from '../../lib/api/client';
@@ -61,14 +63,10 @@ export const PublicFlyerPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="text-center space-y-3">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg mx-auto animate-pulse">
-            LN
-          </div>
-          <p className="text-xs font-bold text-slate-600">Loading verified property flyer...</p>
-        </div>
-      </div>
+      <>
+        <TopLoadingBar />
+        <FlyerSkeleton />
+      </>
     );
   }
 

@@ -34,7 +34,7 @@ import { Badge } from '../../components/ui/Badge';
 import { useToast } from '../../components/ui/Toast';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { ErrorState } from '../../components/ui/ErrorState';
-import { PropertyCardSkeleton } from '../../components/ui/Skeleton';
+import { PropertyCardSkeleton, PropertyDetailSkeleton } from '../../components/ui/Skeleton';
 import { useAuth } from '../auth/AuthProvider';
 import {
   fetchProperties,
@@ -207,6 +207,9 @@ export const PropertiesListPage: React.FC = () => {
         <ErrorState onRetry={loadProperties} message={fetchError} />
       ) : isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <PropertyCardSkeleton />
+          <PropertyCardSkeleton />
+          <PropertyCardSkeleton />
           <PropertyCardSkeleton />
           <PropertyCardSkeleton />
           <PropertyCardSkeleton />
@@ -972,11 +975,7 @@ export const PropertyDetailPage: React.FC = () => {
   }
 
   if (!property) {
-    return (
-      <div className="p-8 text-center text-xs text-muted">
-        Loading property details...
-      </div>
-    );
+    return <PropertyDetailSkeleton />;
   }
 
   const handleStatusChange = async (newStatus: PropertyItem['status']) => {
@@ -1280,11 +1279,7 @@ export const PropertySharePage: React.FC = () => {
   }, [id]);
 
   if (!property) {
-    return (
-      <div className="p-8 text-center text-xs text-muted">
-        Loading property flyer...
-      </div>
-    );
+    return <PropertyDetailSkeleton />;
   }
 
   const shareText = `*${property.title}*\nLocation: ${property.locality}, ${property.city || 'Panipat'}\nSize: ${property.size.value} ${property.size.unit.toUpperCase()}\nFacing: ${property.facing || 'Prime Facing'}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Verified clear title property ready for inspection.'}\n\nMarketed by: ${agencyDisplayName} · ${property.city || 'Panipat'}\nView Verified Flyer & Media: https://leadnivash.com/flyer/${property._id}`;

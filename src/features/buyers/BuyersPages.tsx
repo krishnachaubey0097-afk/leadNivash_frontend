@@ -20,7 +20,7 @@ import { Card } from '../../components/ui/Card';
 import { useToast } from '../../components/ui/Toast';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { ErrorState } from '../../components/ui/ErrorState';
-import { BuyerCardSkeleton } from '../../components/ui/Skeleton';
+import { BuyerCardSkeleton, BuyerDetailSkeleton } from '../../components/ui/Skeleton';
 import { formatRupees } from '../../lib/money';
 import {
   fetchBuyers,
@@ -193,6 +193,9 @@ export const BuyersListPage: React.FC = () => {
         <ErrorState onRetry={loadBuyers} message={fetchError} />
       ) : isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <BuyerCardSkeleton />
+          <BuyerCardSkeleton />
+          <BuyerCardSkeleton />
           <BuyerCardSkeleton />
           <BuyerCardSkeleton />
           <BuyerCardSkeleton />
@@ -676,11 +679,7 @@ export const BuyerDetailPage: React.FC = () => {
   }, [id]);
 
   if (!buyer) {
-    return (
-      <div className="p-8 text-center text-xs text-muted">
-        Loading buyer profile...
-      </div>
-    );
+    return <BuyerDetailSkeleton />;
   }
 
   return (

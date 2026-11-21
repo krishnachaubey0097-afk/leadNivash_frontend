@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
+import { InquiryCardSkeleton } from '../../components/ui/Skeleton';
 import { useToast } from '../../components/ui/Toast';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { apiClient } from '../../lib/api/client';
@@ -360,9 +361,11 @@ export const InquiriesPage: React.FC = () => {
           </div>
 
           {isLoadingPropertyInquiries ? (
-            <Card className="p-8 text-center space-y-2">
-              <p className="text-xs text-muted">Loading live broker inquiries...</p>
-            </Card>
+            <div className="space-y-4">
+              <InquiryCardSkeleton />
+              <InquiryCardSkeleton />
+              <InquiryCardSkeleton />
+            </div>
           ) : propertyInquiries.length === 0 ? (
             <Card className="p-8 text-center space-y-2">
               <Building2 className="w-8 h-8 text-muted mx-auto" />
@@ -660,9 +663,9 @@ export const InquiriesPage: React.FC = () => {
 
           {isLoadingContacts ? (
             <div className="space-y-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-32 rounded-2xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
-              ))}
+              <InquiryCardSkeleton />
+              <InquiryCardSkeleton />
+              <InquiryCardSkeleton />
             </div>
           ) : contactLeads.length === 0 ? (
             <Card className="p-12 text-center space-y-3">

@@ -19,7 +19,7 @@ import {
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
-import { StatCardSkeleton } from '../../components/ui/Skeleton';
+import { StatCardSkeleton, MatchCardSkeleton } from '../../components/ui/Skeleton';
 import clsx from 'clsx';
 import { formatRupees } from '../../lib/money';
 import { parseMessage, type ParseResult } from '../../lib/api/parse';
@@ -813,7 +813,12 @@ export const DashboardPage: React.FC = () => {
               </Link>
             </div>
 
-            {matchesWaiting.length === 0 ? (
+            {isLoadingStats ? (
+              <div className="space-y-4">
+                <MatchCardSkeleton />
+                <MatchCardSkeleton />
+              </div>
+            ) : matchesWaiting.length === 0 ? (
               <Card className="p-8 text-center space-y-3">
                 <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 flex items-center justify-center mx-auto">
                   <Building2 className="w-6 h-6" />
