@@ -43,10 +43,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             'bg-transparent text-text hover:bg-slate-100/70 dark:hover:bg-slate-800/60 hover:text-ink',
           variant === 'danger' &&
             'bg-danger text-white hover:bg-red-700 shadow-sm shadow-danger/20',
-          // Sizes (touch targets ≥ 44px)
-          size === 'sm' && 'h-9 px-3.5 text-xs gap-1.5',
-          size === 'md' && 'h-11 px-5 text-sm gap-2',
-          size === 'lg' && 'h-12 px-6 text-base gap-2.5 font-bold',
+          // Sizes (touch targets ≥ 44px on mobile)
+          size === 'sm' && 'min-h-[44px] sm:min-h-0 h-11 sm:h-9 px-3.5 text-xs gap-1.5',
+          size === 'md' && 'min-h-[44px] h-11 px-5 text-sm gap-2',
+          size === 'lg' && 'min-h-[48px] h-12 px-6 text-base gap-2.5 font-bold',
           className
         )}
         {...props}

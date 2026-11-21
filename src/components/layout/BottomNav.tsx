@@ -13,7 +13,7 @@ export const BottomNav: React.FC = () => {
           end
           className={({ isActive }) =>
             clsx(
-              'flex flex-col items-center justify-center flex-1 py-1 text-[10px] font-bold transition-colors relative',
+              'flex flex-col items-center justify-center flex-1 py-1 min-h-[48px] min-w-[48px] text-[10px] font-bold transition-colors relative',
               isActive ? 'text-brand-700 dark:text-brand-600' : 'text-muted hover:text-ink'
             )
           }
@@ -34,7 +34,7 @@ export const BottomNav: React.FC = () => {
           to="/app/properties"
           className={({ isActive }) =>
             clsx(
-              'flex flex-col items-center justify-center flex-1 py-1 text-[10px] font-bold transition-colors relative',
+              'flex flex-col items-center justify-center flex-1 py-1 min-h-[48px] min-w-[48px] text-[10px] font-bold transition-colors relative',
               isActive ? 'text-brand-700 dark:text-brand-600' : 'text-muted hover:text-ink'
             )
           }
@@ -55,7 +55,7 @@ export const BottomNav: React.FC = () => {
           to="/app/buyers"
           className={({ isActive }) =>
             clsx(
-              'flex flex-col items-center justify-center flex-1 py-1 text-[10px] font-bold transition-colors relative',
+              'flex flex-col items-center justify-center flex-1 py-1 min-h-[48px] min-w-[48px] text-[10px] font-bold transition-colors relative',
               isActive ? 'text-brand-700 dark:text-brand-600' : 'text-muted hover:text-ink'
             )
           }
@@ -76,7 +76,7 @@ export const BottomNav: React.FC = () => {
           to="/app/paste"
           className={({ isActive }) =>
             clsx(
-              'flex flex-col items-center justify-center flex-1 py-1 text-[10px] font-bold transition-all relative',
+              'flex flex-col items-center justify-center flex-1 py-1 min-h-[48px] min-w-[48px] text-[10px] font-bold transition-all relative',
               isActive ? 'text-emerald-700 dark:text-emerald-400' : 'text-muted hover:text-ink'
             )
           }
@@ -108,7 +108,7 @@ export const BottomNav: React.FC = () => {
           to="/app/tools"
           className={({ isActive }) =>
             clsx(
-              'flex flex-col items-center justify-center flex-1 py-1 text-[10px] font-bold transition-colors relative',
+              'flex flex-col items-center justify-center flex-1 py-1 min-h-[48px] min-w-[48px] text-[10px] font-bold transition-colors relative',
               isActive ? 'text-brand-700 dark:text-brand-600' : 'text-muted hover:text-ink'
             )
           }

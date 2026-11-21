@@ -20,6 +20,40 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
     color: var(--ink);
   }
+
+  /* Fluid responsive typography rules for mobile */
+  h1 {
+    font-size: clamp(28px, 5vw, 56px);
+    line-height: 1.15;
+  }
+  h2 {
+    font-size: clamp(24px, 4vw, 40px);
+    line-height: 1.2;
+  }
+  h3 {
+    font-size: clamp(20px, 3vw, 32px);
+    line-height: 1.25;
+  }
+
+  /* Prevent automatic iOS Safari zoom by enforcing 16px font-size on all mobile inputs */
+  @media (max-width: 767px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Ensure all images and videos are responsive and never cause overflow */
+  img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Enforce touch target accessibility on mobile */
+  @media (pointer: coarse) {
+    button, a, input, select, textarea, [role="button"] {
+      touch-action: manipulation;
+    }
+  }
 }
 
 /* Safe area support for mobile PWA */

@@ -31,7 +31,7 @@ export const AvatarMenu: React.FC<AvatarMenuProps> = ({ inquiryCount = 0 }) => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="relative w-9 h-9 rounded-full bg-brand-50 border border-brand-600/30 text-brand-700 font-bold text-xs flex items-center justify-center hover:ring-2 hover:ring-brand-600 transition cursor-pointer focus:outline-none"
+          className="relative w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-brand-50 border border-brand-600/30 text-brand-700 font-bold text-xs flex items-center justify-center hover:ring-2 hover:ring-brand-600 transition cursor-pointer focus:outline-none"
           aria-label="User Account Menu"
         >
           {initials}

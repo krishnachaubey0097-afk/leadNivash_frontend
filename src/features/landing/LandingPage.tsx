@@ -279,7 +279,7 @@ export const LandingPage: React.FC = () => {
 
             <button
               onClick={scrollToInquiry}
-              className="group relative inline-flex items-center gap-2 pl-3.5 sm:pl-4 pr-1.5 sm:pr-2 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-emerald-600 via-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider shadow-md shadow-emerald-700/25 hover:shadow-lg transition-all cursor-pointer whitespace-nowrap leading-none min-h-[36px]"
+              className="group relative inline-flex items-center gap-2 pl-3.5 sm:pl-4 pr-1.5 sm:pr-2 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-emerald-600 via-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider shadow-md shadow-emerald-700/25 hover:shadow-lg transition-all cursor-pointer whitespace-nowrap leading-none min-h-[44px]"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-white/95 animate-pulse hidden sm:inline-block shrink-0" />
               <span>Get Free Demo</span>
@@ -292,11 +292,11 @@ export const LandingPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-8 h-8 rounded-full flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:bg-slate-100 active:scale-95 transition cursor-pointer border border-slate-200/80 shadow-2xs shrink-0"
+              className="lg:hidden w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:bg-slate-100 active:scale-95 transition cursor-pointer border border-slate-200/80 shadow-2xs shrink-0"
               aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -330,7 +330,7 @@ export const LandingPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
+                    className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
                     aria-label="Close menu"
                   >
                     <X className="w-5 h-5" />
@@ -419,7 +419,7 @@ export const LandingPage: React.FC = () => {
                     <Link
                       to="/login"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="text-xs text-center text-slate-500 hover:text-slate-900 block font-bold py-2 transition"
+                      className="text-xs text-center text-slate-500 hover:text-slate-900 block font-bold py-3 min-h-[44px] flex items-center justify-center transition"
                     >
                       Already have an account? Sign In
                     </Link>
@@ -483,7 +483,7 @@ export const LandingPage: React.FC = () => {
             </h1>
 
             {/* 4. Supporting Text */}
-            <p className="text-xs sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal px-2 sm:px-0">
+            <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal px-2 sm:px-0">
               Turn scattered WhatsApp enquiries into an organised property business. Save time, find the right property matches faster and manage more opportunities without losing track of your deals.
             </p>
 
@@ -547,7 +547,7 @@ export const LandingPage: React.FC = () => {
                         type="button"
                         onClick={() => setActiveProcessStep(idx)}
                         className={clsx(
-                          'relative z-10 flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer border snap-center shrink-0 min-h-[42px]',
+                          'relative z-10 flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer border snap-center shrink-0 min-h-[44px]',
                           isActive
                             ? 'bg-emerald-50/90 border-2 border-emerald-600 text-emerald-950 font-bold shadow-md shadow-emerald-600/15'
                             : isPassed
@@ -745,7 +745,7 @@ export const LandingPage: React.FC = () => {
                   type="button"
                   onClick={() => setVideoMode('desktop')}
                   className={clsx(
-                    'px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-200 cursor-pointer',
+                    'px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-200 cursor-pointer min-h-[44px] sm:min-h-0',
                     videoMode === 'desktop'
                       ? 'bg-emerald-600 text-white shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
@@ -759,7 +759,7 @@ export const LandingPage: React.FC = () => {
                   type="button"
                   onClick={() => setVideoMode('mobile')}
                   className={clsx(
-                    'px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-200 cursor-pointer',
+                    'px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-200 cursor-pointer min-h-[44px] sm:min-h-0',
                     videoMode === 'mobile'
                       ? 'bg-emerald-600 text-white shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
@@ -828,7 +828,7 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* 6. Compact Core Capabilities Strip (Apple-Class Light Cards) */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 pt-4">
             {[
               {
                 title: 'Smart Property Inventory',
@@ -919,7 +919,7 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsWorkflowPaused(!isWorkflowPaused)}
-                className="text-[11px] font-bold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer min-h-[36px]"
+                className="text-[11px] font-bold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer min-h-[44px]"
               >
                 {isWorkflowPaused ? 'Resume Auto-Cycle' : 'Pause Flow'}
               </button>
@@ -1025,7 +1025,7 @@ export const LandingPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setActiveWorkflowStep((prev) => (prev + 1) % 5)}
-                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 text-xs font-bold transition cursor-pointer min-h-[40px]"
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 text-xs font-bold transition cursor-pointer min-h-[44px]"
                     >
                       <span>Next Stage</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -1072,7 +1072,7 @@ export const LandingPage: React.FC = () => {
                         <span className="text-[10px] text-emerald-700 font-mono font-bold">4 Attributes Identified</span>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2 text-left">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
                         <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
                           <span className="text-[10px] uppercase font-bold text-slate-500 block">Property</span>
                           <span className="text-xs font-bold text-emerald-700">3 BHK Builder Floor</span>

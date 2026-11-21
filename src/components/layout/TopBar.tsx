@@ -66,20 +66,20 @@ export const TopBar: React.FC = () => {
 
           {/* Notifications button */}
           <button
-            className="relative w-9 h-9 rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            className="relative w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
             aria-label="Notifications"
           >
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-600" />
+            <Bell className="w-5 h-5 sm:w-4 sm:h-4" />
+            <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-brand-600" />
           </button>
 
           {/* Mobile Settings button */}
           <Link
             to="/app/settings"
-            className="md:hidden w-9 h-9 rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            className="md:hidden w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             aria-label="Settings"
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-5 h-5" />
           </Link>
 
           {/* User Avatar Menu */}

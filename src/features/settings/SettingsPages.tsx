@@ -190,7 +190,7 @@ export const SettingsPage: React.FC = () => {
                 value={agencyName}
                 placeholder="Enter agency or firm name (e.g. Prime Realty)"
                 onChange={(e) => setAgencyName(e.target.value)}
-                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
             </div>
 
@@ -203,7 +203,7 @@ export const SettingsPage: React.FC = () => {
                 value={reraNo}
                 placeholder="Enter RERA registration number (optional)"
                 onChange={(e) => setReraNo(e.target.value)}
-                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
             </div>
           </div>
@@ -219,7 +219,7 @@ export const SettingsPage: React.FC = () => {
                 value={name}
                 placeholder="Enter broker contact person name"
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
             </div>
 
@@ -232,7 +232,7 @@ export const SettingsPage: React.FC = () => {
                 value={agencyCity}
                 placeholder="Enter primary operating city (e.g. Panipat)"
                 onChange={(e) => setAgencyCity(e.target.value)}
-                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
             </div>
           </div>
@@ -246,7 +246,7 @@ export const SettingsPage: React.FC = () => {
                 type="text"
                 disabled
                 value={user?.phone || '+91' + (user as any)?.phoneE164 || 'Registered Phone'}
-                className="w-full bg-slate-100 dark:bg-slate-800 border border-border rounded-xl p-2.5 text-xs text-muted cursor-not-allowed font-mono"
+                className="w-full bg-slate-100 dark:bg-slate-800 border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-muted cursor-not-allowed font-mono"
               />
               <span className="text-[10px] text-muted">Phone is bound to your authentication security credential.</span>
             </div>
@@ -259,7 +259,7 @@ export const SettingsPage: React.FC = () => {
                 type="email"
                 disabled
                 value={user?.email || 'Registered Email'}
-                className="w-full bg-slate-100 dark:bg-slate-800 border border-border rounded-xl p-2.5 text-xs text-muted cursor-not-allowed font-mono"
+                className="w-full bg-slate-100 dark:bg-slate-800 border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-muted cursor-not-allowed font-mono"
               />
               <span className="text-[10px] text-muted">Email address for login & security alerts.</span>
             </div>
@@ -272,7 +272,7 @@ export const SettingsPage: React.FC = () => {
             <select
               value={marlaStandard}
               onChange={(e) => setMarlaStandard(e.target.value as any)}
-              className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
+              className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
             >
               <option value="25">25 Gaj / Marla (Panipat Local Standard)</option>
               <option value="30.25">30.25 Gaj / Marla (Haryana Official Standard)</option>
@@ -281,7 +281,7 @@ export const SettingsPage: React.FC = () => {
           </div>
 
           <div className="flex justify-end pt-2">
-            <Button size="sm" pill type="submit" isLoading={isSaving} className="font-bold text-xs">
+            <Button size="sm" pill type="submit" isLoading={isSaving} className="w-full sm:w-auto font-bold text-xs min-h-[44px]">
               {isSaved ? (
                 <span className="flex items-center gap-1.5">
                   <Check className="w-3.5 h-3.5" />

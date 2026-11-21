@@ -545,7 +545,7 @@ export const PastePage: React.FC = () => {
                 <button
                   onClick={toggleListening}
                   className={clsx(
-                    'w-9 h-9 rounded-full flex items-center justify-center transition shadow-xs cursor-pointer',
+                    'w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center transition shadow-xs cursor-pointer',
                     isListening
                       ? 'bg-rose-600 text-white animate-pulse ring-4 ring-rose-200 dark:ring-rose-950'
                       : 'bg-emerald-700 text-white hover:bg-emerald-800'

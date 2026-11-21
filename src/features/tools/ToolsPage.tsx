@@ -626,7 +626,7 @@ ${agencyOrOwnerName}`;
                     type="button"
                     onClick={() => setBuyerGender(g.id as BuyerGender)}
                     className={clsx(
-                      'py-2 px-1 rounded-xl text-[11px] font-bold transition cursor-pointer border text-center',
+                      'py-2 px-1 min-h-[44px] flex items-center justify-center rounded-xl text-[11px] font-bold transition cursor-pointer border text-center',
                       buyerGender === g.id
                         ? 'bg-brand-700 text-white border-brand-700 shadow-xs'
                         : 'bg-surface border-border text-muted hover:text-ink'
@@ -652,7 +652,7 @@ ${agencyOrOwnerName}`;
                     type="button"
                     onClick={() => setAreaType(a.id as AreaType)}
                     className={clsx(
-                      'py-2 px-2 rounded-xl text-[11px] font-bold transition cursor-pointer border text-center',
+                      'py-2 px-2 min-h-[44px] flex items-center justify-center rounded-xl text-[11px] font-bold transition cursor-pointer border text-center',
                       areaType === a.id
                         ? 'bg-brand-700 text-white border-brand-700 shadow-xs'
                         : 'bg-surface border-border text-muted hover:text-ink'
@@ -743,7 +743,7 @@ ${agencyOrOwnerName}`;
                 type="button"
                 onClick={() => setLoanCalcMode('direct')}
                 className={clsx(
-                  'px-3 py-1 rounded-full transition-all cursor-pointer',
+                  'px-3 py-1.5 min-h-[44px] flex items-center rounded-full transition-all cursor-pointer',
                   loanCalcMode === 'direct'
                     ? 'bg-white dark:bg-slate-700 text-ink shadow-xs'
                     : 'text-muted hover:text-ink'
@@ -755,7 +755,7 @@ ${agencyOrOwnerName}`;
                 type="button"
                 onClick={() => setLoanCalcMode('property')}
                 className={clsx(
-                  'px-3 py-1 rounded-full transition-all cursor-pointer',
+                  'px-3 py-1.5 min-h-[44px] flex items-center rounded-full transition-all cursor-pointer',
                   loanCalcMode === 'property'
                     ? 'bg-white dark:bg-slate-700 text-ink shadow-xs'
                     : 'text-muted hover:text-ink'

@@ -321,7 +321,7 @@ export const BuyersListPage: React.FC = () => {
                     href={`https://wa.me/${buyer.phone.replace(/[^0-9]/g, '')}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold flex items-center gap-1 transition"
+                    className="px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold flex items-center gap-1 transition"
                   >
                     <MessageCircle className="w-3.5 h-3.5" />
                     <span>WhatsApp</span>
@@ -331,7 +331,7 @@ export const BuyersListPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setBuyerToDelete({ id: buyer._id, name: buyer.name })}
-                    className="p-1.5 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                    className="w-11 h-11 sm:w-8 sm:h-8 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 transition cursor-pointer"
                     title="Delete Buyer Inquiry"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -340,7 +340,7 @@ export const BuyersListPage: React.FC = () => {
 
                 <Link
                   to={`/app/buyers/${buyer._id}`}
-                  className="px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold transition flex items-center gap-1"
+                  className="px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold transition flex items-center gap-1"
                 >
                   <span>Matches & Pitch</span>
                   <ChevronRight className="w-3 h-3" />
