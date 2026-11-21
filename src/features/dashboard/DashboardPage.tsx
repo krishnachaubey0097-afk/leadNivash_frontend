@@ -556,111 +556,171 @@ export const DashboardPage: React.FC = () => {
             </Card>
           </div>
 
-          {/* Deal Activity & Engagement Visualizer (Quixotic Bar & Wave Style) */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Weekly / Monthly Activity Bar Chart (Quixotic style) */}
-            <Card className="p-5 sm:p-6 lg:col-span-2 space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-black text-ink font-heading">
-                    Deal Engagement & Match Activity
-                  </h3>
-                  <p className="text-[11px] text-muted">Client inquiries and property matches per month</p>
+          {/* Deal Activity & Engagement Visualizer - Only rendered when inventory or buyers exist */}
+          {totalPropertiesCount > 0 || totalBuyersCount > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Dynamic Inventory & Lead Breakdown Chart */}
+              <Card className="p-5 sm:p-6 lg:col-span-2 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-black text-ink font-heading">
+                      Inventory & Deal Activity Overview
+                    </h3>
+                    <p className="text-[11px] text-muted">
+                      Real-time inventory and client matches in your account
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-brand-700 bg-brand-50 dark:bg-brand-950/60 px-2.5 py-1 rounded-full">
+                    <TrendingUp className="w-3.5 h-3.5" />
+                    <span>Real Data</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1.5 text-[11px] font-bold text-brand-700 bg-brand-50 dark:bg-brand-950/60 px-2.5 py-1 rounded-full">
-                  <TrendingUp className="w-3.5 h-3.5" />
-                  <span>+17.8% Growth</span>
-                </div>
-              </div>
 
-              {/* Styled CSS Bar Visualization matching Quixotic reference */}
-              <div className="h-44 pt-6 flex items-end justify-between gap-3 px-2">
-                {[
-                  { month: 'Jan', height: '45%', value: '14' },
-                  { month: 'Feb', height: '60%', value: '19' },
-                  { month: 'Mar', height: '52%', value: '16' },
-                  { month: 'Apr', height: '95%', value: '32', active: true },
-                  { month: 'May', height: '70%', value: '23' },
-                  { month: 'Jun', height: '80%', value: '26' },
-                ].map((bar, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
-                    {/* Tooltip on active bar */}
-                    {bar.active && (
-                      <span className="px-2 py-0.5 rounded-full bg-brand-700 text-white text-[10px] font-bold shadow-xs animate-bounce">
-                        +17.8%
-                      </span>
-                    )}
-                    <div
-                      style={{ height: bar.height }}
-                      className={clsx(
-                        'w-full max-w-[42px] rounded-t-2xl transition-all duration-300 group-hover:opacity-90',
-                        bar.active
-                          ? 'bg-gradient-to-t from-brand-700 to-emerald-500 shadow-md shadow-brand-700/20'
-                          : 'bg-emerald-100/70 dark:bg-emerald-950/40 hover:bg-emerald-200'
-                      )}
-                    />
-                    <span className="text-[11px] font-bold text-muted group-hover:text-ink">
-                      {bar.month}
+                {/* Dynamic Summary Cards instead of fake month bars */}
+                <div className="grid grid-cols-3 gap-3 pt-2">
+                  <div className="p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-500/20 text-center">
+                    <span className="text-[10px] uppercase font-bold text-muted block">Available Inventory</span>
+                    <span className="text-xl sm:text-2xl font-black text-emerald-800 dark:text-emerald-300 font-heading">
+                      {activePropertiesCount}
                     </span>
+                    <span className="text-[10px] text-muted block mt-0.5">of {totalPropertiesCount} listings</span>
                   </div>
-                ))}
-              </div>
 
-              {/* Footer summary */}
-              <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs text-muted">
-                <span className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-brand-700" />
-                  <span>Current High: April (32 matches closed)</span>
-                </span>
-                <span className="font-semibold text-ink">Total 130 Inquiries Handled</span>
-              </div>
-            </Card>
-
-            {/* Pipeline Stage Distribution (Emitra gauge style) */}
-            <Card className="p-5 sm:p-6 space-y-4 flex flex-col justify-between">
-              <div>
-                <h3 className="text-sm font-black text-ink font-heading">Deal Pipeline Health</h3>
-                <p className="text-[11px] text-muted">Current stage distribution of active leads</p>
-              </div>
-
-              <div className="space-y-3 py-2">
-                <div>
-                  <div className="flex justify-between text-xs font-bold mb-1">
-                    <span className="text-text">Site Visit Scheduled</span>
-                    <span className="text-brand-700">8 Deals (40%)</span>
+                  <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-500/20 text-center">
+                    <span className="text-[10px] uppercase font-bold text-muted block">Verified Leads</span>
+                    <span className="text-xl sm:text-2xl font-black text-blue-800 dark:text-blue-300 font-heading">
+                      {activeBuyersCount}
+                    </span>
+                    <span className="text-[10px] text-muted block mt-0.5">of {totalBuyersCount} clients</span>
                   </div>
-                  <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                    <div className="h-full bg-brand-600 rounded-full" style={{ width: '40%' }} />
+
+                  <div className="p-3.5 rounded-2xl bg-teal-50/70 dark:bg-teal-950/30 border border-teal-500/20 text-center">
+                    <span className="text-[10px] uppercase font-bold text-muted block">Instant Matches</span>
+                    <span className="text-xl sm:text-2xl font-black text-teal-800 dark:text-teal-300 font-heading">
+                      {matchesWaitingCount}
+                    </span>
+                    <span className="text-[10px] text-muted block mt-0.5">ready to pitch</span>
                   </div>
                 </div>
 
+                {/* Footer summary */}
+                <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs text-muted">
+                  <span className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-brand-700" />
+                    <span>Portfolio Demand: {formatRupees(totalPipelinePaise)}</span>
+                  </span>
+                  <span className="font-semibold text-ink">
+                    Est. Brokerage: {formatRupees(projectedCommissionPaise)}
+                  </span>
+                </div>
+              </Card>
+
+              {/* Pipeline Stage Distribution */}
+              <Card className="p-5 sm:p-6 space-y-4 flex flex-col justify-between">
                 <div>
-                  <div className="flex justify-between text-xs font-bold mb-1">
-                    <span className="text-text">In Active Negotiation</span>
-                    <span className="text-blue-600">5 Deals (25%)</span>
+                  <h3 className="text-sm font-black text-ink font-heading">Deal Pipeline Health</h3>
+                  <p className="text-[11px] text-muted">Active leads and inventory readiness</p>
+                </div>
+
+                <div className="space-y-3 py-2">
+                  <div>
+                    <div className="flex justify-between text-xs font-bold mb-1">
+                      <span className="text-text">Active Available Listings</span>
+                      <span className="text-brand-700">
+                        {totalPropertiesCount > 0
+                          ? `${Math.round((activePropertiesCount / totalPropertiesCount) * 100)}%`
+                          : '0%'}
+                      </span>
+                    </div>
+                    <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                      <div
+                        className="h-full bg-brand-600 rounded-full"
+                        style={{
+                          width: `${totalPropertiesCount > 0 ? (activePropertiesCount / totalPropertiesCount) * 100 : 0}%`,
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                    <div className="h-full bg-blue-500 rounded-full" style={{ width: '25%' }} />
+
+                  <div>
+                    <div className="flex justify-between text-xs font-bold mb-1">
+                      <span className="text-text">Verified Active Buyers</span>
+                      <span className="text-blue-600">
+                        {totalBuyersCount > 0
+                          ? `${Math.round((activeBuyersCount / totalBuyersCount) * 100)}%`
+                          : '0%'}
+                      </span>
+                    </div>
+                    <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                      <div
+                        className="h-full bg-blue-500 rounded-full"
+                        style={{
+                          width: `${totalBuyersCount > 0 ? (activeBuyersCount / totalBuyersCount) * 100 : 0}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs font-bold mb-1">
+                      <span className="text-text">Auto-Match Coverage</span>
+                      <span className="text-emerald-700">
+                        {totalPropertiesCount > 0 && totalBuyersCount > 0
+                          ? `${Math.min(100, Math.round((matchesWaitingCount / Math.max(1, totalBuyersCount)) * 100))}%`
+                          : '0%'}
+                      </span>
+                    </div>
+                    <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                      <div
+                        className="h-full bg-emerald-600 rounded-full"
+                        style={{
+                          width: `${
+                            totalPropertiesCount > 0 && totalBuyersCount > 0
+                              ? Math.min(100, (matchesWaitingCount / Math.max(1, totalBuyersCount)) * 100)
+                              : 0
+                          }%`,
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <div className="flex justify-between text-xs font-bold mb-1">
-                    <span className="text-text">Token Advance / Finalizing</span>
-                    <span className="text-gold">3 Deals (15%)</span>
-                  </div>
-                  <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                    <div className="h-full bg-gold rounded-full" style={{ width: '15%' }} />
-                  </div>
+                <div className="p-3 rounded-xl bg-bg border border-border/60 text-[11px] text-muted flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-brand-600 shrink-0" />
+                  <span>Real portfolio metrics synchronized directly from your database.</span>
                 </div>
+              </Card>
+            </div>
+          ) : (
+            /* Clear Empty State when account has 0 listings & 0 buyers */
+            <div className="p-8 sm:p-12 text-center rounded-3xl bg-gradient-to-br from-white/95 via-emerald-50/60 to-emerald-100/40 border border-emerald-500/30 shadow-sm space-y-4">
+              <div className="w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto shadow-sm">
+                <Building2 className="w-8 h-8 stroke-[2.2]" />
               </div>
-
-              <div className="p-3 rounded-xl bg-bg border border-border/60 text-[11px] text-muted flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-brand-600 shrink-0" />
-                <span>85% conversion probability for site-visited builder floors.</span>
+              <div className="space-y-1.5 max-w-md mx-auto">
+                <h3 className="text-lg font-black text-ink font-heading">
+                  Please add your properties first
+                </h3>
+                <p className="text-xs text-muted">
+                  No data is available to display yet. Add properties to your inventory so Quick Chat can automatically match client requirements and track your pipeline.
+                </p>
               </div>
-            </Card>
-          </div>
+              <div className="flex items-center justify-center gap-3 pt-2">
+                <Link to="/app/properties/new">
+                  <Button pill className="font-bold text-xs px-5 py-2.5 shadow-md shadow-emerald-700/20 bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <Plus className="w-3.5 h-3.5 mr-1" />
+                    <span>Add Property</span>
+                  </Button>
+                </Link>
+                <Link to="/app/buyers/new">
+                  <Button variant="secondary" pill className="font-bold text-xs px-5 py-2.5">
+                    <Plus className="w-3.5 h-3.5 mr-1" />
+                    <span>Add Buyer</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
 
           {/* Top Matches Waiting Action Section */}
           <div className="space-y-3">

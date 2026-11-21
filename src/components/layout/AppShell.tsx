@@ -4,6 +4,7 @@ import { TopBar } from './TopBar';
 import { BottomNav } from './BottomNav';
 import { Sidebar } from './Sidebar';
 import { Banner } from '../ui/Banner';
+import { OnboardingTour } from '../../features/onboarding/OnboardingTour';
 import { useOnline } from '../../lib/hooks/useOnline';
 import { useAuth } from '../../features/auth/AuthProvider';
 
@@ -50,6 +51,9 @@ export const AppShell: React.FC = () => {
 
         {/* Mobile Bottom Navigation (lg:hidden) */}
         <BottomNav />
+
+        {/* First-Time User Onboarding Guided Tour (Stage 5) */}
+        <OnboardingTour />
       </div>
     </div>
   );

@@ -100,6 +100,10 @@ export const PastePage: React.FC = () => {
   // Pre-fill test samples
   const samples = [
     {
+      label: 'Buyer: 3 BHK Gurgaon (80L)',
+      text: 'Client wants a 3 BHK flat in Gurgaon, budget 80 lakh, preferably near a metro station. Contact: 9811223344.',
+    },
+    {
       label: 'Buyer: 3 BHK Model Town',
       text: 'Urgent buyer requirement: Need 3 BHK builder floor in Model Town or Sector 11 Panipat. Budget 1.10 to 1.35 Cr with lift & car parking. Client: Rajesh Sharma 9876543210.',
     },
@@ -378,15 +382,15 @@ export const PastePage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
-              Quick Paste & Client Matching
+              Quick Chat — Client & Property Matcher
             </h1>
             <Badge variant="brand">
               <Sparkles className="w-3 h-3 mr-1 inline" />
-              AI Workflow
+              AI Matcher
             </Badge>
           </div>
           <p className="text-xs text-muted mt-1">
-            Convert WhatsApp messages into buyer requirements and match them with property listings instantly.
+            Speak or type your client's requirements naturally. LeadNivash extracts filters and finds matching properties directly from your real inventory.
           </p>
         </div>
 
@@ -794,7 +798,7 @@ export const PastePage: React.FC = () => {
 
           <div className="flex items-center justify-between text-xs font-bold text-muted px-1">
             <span>{matchedProperties.length} Inventory Properties Evaluated</span>
-            <span>Transparent Match Reasons</span>
+            <span>Real Database Matches</span>
           </div>
 
           {matchedProperties.length === 0 ? (
@@ -804,122 +808,263 @@ export const PastePage: React.FC = () => {
               <p className="text-xs text-muted max-w-sm mx-auto">
                 No data is available to display yet. Add properties to your inventory so Quick Chat can automatically match client requirements.
               </p>
-              <Link to="/app/properties/new">
-                <Button size="sm" pill className="font-bold text-xs mt-2">
-                  + Add Property
-                </Button>
-              </Link>
+              <div className="flex items-center justify-center gap-2 pt-2">
+                <Link to="/app/properties/new">
+                  <Button size="sm" pill className="font-bold text-xs">
+                    + Add Property
+                  </Button>
+                </Link>
+                <Link to="/app/buyers/new">
+                  <Button variant="secondary" size="sm" pill className="font-bold text-xs">
+                    + Add Buyer
+                  </Button>
+                </Link>
+              </div>
             </Card>
           ) : (
-            <div className="space-y-4">
-              {matchedProperties.map(({ property, score, reasons, mismatches }) => {
-                const isSaved = savedPropertyIds.has(property._id);
+            <div className="space-y-6">
+              {/* 1. Exact Matches (Score >= 80) */}
+              {matchedProperties.filter((m) => m.score >= 80).length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 px-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                    <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+                      Exact Matches ({matchedProperties.filter((m) => m.score >= 80).length})
+                    </span>
+                    <span className="text-[10px] text-muted font-medium">All key criteria match</span>
+                  </div>
 
-                return (
-                  <Card
-                    key={property._id}
-                    className="p-5 space-y-4 border-slate-200 hover:border-emerald-500/40 transition-all duration-200 shadow-sm"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border/80">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-base font-black text-ink font-heading">
-                            {property.title}
-                          </h4>
-                          <span
-                            className={clsx(
-                              'px-2 py-0.5 rounded-full text-[10px] font-bold',
-                              score >= 80
-                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300'
-                                : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
-                            )}
+                  <div className="space-y-4">
+                    {matchedProperties
+                      .filter((m) => m.score >= 80)
+                      .map(({ property, score, reasons, mismatches }) => {
+                        const isSaved = savedPropertyIds.has(property._id);
+                        return (
+                          <Card
+                            key={property._id}
+                            className="p-5 space-y-4 border-emerald-500/30 hover:border-emerald-500/60 transition-all duration-200 shadow-sm bg-gradient-to-br from-white via-emerald-50/20 to-white dark:from-slate-900 dark:via-emerald-950/20 dark:to-slate-900"
                           >
-                            {score}% Match
-                          </span>
-                        </div>
-                        <p className="text-xs text-muted">
-                          {property.locality}, {property.city} · {property.size.value} {property.size.unit.toUpperCase()}
-                        </p>
-                      </div>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border/80">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h4 className="text-base font-black text-ink font-heading">
+                                    {property.title}
+                                  </h4>
+                                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300/40">
+                                    Exact Match · {score}%
+                                  </span>
+                                </div>
+                                <p className="text-xs text-muted">
+                                  {property.locality}, {property.city} · {property.size.value} {property.size.unit.toUpperCase()}
+                                </p>
+                              </div>
 
-                      <div className="text-right">
-                        <span className="text-[10px] uppercase font-bold text-muted block">Demand</span>
-                        <span className="text-base font-black text-emerald-700 dark:text-emerald-400">
-                          {formatRupees(property.priceDemandPaise)}
-                        </span>
-                      </div>
-                    </div>
+                              <div className="text-right">
+                                <span className="text-[10px] uppercase font-bold text-muted block">Demand</span>
+                                <span className="text-base font-black text-emerald-700 dark:text-emerald-400">
+                                  {formatRupees(property.priceDemandPaise)}
+                                </span>
+                              </div>
+                            </div>
 
-                    {/* Transparent Match Reasons */}
-                    <div className="space-y-1.5 text-xs bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-border">
-                      <span className="text-[10px] uppercase font-bold text-muted block tracking-wider">
-                        Why this matches:
-                      </span>
-                      {reasons.map((r, i) => (
-                        <div key={i} className="flex items-center gap-2 text-emerald-800 dark:text-emerald-400">
-                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                          <span>{r}</span>
-                        </div>
-                      ))}
-                      {mismatches.map((m, i) => (
-                        <div key={i} className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
-                          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                          <span>{m}</span>
-                        </div>
-                      ))}
-                    </div>
+                            {/* Transparent Match Reasons */}
+                            <div className="space-y-1.5 text-xs bg-emerald-50/50 dark:bg-slate-800/60 p-3 rounded-2xl border border-emerald-500/20">
+                              <span className="text-[10px] uppercase font-bold text-muted block tracking-wider">
+                                Why this matches:
+                              </span>
+                              {reasons.map((r, i) => (
+                                <div key={i} className="flex items-center gap-2 text-emerald-800 dark:text-emerald-400">
+                                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
+                                  <span>{r}</span>
+                                </div>
+                              ))}
+                              {mismatches.map((m, i) => (
+                                <div key={i} className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+                                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                  <span>{m}</span>
+                                </div>
+                              ))}
+                            </div>
 
-                    {/* STEP 4: TWO CLEAR MATCH RESULT ACTIONS */}
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-border/80">
-                      <button
-                        type="button"
-                        onClick={() => setInspectingProperty(property)}
-                        className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-ink flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                        <span>Inspect Listing</span>
-                      </button>
+                            {/* Actions */}
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-border/80">
+                              <button
+                                type="button"
+                                onClick={() => setInspectingProperty(property)}
+                                className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-ink flex items-center gap-1.5 cursor-pointer"
+                              >
+                                <Eye className="w-3.5 h-3.5" />
+                                <span>Inspect Listing</span>
+                              </button>
 
-                      <div className="flex items-center gap-2.5 w-full sm:w-auto">
-                        {/* Action 1 — Save Property */}
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          pill
-                          disabled={isSaved}
-                          onClick={() => handleSavePropertyMatch(property)}
-                          className={clsx(
-                            'flex-1 sm:flex-none text-xs font-bold',
-                            isSaved && 'text-emerald-700 border-emerald-300'
-                          )}
-                        >
-                          {isSaved ? (
-                            <span className="flex items-center gap-1.5">
-                              <Check className="w-3.5 h-3.5 text-emerald-600" />
-                              <span>Saved ✓</span>
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1.5">
-                              <Save className="w-3.5 h-3.5" />
-                              <span>Save Property</span>
-                            </span>
-                          )}
-                        </Button>
+                              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  pill
+                                  disabled={isSaved}
+                                  onClick={() => handleSavePropertyMatch(property)}
+                                  className={clsx(
+                                    'flex-1 sm:flex-none text-xs font-bold',
+                                    isSaved && 'text-emerald-700 border-emerald-300'
+                                  )}
+                                >
+                                  {isSaved ? (
+                                    <span className="flex items-center gap-1.5">
+                                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                      <span>Saved ✓</span>
+                                    </span>
+                                  ) : (
+                                    <span className="flex items-center gap-1.5">
+                                      <Save className="w-3.5 h-3.5" />
+                                      <span>Save Deal</span>
+                                    </span>
+                                  )}
+                                </Button>
 
-                        {/* Action 2 — Share on WhatsApp */}
-                        <button
-                          type="button"
-                          onClick={() => handleShareOnWhatsApp(property)}
-                          className="flex-1 sm:flex-none py-2 px-4 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer"
-                        >
-                          <Share2 className="w-3.5 h-3.5" />
-                          <span>Share on WhatsApp</span>
-                        </button>
-                      </div>
-                    </div>
-                  </Card>
-                );
-              })}
+                                <button
+                                  type="button"
+                                  onClick={() => handleShareOnWhatsApp(property)}
+                                  className="flex-1 sm:flex-none py-2 px-4 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer"
+                                >
+                                  <Share2 className="w-3.5 h-3.5" />
+                                  <span>Share Quote</span>
+                                </button>
+                              </div>
+                            </div>
+                          </Card>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
+
+              {/* Notice when no exact matches exist */}
+              {matchedProperties.filter((m) => m.score >= 80).length === 0 &&
+                matchedProperties.filter((m) => m.score < 80).length > 0 && (
+                  <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300/60 text-amber-800 dark:text-amber-300 text-xs flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
+                    <span>
+                      No exact match found in your inventory for "{buyerLocation}" ({buyerType}). Showing close matches and alternative options below:
+                    </span>
+                  </div>
+                )}
+
+              {/* 2. Close Matches (Score < 80) */}
+              {matchedProperties.filter((m) => m.score < 80).length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 px-1">
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="text-xs font-black text-amber-800 dark:text-amber-300 uppercase tracking-wider">
+                      Close Matches ({matchedProperties.filter((m) => m.score < 80).length})
+                    </span>
+                    <span className="text-[10px] text-muted font-medium">Alternative / Nearby options</span>
+                  </div>
+
+                  <div className="space-y-4">
+                    {matchedProperties
+                      .filter((m) => m.score < 80)
+                      .map(({ property, score, reasons, mismatches }) => {
+                        const isSaved = savedPropertyIds.has(property._id);
+                        return (
+                          <Card
+                            key={property._id}
+                            className="p-5 space-y-4 border-amber-300/50 hover:border-amber-500/60 transition-all duration-200 shadow-sm bg-gradient-to-br from-white via-amber-50/10 to-white dark:from-slate-900 dark:via-amber-950/10 dark:to-slate-900"
+                          >
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border/80">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h4 className="text-base font-black text-ink font-heading">
+                                    {property.title}
+                                  </h4>
+                                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300/50">
+                                    Close Match · {score}%
+                                  </span>
+                                </div>
+                                <p className="text-xs text-muted">
+                                  {property.locality}, {property.city} · {property.size.value} {property.size.unit.toUpperCase()}
+                                </p>
+                              </div>
+
+                              <div className="text-right">
+                                <span className="text-[10px] uppercase font-bold text-muted block">Demand</span>
+                                <span className="text-base font-black text-amber-800 dark:text-amber-400">
+                                  {formatRupees(property.priceDemandPaise)}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Transparent Match Reasons */}
+                            <div className="space-y-1.5 text-xs bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-border">
+                              <span className="text-[10px] uppercase font-bold text-muted block tracking-wider">
+                                Match analysis:
+                              </span>
+                              {reasons.map((r, i) => (
+                                <div key={i} className="flex items-center gap-2 text-emerald-800 dark:text-emerald-400">
+                                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
+                                  <span>{r}</span>
+                                </div>
+                              ))}
+                              {mismatches.map((m, i) => (
+                                <div key={i} className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+                                  <AlertCircle className="w-3.5 h-3.5 shrink-0 text-amber-600" />
+                                  <span>{m}</span>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-border/80">
+                              <button
+                                type="button"
+                                onClick={() => setInspectingProperty(property)}
+                                className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-ink flex items-center gap-1.5 cursor-pointer"
+                              >
+                                <Eye className="w-3.5 h-3.5" />
+                                <span>Inspect Listing</span>
+                              </button>
+
+                              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  pill
+                                  disabled={isSaved}
+                                  onClick={() => handleSavePropertyMatch(property)}
+                                  className={clsx(
+                                    'flex-1 sm:flex-none text-xs font-bold',
+                                    isSaved && 'text-emerald-700 border-emerald-300'
+                                  )}
+                                >
+                                  {isSaved ? (
+                                    <span className="flex items-center gap-1.5">
+                                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                      <span>Saved ✓</span>
+                                    </span>
+                                  ) : (
+                                    <span className="flex items-center gap-1.5">
+                                      <Save className="w-3.5 h-3.5" />
+                                      <span>Save Deal</span>
+                                    </span>
+                                  )}
+                                </Button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleShareOnWhatsApp(property)}
+                                  className="flex-1 sm:flex-none py-2 px-4 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer"
+                                >
+                                  <Share2 className="w-3.5 h-3.5" />
+                                  <span>Share Quote</span>
+                                </button>
+                              </div>
+                            </div>
+                          </Card>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

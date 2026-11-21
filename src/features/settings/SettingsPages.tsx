@@ -12,7 +12,9 @@ import {
   LogOut,
   ChevronRight,
   Check,
+  HelpCircle,
 } from 'lucide-react';
+import { startInteractiveTour } from '../onboarding/OnboardingTour';
 
 export const SettingsPage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -166,6 +168,39 @@ export const SettingsPage: React.FC = () => {
             <ChevronRight className="w-4 h-4 text-muted" />
           </div>
         </Link>
+      </Card>
+
+      {/* Help & Interactive Guided Tour (Stage 5) */}
+      <Card className="p-4 sm:p-5 space-y-2 border-emerald-500/25 bg-gradient-to-br from-white via-emerald-50/20 to-white dark:from-slate-900 dark:via-emerald-950/20 dark:to-slate-900 shadow-xs">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-muted pb-1">
+          Help & Product Tour
+        </h3>
+
+        <button
+          type="button"
+          onClick={() => startInteractiveTour()}
+          className="w-full p-3 rounded-2xl bg-surface hover:bg-emerald-50/60 dark:hover:bg-slate-800/80 border border-emerald-500/30 flex items-center justify-between text-xs transition group cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center justify-center">
+              <HelpCircle className="w-4 h-4" />
+            </div>
+            <div className="text-left">
+              <span className="font-bold text-ink block group-hover:text-emerald-700 transition">
+                Take Interactive Product Tour
+              </span>
+              <span className="text-muted text-[11px]">
+                Replay the 7-step guided tour of Dashboard, Inventory, Buyers, Quick Chat, and Tools
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="bg-emerald-600 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full shadow-2xs">
+              7 Steps
+            </span>
+            <ChevronRight className="w-4 h-4 text-muted" />
+          </div>
+        </button>
       </Card>
 
       {/* Sign Out Card */}

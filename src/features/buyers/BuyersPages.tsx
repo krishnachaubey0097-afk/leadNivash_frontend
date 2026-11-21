@@ -151,23 +151,33 @@ export const BuyersListPage: React.FC = () => {
           ))}
         </div>
       ) : buyers.length === 0 ? (
-        <Card className="p-12 text-center space-y-4">
-          <div className="w-12 h-12 rounded-full bg-brand-50 dark:bg-brand-950/60 text-brand-700 flex items-center justify-center mx-auto">
-            <Users className="w-6 h-6" />
+        <Card className="p-8 sm:p-12 text-center space-y-4 rounded-3xl bg-gradient-to-br from-white via-blue-50/30 to-white dark:from-slate-900 dark:via-blue-950/20 dark:to-slate-900 border-blue-500/20">
+          <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 flex items-center justify-center mx-auto shadow-xs">
+            <Users className="w-7 h-7" />
           </div>
-          <div>
-            <h3 className="text-base font-bold text-ink">No Buyer Inquiries Found</h3>
-            <p className="text-xs text-muted max-w-sm mx-auto mt-1">
+          <div className="space-y-1">
+            <h3 className="text-base font-black text-ink font-heading">
+              {searchQuery ? 'No Buyer Inquiries Found' : 'Please add your buyers first'}
+            </h3>
+            <p className="text-xs text-muted max-w-sm mx-auto">
               {searchQuery
                 ? `No buyers matched "${searchQuery}". Try a different name or clear filter.`
-                : 'You have no logged buyer requirements yet. Add a client or paste a requirement message.'}
+                : 'No data is available to display yet. Add a client lead or paste client requirements in Quick Chat to discover matching inventory.'}
             </p>
           </div>
-          <Link to="/app/buyers/new">
-            <Button size="sm" pill className="font-bold text-xs">
-              + Add First Buyer
-            </Button>
-          </Link>
+          <div className="pt-2 flex items-center justify-center gap-2">
+            <Link to="/app/buyers/new">
+              <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">
+                + Add Buyer
+              </Button>
+            </Link>
+            <Link to="/app/paste">
+              <Button variant="secondary" size="sm" pill className="font-bold text-xs">
+                <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                <span>Quick Chat</span>
+              </Button>
+            </Link>
+          </div>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

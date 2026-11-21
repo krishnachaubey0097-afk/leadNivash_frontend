@@ -7,7 +7,9 @@ import {
   Settings as SettingsIcon,
   Shield,
   LogOut,
+  HelpCircle,
 } from 'lucide-react';
+import { startInteractiveTour } from '../../features/onboarding/OnboardingTour';
 
 export interface AvatarMenuProps {
   inquiryCount?: number;
@@ -83,6 +85,15 @@ export const AvatarMenu: React.FC<AvatarMenuProps> = ({ inquiryCount = 0 }) => {
               <SettingsIcon className="w-4 h-4 text-muted" />
               <span>Settings</span>
             </Link>
+          </DropdownMenu.Item>
+
+          {/* Guided Tour (Stage 5) */}
+          <DropdownMenu.Item
+            onClick={() => startInteractiveTour()}
+            className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg cursor-pointer outline-none transition"
+          >
+            <HelpCircle className="w-4 h-4 text-emerald-600" />
+            <span>Take Guided Tour</span>
           </DropdownMenu.Item>
 
           {/* Admin panel link (Visible only if user.role === 'admin') */}
