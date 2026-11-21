@@ -29,11 +29,16 @@ import { fetchProperties, type PropertyItem } from '../../lib/api/properties';
 import { createBuyer, fetchBuyers } from '../../lib/api/buyers';
 import { createDeal } from '../../lib/api/deals';
 import { formatRupees } from '../../lib/money';
+import { useAuth } from '../auth/AuthProvider';
+import { apiClient } from '../../lib/api/client';
 import clsx from 'clsx';
 
 export const PastePage: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { success, error, toast } = useToast();
+
+  const agencyDisplayName = user?.agency?.name || user?.name || 'Verified Broker';
 
   // Workflow Step: 'paste' (Step 1) | 'buyer-details' (Step 2) | 'matches' (Step 3) | 'listing-review' | 'listing-saved-matches'
   const [currentStep, setCurrentStep] = useState<
@@ -87,6 +92,9 @@ export const PastePage: React.FC = () => {
 
   // Listing review state
   const [isSavingListing, setIsSavingListing] = useState(false);
+  const [listingBuyerMatches, setListingBuyerMatches] = useState<any[]>([]);
+  const [totalBuyersCount, setTotalBuyersCount] = useState<number>(0);
+  const [isLoadingListingMatches, setIsLoadingListingMatches] = useState<boolean>(false);
 
   // Voice dictation hook — GUARANTEED NON-REPEATING
   const { isListening, isSupported, interimTranscript, toggleListening } = useVoiceDictation({
@@ -187,7 +195,7 @@ export const PastePage: React.FC = () => {
 
   // DIRECT ACTION 1: Share Buyer Requirement on WhatsApp
   const handleShareBuyerRequirement = () => {
-    const text = `*Client Property Requirement*\n\n*Buyer:* ${buyerName || 'Direct Client'}\n*Seeking:* ${buyerBedrooms} ${buyerType}\n*Location:* ${buyerLocation}, Panipat\n*Budget:* Up to ₹${buyerBudgetLakhs} Lakhs\n*Preferences:* ${buyerNotes || 'Ready to close deals'}\n\nShared via Sharma Real Estate Agency`;
+    const text = `*Client Property Requirement*\n\n*Buyer:* ${buyerName || 'Direct Client'}\n*Seeking:* ${buyerBedrooms} ${buyerType}\n*Location:* ${buyerLocation}, Panipat\n*Budget:* Up to ₹${buyerBudgetLakhs} Lakhs\n*Preferences:* ${buyerNotes || 'Ready to close deals'}\n\nShared via ${agencyDisplayName}`;
     const cleanPhone = buyerPhone.replace(/\D/g, '');
     const url = cleanPhone.length === 10 || cleanPhone.length === 12
       ? `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${encodeURIComponent(text)}`
@@ -339,7 +347,7 @@ export const PastePage: React.FC = () => {
 
   // STEP 4: Share on WhatsApp
   const handleShareOnWhatsApp = (property: PropertyItem) => {
-    const text = `*Verified Property Recommendation*\n\n*${property.title}*\nLocation: ${property.locality}, Panipat\nType: ${property.type}\nArea: ${property.size.value} ${property.size.unit.toUpperCase()}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Verified clear title property ready for inspection.'}\n\nView Verified Flyer & Media: https://leadnivash.com/flyer/${property._id}\n\nShared via Sharma Real Estate Agency`;
+    const text = `*Verified Property Recommendation*\n\n*${property.title}*\nLocation: ${property.locality}, Panipat\nType: ${property.type}\nArea: ${property.size.value} ${property.size.unit.toUpperCase()}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Verified clear title property ready for inspection.'}\n\nView Verified Flyer & Media: https://leadnivash.com/flyer/${property._id}\n\nShared via ${agencyDisplayName}`;
     const cleanPhone = buyerPhone.replace(/\D/g, '');
     const url = cleanPhone.length === 10 || cleanPhone.length === 12
       ? `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${encodeURIComponent(text)}`
@@ -368,6 +376,33 @@ export const PastePage: React.FC = () => {
       setSavedPropertyId(newId);
       success('Property saved to inventory successfully!');
       setCurrentStep('listing-saved-matches');
+
+      // Fetch real buyer matches for this newly saved property from the backend
+      setIsLoadingListingMatches(true);
+      try {
+        const [matchesRes, buyersList] = await Promise.allSettled([
+          apiClient.get<any, any>(`/properties/${newId}/matches`),
+          fetchBuyers(),
+        ]);
+
+        if (matchesRes.status === 'fulfilled' && matchesRes.value) {
+          const list = Array.isArray(matchesRes.value) ? matchesRes.value : ((matchesRes.value as any)?.data || []);
+          setListingBuyerMatches(list);
+        } else {
+          setListingBuyerMatches([]);
+        }
+
+        if (buyersList.status === 'fulfilled' && Array.isArray(buyersList.value)) {
+          setTotalBuyersCount(buyersList.value.length);
+        } else {
+          setTotalBuyersCount(0);
+        }
+      } catch (err) {
+        console.warn('Could not fetch matches for property:', err);
+        setListingBuyerMatches([]);
+      } finally {
+        setIsLoadingListingMatches(false);
+      }
     } catch (err: any) {
       error(err.message || 'Saving failed. Please try again.');
     } finally {
@@ -1294,16 +1329,18 @@ export const PastePage: React.FC = () => {
           </Card>
 
           {/* Instant AI Matches Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-black text-ink font-heading">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-border/60">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-base sm:text-lg font-black text-ink font-heading leading-tight">
                   Instant Buyer Matches for this Property
                 </h2>
-                <Badge variant="brand">3 Matched</Badge>
+                <Badge variant={listingBuyerMatches.length > 0 ? 'brand' : 'neutral'}>
+                  {listingBuyerMatches.length} {listingBuyerMatches.length === 1 ? 'Matched' : 'Matched'}
+                </Badge>
               </div>
               <p className="text-xs text-muted">
-                Pre-matched buyer leads in your territory. Share the masked flyer directly via WhatsApp.
+                Pre-matched buyer leads in your database. Share the property flyer directly with clients via WhatsApp.
               </p>
             </div>
 
@@ -1316,99 +1353,125 @@ export const PastePage: React.FC = () => {
                 setParseResult(null);
                 setCurrentStep('paste');
               }}
-              className="text-xs font-bold"
+              className="text-xs font-bold whitespace-nowrap self-start sm:self-auto shrink-0 shadow-2xs"
             >
               + Paste Another Message
             </Button>
           </div>
 
           {/* Matching Buyers Cards */}
-          <div className="space-y-3">
-            {[
-              {
-                id: 'lead_1',
-                name: 'Rajesh Sharma',
-                phone: '+919876543210',
-                budget: '₹1.10 - 1.35 Cr',
-                requirement: '3 BHK Builder Floor with lift & parking',
-                locality: listingLocality || 'Model Town',
-                score: 96,
-              },
-              {
-                id: 'lead_2',
-                name: 'Vikram Verma',
-                phone: '+919876500002',
-                budget: '₹1.00 - 1.25 Cr',
-                requirement: `${listingType} in ${listingLocality || 'Panipat'}`,
-                locality: listingLocality || 'GT Road',
-                score: 91,
-              },
-              {
-                id: 'lead_3',
-                name: 'Amit Kumar',
-                phone: '+919812055667',
-                budget: '₹1.20 - 1.40 Cr',
-                requirement: 'Ready-to-move property in prime location',
-                locality: listingLocality || 'Sector 11',
-                score: 87,
-              },
-            ].map((lead) => {
-              const flyerUrl = `https://leadnivash.com/flyer/${savedPropertyId}`;
-              const whatsappShareText = `Namaste ${lead.name} ji,\n\nAapki requirement ke hisaab se ek prime property inventory mein aayi hai:\n\n*${listingTitle}*\n📍 Location: ${listingLocality}, Panipat\n💰 Asking: ${listingPrice}\n📐 Area: ${listingArea} ${listingUnit.toUpperCase()}\n\nVerified Flyer & Photos yahan dekhein:\n${flyerUrl}\n\nKya hum kal iska inspection plan kar sakte hain?\n- Sharma Real Estate Agency`;
-              const waLink = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(whatsappShareText)}`;
-
-              return (
-                <Card
-                  key={lead.id}
-                  className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-slate-200 hover:border-emerald-500/50 transition shadow-sm bg-white dark:bg-slate-900"
+          {isLoadingListingMatches ? (
+            <div className="space-y-3">
+              {[1, 2].map((i) => (
+                <div key={i} className="h-28 rounded-2xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+              ))}
+            </div>
+          ) : listingBuyerMatches.length === 0 ? (
+            <Card className="p-8 text-center space-y-3 bg-white dark:bg-slate-900 border-border">
+              <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-muted flex items-center justify-center mx-auto">
+                <Users className="w-6 h-6 text-muted" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-bold text-ink">
+                  {totalBuyersCount === 0
+                    ? 'No Buyer Requirements Added Yet'
+                    : 'No Matching Buyers Found in Your Database'}
+                </h4>
+                <p className="text-xs text-muted max-w-md mx-auto leading-relaxed">
+                  {totalBuyersCount === 0
+                    ? 'This property has been saved to your inventory. Add your client requirements in Buyer Leads, and Quick Chat will automatically match them here!'
+                    : `None of your active buyers currently match ${listingLocality || 'this location'} within ${listingPrice || 'asking price'}. You can still share this property flyer directly with clients on WhatsApp.`}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                <Link to="/app/buyers/new">
+                  <Button size="sm" pill className="font-bold text-xs">
+                    + Add Buyer Requirement
+                  </Button>
+                </Link>
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(
+                    `*Verified Property Available*\n\n*${listingTitle}*\n📍 Location: ${listingLocality}, Panipat\n💰 Asking: ${listingPrice}\n📐 Area: ${listingArea} ${listingUnit.toUpperCase()}\n\nView Verified Flyer & Photos:\nhttps://leadnivash.com/flyer/${savedPropertyId}\n\nMarketed by: ${agencyDisplayName}`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="py-1.5 px-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition"
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center justify-center font-black text-sm shrink-0 border border-emerald-200">
-                      {lead.score}%
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-bold text-ink text-sm">{lead.name}</h4>
-                        <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 px-2 py-0.5 rounded-full font-semibold">
-                          Budget: {lead.budget}
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>Share Flyer on WhatsApp</span>
+                </a>
+              </div>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              {listingBuyerMatches.map((item, idx) => {
+                const lead = item.buyer || item;
+                const score = item.score || 90;
+                const buyerBudgetFormatted = lead.budget?.maxPaise
+                  ? formatRupees(lead.budget.maxPaise)
+                  : lead.budget || 'Budget Flexible';
+                const flyerUrl = `https://leadnivash.com/flyer/${savedPropertyId}`;
+                const whatsappShareText = `Namaste ${lead.name} ji,\n\nAapki requirement ke hisaab se ek prime property inventory mein aayi hai:\n\n*${listingTitle}*\n📍 Location: ${listingLocality}, Panipat\n💰 Asking: ${listingPrice}\n📐 Area: ${listingArea} ${listingUnit.toUpperCase()}\n\nVerified Flyer & Photos yahan dekhein:\n${flyerUrl}\n\nKya hum kal iska inspection plan kar sakte hain?\n- ${agencyDisplayName}`;
+                const waLink = `https://wa.me/${(lead.phoneE164 || lead.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(whatsappShareText)}`;
+
+                return (
+                  <Card
+                    key={lead.id || lead._id || idx}
+                    className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-slate-200 hover:border-emerald-500/50 transition shadow-sm bg-white dark:bg-slate-900"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center justify-center font-black text-sm shrink-0 border border-emerald-200">
+                        {score}%
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h4 className="font-bold text-ink text-sm">{lead.name}</h4>
+                          <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full font-semibold">
+                            Max Budget: {buyerBudgetFormatted}
+                          </span>
+                          {lead.urgency && (
+                            <span className="text-[10px] bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 px-2 py-0.5 rounded-full font-bold uppercase">
+                              {lead.urgency}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted font-normal">
+                          Matches criteria in <span className="font-semibold text-ink">{listingLocality || 'Panipat'}</span>
+                        </p>
+                        <span className="text-[11px] text-slate-500 font-mono block">
+                          {lead.phoneE164 || lead.phone || '—'}
                         </span>
                       </div>
-                      <p className="text-xs text-muted font-normal">
-                        Seeking: <span className="font-semibold text-ink">{lead.requirement}</span> in {lead.locality}
-                      </p>
-                      <span className="text-[11px] text-slate-500 font-mono block">
-                        {lead.phone}
-                      </span>
                     </div>
-                  </div>
 
-                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(whatsappShareText);
-                        success(`WhatsApp flyer message copied for ${lead.name}!`);
-                      }}
-                      className="p-2 rounded-full border border-border hover:bg-slate-100 text-slate-600 text-xs font-bold cursor-pointer"
-                      title="Copy Share Message"
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(whatsappShareText);
+                          success(`WhatsApp flyer message copied for ${lead.name}!`);
+                        }}
+                        className="p-2 rounded-full border border-border hover:bg-slate-100 text-slate-600 text-xs font-bold cursor-pointer"
+                        title="Copy Share Message"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                      </button>
 
-                    <a
-                      href={waLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="py-2 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                      <span>Share on WhatsApp</span>
-                    </a>
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
+                      <a
+                        href={waLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="py-2 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
+                      >
+                        <Share2 className="w-3.5 h-3.5" />
+                        <span>Share on WhatsApp</span>
+                      </a>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 

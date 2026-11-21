@@ -169,13 +169,15 @@ export const PublicFlyerPage: React.FC = () => {
           {/* Agency Watermark Header */}
           <div className="p-4 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-md">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center font-black text-white text-sm shadow-xs">
-                LN
+              <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center font-black text-white text-sm shadow-xs shrink-0">
+                {((property as any)?.agency?.name || (property as any)?.brokerAgencyName || 'LN').slice(0, 2).toUpperCase()}
               </div>
               <div>
-                <h4 className="font-bold text-sm leading-tight text-white">Sharma Real Estate Agency</h4>
+                <h4 className="font-bold text-sm leading-tight text-white">
+                  {(property as any)?.agency?.name || (property as any)?.brokerAgencyName || 'Verified Real Estate Partner'}
+                </h4>
                 <span className="text-[11px] text-emerald-300 font-medium">
-                  Panipat Central & NCR · RERA Verified Broker
+                  {(property as any)?.agency?.city || property.city || 'Panipat Central & NCR'} · Verified Broker
                 </span>
               </div>
             </div>
@@ -372,7 +374,7 @@ export const PublicFlyerPage: React.FC = () => {
                   Inquiry Sent Successfully!
                 </h4>
                 <p className="text-xs text-emerald-700">
-                  Thank you, {buyerName}! Sharma Real Estate Agency has received your request and will contact you on {buyerPhone}.
+                  Thank you, {buyerName}! The listing partner has received your request and will contact you on {buyerPhone}.
                 </p>
               </div>
             ) : (

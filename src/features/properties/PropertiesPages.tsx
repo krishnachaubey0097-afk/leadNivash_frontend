@@ -35,6 +35,7 @@ import { useToast } from '../../components/ui/Toast';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { ErrorState } from '../../components/ui/ErrorState';
 import { PropertyCardSkeleton } from '../../components/ui/Skeleton';
+import { useAuth } from '../auth/AuthProvider';
 import {
   fetchProperties,
   fetchPropertyById,
@@ -1193,12 +1194,15 @@ export const PropertyDetailPage: React.FC = () => {
 // =========================================================================
 export const PropertySharePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const { success, toast } = useToast();
   const [property, setProperty] = useState<PropertyItem | null>(null);
   const [copied, setCopied] = useState(false);
   const [isSharingMedia, setIsSharingMedia] = useState(false);
   const [flyerMediaIndex, setFlyerMediaIndex] = useState<number>(0);
   const [flyerMediaType, setFlyerMediaType] = useState<'photo' | 'video'>('photo');
+
+  const agencyDisplayName = user?.agency?.name || user?.name || 'Verified Broker';
 
   useEffect(() => {
     if (id) {
@@ -1222,7 +1226,7 @@ export const PropertySharePage: React.FC = () => {
     );
   }
 
-  const shareText = `*${property.title}*\nLocation: ${property.locality}, ${property.city || 'Panipat'}\nSize: ${property.size.value} ${property.size.unit.toUpperCase()}\nFacing: ${property.facing || 'Prime Facing'}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Verified clear title property ready for inspection.'}\n\nMarketed by: Sharma Real Estate Agency · Panipat\nView Verified Flyer & Media: https://leadnivash.com/flyer/${property._id}`;
+  const shareText = `*${property.title}*\nLocation: ${property.locality}, ${property.city || 'Panipat'}\nSize: ${property.size.value} ${property.size.unit.toUpperCase()}\nFacing: ${property.facing || 'Prime Facing'}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Verified clear title property ready for inspection.'}\n\nMarketed by: ${agencyDisplayName} · ${property.city || 'Panipat'}\nView Verified Flyer & Media: https://leadnivash.com/flyer/${property._id}`;
 
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
@@ -1316,11 +1320,11 @@ export const PropertySharePage: React.FC = () => {
         <div className="p-3 rounded-2xl bg-slate-900 text-white flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center font-black text-white text-xs">
-              LN
+              {(agencyDisplayName || 'LN').slice(0, 2).toUpperCase()}
             </div>
             <div>
-              <h4 className="font-bold leading-tight">Sharma Real Estate Agency</h4>
-              <span className="text-[10px] text-emerald-400 font-medium">Panipat · Verified Listing</span>
+              <h4 className="font-bold leading-tight">{agencyDisplayName}</h4>
+              <span className="text-[10px] text-emerald-400 font-medium">{property.city || 'Panipat'} · Verified Listing</span>
             </div>
           </div>
           <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">

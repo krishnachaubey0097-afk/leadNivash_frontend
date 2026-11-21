@@ -97,7 +97,7 @@ export const ToolsPage: React.FC = () => {
   const agencyOrOwnerName =
     agencyName && ownerName && agencyName !== ownerName
       ? `${agencyName} · ${ownerName}`
-      : agencyName || ownerName || 'Sharma Real Estate Agency';
+      : agencyName || ownerName || 'LeadNivash Partner';
 
   const handleCopyText = (text: string, id: string) => {
     navigator.clipboard.writeText(text);

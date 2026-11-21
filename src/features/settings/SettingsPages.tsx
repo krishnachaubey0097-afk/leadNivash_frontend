@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
 import { Button } from '../../components/ui/Button';
@@ -17,18 +17,97 @@ import {
   Download,
   Trash2,
   Lock,
+  Building2,
+  User as UserIcon,
 } from 'lucide-react';
 import { startInteractiveTour } from '../onboarding/OnboardingTour';
 
 export const SettingsPage: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, refreshUser, logout } = useAuth();
   const { success, error } = useToast();
 
-  const [agencyName, setAgencyName] = useState('Sharma Real Estate Agency');
-  const [reraNo, setReraNo] = useState('HR/PNP/RERA-2024/889');
-  const [marlaStandard, setMarlaStandard] = useState<'30.25' | '25'>('25');
+  // Profile Form State (connected directly to backend User & Agency profile)
+  const [name, setName] = useState(user?.name || '');
+  const [agencyName, setAgencyName] = useState(user?.agency?.name || '');
+  const [reraNo, setReraNo] = useState(user?.agency?.reraNo || '');
+  const [agencyCity, setAgencyCity] = useState(user?.agency?.city || 'Panipat');
+  const [marlaStandard, setMarlaStandard] = useState<'30.25' | '25'>(
+    String((user as any)?.preferences?.marlaToGaj || '25') === '30.25' ? '30.25' : '25'
+  );
+
+  const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [inquiriesCount, setInquiriesCount] = useState<number>(0);
+
+  // Sync state whenever AuthContext user updates
+  useEffect(() => {
+    if (user) {
+      if (user.name) setName(user.name);
+      if (user.agency?.name) setAgencyName(user.agency.name);
+      if (user.agency?.reraNo) setReraNo(user.agency.reraNo);
+      if (user.agency?.city) setAgencyCity(user.agency.city);
+      if ((user as any).preferences?.marlaToGaj) {
+        setMarlaStandard(String((user as any).preferences.marlaToGaj) === '30.25' ? '30.25' : '25');
+      }
+    }
+  }, [user]);
+
+  // Fetch freshest profile & inquiries on component mount
+  useEffect(() => {
+    apiClient
+      .get<any, any>('/users/me')
+      .then((res) => {
+        const u = res?.data || res;
+        if (u) {
+          if (u.name) setName(u.name);
+          if (u.agency?.name) setAgencyName(u.agency.name);
+          if (u.agency?.reraNo) setReraNo(u.agency.reraNo);
+          if (u.agency?.city) setAgencyCity(u.agency.city);
+          if (u.preferences?.marlaToGaj) {
+            setMarlaStandard(String(u.preferences.marlaToGaj) === '30.25' ? '30.25' : '25');
+          }
+        }
+      })
+      .catch((err) => console.warn('Settings: Could not refresh profile from API:', err));
+
+    apiClient
+      .get<any, any>('/inquiries')
+      .then((res) => {
+        const inqs = res?.inquiries || res?.data || (Array.isArray(res) ? res : []);
+        setInquiriesCount(Array.isArray(inqs) ? inqs.length : 0);
+      })
+      .catch(() => setInquiriesCount(0));
+  }, []);
+
+  // Save Settings to Backend API (PATCH /api/v1/users/me)
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      await apiClient.patch('/users/me', {
+        name: name.trim() || undefined,
+        agency: {
+          name: agencyName.trim() || undefined,
+          reraNo: reraNo.trim() || undefined,
+          city: agencyCity.trim() || undefined,
+        },
+        preferences: {
+          marlaToGaj: Number(marlaStandard),
+          defaultCity: agencyCity.trim() || undefined,
+        },
+      });
+
+      await refreshUser();
+      setIsSaved(true);
+      success('Agency profile and settings updated successfully!');
+      setTimeout(() => setIsSaved(false), 2500);
+    } catch (err: any) {
+      error(err.message || 'Failed to update settings. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleExportData = async () => {
     setIsExporting(true);
@@ -51,15 +130,14 @@ export const SettingsPage: React.FC = () => {
     }
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaved(true);
-    success('Agency profile and regional unit settings saved!');
-    setTimeout(() => setIsSaved(false), 2000);
-  };
+  // Derive dynamic initials from Agency Name or User Name
+  const displayTitle = agencyName.trim() || name.trim() || user?.agency?.name || user?.name || 'My Agency Profile';
+  const displayInitials = (agencyName.trim() || name.trim() || user?.name || 'LN')
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto pb-16 text-left">
+    <div className="space-y-6 max-w-2xl mx-auto pb-16 text-left px-2 sm:px-0">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -77,34 +155,36 @@ export const SettingsPage: React.FC = () => {
       <Card className="p-5 sm:p-6 space-y-4 border-emerald-500/30 shadow-card">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/80">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-black text-lg shadow-md shadow-brand-700/20">
-              LN
+            <div className="w-12 h-12 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-black text-lg shadow-md shadow-brand-700/20 shrink-0">
+              {displayInitials}
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <h2 className="text-base font-black text-ink font-heading">{agencyName}</h2>
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <h2 className="text-base font-black text-ink font-heading">{displayTitle}</h2>
+                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
               </div>
               <p className="text-xs text-muted">
-                Primary Territory: <span className="font-semibold text-ink">Panipat Central & NCR</span>
+                Primary Territory: <span className="font-semibold text-ink">{agencyCity || 'Panipat Central'}</span>
               </p>
             </div>
           </div>
 
           <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold px-3 py-1 rounded-full border border-emerald-500/30 self-start sm:self-auto">
-            RERA Verified Broker
+            {reraNo.trim() ? 'RERA Verified Broker' : 'Verified Broker'}
           </span>
         </div>
 
         <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
-                Agency / Firm Name
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted flex items-center gap-1">
+                <Building2 className="w-3 h-3 text-emerald-600" />
+                <span>Agency / Firm Name</span>
               </label>
               <input
                 type="text"
                 value={agencyName}
+                placeholder="e.g. Skyline Realty / Property Point"
                 onChange={(e) => setAgencyName(e.target.value)}
                 className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
@@ -117,6 +197,7 @@ export const SettingsPage: React.FC = () => {
               <input
                 type="text"
                 value={reraNo}
+                placeholder="e.g. HR/PNP/RERA-2024/..."
                 onChange={(e) => setReraNo(e.target.value)}
                 className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
@@ -125,15 +206,45 @@ export const SettingsPage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted flex items-center gap-1">
+                <UserIcon className="w-3 h-3 text-emerald-600" />
+                <span>Broker Contact Person</span>
+              </label>
+              <input
+                type="text"
+                value={name}
+                placeholder="e.g. Pawan Sharma"
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+            </div>
+
+            <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
-                Broker Contact Phone
+                Primary Territory / City
+              </label>
+              <input
+                type="text"
+                value={agencyCity}
+                placeholder="e.g. Panipat"
+                onChange={(e) => setAgencyCity(e.target.value)}
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                Registered Contact Phone (Login ID)
               </label>
               <input
                 type="text"
                 disabled
-                value={user?.phone || '+91 98120 44321'}
-                className="w-full bg-slate-100 dark:bg-slate-800 border border-border rounded-xl p-2.5 text-xs text-muted"
+                value={user?.phone || '+91' + (user as any)?.phoneE164 || 'Registered Phone'}
+                className="w-full bg-slate-100 dark:bg-slate-800 border border-border rounded-xl p-2.5 text-xs text-muted cursor-not-allowed font-mono"
               />
+              <span className="text-[10px] text-muted">Phone is bound to your authentication security credential.</span>
             </div>
 
             <div className="space-y-1">
@@ -143,16 +254,17 @@ export const SettingsPage: React.FC = () => {
               <select
                 value={marlaStandard}
                 onChange={(e) => setMarlaStandard(e.target.value as any)}
-                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold"
+                className="w-full bg-surface border border-border rounded-xl p-2.5 text-xs text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
               >
                 <option value="25">25 Gaj / Marla (Panipat Local Standard)</option>
                 <option value="30.25">30.25 Gaj / Marla (Haryana Official Standard)</option>
               </select>
+              <span className="text-[10px] text-muted">Sets default conversion unit across Quick Chat and tools.</span>
             </div>
           </div>
 
-          <div className="flex justify-end pt-1">
-            <Button size="sm" pill type="submit" className="font-bold text-xs">
+          <div className="flex justify-end pt-2">
+            <Button size="sm" pill type="submit" isLoading={isSaving} className="font-bold text-xs">
               {isSaved ? (
                 <span className="flex items-center gap-1.5">
                   <Check className="w-3.5 h-3.5" />
@@ -189,7 +301,7 @@ export const SettingsPage: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             <span className="bg-brand-600 text-white font-bold text-[10px] px-2 py-0.5 rounded-full">
-              4 New
+              {inquiriesCount} {inquiriesCount === 1 ? 'Inquiry' : 'Inquiries'}
             </span>
             <ChevronRight className="w-4 h-4 text-muted" />
           </div>

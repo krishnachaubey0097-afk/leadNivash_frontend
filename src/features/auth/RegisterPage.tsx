@@ -115,7 +115,7 @@ export const RegisterPage: React.FC = () => {
         email: googleEmail,
         name: googleName || 'Verified Broker',
         phone: formattedPhone,
-        agencyName: googleAgency || 'Sharma Real Estate Agency',
+        agencyName: googleAgency || (googleName ? `${googleName} Realty` : 'Prime Realty'),
         city: googleCity || 'Panipat',
       });
 
