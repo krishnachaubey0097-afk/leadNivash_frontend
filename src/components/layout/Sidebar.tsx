@@ -119,12 +119,12 @@ export const Sidebar: React.FC = () => {
         {/* Upgrade Button with Subtle Glow for Free Trial Users */}
         {(user?.plan?.tier === 'trial' || !user?.plan?.tier) && (
           <div className="pt-2 border-t border-border/60 dark:border-slate-800 space-y-1.5">
-            <div className="flex items-center justify-between text-[10px] text-amber-700 dark:text-amber-400 font-bold">
+            <div className="flex items-center justify-between text-[10px] text-emerald-800 dark:text-emerald-300 font-bold">
               <span className="flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-amber-600" />
+                <Sparkles className="w-3 h-3 text-emerald-600" />
                 <span>Special Trial Deal</span>
               </span>
-              <span className="bg-amber-100 dark:bg-amber-950/80 px-1.5 py-0.2 rounded text-[9px] border border-amber-300 dark:border-amber-700 font-extrabold">
+              <span className="bg-emerald-100 dark:bg-emerald-950/80 px-1.5 py-0.2 rounded text-[9px] border border-emerald-300/80 dark:border-emerald-700 font-extrabold text-emerald-800 dark:text-emerald-300">
                 -₹700 OFF
               </span>
             </div>

@@ -186,8 +186,8 @@ export const SettingsPage: React.FC = () => {
 
         {/* Special Free Trial Upgrade Offer */}
         <div className="p-4 rounded-xl bg-white dark:bg-slate-800/80 border border-emerald-500/25 space-y-3">
-          <div className="flex items-center gap-1.5 text-amber-800 dark:text-amber-300 text-[11px] font-bold">
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+          <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300 text-[11px] font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
             <span>Exclusive Free Trial Member Upgrade</span>
           </div>
           <div>

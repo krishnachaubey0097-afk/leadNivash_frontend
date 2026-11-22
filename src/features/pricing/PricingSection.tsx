@@ -64,19 +64,19 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
       {/* ========================================================================= */}
       <div className="rounded-3xl p-5 sm:p-6 bg-gradient-to-br from-white via-emerald-50/50 to-teal-50/40 dark:from-slate-900 dark:via-emerald-950/20 dark:to-slate-900 border-2 border-emerald-500/30 shadow-md relative overflow-hidden">
         {/* Ambient Top Glow Line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-400" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-600 via-teal-400 to-emerald-500" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 relative z-10">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700/60 text-amber-800 dark:text-amber-300 text-[11px] font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-[11px] font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
               <span>Special Free Trial Upgrade Offer</span>
             </div>
             <h3 className="text-lg sm:text-xl md:text-2xl font-black text-ink font-heading tracking-tight">
               Upgrade to the Yearly Plan for{' '}
               <span className="text-emerald-700 dark:text-emerald-400 font-black">₹3,299</span>{' '}
               <span className="line-through text-muted text-base font-normal">₹3,999</span>{' '}
-              <span className="text-xs font-bold text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-950/80 px-2 py-0.5 rounded-md ml-1 border border-amber-300">
+              <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/80 px-2 py-0.5 rounded-md ml-1 border border-emerald-300/80">
                 Save ₹700
               </span>
             </h3>

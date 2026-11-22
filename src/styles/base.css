@@ -216,7 +216,7 @@
 
 /* ========================================================= */
 /* Special Free Trial Upgrade Glowing Button Animation       */
-/* 2-3 theme-matching colors: Emerald (#018E45), Cyan/Teal (#0D9488), and Gold/Amber (#D97706) */
+/* Clean brand colors: Emerald (#018E45), Cyan/Teal (#0D9488), Deep Emerald (#017A3C) */
 /* ========================================================= */
 @keyframes trialGlowPulse {
   0% {
@@ -225,8 +225,8 @@
     background-position: 0% 50%;
   }
   50% {
-    box-shadow: 0 0 22px -1px rgba(217, 119, 6, 0.6), 0 0 36px -2px rgba(1, 142, 69, 0.4);
-    border-color: rgba(217, 119, 6, 0.85);
+    box-shadow: 0 0 22px -1px rgba(1, 142, 69, 0.65), 0 0 36px -2px rgba(13, 148, 136, 0.45);
+    border-color: rgba(1, 142, 69, 0.85);
     background-position: 100% 50%;
   }
   100% {
