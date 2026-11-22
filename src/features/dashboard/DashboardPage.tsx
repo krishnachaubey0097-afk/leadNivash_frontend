@@ -500,6 +500,73 @@ export const DashboardPage: React.FC = () => {
               <StatCardSkeleton />
               <StatCardSkeleton />
             </div>
+          ) : totalPropertiesCount === 0 && totalBuyersCount === 0 ? (
+            /* First Inquiry / Zero-Data Onboarding Hub with Clear CTAs */
+            <div className="p-6 sm:p-10 text-center rounded-3xl bg-gradient-to-br from-white/95 via-emerald-50/60 to-emerald-100/40 dark:from-slate-900/95 dark:via-emerald-950/30 dark:to-slate-900/90 border border-emerald-500/30 shadow-sm space-y-6">
+              <div className="w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto shadow-sm">
+                <Sparkles className="w-8 h-8 stroke-[2.2]" />
+              </div>
+
+              <div className="space-y-2 max-w-lg mx-auto">
+                <h3 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
+                  Welcome to your Broker Hub, {user?.name?.split(' ')[0] || 'Broker'}!
+                </h3>
+                <p className="text-xs sm:text-sm text-muted leading-relaxed">
+                  Your workspace is ready. You haven't added any listings or buyer inquiries yet. Add your first property or client requirement below to activate automated AI matching and deal tracking.
+                </p>
+              </div>
+
+              {/* 3 High-Conversion Direct CTAs */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <Link to="/app/properties/new" className="w-full sm:w-auto">
+                  <Button pill className="w-full sm:w-auto font-bold text-xs sm:text-sm px-6 py-3 min-h-[44px] shadow-md shadow-emerald-700/20 bg-emerald-600 hover:bg-emerald-700 text-white justify-center">
+                    <Plus className="w-4 h-4 mr-1.5" />
+                    <span>Add 1st Property Listing</span>
+                  </Button>
+                </Link>
+
+                <Link to="/app/buyers/new" className="w-full sm:w-auto">
+                  <Button variant="secondary" pill className="w-full sm:w-auto font-bold text-xs sm:text-sm px-6 py-3 min-h-[44px] justify-center">
+                    <Plus className="w-4 h-4 mr-1.5" />
+                    <span>Add 1st Buyer Inquiry</span>
+                  </Button>
+                </Link>
+
+                <Link to="/app/paste" className="w-full sm:w-auto">
+                  <Button variant="secondary" pill className="w-full sm:w-auto font-bold text-xs sm:text-sm px-6 py-3 min-h-[44px] justify-center border-teal-500/40 text-teal-800 dark:text-teal-300">
+                    <Sparkles className="w-4 h-4 mr-1.5 text-teal-600" />
+                    <span>Quick Chat WhatsApp Extract</span>
+                  </Button>
+                </Link>
+              </div>
+
+              {/* 3 Step Matching Engine Explanation */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-4 border-t border-emerald-500/20 text-left">
+                <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-emerald-500/20 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-black text-[11px] flex items-center justify-center">1</span>
+                    <span className="font-bold text-xs text-ink">Add Listings & Leads</span>
+                  </div>
+                  <p className="text-[11px] text-muted">Create inventory listings or paste raw messages from WhatsApp groups.</p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-emerald-500/20 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[11px] flex items-center justify-center">2</span>
+                    <span className="font-bold text-xs text-ink">Instant AI Matching</span>
+                  </div>
+                  <p className="text-[11px] text-muted">Locality, budget, and Marla/Gaj standards are automatically paired.</p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-emerald-500/20 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-teal-600 text-white font-black text-[11px] flex items-center justify-center">3</span>
+                    <span className="font-bold text-xs text-ink">1-Click WhatsApp Pitch</span>
+                  </div>
+                  <p className="text-[11px] text-muted">Send verified flyers & WhatsApp pitch messages to close transactions faster.</p>
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {/* 1. Total Properties */}
@@ -766,148 +833,117 @@ export const DashboardPage: React.FC = () => {
                 </div>
               </Card>
             </div>
-          ) : (
-            /* Clear Empty State when account has 0 listings & 0 buyers */
-            <div className="p-8 sm:p-12 text-center rounded-3xl bg-gradient-to-br from-white/95 via-emerald-50/60 to-emerald-100/40 border border-emerald-500/30 shadow-sm space-y-4">
-              <div className="w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto shadow-sm">
-                <Building2 className="w-8 h-8 stroke-[2.2]" />
-              </div>
-              <div className="space-y-1.5 max-w-md mx-auto">
-                <h3 className="text-lg font-black text-ink font-heading">
-                  Please add your properties first
-                </h3>
-                <p className="text-xs text-muted">
-                  No data is available to display yet. Add properties to your inventory so Quick Chat can automatically match client requirements and track your pipeline.
-                </p>
-              </div>
-              <div className="flex items-center justify-center gap-3 pt-2">
-                <Link to="/app/properties/new">
-                  <Button pill className="font-bold text-xs px-5 py-2.5 shadow-md shadow-emerald-700/20 bg-emerald-600 hover:bg-emerald-700 text-white">
-                    <Plus className="w-3.5 h-3.5 mr-1" />
-                    <span>Add Property</span>
-                  </Button>
-                </Link>
-                <Link to="/app/buyers/new">
-                  <Button variant="secondary" pill className="font-bold text-xs px-5 py-2.5">
-                    <Plus className="w-3.5 h-3.5 mr-1" />
-                    <span>Add Buyer</span>
-                  </Button>
+          ) : null}
+
+          {/* Top Matches Waiting Action Section - Only rendered when user has inventory or leads */}
+          {(totalPropertiesCount > 0 || totalBuyersCount > 0) && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-base font-black text-ink font-heading">
+                    High-Priority Matches Waiting
+                  </h2>
+                  <p className="text-xs text-muted">
+                    Auto-matched inventory ready to be forwarded to clients
+                  </p>
+                </div>
+                <Link to="/app/properties" className="text-xs font-bold text-brand-700 hover:underline flex items-center gap-1">
+                  View All Matches <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
+
+              {isLoadingStats ? (
+                <div className="space-y-4">
+                  <MatchCardSkeleton />
+                  <MatchCardSkeleton />
+                </div>
+              ) : matchesWaiting.length === 0 ? (
+                <Card className="p-8 text-center space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 flex items-center justify-center mx-auto">
+                    <Building2 className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-sm font-bold text-ink">
+                    No Active Matches Waiting
+                  </h4>
+                  <p className="text-xs text-muted max-w-sm mx-auto">
+                    All current buyer requirements have been processed. Add new properties or paste inquiries in Quick Chat to discover instant matches.
+                  </p>
+                  <div className="pt-2 flex items-center justify-center gap-2">
+                    <Link to="/app/properties/new">
+                      <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+                        <Plus className="w-3.5 h-3.5 mr-1" />
+                        <span>Add Property</span>
+                      </Button>
+                    </Link>
+                    <Link to="/app/paste">
+                      <Button variant="secondary" size="sm" pill className="font-bold text-xs">
+                        <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                        <span>Quick Chat</span>
+                      </Button>
+                    </Link>
+                  </div>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {matchesWaiting.map((match) => (
+                    <Card key={match.id} className="p-5 flex flex-col justify-between" interactive>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Badge variant={match.badge as any} pill dot>
+                            {match.score}% Match
+                          </Badge>
+                          <span className="text-[11px] text-muted">{match.date}</span>
+                        </div>
+
+                        <div>
+                          <h3 className="text-sm font-bold text-ink hover:text-brand-700 transition">
+                            {match.propertyTitle}
+                          </h3>
+                          <p className="text-xs text-muted mt-0.5">{match.locality}</p>
+                          <span className="text-xs font-black text-brand-700 mt-1 block">
+                            {formatRupees(match.propertyPrice)}
+                          </span>
+                        </div>
+
+                        <div className="p-3 rounded-xl bg-bg border border-border/60 flex items-center justify-between text-xs">
+                          <div>
+                            <span className="text-[10px] uppercase font-bold text-muted block">Client Lead</span>
+                            <span className="font-bold text-ink">{match.buyerName}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-[10px] uppercase font-bold text-muted block">Target Budget</span>
+                            <span className="font-semibold text-text">{match.buyerBudget}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 pt-3 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-2">
+                        <a
+                          href={`https://wa.me/?text=${encodeURIComponent(
+                            `Hello! Here is a great property matching your requirement: ${match.propertyTitle} in ${match.locality}. Price: ${formatRupees(match.propertyPrice)}. Let me know if you would like to schedule a site visit!`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full sm:flex-1"
+                        >
+                          <Button size="sm" pill className="w-full text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white min-h-[40px] justify-center">
+                            <Send className="w-3.5 h-3.5 mr-1" />
+                            <span>Send on WhatsApp</span>
+                          </Button>
+                        </a>
+
+                        <Link to="/app/properties" className="w-full sm:w-auto">
+                          <Button variant="secondary" size="sm" pill className="w-full sm:w-auto text-xs font-bold min-h-[40px] justify-center">
+                            View Flyer
+                          </Button>
+                        </Link>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </div>
           )}
-
-          {/* Top Matches Waiting Action Section */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-base font-black text-ink font-heading">
-                  High-Priority Matches Waiting
-                </h2>
-                <p className="text-xs text-muted">
-                  Auto-matched inventory ready to be forwarded to clients
-                </p>
-              </div>
-              <Link to="/app/properties" className="text-xs font-bold text-brand-700 hover:underline flex items-center gap-1">
-                View All Matches <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            {isLoadingStats ? (
-              <div className="space-y-4">
-                <MatchCardSkeleton />
-                <MatchCardSkeleton />
-              </div>
-            ) : matchesWaiting.length === 0 ? (
-              <Card className="p-8 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 flex items-center justify-center mx-auto">
-                  <Building2 className="w-6 h-6" />
-                </div>
-                <h4 className="text-sm font-bold text-ink">
-                  {dbProperties.length === 0
-                    ? 'Please add your properties first'
-                    : 'No Active Matches Waiting'}
-                </h4>
-                <p className="text-xs text-muted max-w-sm mx-auto">
-                  {dbProperties.length === 0
-                    ? 'No data is available to display yet. Add properties to your inventory so matches can be generated automatically.'
-                    : 'All current buyer requirements have been processed. Add new properties or paste inquiries to discover matches.'}
-                </p>
-                <div className="pt-2 flex items-center justify-center gap-2">
-                  <Link to="/app/properties/new">
-                    <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
-                      <Plus className="w-3.5 h-3.5 mr-1" />
-                      <span>Add Property</span>
-                    </Button>
-                  </Link>
-                  <Link to="/app/paste">
-                    <Button variant="secondary" size="sm" pill className="font-bold text-xs">
-                      <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
-                      <span>Quick Chat</span>
-                    </Button>
-                  </Link>
-                </div>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {matchesWaiting.map((match) => (
-                  <Card key={match.id} className="p-5 flex flex-col justify-between" interactive>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <Badge variant={match.badge as any} pill dot>
-                          {match.score}% Match
-                        </Badge>
-                        <span className="text-[11px] text-muted">{match.date}</span>
-                      </div>
-
-                      <div>
-                        <h3 className="text-sm font-bold text-ink hover:text-brand-700 transition">
-                          {match.propertyTitle}
-                        </h3>
-                        <p className="text-xs text-muted mt-0.5">{match.locality}</p>
-                        <span className="text-xs font-black text-brand-700 mt-1 block">
-                          {formatRupees(match.propertyPrice)}
-                        </span>
-                      </div>
-
-                      <div className="p-3 rounded-xl bg-bg border border-border/60 flex items-center justify-between text-xs">
-                        <div>
-                          <span className="text-[10px] uppercase font-bold text-muted block">Client Lead</span>
-                          <span className="font-bold text-ink">{match.buyerName}</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-[10px] uppercase font-bold text-muted block">Target Budget</span>
-                          <span className="font-semibold text-text">{match.buyerBudget}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 pt-3 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-2">
-                      <a
-                        href={`https://wa.me/?text=${encodeURIComponent(
-                          `Hello! Here is a great property matching your requirement: ${match.propertyTitle} in ${match.locality}. Price: ${formatRupees(match.propertyPrice)}. Let me know if you would like to schedule a site visit!`
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full sm:flex-1"
-                      >
-                        <Button size="sm" pill className="w-full text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white min-h-[40px] justify-center">
-                          <Send className="w-3.5 h-3.5 mr-1" />
-                          <span>Send on WhatsApp</span>
-                        </Button>
-                      </a>
-
-                      <Link to="/app/properties" className="w-full sm:w-auto">
-                        <Button variant="secondary" size="sm" pill className="w-full sm:w-auto text-xs font-bold min-h-[40px] justify-center">
-                          View Flyer
-                        </Button>
-                      </Link>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
       )}
 

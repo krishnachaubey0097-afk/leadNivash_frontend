@@ -131,14 +131,14 @@ export const SettingsPage: React.FC = () => {
   };
 
   // Derive dynamic initials from Broker Name, User Email, or Agency Name (matching TopBar & Avatar)
-  const displayTitle = agencyName.trim() || name.trim() || user?.agency?.name || user?.name || user?.email?.split('@')[0] || 'My Agency Profile';
-  const displayInitials = (user?.name || name || user?.email?.split('@')[0] || agencyName || 'BR')
+  const displayTitle = name.trim() || user?.name || agencyName.trim() || user?.agency?.name || 'Broker Profile';
+  const displayInitials = (name.trim() || user?.name || user?.email?.split('@')[0] || 'S')
     .split(' ')
     .filter(Boolean)
     .map((n) => n[0])
     .slice(0, 2)
     .join('')
-    .toUpperCase() || 'BR';
+    .toUpperCase() || 'S';
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto pb-16 text-left px-2 sm:px-0">
@@ -159,55 +159,27 @@ export const SettingsPage: React.FC = () => {
       <Card className="p-5 sm:p-6 space-y-4 border-emerald-500/30 shadow-card">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/80">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-black text-lg shadow-md shadow-brand-700/20 shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex items-center justify-center font-black text-lg shadow-md shadow-emerald-700/20 shrink-0">
               {displayInitials}
             </div>
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
-                <h2 className="text-base font-black text-ink font-heading">{displayTitle}</h2>
+                <h2 className="text-base font-black text-ink font-heading capitalize">{displayTitle}</h2>
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
               </div>
               <p className="text-xs text-muted">
-                Primary Territory: <span className="font-semibold text-ink">{agencyCity || 'Panipat Central'}</span>
+                {agencyName.trim() ? <span className="font-semibold text-ink">{agencyName.trim()} · </span> : ''}
+                Primary Territory: <span className="font-semibold text-ink">{agencyCity || 'Panipat Central & NCR'}</span>
               </p>
             </div>
           </div>
 
           <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold px-3 py-1 rounded-full border border-emerald-500/30 self-start sm:self-auto">
-            {reraNo.trim() ? 'RERA Verified Broker' : 'Verified Broker'}
+            {reraNo.trim() ? `RERA: ${reraNo.trim()}` : 'Verified Broker'}
           </span>
         </div>
 
         <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-muted flex items-center gap-1">
-                <Building2 className="w-3 h-3 text-emerald-600" />
-                <span>Agency / Firm Name</span>
-              </label>
-              <input
-                type="text"
-                value={agencyName}
-                placeholder="Enter agency or firm name (e.g. Prime Realty)"
-                onChange={(e) => setAgencyName(e.target.value)}
-                className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600"
-              />
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
-                RERA / Registration No.
-              </label>
-              <input
-                type="text"
-                value={reraNo}
-                placeholder="Enter RERA registration number (optional)"
-                onChange={(e) => setReraNo(e.target.value)}
-                className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600"
-              />
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase tracking-wider text-muted flex items-center gap-1">
@@ -217,8 +189,37 @@ export const SettingsPage: React.FC = () => {
               <input
                 type="text"
                 value={name}
-                placeholder="Enter broker contact person name"
+                placeholder="Enter broker contact person name (e.g. Sunny)"
                 onChange={(e) => setName(e.target.value)}
+                className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted flex items-center gap-1">
+                <Building2 className="w-3 h-3 text-emerald-600" />
+                <span>Agency / Firm Name</span>
+              </label>
+              <input
+                type="text"
+                value={agencyName}
+                placeholder="Enter agency or firm name (optional)"
+                onChange={(e) => setAgencyName(e.target.value)}
+                className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                RERA / Registration No.
+              </label>
+              <input
+                type="text"
+                value={reraNo}
+                placeholder="Enter RERA registration number (optional)"
+                onChange={(e) => setReraNo(e.target.value)}
                 className="w-full bg-surface border border-border rounded-xl px-3.5 py-3 min-h-[44px] text-base sm:text-xs text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
             </div>

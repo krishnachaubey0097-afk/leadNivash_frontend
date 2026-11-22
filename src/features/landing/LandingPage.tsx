@@ -551,8 +551,8 @@ export const LandingPage: React.FC = () => {
                           isActive
                             ? 'bg-emerald-50/90 border-2 border-emerald-600 text-emerald-950 font-bold shadow-md shadow-emerald-600/15'
                             : isPassed
-                            ? 'bg-white border-emerald-300 text-emerald-700 shadow-2xs'
-                            : 'bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:text-slate-900 shadow-2xs'
+                              ? 'bg-white border-emerald-300 text-emerald-700 shadow-2xs'
+                              : 'bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:text-slate-900 shadow-2xs'
                         )}
                       >
                         <span
@@ -561,8 +561,8 @@ export const LandingPage: React.FC = () => {
                             isActive
                               ? 'bg-emerald-600 text-white shadow-2xs'
                               : isPassed
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-slate-100 text-slate-600'
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : 'bg-slate-100 text-slate-600'
                           )}
                         >
                           <Icon className="w-3 h-3" />
@@ -962,8 +962,8 @@ export const LandingPage: React.FC = () => {
                           isActive
                             ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-600/30 scale-110 ring-4 ring-emerald-500/20'
                             : isPassed
-                            ? 'bg-emerald-50 border-emerald-600 text-emerald-700'
-                            : 'bg-white border-slate-300 text-slate-500 hover:border-slate-400'
+                              ? 'bg-emerald-50 border-emerald-600 text-emerald-700'
+                              : 'bg-white border-slate-300 text-slate-500 hover:border-slate-400'
                         )}
                       >
                         <Icon className="w-4 h-4" />
@@ -1638,7 +1638,7 @@ export const LandingPage: React.FC = () => {
           {/* 2. Interactive Financial Dashboard (Two-Column Layout) */}
           <div className="rounded-3xl bg-white border border-slate-200/90 shadow-xl shadow-emerald-950/5 overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-              
+
               {/* LEFT COLUMN: Financial Assumptions & Controls (7 Cols on desktop) */}
               <div className="lg:col-span-7 p-5 sm:p-8 lg:p-10 space-y-7 text-left">
                 <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
@@ -1773,7 +1773,7 @@ export const LandingPage: React.FC = () => {
 
               {/* RIGHT COLUMN: Calculated Commission Results (5 Cols on desktop) */}
               <div className="lg:col-span-5 p-5 sm:p-8 lg:p-10 bg-gradient-to-br from-emerald-500/5 via-teal-500/5 to-slate-900/5 text-left flex flex-col justify-between space-y-7">
-                
+
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-emerald-500/20 pb-3">
                     <span className="text-[10px] font-black uppercase tracking-widest text-emerald-800 dark:text-emerald-300">
@@ -2020,7 +2020,7 @@ export const LandingPage: React.FC = () => {
 
           {/* 2. Exactly TWO Pricing Cards (Side-by-Side on Desktop) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
-            
+
             {/* PLAN ONE — STARTER PILOT */}
             <div className="group rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 relative shadow-2xs">
               <div className="space-y-6">
@@ -2278,7 +2278,7 @@ export const LandingPage: React.FC = () => {
 
           {/* 3 Primary Reason Feature Panels */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch text-left">
-            
+
             {/* CARD 1 — NEVER LOSE A MATCH */}
             <div className="group rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 shadow-2xs">
               <div className="space-y-4">
