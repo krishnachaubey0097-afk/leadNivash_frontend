@@ -25,7 +25,8 @@ export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as any)?.from?.pathname || '/app';
+  const rawFrom = (location.state as any)?.from?.pathname;
+  const from = rawFrom && rawFrom !== '/login' ? rawFrom : '/app';
 
   // Automatically redirect if already authenticated
   React.useEffect(() => {
@@ -59,6 +60,7 @@ export const LoginPage: React.FC = () => {
   const [googlePhoneError, setGooglePhoneError] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const hasGoogleClientId = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
@@ -67,24 +69,31 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setErrorMsg(null);
     setLoading(true);
+    setLoadingStatus('Verifying credentials...');
+
+    const slowTimer = setTimeout(() => {
+      setLoadingStatus('Connecting to secure broker workspace...');
+    }, 1800);
 
     try {
-      await login(email, password);
+      await login(email.trim(), password);
       navigate(from, { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 401) {
-          setErrorMsg('Invalid email or password. Please verify your credentials.');
+          setErrorMsg('Invalid email/mobile or password. Please verify your credentials.');
         } else if (err.status === 429) {
           setErrorMsg(err.message || 'Too many login attempts. Please wait a moment before trying again.');
         } else {
           setErrorMsg(err.message || 'Login failed. Please check your connection and try again.');
         }
       } else {
-        setErrorMsg('Network error — please check your internet connection.');
+        setErrorMsg('Connection error or timeout. Please check your network and retry.');
       }
     } finally {
+      clearTimeout(slowTimer);
       setLoading(false);
+      setLoadingStatus(null);
     }
   };
 
@@ -442,13 +451,20 @@ export const LoginPage: React.FC = () => {
               {loginMode === 'password' && (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <Input
-                    label="Work Email Address"
-                    type="email"
+                    label="Work Email or Registered Mobile Number"
+                    type="text"
                     required
+                    autoComplete="username"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="broker@sharmarealestate.com"
-                    leftIcon={<Mail className="w-4 h-4 text-slate-400" />}
+                    placeholder="Enter email or 10-digit mobile (e.g. 9876543210)"
+                    leftIcon={
+                      /^[6-9]\d{2}/.test(email.replace(/[\s+-]/g, '')) ? (
+                        <Phone className="w-4 h-4 text-emerald-600" />
+                      ) : (
+                        <Mail className="w-4 h-4 text-slate-400" />
+                      )
+                    }
                   />
 
                   <div className="space-y-1">
@@ -456,6 +472,7 @@ export const LoginPage: React.FC = () => {
                       label="Password"
                       type={showPassword ? 'text' : 'password'}
                       required
+                      autoComplete="current-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••••••"
@@ -490,10 +507,10 @@ export const LoginPage: React.FC = () => {
                   <Button
                     type="submit"
                     isLoading={loading}
-                    className="w-full font-bold shadow-md shadow-emerald-700/20"
+                    className="w-full font-bold shadow-md shadow-emerald-700/20 min-h-[44px]"
                   >
                     <LogIn className="w-4 h-4 mr-1.5" />
-                    <span>Sign In to Workspace</span>
+                    <span>{loadingStatus || 'Sign In to Workspace'}</span>
                   </Button>
                 </form>
               )}

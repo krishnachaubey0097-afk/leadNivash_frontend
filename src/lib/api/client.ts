@@ -7,7 +7,7 @@ import { ApiError } from './errors';
 export const apiClient = axios.create({
   baseURL: env.VITE_API_BASE_URL,
   withCredentials: true,
-  timeout: 15000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
