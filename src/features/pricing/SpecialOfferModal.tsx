@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Sparkles,
   Check,
@@ -30,6 +30,17 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Lock body scroll when modal is active to prevent background bleed-through
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleProceedToUpgrade = async () => {
@@ -48,7 +59,6 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
       if (onPay) {
         onPay({ plan: 'yearly_special', amount: 3299, currency: 'INR' });
       } else if (typeof (window as any).Razorpay !== 'undefined') {
-        // If user already embedded Razorpay script on window
         toast('Opening Razorpay Checkout...', 'info');
       } else {
         toast('Proceeding to Razorpay payment gateway for ₹3,299...', 'success');
@@ -65,45 +75,45 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/75 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-emerald-500/30 shadow-2xl overflow-hidden text-left my-auto"
+        className="relative w-full max-w-lg max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-emerald-500/30 shadow-2xl overflow-hidden text-left my-auto animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Decorative Emerald Accent Bar */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-700 shrink-0" />
+        <div className="h-1.5 w-full bg-gradient-to-r from-[#018E45] via-teal-500 to-[#017A3C] shrink-0" />
 
-        {/* Close Button */}
+        {/* Close Button with generous click target & elegant circle */}
         <button
           onClick={onClose}
-          className="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-muted hover:text-ink flex items-center justify-center transition cursor-pointer z-10"
+          className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition cursor-pointer z-20 shadow-2xs"
           aria-label="Close modal"
         >
           <X className="w-4 h-4" />
         </button>
 
-        {/* Scrollable Modal Content to fit any viewport cleanly */}
-        <div className="overflow-y-auto px-5 py-4 sm:p-6 space-y-4">
-          {/* Header with Emerald Brand Badge */}
-          <div className="space-y-1.5 pr-8">
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-[11px] font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span>Free Trial Exclusive Privilege</span>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight leading-snug">
-              Upgrade to the Yearly Plan for{' '}
-              <span className="text-emerald-700 dark:text-emerald-400">₹3,299</span>{' '}
-              <span className="line-through text-muted text-base font-normal">₹3,999</span>
-            </h2>
-            <p className="text-xs text-muted leading-relaxed">
-              As an active Free Trial broker, you are eligible for an exclusive{' '}
-              <strong className="text-emerald-700 dark:text-emerald-400 font-semibold">₹700 instant discount</strong> on our
-              full Lifetime Yearly Plan.
-            </p>
+        {/* Pinned Header with Brand Identity */}
+        <div className="px-5 pt-4 pb-2 sm:px-6 sm:pt-5 shrink-0 pr-12 space-y-1.5">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-[11px] font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <span>Free Trial Exclusive Privilege</span>
           </div>
+          <h2 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight leading-snug">
+            Upgrade to the Yearly Plan for{' '}
+            <span className="text-emerald-700 dark:text-emerald-400">₹3,299</span>{' '}
+            <span className="line-through text-muted text-base font-normal">₹3,999</span>
+          </h2>
+          <p className="text-xs text-muted leading-relaxed">
+            As an active Free Trial broker, you are eligible for an exclusive{' '}
+            <strong className="text-emerald-700 dark:text-emerald-400 font-semibold">₹700 instant discount</strong> on our
+            full Lifetime Yearly Plan.
+          </p>
+        </div>
 
+        {/* Smooth, Clean Content Body (scrollbar hidden for sleek aesthetic) */}
+        <div className="flex-1 overflow-y-auto px-5 py-2.5 sm:px-6 space-y-3.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {/* Pricing Details Box */}
           <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-br from-emerald-50/50 via-white to-teal-50/30 dark:from-slate-800/80 dark:via-slate-800 dark:to-slate-800/60 border border-emerald-500/25 space-y-2.5">
             <div className="flex items-center justify-between border-b border-[#E5E9EE] dark:border-slate-700/80 pb-2">
@@ -180,33 +190,33 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
             <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Includes 7-Day 100% Unconditional Money-Back Guarantee. Zero risk.</span>
           </div>
+        </div>
 
-          {/* Actions & Razorpay-ready CTA */}
-          <div className="pt-1 space-y-2">
-            <button
-              type="button"
-              disabled={isSubmitting}
-              onClick={handleProceedToUpgrade}
-              className="w-full py-3.5 rounded-2xl text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow-md animate-trial-glow flex items-center justify-center gap-2 cursor-pointer transition min-h-[46px]"
-            >
-              <Crown className="w-4 h-4 shrink-0" />
-              <span>Proceed to Pay ₹3,299</span>
-              <ArrowRight className="w-4 h-4 shrink-0" />
-            </button>
+        {/* Pinned Bottom Actions & Razorpay CTA - Always visible without scroll clipping */}
+        <div className="shrink-0 p-4 sm:px-6 sm:pb-5 pt-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs border-t border-slate-100 dark:border-slate-800 space-y-2">
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={handleProceedToUpgrade}
+            className="w-full py-3.5 px-4 rounded-2xl text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow-md animate-trial-glow flex items-center justify-center gap-2 cursor-pointer transition min-h-[46px]"
+          >
+            <Crown className="w-4 h-4 shrink-0" />
+            <span>Proceed to Pay ₹3,299</span>
+            <ArrowRight className="w-4 h-4 shrink-0" />
+          </button>
 
-            <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted">
-              <Lock className="w-3 h-3 text-emerald-600 shrink-0" />
-              <span>100% Secure Checkout via Razorpay · Instant Activation</span>
-            </div>
-
-            <button
-              type="button"
-              onClick={onClose}
-              className="w-full text-center text-xs text-muted hover:text-ink font-medium py-1 transition cursor-pointer"
-            >
-              Continue with my 14-Day Free Trial
-            </button>
+          <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted">
+            <Lock className="w-3 h-3 text-emerald-600 shrink-0" />
+            <span>100% Secure Checkout via Razorpay · Instant Activation</span>
           </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full text-center text-xs text-muted hover:text-ink font-medium py-0.5 transition cursor-pointer"
+          >
+            Continue with my 14-Day Free Trial
+          </button>
         </div>
       </div>
     </div>
