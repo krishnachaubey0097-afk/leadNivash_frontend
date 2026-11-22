@@ -32,19 +32,19 @@ export const TopBar: React.FC = () => {
   const { title, subtitle } = getPageTitle(location.pathname);
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-surface/85 backdrop-blur-xl border-b border-border/80 transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-30 w-full bg-gradient-to-r from-white via-white to-emerald-50/40 backdrop-blur-md border-b border-[#E5E9EE] transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
         {/* Left side: Mobile Logo & Page Heading */}
         <div className="flex items-center gap-3">
           <Link to="/app" className="flex items-center gap-2 lg:hidden">
-            <div className="w-8 h-8 rounded-xl bg-surface border border-border/70 p-1 shadow-xs">
-              <img src="/logo-icon.png" alt="leadNivash" className="w-full h-full object-contain" />
+            <div className="w-8 h-8 rounded-lg bg-white border border-[#E5E9EE] p-1 shadow-2xs">
+              <img src="/logo-icon.png" alt="LeadNivesh" className="w-full h-full object-contain" />
             </div>
           </Link>
           <div className="flex flex-col">
-            <h1 className="text-base font-black text-ink font-heading leading-tight">{title}</h1>
+            <h1 className="text-base sm:text-lg font-bold text-ink font-heading leading-tight">{title}</h1>
             {subtitle && (
-              <span className="text-[10px] text-muted font-bold uppercase tracking-wider hidden sm:block">
+              <span className="text-[11px] text-muted font-medium hidden sm:block">
                 {subtitle}
               </span>
             )}
@@ -53,14 +53,14 @@ export const TopBar: React.FC = () => {
 
         {/* Right side: Quick Actions, Theme Switcher, Notifications, Avatar */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Quick Paste signature pill button (Reference 2 style) */}
+          {/* Quick Paste signature button */}
           <Link
             to="/app/paste"
-            className="group hidden sm:inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 via-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 active:scale-[0.98] text-white text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-700/25 hover:shadow-lg hover:shadow-emerald-700/35 transition-all"
+            className="group hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 active:scale-[0.98] text-white text-xs font-semibold shadow-xs hover:shadow-sm transition-all"
           >
-            <span className="w-2 h-2 rounded-full bg-white/95 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             <span>Paste Message</span>
-            <span className="w-5 h-5 rounded-full bg-white text-emerald-700 flex items-center justify-center font-bold text-xs shadow-2xs group-hover:rotate-90 transition-transform">
+            <span className="w-4 h-4 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs transition-transform group-hover:rotate-90">
               <Plus className="w-3 h-3 stroke-[2.5]" />
             </span>
           </Link>

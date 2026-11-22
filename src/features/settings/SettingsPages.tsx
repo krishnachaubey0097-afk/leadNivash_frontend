@@ -156,16 +156,16 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {/* Agency Identity & Verified Badge Card */}
-      <Card className="p-5 sm:p-6 space-y-4 border-emerald-500/30 shadow-card">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/80">
+      <Card className="p-5 sm:p-6 space-y-4 border-emerald-500/25 bg-gradient-to-br from-white via-white to-emerald-50/30 shadow-xs rounded-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E5E9EE]">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex items-center justify-center font-black text-lg shadow-md shadow-emerald-700/20 shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-600 to-brand-700 text-white flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">
               {displayInitials}
             </div>
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
-                <h2 className="text-base font-black text-ink font-heading capitalize">{displayTitle}</h2>
-                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                <h2 className="text-base font-bold text-ink font-heading capitalize">{displayTitle}</h2>
+                <ShieldCheck className="w-4 h-4 text-brand-600 shrink-0" />
               </div>
               <p className="text-xs text-muted">
                 {agencyName.trim() ? <span className="font-semibold text-ink">{agencyName.trim()} · </span> : ''}
@@ -174,45 +174,45 @@ export const SettingsPage: React.FC = () => {
             </div>
           </div>
 
-          <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold px-3 py-1 rounded-full border border-emerald-500/30 self-start sm:self-auto">
+          <span className="text-[11px] bg-[#E8F5EE] text-[#017A3C] font-semibold px-3 py-1 rounded-full border border-emerald-500/25 self-start sm:self-auto">
             {reraNo.trim() ? `RERA: ${reraNo.trim()}` : 'Verified Broker'}
           </span>
         </div>
 
         {/* Saved Account Details Overview */}
-        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 space-y-3">
+        <div className="p-4 rounded-xl bg-gradient-to-br from-white to-[#E8F5EE]/40 border border-[#E5E9EE] space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="text-[11px] font-bold text-muted flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
               <span>Saved Account Details</span>
             </span>
-            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/70 dark:bg-emerald-950/80 dark:text-emerald-300 px-2.5 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold text-[#017A3C] bg-[#E8F5EE] px-2.5 py-0.5 rounded-full border border-emerald-500/20">
               MongoDB Synchronized
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-            <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-border/70 space-y-0.5">
+            <div className="p-2.5 rounded-lg bg-white border border-[#E5E9EE] space-y-0.5">
               <span className="text-[10px] uppercase font-bold text-muted block">Broker Name</span>
               <span className="font-bold text-ink">{name.trim() || user?.name || 'Not provided'}</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-border/70 space-y-0.5">
+            <div className="p-2.5 rounded-lg bg-white border border-[#E5E9EE] space-y-0.5">
               <span className="text-[10px] uppercase font-bold text-muted block">Registered Phone (Login ID)</span>
               <span className="font-mono font-bold text-ink">{user?.phone || (user as any)?.phoneE164 || 'Not registered'}</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-border/70 space-y-0.5">
+            <div className="p-2.5 rounded-lg bg-white border border-[#E5E9EE] space-y-0.5">
               <span className="text-[10px] uppercase font-bold text-muted block">Registered Email</span>
               <span className="font-mono font-bold text-ink truncate block">{user?.email || 'Not provided'}</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-border/70 space-y-0.5">
+            <div className="p-2.5 rounded-lg bg-white border border-[#E5E9EE] space-y-0.5">
               <span className="text-[10px] uppercase font-bold text-muted block">Agency / Firm Name</span>
               <span className="font-bold text-ink">{agencyName.trim() || user?.agency?.name || 'Direct Broker Agency'}</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-border/70 space-y-0.5">
+            <div className="p-2.5 rounded-lg bg-white border border-[#E5E9EE] space-y-0.5">
               <span className="text-[10px] uppercase font-bold text-muted block">RERA Number</span>
               <span className="font-mono font-bold text-ink">{reraNo.trim() || user?.agency?.reraNo || 'Not registered'}</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-border/70 space-y-0.5">
+            <div className="p-2.5 rounded-lg bg-white border border-[#E5E9EE] space-y-0.5">
               <span className="text-[10px] uppercase font-bold text-muted block">Operating Territory</span>
               <span className="font-bold text-ink">{agencyCity.trim() || user?.agency?.city || 'Haryana & NCR Hub'}</span>
             </div>

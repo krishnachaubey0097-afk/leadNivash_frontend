@@ -15,15 +15,15 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
           'rounded-card border transition-all duration-200',
           // Variants
           variant === 'default' &&
-            'bg-surface border-border/80 shadow-card text-text',
+            'bg-gradient-to-br from-white via-white to-emerald-50/20 border-border/90 shadow-card text-text',
           variant === 'raised' &&
-            'bg-surface-raised border-border shadow-card-hover text-text',
+            'bg-gradient-to-br from-white via-white to-emerald-50/40 border-border shadow-card-hover text-text',
           variant === 'flat' &&
-            'bg-bg/60 border-border/60 text-text',
+            'bg-gradient-to-br from-white via-[#F4F6F8] to-emerald-50/20 border-border/70 text-text',
           variant === 'glow' &&
-            'bg-surface border-brand-600/20 shadow-glow text-text',
+            'bg-gradient-to-br from-white via-emerald-50/30 to-emerald-100/40 border-brand-600/30 shadow-glow text-text',
           variant === 'dark' &&
-            'bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white border-slate-800 shadow-xl',
+            'bg-gradient-to-br from-white via-emerald-50/40 to-emerald-100/30 text-ink border-emerald-500/30 shadow-card',
           // Interactive Hover
           interactive &&
             'hover:shadow-card-hover hover:border-brand-600/40 cursor-pointer active:scale-[0.99]',

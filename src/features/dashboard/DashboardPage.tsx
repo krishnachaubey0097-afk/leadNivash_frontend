@@ -205,18 +205,18 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-5 pb-12">
-      {/* Apple Glass White + Green Gradient Welcome Banner (Zero dark/black) */}
-      <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-white/95 via-emerald-50/70 to-emerald-100/40 backdrop-blur-xl border border-emerald-500/25 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Light White + Green Gradient Welcome Banner (Apple-Class Crisp Glass) */}
+      <div className="rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-white via-white to-emerald-50/40 backdrop-blur-md border border-[#E5E9EE] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center font-black text-white text-base shadow-sm shrink-0 uppercase">
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-600 to-brand-700 flex items-center justify-center font-bold text-white text-base shadow-2xs shrink-0 uppercase">
             {(user?.name?.charAt(0) || user?.agency?.name?.charAt(0) || 'S').toUpperCase()}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg sm:text-xl font-black font-heading tracking-tight text-ink capitalize">
+              <h1 className="text-base sm:text-lg font-bold font-heading tracking-tight text-ink capitalize">
                 Welcome back, {user?.name?.split(' ')[0] || 'Broker'}
               </h1>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-100/80 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-[10px] font-extrabold border border-emerald-300/60 shadow-2xs">
+              <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] text-[11px] font-semibold border border-emerald-500/20">
                 PRO ACTIVE
               </span>
             </div>
@@ -227,18 +227,18 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Right side controls: Tour, Date pill & Segmented Toggle */}
-        <div className="flex items-center gap-2.5 flex-wrap justify-end">
+        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap justify-end">
           <button
             type="button"
             onClick={() => startInteractiveTour()}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition shadow-2xs cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-50/60 text-brand-700 border border-[#E5E9EE] text-xs font-semibold transition shadow-2xs cursor-pointer min-h-[36px]"
             title="Start Interactive Product Tour"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
+            <HelpCircle className="w-3.5 h-3.5 text-brand-600" />
             <span>Product Tour</span>
           </button>
 
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-xs border border-border/70 text-xs font-semibold text-muted shadow-2xs">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#E5E9EE] text-xs font-semibold text-muted shadow-2xs min-h-[36px]">
             <Calendar className="w-3.5 h-3.5 text-brand-600" />
             <span>
               {new Date().toLocaleDateString('en-IN', {
@@ -249,14 +249,14 @@ export const DashboardPage: React.FC = () => {
             </span>
           </div>
 
-          {/* Segmented Control Pill (Apple Glass Frosted Style) */}
-          <div className="flex p-1 bg-slate-200/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full border border-border/80 shadow-2xs">
+          {/* Segmented Control Pill */}
+          <div className="flex p-1 bg-slate-100 rounded-xl border border-[#E5E9EE] shadow-2xs">
             <button
               onClick={() => setActiveSegment('today')}
               className={clsx(
-                'px-4 py-1.5 text-xs font-bold rounded-full transition-all cursor-pointer',
+                'px-3.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer min-h-[32px]',
                 activeSegment === 'today'
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-xs'
+                  ? 'bg-brand-600 text-white shadow-2xs'
                   : 'text-muted hover:text-ink'
               )}
             >
@@ -265,9 +265,9 @@ export const DashboardPage: React.FC = () => {
             <button
               onClick={() => setActiveSegment('track-record')}
               className={clsx(
-                'px-4 py-1.5 text-xs font-bold rounded-full transition-all cursor-pointer',
+                'px-3.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer min-h-[32px]',
                 activeSegment === 'track-record'
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-xs'
+                  ? 'bg-brand-600 text-white shadow-2xs'
                   : 'text-muted hover:text-ink'
               )}
             >
@@ -279,10 +279,10 @@ export const DashboardPage: React.FC = () => {
 
       {/* TODAY SEGMENT (§5.3.1) */}
       {activeSegment === 'today' && (
-        <div className="space-y-6">
+        <div className="space-y-5">
           {/* Empty Account Banner Prompting User to Add Properties */}
           {dbProperties.length === 0 && !isLoadingStats && (
-            <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-white via-emerald-50/60 to-emerald-100/40 border border-emerald-500/30 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/40 border border-emerald-500/25 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
               <div className="flex flex-col sm:flex-row items-center gap-3.5">
                 <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 shadow-2xs">
                   <Building2 className="w-6 h-6" />
@@ -322,14 +322,14 @@ export const DashboardPage: React.FC = () => {
           )}
 
           {/* Quick Paste Hero Card (Integrated directly into Dashboard with Green+White Gradient) */}
-          <Card className="p-4 sm:p-5 bg-gradient-to-br from-white via-emerald-50/25 to-emerald-100/35 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border-emerald-500/30 shadow-card space-y-3">
+          <Card className="p-4 sm:p-5 bg-gradient-to-br from-white via-white to-emerald-50/30 border border-[#E5E9EE] shadow-card rounded-2xl space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="p-1.5 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-50 dark:from-emerald-950 dark:to-slate-900 text-brand-700 dark:text-brand-400 border border-emerald-500/20">
+                <span className="p-1.5 rounded-lg bg-[#E8F5EE] text-brand-700 border border-emerald-500/20">
                   <Sparkles className="w-4 h-4" />
                 </span>
                 <div>
-                  <h2 className="text-sm font-black text-ink font-heading leading-tight">
+                  <h2 className="text-sm sm:text-base font-bold text-ink font-heading leading-tight">
                     Quick Paste WhatsApp Deal
                   </h2>
                   <p className="text-[11px] text-muted">
@@ -339,7 +339,7 @@ export const DashboardPage: React.FC = () => {
               </div>
               <Link
                 to="/app/paste"
-                className="text-xs text-brand-700 dark:text-brand-600 font-bold hover:underline hidden sm:flex items-center gap-1"
+                className="text-xs text-brand-700 font-semibold hover:underline hidden sm:flex items-center gap-1"
               >
                 <span>Voice Dictation & Full View</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -353,7 +353,7 @@ export const DashboardPage: React.FC = () => {
                 value={quickInput}
                 onChange={(e) => setQuickInput(e.target.value)}
                 placeholder="e.g. 2 BHK luxury floor in Model Town Panipat demand 65 Lakhs negotiable. Contact 9876543210..."
-                className="w-full bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 text-xs text-ink placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-600 shadow-2xs transition"
+                className="w-full bg-white border border-[#E5E9EE] rounded-xl p-3 text-xs sm:text-sm text-ink placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-600 shadow-2xs transition"
               />
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
@@ -635,31 +635,31 @@ export const DashboardPage: React.FC = () => {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {/* 1. Total Properties */}
               <Card
-                className="p-3.5 sm:p-5 flex flex-col justify-between rounded-3xl bg-gradient-to-br from-white via-white to-emerald-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border-emerald-500/25 shadow-xs hover:shadow-md transition-all"
+                className="p-3.5 sm:p-4 flex flex-col justify-between rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/40 border-emerald-500/20 shadow-xs hover:border-emerald-500/40 transition-all"
                 interactive
               >
               <div>
                 <div className="flex items-center justify-between gap-1">
-                  <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-muted truncate">
+                  <span className="text-[11px] font-bold text-muted font-sans tracking-wide truncate">
                     Properties
                   </span>
                   <Link
                     to="/app/properties"
-                    className="w-11 h-11 sm:w-7 sm:h-7 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-full bg-emerald-500/10 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center transition shrink-0"
+                    className="w-8 h-8 rounded-lg bg-emerald-50 text-brand-700 flex items-center justify-center transition shrink-0 hover:bg-emerald-100"
                     title="View Properties"
                   >
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
-                <div className="mt-1.5 sm:mt-2 flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-3xl font-black text-ink font-heading leading-tight">
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  <span className="text-2xl sm:text-[26px] font-bold text-ink font-heading leading-tight">
                     {isLoadingStats ? '...' : totalPropertiesCount}
                   </span>
-                  <span className="text-xs text-muted font-bold">listings</span>
+                  <span className="text-xs text-muted font-medium">listings</span>
                 </div>
               </div>
-              <div className="mt-3 pt-2.5 border-t border-border/50 flex items-center justify-between text-[10px] sm:text-[11px]">
-                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold dark:bg-emerald-950/60 dark:text-emerald-400 shrink-0">
+              <div className="mt-2.5 pt-2 border-t border-[#E5E9EE] flex items-center justify-between text-[11px]">
+                <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] font-semibold text-[11px] shrink-0">
                   Active
                 </span>
                 <span className="text-muted font-medium">{activePropertiesCount} Available</span>
@@ -668,31 +668,31 @@ export const DashboardPage: React.FC = () => {
 
             {/* 2. Active Buyers */}
             <Card
-              className="p-3.5 sm:p-5 flex flex-col justify-between rounded-3xl bg-gradient-to-br from-white via-white to-blue-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/20 border-blue-500/25 shadow-xs hover:shadow-md transition-all"
+              className="p-3.5 sm:p-4 flex flex-col justify-between rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/30 border-[#E5E9EE] shadow-xs hover:border-brand-600/30 transition-all"
               interactive
             >
               <div>
                 <div className="flex items-center justify-between gap-1">
-                  <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-muted truncate">
+                  <span className="text-[11px] font-bold text-muted font-sans tracking-wide truncate">
                     Active Buyers
                   </span>
                   <Link
                     to="/app/buyers"
-                    className="w-11 h-11 sm:w-7 sm:h-7 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-full bg-blue-500/10 text-blue-700 dark:bg-blue-950/60 dark:text-blue-400 flex items-center justify-center transition shrink-0"
+                    className="w-8 h-8 rounded-lg bg-emerald-50/70 text-brand-700 flex items-center justify-center transition shrink-0 hover:bg-emerald-100"
                     title="View Buyers"
                   >
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
-                <div className="mt-1.5 sm:mt-2 flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-3xl font-black text-ink font-heading leading-tight">
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  <span className="text-2xl sm:text-[26px] font-bold text-ink font-heading leading-tight">
                     {isLoadingStats ? '...' : totalBuyersCount}
                   </span>
-                  <span className="text-xs text-muted font-bold">leads</span>
+                  <span className="text-xs text-muted font-medium">leads</span>
                 </div>
               </div>
-              <div className="mt-3 pt-2.5 border-t border-border/50 flex items-center justify-between text-[10px] sm:text-[11px]">
-                <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-400 shrink-0">
+              <div className="mt-2.5 pt-2 border-t border-[#E5E9EE] flex items-center justify-between text-[11px]">
+                <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] font-semibold text-[11px] shrink-0">
                   {activeBuyersCount} Verified
                 </span>
                 <span className="text-muted font-medium">High Intent</span>
@@ -701,59 +701,59 @@ export const DashboardPage: React.FC = () => {
 
             {/* 3. Matches Waiting */}
             <Card
-              className="p-3.5 sm:p-5 flex flex-col justify-between rounded-3xl bg-gradient-to-br from-white via-white to-teal-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/20 border-teal-500/25 shadow-xs hover:shadow-md transition-all"
+              className="p-3.5 sm:p-4 flex flex-col justify-between rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/50 border-emerald-500/25 shadow-xs hover:border-emerald-500/45 transition-all"
               interactive
             >
               <div>
                 <div className="flex items-center justify-between gap-1">
-                  <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-muted truncate">
+                  <span className="text-[11px] font-bold text-muted font-sans tracking-wide truncate">
                     Matches Ready
                   </span>
                   <Link
                     to="/app/properties"
-                    className="w-11 h-11 sm:w-7 sm:h-7 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-full bg-teal-500/10 text-teal-700 dark:bg-teal-950/60 dark:text-teal-400 flex items-center justify-center transition shrink-0"
+                    className="w-8 h-8 rounded-lg bg-emerald-50 text-brand-700 flex items-center justify-center transition shrink-0 hover:bg-emerald-100"
                     title="View Matches"
                   >
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
-                <div className="mt-1.5 sm:mt-2 flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-3xl font-black text-emerald-700 dark:text-emerald-400 font-heading leading-tight">
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  <span className="text-2xl sm:text-[26px] font-bold text-brand-700 font-heading leading-tight">
                     {isLoadingStats ? '...' : matchesWaitingCount}
                   </span>
-                  <span className="text-xs text-emerald-700/80 font-bold">pairs</span>
+                  <span className="text-xs text-brand-700/80 font-medium">pairs</span>
                 </div>
               </div>
-              <div className="mt-3 pt-2.5 border-t border-border/50 flex items-center justify-between text-[10px] sm:text-[11px]">
-                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center gap-1 shrink-0">
+              <div className="mt-2.5 pt-2 border-t border-[#E5E9EE] flex items-center justify-between text-[11px]">
+                <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] font-semibold text-[11px] flex items-center gap-1 shrink-0">
                   <Sparkles className="w-3 h-3" /> 85%+
                 </span>
                 <span className="text-muted font-medium">Matched</span>
               </div>
             </Card>
 
-            {/* 4. Projected Commission (Zero mobile truncation: Pipeline Fee + ₹5.45 L + 1% avg fee + 4 deals) */}
+            {/* 4. Projected Commission */}
             <Card
-              className="p-3.5 sm:p-5 flex flex-col justify-between rounded-3xl bg-gradient-to-br from-white via-amber-50/20 to-amber-100/40 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/20 border-amber-500/30 shadow-xs hover:shadow-md transition-all min-w-0"
+              className="p-3.5 sm:p-4 flex flex-col justify-between rounded-2xl bg-gradient-to-br from-white via-white to-emerald-100/30 border-emerald-500/20 shadow-xs hover:border-emerald-500/40 transition-all min-w-0"
               interactive
             >
               <div>
                 <div className="flex items-center justify-between gap-1">
-                  <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-muted truncate">
+                  <span className="text-[11px] font-bold text-muted font-sans tracking-wide truncate">
                     Pipeline Fee
                   </span>
-                  <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-500/15 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 flex items-center justify-center shrink-0">
+                  <span className="w-7 h-7 rounded-lg bg-[#E8F5EE] text-brand-700 flex items-center justify-center shrink-0">
                     <Trophy className="w-3.5 h-3.5" />
                   </span>
                 </div>
-                <div className="mt-1.5 sm:mt-2 min-w-0">
-                  <span className="text-lg sm:text-2xl xl:text-3xl font-black text-amber-800 dark:text-amber-400 font-heading tracking-tight block">
+                <div className="mt-1 min-w-0">
+                  <span className="text-lg sm:text-2xl xl:text-[26px] font-bold text-ink font-heading tracking-tight block">
                     {isLoadingStats ? '...' : formatRupees(projectedCommissionPaise)}
                   </span>
                 </div>
               </div>
-              <div className="mt-3 pt-2.5 border-t border-border/50 flex items-center justify-between text-[10px] sm:text-[11px]">
-                <span className="px-2 py-0.5 rounded-full bg-amber-100/80 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 font-bold shrink-0">
+              <div className="mt-2.5 pt-2 border-t border-[#E5E9EE] flex items-center justify-between text-[11px]">
+                <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] font-semibold text-[11px] shrink-0">
                   1% avg fee
                 </span>
                 <span className="text-muted font-medium">{dbProperties.length} active</span>

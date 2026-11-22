@@ -1,28 +1,28 @@
 :root {
-  /* Brand Emerald */
-  --brand-50: #ECFDF5;
-  --brand-100: #D1FAE5;
-  --brand-200: #A7F3D0;
-  --brand-500: #10B981;
-  --brand-600: #059669;
-  --brand-700: #047857; /* White text buttons & links (WCAG AA) */
-  --brand-800: #065F46;
-  --brand-900: #064E3B;
-  --brand-950: #022C22;
+  /* Brand Emerald / Green (Sampled directly from LeadNivesh Logo) */
+  --brand-50: #E8F5EE;
+  --brand-100: #D1F2E0;
+  --brand-200: #A3E5C2;
+  --brand-500: #018E45;
+  --brand-600: #018E45; /* Primary logo green */
+  --brand-700: #017A3C; /* White text buttons & links (WCAG AA) */
+  --brand-800: #016230;
+  --brand-900: #014B25;
+  --brand-950: #003318;
 
-  /* Typography Colors */
-  --ink: #0F172A;
-  --text: #334155;
-  --muted: #64748B;
+  /* Typography Colors (Brand Navy & Slate Charcoal) */
+  --ink: #0E2235;   /* Logo Navy for headings and dark titles */
+  --text: #33475B;  /* Slate Charcoal for body text */
+  --muted: #64748B; /* Secondary metadata and hints */
   --faint: #94A3B8;
 
   /* Surfaces & Backgrounds */
-  --bg: #F8FAFC;
+  --bg: #F4F6F8;
   --surface: #FFFFFF;
   --surface-raised: #FFFFFF;
-  --surface-hover: #F1F5F9;
-  --border: #E2E8F0;
-  --border-subtle: #F1F5F9;
+  --surface-hover: #F8FAFC;
+  --border: #E5E9EE;
+  --border-subtle: #F0F3F6;
 
   /* Semantic Accents */
   --gold: #D97706;
@@ -35,10 +35,10 @@
   --danger: #E11D48;
   --danger-bg: #FFE4E6;
 
-  /* Shadows */
-  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
-  --shadow-card-hover: 0 16px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
-  --shadow-glow: 0 0 50px -10px rgba(5, 150, 105, 0.2);
+  /* Crisp SaaS Shadows (Subtle & Clean) */
+  --shadow-card: 0 1px 3px 0 rgba(14, 34, 53, 0.05), 0 1px 2px -1px rgba(14, 34, 53, 0.02);
+  --shadow-card-hover: 0 4px 12px -2px rgba(14, 34, 53, 0.08), 0 2px 4px -2px rgba(14, 34, 53, 0.03);
+  --shadow-glow: 0 0 25px -5px rgba(1, 142, 69, 0.15);
 }
 
 [data-theme='dark'],

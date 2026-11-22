@@ -305,11 +305,11 @@ ${agencyOrOwnerName}`;
     <div className="space-y-5 max-w-4xl mx-auto pb-16 text-left">
       {activeTool === null ? (
         <div className="space-y-6 animate-hero-up">
-          {/* Top Header with Apple Glass Gradient */}
-          <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-white/95 via-emerald-50/70 to-emerald-100/40 dark:from-slate-900/90 dark:via-slate-900/80 dark:to-emerald-950/20 backdrop-blur-xl border border-emerald-500/25 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          {/* Top Header with Light White + Green Gradient */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/40 border border-[#E5E9EE] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
+                <h1 className="text-lg sm:text-xl font-bold text-ink font-heading tracking-tight">
                   Broker Toolkit & Calculators
                 </h1>
                 <Badge variant="brand">
@@ -317,7 +317,7 @@ ${agencyOrOwnerName}`;
                   5 Dedicated Tools
                 </Badge>
               </div>
-              <p className="text-xs text-muted mt-1 max-w-xl">
+              <p className="text-xs text-muted mt-1 max-w-xl font-medium">
                 Choose any tool below to launch its dedicated calculation workspace on desktop or mobile. Fast Haryana circle rates, EMI quotations, unit conversions & brokerage splits.
               </p>
             </div>
@@ -331,7 +331,7 @@ ${agencyOrOwnerName}`;
                 <div
                   key={tool.id}
                   onClick={() => handleSelectTool(tool.id)}
-                  className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between space-y-4 group cursor-pointer text-left"
+                  className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/25 border border-[#E5E9EE] hover:border-emerald-500/40 shadow-xs hover:shadow-sm transition-all duration-200 flex flex-col justify-between space-y-4 group cursor-pointer text-left"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">

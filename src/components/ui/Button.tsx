@@ -32,13 +32,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           pill ? 'rounded-full' : 'rounded-input',
           // Variants
           variant === 'primary' &&
-            'bg-brand-700 hover:bg-[#036246] text-white shadow-sm hover:shadow-md hover:shadow-brand-700/20',
+            'bg-brand-600 hover:bg-brand-700 text-white shadow-xs hover:shadow-sm font-semibold',
           variant === 'secondary' &&
-            'bg-surface border border-border text-ink hover:bg-slate-50 dark:hover:bg-slate-800/60 shadow-sm',
+            'bg-gradient-to-r from-white to-emerald-50/40 border border-border text-ink hover:border-brand-600/40 shadow-2xs',
           variant === 'soft' &&
-            'bg-brand-50 text-brand-700 hover:bg-brand-100 dark:bg-brand-950/40 dark:text-brand-600 font-bold',
+            'bg-brand-50 text-brand-700 hover:bg-brand-100/80 font-bold border border-brand-200/50',
           variant === 'dark' &&
-            'bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 shadow-sm',
+            'bg-gradient-to-r from-brand-600 via-brand-700 to-emerald-800 text-white hover:brightness-105 shadow-xs',
           variant === 'ghost' &&
             'bg-transparent text-text hover:bg-slate-100/70 dark:hover:bg-slate-800/60 hover:text-ink',
           variant === 'danger' &&

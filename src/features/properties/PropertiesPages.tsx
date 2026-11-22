@@ -1205,7 +1205,7 @@ export const PropertyDetailPage: React.FC = () => {
         {/* ======================================================== */}
         {/* OWNER PRIVACY VAULT                                      */}
         {/* ======================================================== */}
-        <div className="p-5 rounded-3xl bg-gradient-to-br from-surface to-brand-50/40 dark:to-brand-950/20 border border-brand-500/30 space-y-3">
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/30 border border-[#E5E9EE] shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-brand-600" />

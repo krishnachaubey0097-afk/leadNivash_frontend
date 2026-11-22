@@ -56,10 +56,10 @@ export default {
         heading: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       borderRadius: {
-        'input': '14px',
-        'card': '20px',
-        'card-lg': '28px',
-        'sheet': '32px',
+        'input': '10px',
+        'card': '12px',
+        'card-lg': '16px',
+        'sheet': '20px',
       },
       boxShadow: {
         card: 'var(--shadow-card)',
