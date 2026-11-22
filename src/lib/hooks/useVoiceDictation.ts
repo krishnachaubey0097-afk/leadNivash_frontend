@@ -1,13 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { normalizeRealEstateVoiceTranscript } from '../voiceNormalizer';
+
+export type DictationLang = 'en-IN' | 'hi-IN';
 
 interface VoiceDictationOptions {
-  lang?: 'hi-IN' | 'en-IN';
+  lang?: DictationLang;
   onFinalTranscript?: (finalChunk: string) => void;
   onTranscript?: (interimOrFinal: string, isFinal: boolean) => void;
 }
 
 export function useVoiceDictation({
-  lang = 'hi-IN',
+  lang = 'en-IN',
   onFinalTranscript,
   onTranscript,
 }: VoiceDictationOptions = {}) {
@@ -18,7 +21,9 @@ export function useVoiceDictation({
   const [error, setError] = useState<string | null>(null);
 
   const recognitionRef = useRef<any>(null);
-  const isListeningRef = useRef(false);
+  const userWantsListeningRef = useRef(false);
+  const restartTimeoutRef = useRef<any>(null);
+  const currentInterimRef = useRef<string>('');
   const lastFinalIndexRef = useRef<number>(-1);
 
   // Store callbacks in refs to avoid rebuilding SpeechRecognition on every render
@@ -27,6 +32,25 @@ export function useVoiceDictation({
   const onTranscriptRef = useRef(onTranscript);
   onTranscriptRef.current = onTranscript;
 
+  const flushInterim = useCallback(() => {
+    const raw = currentInterimRef.current.trim();
+    if (raw) {
+      const normalized = normalizeRealEstateVoiceTranscript(raw);
+      if (normalized) {
+        setFinalTranscript((prev) => (prev ? `${prev} ${normalized}` : normalized));
+        if (onFinalTranscriptRef.current) {
+          onFinalTranscriptRef.current(normalized);
+        }
+        if (onTranscriptRef.current) {
+          onTranscriptRef.current(normalized, true);
+        }
+      }
+    }
+    currentInterimRef.current = '';
+    setInterimTranscript('');
+  }, []);
+
+  // Initialize SpeechRecognition
   useEffect(() => {
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -40,14 +64,16 @@ export function useVoiceDictation({
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
     recognition.lang = lang;
 
     recognition.onresult = (event: any) => {
-      let currentInterim = '';
+      let activeInterim = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const item = event.results[i];
-        const text = item[0]?.transcript?.trim() || '';
+        const rawText = item[0]?.transcript?.trim() || '';
+        const text = normalizeRealEstateVoiceTranscript(rawText);
 
         if (item.isFinal) {
           // Guard: Only process each final segment once
@@ -65,80 +91,128 @@ export function useVoiceDictation({
           }
         } else {
           // Accumulate interim results
-          currentInterim += (currentInterim ? ' ' : '') + text;
+          activeInterim += (activeInterim ? ' ' : '') + text;
         }
       }
 
-      setInterimTranscript(currentInterim);
-      if (currentInterim && onTranscriptRef.current) {
-        onTranscriptRef.current(currentInterim, false);
+      currentInterimRef.current = activeInterim;
+      setInterimTranscript(activeInterim);
+      if (activeInterim && onTranscriptRef.current) {
+        onTranscriptRef.current(activeInterim, false);
       }
     };
 
     recognition.onerror = (event: any) => {
-      console.warn('Speech recognition error:', event.error);
-      if (event.error !== 'no-speech') {
-        setError(`Microphone error: ${event.error}`);
+      console.warn('Speech recognition warning/event:', event.error);
+      // 'no-speech' happens on natural conversational pauses. DO NOT terminate listening.
+      if (event.error === 'no-speech') {
+        return;
       }
-      setIsListening(false);
-      isListeningRef.current = false;
+
+      if (event.error === 'not-allowed' || event.error === 'audio-capture') {
+        userWantsListeningRef.current = false;
+        setError(
+          event.error === 'not-allowed'
+            ? 'Microphone permission was denied. Please allow microphone access in your browser.'
+            : 'No microphone was detected on your device.'
+        );
+        setIsListening(false);
+      }
     };
 
     recognition.onend = () => {
+      // If user still wants listening, continuously resume without stopping
+      if (userWantsListeningRef.current) {
+        // Flush any interim speech that browser did not mark isFinal before ending the chunk
+        flushInterim();
+        lastFinalIndexRef.current = -1;
+
+        if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
+        restartTimeoutRef.current = setTimeout(() => {
+          if (userWantsListeningRef.current && recognitionRef.current) {
+            try {
+              recognitionRef.current.start();
+              setIsListening(true);
+            } catch (err: any) {
+              // Recognition might already be running or transitioning
+              console.warn('SpeechRecognition auto-restart transition:', err?.message || err);
+            }
+          }
+        }, 60);
+        return;
+      }
+
       setIsListening(false);
-      isListeningRef.current = false;
+      currentInterimRef.current = '';
       setInterimTranscript('');
     };
 
     recognitionRef.current = recognition;
 
+    // If user was listening and lang changed, restart recognition with new language
+    if (userWantsListeningRef.current) {
+      try {
+        recognition.start();
+      } catch {
+        // ignore
+      }
+    }
+
     return () => {
+      if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
       if (recognitionRef.current) {
         try {
-          recognitionRef.current.stop();
+          recognitionRef.current.abort();
         } catch {
           // ignore
         }
       }
     };
-  }, [lang]);
+  }, [lang, flushInterim]);
 
   const startListening = useCallback(() => {
     setError(null);
     setInterimTranscript('');
+    currentInterimRef.current = '';
     lastFinalIndexRef.current = -1;
+    userWantsListeningRef.current = true;
+
+    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
+
     if (!recognitionRef.current) return;
     try {
       recognitionRef.current.start();
       setIsListening(true);
-      isListeningRef.current = true;
     } catch (err: any) {
       console.warn('Could not start speech recognition:', err);
-      // Already running or permission issue
       setIsListening(true);
-      isListeningRef.current = true;
     }
   }, []);
 
   const stopListening = useCallback(() => {
-    if (!recognitionRef.current) return;
-    try {
-      recognitionRef.current.stop();
-    } catch (err) {
-      console.warn('Could not stop speech recognition:', err);
+    userWantsListeningRef.current = false;
+    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
+
+    // Flush any uncommitted interim speech so user never loses their last spoken words
+    flushInterim();
+
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (err) {
+        console.warn('Could not stop speech recognition:', err);
+      }
     }
     setIsListening(false);
-    isListeningRef.current = false;
-    setInterimTranscript('');
-  }, []);
+  }, [flushInterim]);
 
   const toggleListening = useCallback(() => {
-    if (isListeningRef.current) {
+    if (userWantsListeningRef.current || isListening) {
       stopListening();
     } else {
       startListening();
     }
-  }, [startListening, stopListening]);
+  }, [isListening, startListening, stopListening]);
 
   return {
     isListening,

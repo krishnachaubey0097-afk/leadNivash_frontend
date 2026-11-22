@@ -8,25 +8,26 @@ export const TopBar: React.FC = () => {
   const location = useLocation();
 
   const getPageTitle = (pathname: string): { title: string; subtitle?: string } => {
-    if (pathname === '/app') return { title: 'Lead Nivesh', subtitle: 'Broker Operating System' };
-    if (pathname.startsWith('/app/track-record')) return { title: 'Lead Nivesh', subtitle: 'Pipeline & Deals' };
-    if (pathname === '/app/properties/new') return { title: 'New Listing', subtitle: 'Add Property' };
-    if (pathname.startsWith('/app/properties')) return { title: 'Inventory', subtitle: 'Property Listings' };
-    if (pathname === '/app/paste') return { title: 'Quick Paste', subtitle: 'AI WhatsApp Parser' };
-    if (pathname === '/app/buyers/new') return { title: 'New Buyer', subtitle: 'Add Requirement' };
-    if (pathname.startsWith('/app/buyers')) return { title: 'Buyers', subtitle: 'Active Inquiries' };
-    if (pathname.startsWith('/app/tools')) {
-      if (pathname.includes('/emi')) return { title: 'EMI Calculator', subtitle: 'Home Loan & Quotation' };
-      if (pathname.includes('/area')) return { title: 'Area Converter', subtitle: 'Gaj, Marla, Kanal' };
-      if (pathname.includes('/registry')) return { title: 'Haryana Registry', subtitle: 'Stamp Duty & Fees' };
-      if (pathname.includes('/commission')) return { title: 'Commission Split', subtitle: 'Brokerage & Payouts' };
-      if (pathname.includes('/templates')) return { title: 'WhatsApp Templates', subtitle: 'Quick Deal Chips' };
+    const cleanPath = pathname.replace(/\/+$/, '') || '/';
+    if (cleanPath === '/app' || cleanPath === '') return { title: 'Lead Nivesh', subtitle: 'Broker Operating System' };
+    if (cleanPath.startsWith('/app/track-record')) return { title: 'Lead Nivesh', subtitle: 'Pipeline & Deals' };
+    if (cleanPath === '/app/properties/new') return { title: 'New Listing', subtitle: 'Add Property' };
+    if (cleanPath.startsWith('/app/properties')) return { title: 'Inventory', subtitle: 'Property Listings' };
+    if (cleanPath === '/app/paste') return { title: 'Quick Paste', subtitle: 'AI WhatsApp Parser' };
+    if (cleanPath === '/app/buyers/new') return { title: 'New Buyer', subtitle: 'Add Requirement' };
+    if (cleanPath.startsWith('/app/buyers')) return { title: 'Buyers', subtitle: 'Active Inquiries' };
+    if (cleanPath.startsWith('/app/tools')) {
+      if (cleanPath.includes('/emi')) return { title: 'EMI Calculator', subtitle: 'Home Loan & Quotation' };
+      if (cleanPath.includes('/area')) return { title: 'Area Converter', subtitle: 'Gaj, Marla, Kanal' };
+      if (cleanPath.includes('/registry')) return { title: 'Haryana Registry', subtitle: 'Stamp Duty & Fees' };
+      if (cleanPath.includes('/commission')) return { title: 'Commission Split', subtitle: 'Brokerage & Payouts' };
+      if (cleanPath.includes('/templates')) return { title: 'WhatsApp Templates', subtitle: 'Quick Deal Chips' };
       return { title: 'Tools', subtitle: 'Calculators & Toolkit' };
     }
-    if (pathname.startsWith('/app/inquiries')) return { title: 'Inquiries', subtitle: 'Lead Inbox' };
-    if (pathname.startsWith('/app/settings')) return { title: 'Settings', subtitle: 'Agency & Profile' };
-    if (pathname.startsWith('/app/admin')) return { title: 'Admin Console', subtitle: 'System Control' };
-    return { title: 'leadNivash', subtitle: 'Broker OS' };
+    if (cleanPath.startsWith('/app/inquiries')) return { title: 'Inquiries', subtitle: 'Lead Inbox' };
+    if (cleanPath.startsWith('/app/settings')) return { title: 'Settings', subtitle: 'Agency & Profile' };
+    if (cleanPath.startsWith('/app/admin')) return { title: 'Admin Console', subtitle: 'System Control' };
+    return { title: 'Lead Nivesh', subtitle: 'Broker OS' };
   };
 
   const { title, subtitle } = getPageTitle(location.pathname);

@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import {
   Sparkles,
   Mic,
-  MicOff,
   Check,
   Building2,
   Users,
@@ -18,6 +17,8 @@ import {
   CheckCircle2,
   FileCheck,
   Copy,
+  Languages,
+  Square,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -48,7 +49,7 @@ export const PastePage: React.FC = () => {
   const [rawText, setRawText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [parseResult, setParseResult] = useState<ParseResult | null>(null);
-  const [dictationLang, setDictationLang] = useState<'hi-IN' | 'en-IN'>('hi-IN');
+  const [dictationLang, setDictationLang] = useState<'en-IN' | 'hi-IN'>('en-IN');
 
   // Step 2: Editable Buyer Details
   const [buyerName, setBuyerName] = useState('');
@@ -499,37 +500,77 @@ export const PastePage: React.FC = () => {
       {/* ======================================================== */}
       {currentStep === 'paste' && (
         <Card className="p-4 sm:p-6 space-y-4 border-emerald-500/20 shadow-card">
-          {/* Quick Sample Pills */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-bold text-muted uppercase tracking-wider">Try Demo:</span>
-            {samples.map((s, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  setRawText(s.text);
-                  setParseResult(null);
-                }}
-                className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-400 border border-border text-[11px] font-medium transition cursor-pointer"
-              >
-                {s.label}
-              </button>
-            ))}
+          {/* Voice Language Selector & Demo Samples */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-1">
+            {/* Quick Demo Samples */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider">Try Demo:</span>
+              {samples.map((s, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setRawText(s.text);
+                    setParseResult(null);
+                  }}
+                  className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-400 border border-border text-[11px] font-medium transition cursor-pointer"
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Voice Language Switcher */}
+            {isSupported && (
+              <div className="flex items-center gap-1 p-0.5 bg-slate-100 dark:bg-slate-800 rounded-xl border border-border self-start sm:self-auto">
+                <span className="px-2 py-1 text-[11px] font-bold text-muted flex items-center gap-1">
+                  <Languages className="w-3.5 h-3.5 text-brand-600" />
+                  <span className="hidden xs:inline">Voice:</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setDictationLang('en-IN')}
+                  className={clsx(
+                    'px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer',
+                    dictationLang === 'en-IN'
+                      ? 'bg-brand-600 text-white shadow-2xs'
+                      : 'text-muted hover:text-ink'
+                  )}
+                  title="Hinglish & Indian English recognition (numbers, Lakhs, Crores, BHK)"
+                >
+                  Hinglish / English
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDictationLang('hi-IN')}
+                  className={clsx(
+                    'px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer',
+                    dictationLang === 'hi-IN'
+                      ? 'bg-brand-600 text-white shadow-2xs'
+                      : 'text-muted hover:text-ink'
+                  )}
+                  title="Hindi voice dictation (हिंदी)"
+                >
+                  हिंदी (Hindi)
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Textarea with Non-Duplicating Voice Input */}
+          {/* Textarea with Voice Input & Live Microphone */}
           <div className="relative">
             <textarea
               rows={5}
               value={rawText}
               onChange={(e) => setRawText(e.target.value)}
-              placeholder="Paste forwarded WhatsApp property message or client requirement here... or click the mic to speak in Hindi/English."
-              className="w-full bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-xs sm:text-sm text-ink placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 transition"
+              placeholder="Paste forwarded WhatsApp property message or client requirement here... or click the mic button to speak naturally in Hindi or English."
+              className="w-full bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 pr-16 text-xs sm:text-sm text-ink placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-600 transition"
             />
 
             {/* Action buttons inside bottom right */}
             <div className="absolute right-3 bottom-3 flex items-center gap-2">
               {rawText && (
                 <button
+                  type="button"
                   onClick={() => {
                     setRawText('');
                     setParseResult(null);
@@ -543,39 +584,58 @@ export const PastePage: React.FC = () => {
 
               {isSupported && (
                 <button
+                  type="button"
                   onClick={toggleListening}
                   className={clsx(
                     'w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center transition shadow-xs cursor-pointer',
                     isListening
                       ? 'bg-rose-600 text-white animate-pulse ring-4 ring-rose-200 dark:ring-rose-950'
-                      : 'bg-emerald-700 text-white hover:bg-emerald-800'
+                      : 'bg-brand-600 text-white hover:bg-brand-700'
                   )}
-                  title={isListening ? 'Stop Recording' : 'Start Voice Input'}
+                  title={isListening ? 'Stop Recording' : 'Start Continuous Voice Dictation'}
                 >
-                  {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  {isListening ? <Square className="w-4 h-4 fill-current" /> : <Mic className="w-4 h-4" />}
                 </button>
               )}
             </div>
           </div>
 
-          {/* Live listening feedback pill without text mutation */}
+          {/* Continuous Voice Recording Visualizer with Real-Time Transcript */}
           {isListening && (
-            <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-400 flex items-center justify-between">
-              <span className="flex items-center gap-2 font-bold">
-                <span className="w-2 h-2 rounded-full bg-rose-600 animate-pulse"></span>
-                <span>Listening ({dictationLang === 'hi-IN' ? 'Hindi' : 'English'})...</span>
-                {interimTranscript && (
-                  <span className="font-normal italic text-slate-700 dark:text-slate-300">
-                    "{interimTranscript}"
+            <div className="p-3 rounded-2xl bg-gradient-to-r from-rose-50 via-white to-rose-50/50 dark:from-rose-950/40 dark:via-slate-900 dark:to-rose-950/30 border border-rose-300 dark:border-rose-800/60 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div className="flex items-center gap-3">
+                {/* Animated Equalizer Waveform */}
+                <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-lg bg-rose-100 dark:bg-rose-900/60 shrink-0">
+                  <span className="w-1 h-2 bg-rose-600 rounded-full animate-bounce [animation-delay:0ms]"></span>
+                  <span className="w-1 h-4 bg-rose-600 rounded-full animate-bounce [animation-delay:150ms]"></span>
+                  <span className="w-1 h-3 bg-rose-600 rounded-full animate-bounce [animation-delay:300ms]"></span>
+                  <span className="w-1 h-5 bg-rose-600 rounded-full animate-bounce [animation-delay:450ms]"></span>
+                  <span className="w-1 h-2 bg-rose-600 rounded-full animate-bounce [animation-delay:200ms]"></span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-rose-800 dark:text-rose-300 flex items-center gap-1.5">
+                    <span>Listening ({dictationLang === 'hi-IN' ? 'Hindi' : 'Hinglish / English'})...</span>
+                    <span className="text-[10px] font-normal text-rose-600 dark:text-rose-400 hidden xs:inline">
+                      Continuous listening active (pause naturally)
+                    </span>
                   </span>
-                )}
-              </span>
-              <button
-                onClick={toggleListening}
-                className="font-bold underline text-[11px] cursor-pointer"
-              >
-                Stop
-              </button>
+                  {interimTranscript && (
+                    <span className="text-xs italic text-ink font-medium mt-0.5 max-w-lg truncate">
+                      "{interimTranscript}"
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                <button
+                  type="button"
+                  onClick={toggleListening}
+                  className="px-3 py-1 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow-2xs cursor-pointer flex items-center gap-1.5"
+                >
+                  <Square className="w-3 h-3 fill-current" />
+                  <span>Done Speaking</span>
+                </button>
+              </div>
             </div>
           )}
 
