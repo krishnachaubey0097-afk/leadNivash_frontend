@@ -208,12 +208,12 @@ export const DashboardPage: React.FC = () => {
       {/* Apple Glass White + Green Gradient Welcome Banner (Zero dark/black) */}
       <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-white/95 via-emerald-50/70 to-emerald-100/40 backdrop-blur-xl border border-emerald-500/25 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center font-black text-white text-base shadow-sm shrink-0">
-            {user?.name?.charAt(0) || 'L'}
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center font-black text-white text-base shadow-sm shrink-0 uppercase">
+            {(user?.name?.charAt(0) || user?.agency?.name?.charAt(0) || 'S').toUpperCase()}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg sm:text-xl font-black font-heading tracking-tight text-ink">
+              <h1 className="text-lg sm:text-xl font-black font-heading tracking-tight text-ink capitalize">
                 Welcome back, {user?.name?.split(' ')[0] || 'Broker'}
               </h1>
               <span className="px-2 py-0.5 rounded-full bg-emerald-100/80 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-[10px] font-extrabold border border-emerald-300/60 shadow-2xs">
@@ -221,7 +221,7 @@ export const DashboardPage: React.FC = () => {
               </span>
             </div>
             <p className="text-xs text-muted mt-0.5 font-medium">
-              {user?.agency?.name || 'leadNivash Partner Agency'} · Haryana & NCR Hub
+              {user?.agency?.name ? `${user.agency.name} · ` : ''}{user?.agency?.city || 'Haryana & NCR Hub'}
             </p>
           </div>
         </div>

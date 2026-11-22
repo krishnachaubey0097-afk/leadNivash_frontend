@@ -18,14 +18,18 @@ export interface AvatarMenuProps {
 export const AvatarMenu: React.FC<AvatarMenuProps> = ({ inquiryCount = 0 }) => {
   const { user, logout } = useAuth();
 
-  const initials = user?.name
-    ? user.name
-        .split(' ')
-        .map((n) => n[0])
-        .slice(0, 2)
-        .join('')
-        .toUpperCase()
-    : 'BR';
+  const initials = (
+    user?.name ||
+    user?.agency?.name ||
+    user?.email?.split('@')[0] ||
+    'S'
+  )
+    .split(' ')
+    .filter(Boolean)
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase() || 'S';
 
   return (
     <DropdownMenu.Root>
@@ -51,8 +55,8 @@ export const AvatarMenu: React.FC<AvatarMenuProps> = ({ inquiryCount = 0 }) => {
         >
           {/* User info strip */}
           <div className="px-3 py-2 border-b border-border mb-1">
-            <p className="text-xs font-bold text-ink truncate">{user?.name || 'Broker'}</p>
-            <p className="text-[10px] text-muted truncate">{user?.email}</p>
+            <p className="text-xs font-bold text-ink truncate capitalize">{user?.name || user?.agency?.name || 'Broker'}</p>
+            <p className="text-[10px] text-muted truncate">{user?.email || user?.phone || 'Verified Broker'}</p>
             <span className="inline-block mt-1 text-[9px] font-bold text-brand-700 bg-brand-50 px-1.5 py-0.5 rounded capitalize">
               {user?.plan?.tier || 'Trial'} Plan
             </span>
