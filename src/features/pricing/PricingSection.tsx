@@ -219,20 +219,40 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             </div>
 
             {/* CTA Button */}
-            <div className="pt-6">
+            <div className="pt-6 space-y-2">
               {user ? (
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-center text-xs font-bold text-muted">
-                  {user.plan?.tier === 'trial' ? '✓ Currently Active (Free Trial)' : 'Past Trial'}
+                <div className="space-y-2">
+                  <Link to="/app" className="block">
+                    <Button variant="secondary" pill className="w-full text-xs font-bold py-3 min-h-[44px]">
+                      <span>Open Broker Dashboard</span>
+                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </Button>
+                  </Link>
+                  <div className="text-center text-[11px] text-muted">
+                    Active Account: <span className="font-semibold text-ink">{user.phone || user.name || 'Broker'}</span>{' '}
+                    ·{' '}
+                    <Link to="/login" className="font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
+                      Log in here
+                    </Link>
+                  </div>
                 </div>
               ) : (
-                <Link to="/register" className="block">
-                  <Button variant="secondary" pill className="w-full text-xs font-bold py-3 min-h-[44px]">
-                    <span>Start 14-Day Free Trial</span>
-                    <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                  </Button>
-                </Link>
+                <div className="space-y-2">
+                  <Link to="/register" className="block">
+                    <Button variant="secondary" pill className="w-full text-xs font-bold py-3 min-h-[44px]">
+                      <span>Start 14-Day Free Trial</span>
+                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </Button>
+                  </Link>
+                  <div className="text-center text-[11px] text-muted">
+                    Already registered?{' '}
+                    <Link to="/login" className="font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
+                      Log in here &rarr;
+                    </Link>
+                  </div>
+                </div>
               )}
-              <span className="text-[10px] text-center text-muted block mt-2">
+              <span className="text-[10px] text-center text-muted block">
                 No credit card required · Instant access
               </span>
             </div>
@@ -329,15 +349,15 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <div className="space-y-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600 to-brand-700 text-white flex items-center justify-center font-bold shadow-xs">
-                    <Crown className="w-4 h-4" />
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white flex items-center justify-center font-bold shadow-xs">
+                    <Crown className="w-5 h-5 text-white" />
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-ink font-heading flex items-center gap-1.5">
                       <span>Yearly Plan</span>
                     </h3>
                     <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold block">
-                      Full Lifetime Annual Access
+                      Annual Pass · Best Value
                     </span>
                   </div>
                 </div>
@@ -357,9 +377,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                       <span className="line-through text-muted text-base font-semibold">₹3,999</span>
                       <span className="text-xs font-bold text-muted">/ Year</span>
                     </div>
-                    <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 text-[11px] text-emerald-800 dark:text-emerald-300 font-bold">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>Free Trial Special: ₹700 Instant Discount Active</span>
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5EE] dark:bg-emerald-950/60 border border-emerald-500/25 text-[#017A3C] dark:text-emerald-300 text-[11px] font-bold shadow-2xs">
+                      <Sparkles className="w-3.5 h-3.5 text-[#018E45] shrink-0" />
+                      <span>Special Trial Offer · Save ₹700 Instantly</span>
                     </div>
                   </div>
                 ) : (
@@ -373,7 +393,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     </div>
                   </div>
                 )}
-                <p className="text-xs text-muted leading-relaxed mt-2">
+                <p className="text-xs text-muted leading-relaxed mt-2.5">
                   Complete Broker Operating System. Unlimited listings, multi-image flyers, custom agency branding, and priority support.
                 </p>
               </div>
@@ -396,10 +416,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   '7-Day 100% Unconditional Money-Back Guarantee',
                 ].map((feat, i) => (
                   <div key={i} className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </div>
-                    <span className="font-medium">{feat}</span>
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>{feat}</span>
                   </div>
                 ))}
               </div>
