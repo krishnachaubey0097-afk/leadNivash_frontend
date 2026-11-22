@@ -1,0 +1,655 @@
+{
+  "summary": {
+    "totalPagesTested": 48,
+    "issuesFound": []
+  },
+  "viewports": {
+    "mobile": {
+      "pages": {
+        "landing": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 43,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_landing.png"
+        },
+        "login": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_login.png"
+        },
+        "dashboard": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_dashboard.png"
+        },
+        "properties_list": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_properties_list.png"
+        },
+        "property_new": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_property_new.png"
+        },
+        "buyers_list": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_buyers_list.png"
+        },
+        "buyer_new": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_buyer_new.png"
+        },
+        "quick_paste": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_quick_paste.png"
+        },
+        "tools_hub": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_tools_hub.png"
+        },
+        "tool_emi": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_tool_emi.png"
+        },
+        "tool_registry": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_tool_registry.png"
+        },
+        "tool_area": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_tool_area.png"
+        },
+        "tool_commission": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_tool_commission.png"
+        },
+        "tool_templates": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_tool_templates.png"
+        },
+        "inquiries": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_inquiries.png"
+        },
+        "settings": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\mobile_settings.png"
+        }
+      },
+      "overflowErrors": [],
+      "consoleErrors": [],
+      "brokenButtons": []
+    },
+    "tablet": {
+      "pages": {
+        "landing": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 43,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_landing.png"
+        },
+        "login": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_login.png"
+        },
+        "dashboard": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_dashboard.png"
+        },
+        "properties_list": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_properties_list.png"
+        },
+        "property_new": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_property_new.png"
+        },
+        "buyers_list": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_buyers_list.png"
+        },
+        "buyer_new": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_buyer_new.png"
+        },
+        "quick_paste": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_quick_paste.png"
+        },
+        "tools_hub": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_tools_hub.png"
+        },
+        "tool_emi": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_tool_emi.png"
+        },
+        "tool_registry": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_tool_registry.png"
+        },
+        "tool_area": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_tool_area.png"
+        },
+        "tool_commission": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_tool_commission.png"
+        },
+        "tool_templates": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_tool_templates.png"
+        },
+        "inquiries": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_inquiries.png"
+        },
+        "settings": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\tablet_settings.png"
+        }
+      },
+      "overflowErrors": [],
+      "consoleErrors": [],
+      "brokenButtons": []
+    },
+    "desktop": {
+      "pages": {
+        "landing": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 43,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_landing.png"
+        },
+        "login": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_login.png"
+        },
+        "dashboard": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_dashboard.png"
+        },
+        "properties_list": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_properties_list.png"
+        },
+        "property_new": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_property_new.png"
+        },
+        "buyers_list": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_buyers_list.png"
+        },
+        "buyer_new": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_buyer_new.png"
+        },
+        "quick_paste": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_quick_paste.png"
+        },
+        "tools_hub": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_tools_hub.png"
+        },
+        "tool_emi": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_tool_emi.png"
+        },
+        "tool_registry": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_tool_registry.png"
+        },
+        "tool_area": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_tool_area.png"
+        },
+        "tool_commission": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_tool_commission.png"
+        },
+        "tool_templates": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_tool_templates.png"
+        },
+        "inquiries": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_inquiries.png"
+        },
+        "settings": {
+          "overflow": {
+            "hasOverflow": false,
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "offending": []
+          },
+          "buttonsHealth": {
+            "totalButtons": 11,
+            "nonFunctional": []
+          },
+          "screenshotPath": "F:\\Work\\leadnivash\\frontend\\scripts\\audit_screenshots\\desktop_settings.png"
+        }
+      },
+      "overflowErrors": [],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "brokenButtons": []
+    }
+  }
+}

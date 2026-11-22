@@ -566,6 +566,70 @@ export const DashboardPage: React.FC = () => {
                   <p className="text-[11px] text-muted">Send verified flyers & WhatsApp pitch messages to close transactions faster.</p>
                 </div>
               </div>
+
+              {/* Sample Growth & Match Performance Visualization (Clearly Labeled Preview) */}
+              <div className="pt-6 border-t border-emerald-500/20 space-y-3.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-left">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span className="text-xs font-black uppercase tracking-wider text-ink font-heading">
+                      Sales & Deal Match Performance Visualization
+                    </span>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 text-[10px] font-extrabold border border-amber-300/60 shadow-2xs self-start sm:self-auto">
+                    <span>📊 PREVIEW</span>
+                    <span className="text-[9px] opacity-80">(Sample Chart · Activates automatically with your real data)</span>
+                  </span>
+                </div>
+
+                <p className="text-xs text-muted text-left leading-relaxed">
+                  This sample preview illustrates how your monthly inquiries, automated match velocity, and closed deals will visualize once you add your inventory and buyer leads above.
+                </p>
+
+                {/* Watermarked Sample Bar Chart */}
+                <div className="p-5 rounded-2xl bg-white/70 dark:bg-slate-900/60 border border-emerald-500/20 relative overflow-hidden">
+                  <div className="absolute top-3 right-3 z-10">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-700/80 dark:text-emerald-400/80 font-bold bg-emerald-50/90 dark:bg-emerald-950/90 px-2.5 py-0.5 rounded-md border border-emerald-500/30">
+                      Sample Preview
+                    </span>
+                  </div>
+
+                  {/* Monthly Activity Columns */}
+                  <div className="grid grid-cols-6 gap-2 sm:gap-4 items-end h-32 pt-6 pb-2">
+                    {[
+                      { month: 'Month 1', height: '35%', count: '6' },
+                      { month: 'Month 2', height: '55%', count: '12' },
+                      { month: 'Month 3', height: '45%', count: '9' },
+                      { month: 'Month 4', height: '85%', count: '24', highlight: true },
+                      { month: 'Month 5', height: '65%', count: '16' },
+                      { month: 'Month 6', height: '75%', count: '19' },
+                    ].map((col) => (
+                      <div key={col.month} className="flex flex-col items-center gap-1.5 h-full justify-end">
+                        <span className="text-[10px] font-bold text-muted">{col.count}</span>
+                        <div
+                          className={`w-full max-w-[42px] rounded-t-xl transition-all ${
+                            col.highlight
+                              ? 'bg-gradient-to-t from-emerald-600 to-teal-500 shadow-sm'
+                              : 'bg-emerald-200/70 dark:bg-emerald-900/40'
+                          }`}
+                          style={{ height: col.height }}
+                        />
+                        <span className="text-[10px] font-semibold text-muted">{col.month}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-3 border-t border-border/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px] text-muted text-left">
+                    <span className="flex items-center gap-1.5 font-medium">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                      <span>Sample Metric: Deal pipeline stage & collected brokerage trajectory</span>
+                    </span>
+                    <span className="text-emerald-700 dark:text-emerald-400 font-bold">
+                      Add 1st property or buyer to populate real portfolio data
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -1072,45 +1136,63 @@ export const DashboardPage: React.FC = () => {
 
             {trackRecordSubTab === 'wins' && (
               <div className="space-y-4">
-                <div className="p-5 rounded-3xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black shadow-md">
-                      <Trophy className="w-6 h-6" />
+                {pipelineDeals.filter((d) => d.stage === 'won').length === 0 ? (
+                  <Card className="p-8 text-center space-y-3">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mx-auto shadow-xs">
+                      <Trophy className="w-6 h-6 stroke-[1.8]" />
                     </div>
-                    <div>
-                      <h3 className="text-base font-black text-ink font-heading">
-                        Year-to-Date Closed Wins: ₹4,85,000 Earned
-                      </h3>
-                      <p className="text-xs text-muted">
-                        12 Completed registry transactions logged across Panipat & NCR.
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white font-heading">
+                        No Closed Wins Recorded Yet
+                      </h4>
+                      <p className="text-xs text-muted max-w-sm mx-auto leading-relaxed">
+                        When deals advance through Token Bayana, Agreement, and Registry completion, your earned brokerage commissions and closed records will appear here.
                       </p>
                     </div>
-                  </div>
-                  <Badge variant="sold">100% Collected</Badge>
-                </div>
+                  </Card>
+                ) : (
+                  <>
+                    <div className="p-5 rounded-3xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black shadow-md">
+                          <Trophy className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-black text-ink font-heading">
+                            Closed Wins: ₹{pipelineDeals.filter((d) => d.stage === 'won').reduce((s, d) => s + d.brokerageAmount, 0).toLocaleString('en-IN')} Earned
+                          </h3>
+                          <p className="text-xs text-muted">
+                            {pipelineDeals.filter((d) => d.stage === 'won').length} Completed registry transactions logged.
+                          </p>
+                        </div>
+                      </div>
+                      <Badge variant="sold">100% Collected</Badge>
+                    </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {pipelineDeals
-                    .filter((d) => d.stage === 'won')
-                    .map((deal) => (
-                      <Card key={deal.id} className="p-5 space-y-2 border-amber-500/30 text-left">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
-                            Closed Won Deal
-                          </span>
-                          <span className="text-xs text-muted">{deal.date}</span>
-                        </div>
-                        <h4 className="text-base font-black text-ink font-heading">{deal.title}</h4>
-                        <p className="text-xs text-muted">{deal.locality} · Client: {deal.clientName}</p>
-                        <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
-                          <span className="text-muted">Net Collected Commission</span>
-                          <span className="font-black text-emerald-700 dark:text-emerald-400 text-sm">
-                            ₹{deal.brokerageAmount.toLocaleString('en-IN')}
-                          </span>
-                        </div>
-                      </Card>
-                    ))}
-                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {pipelineDeals
+                        .filter((d) => d.stage === 'won')
+                        .map((deal) => (
+                          <Card key={deal.id} className="p-5 space-y-2 border-amber-500/30 text-left">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                                Closed Won Deal
+                              </span>
+                              <span className="text-xs text-muted">{deal.date}</span>
+                            </div>
+                            <h4 className="text-base font-black text-ink font-heading">{deal.title}</h4>
+                            <p className="text-xs text-muted">{deal.locality} · Client: {deal.clientName}</p>
+                            <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
+                              <span className="text-muted">Net Collected Commission</span>
+                              <span className="font-black text-emerald-700 dark:text-emerald-400 text-sm">
+                                ₹{deal.brokerageAmount.toLocaleString('en-IN')}
+                              </span>
+                            </div>
+                          </Card>
+                        ))}
+                    </div>
+                  </>
+                )}
               </div>
             )}
 

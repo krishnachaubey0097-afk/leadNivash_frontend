@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AvatarMenu } from './AvatarMenu';
-import { Bell, Settings, Plus } from 'lucide-react';
+import { NotificationMenu } from './NotificationMenu';
+import { Settings, Plus } from 'lucide-react';
 
 export const TopBar: React.FC = () => {
   const location = useLocation();
 
   const getPageTitle = (pathname: string): { title: string; subtitle?: string } => {
-    if (pathname === '/app') return { title: 'Today', subtitle: 'Overview & Matches' };
-    if (pathname.startsWith('/app/track-record')) return { title: 'Track Record', subtitle: 'Pipeline & Deals' };
+    if (pathname === '/app') return { title: 'Lead Nivesh', subtitle: 'Broker Operating System' };
+    if (pathname.startsWith('/app/track-record')) return { title: 'Lead Nivesh', subtitle: 'Pipeline & Deals' };
     if (pathname === '/app/properties/new') return { title: 'New Listing', subtitle: 'Add Property' };
     if (pathname.startsWith('/app/properties')) return { title: 'Inventory', subtitle: 'Property Listings' };
     if (pathname === '/app/paste') return { title: 'Quick Paste', subtitle: 'AI WhatsApp Parser' };
@@ -64,14 +65,8 @@ export const TopBar: React.FC = () => {
             </span>
           </Link>
 
-          {/* Notifications button */}
-          <button
-            className="relative w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-            aria-label="Notifications"
-          >
-            <Bell className="w-5 h-5 sm:w-4 sm:h-4" />
-            <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-brand-600" />
-          </button>
+          {/* Notifications Popover Menu */}
+          <NotificationMenu />
 
           {/* Mobile Settings button */}
           <Link
