@@ -215,6 +215,44 @@
 }
 
 /* ========================================================= */
+/* Special Free Trial Upgrade Glowing Button Animation       */
+/* 2-3 theme-matching colors: Emerald (#018E45), Cyan/Teal (#0D9488), and Gold/Amber (#D97706) */
+/* ========================================================= */
+@keyframes trialGlowPulse {
+  0% {
+    box-shadow: 0 0 14px -2px rgba(1, 142, 69, 0.55), 0 0 26px -4px rgba(13, 148, 136, 0.35);
+    border-color: rgba(1, 142, 69, 0.75);
+    background-position: 0% 50%;
+  }
+  50% {
+    box-shadow: 0 0 22px -1px rgba(217, 119, 6, 0.6), 0 0 36px -2px rgba(1, 142, 69, 0.4);
+    border-color: rgba(217, 119, 6, 0.85);
+    background-position: 100% 50%;
+  }
+  100% {
+    box-shadow: 0 0 14px -2px rgba(1, 142, 69, 0.55), 0 0 26px -4px rgba(13, 148, 136, 0.35);
+    border-color: rgba(1, 142, 69, 0.75);
+    background-position: 0% 50%;
+  }
+}
+
+.animate-trial-glow {
+  background: linear-gradient(135deg, #018E45 0%, #0D9488 45%, #017A3C 75%, #018E45 100%);
+  background-size: 250% 250%;
+  animation: trialGlowPulse 4s ease-in-out infinite;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.animate-trial-glow:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.animate-trial-glow:active {
+  transform: scale(0.98);
+}
+
+/* ========================================================= */
 /* APPLE GLASS & GLOSSY BLUR SUITE (Reference 2 & 3)         */
 /* ========================================================= */
 

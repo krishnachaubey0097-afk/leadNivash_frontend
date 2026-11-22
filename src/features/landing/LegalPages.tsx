@@ -17,6 +17,7 @@ import {
   Scale,
   AlertCircle,
 } from 'lucide-react';
+import { PricingSection } from '../pricing/PricingSection';
 
 /* =========================================================================
    1. PRICING PAGE
@@ -27,7 +28,7 @@ export const PricingPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-left">
+    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-5xl mx-auto space-y-6 text-left">
       <Link
         to="/"
         className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
@@ -35,80 +36,7 @@ export const PricingPage: React.FC = () => {
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
 
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-ink font-heading tracking-tight">
-          Simple, Transparent Broker Pricing
-        </h1>
-        <p className="text-xs text-muted mt-1">
-          Invest once, close more deals every month. All plans include full mobile access, Owner Vault data isolation, and encrypted cloud backup.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
-        {/* Starter Pilot */}
-        <div className="p-6 bg-surface border border-border rounded-3xl space-y-4 shadow-xs flex flex-col justify-between">
-          <div className="space-y-3">
-            <span className="text-xs font-black uppercase tracking-wider text-muted">
-              Starter Pilot
-            </span>
-            <h2 className="text-3xl font-black text-ink font-heading">
-              ₹0 <span className="text-xs font-normal text-muted">/ 14 Days</span>
-            </h2>
-            <p className="text-xs text-muted leading-relaxed">
-              Full access trial for single brokers. Test Quick Chat voice parsing, add up to 25 properties, and generate branded WhatsApp flyers without credit card.
-            </p>
-            <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-2 pt-2">
-              <li className="flex items-center gap-2">✓ Quick Chat AI requirement matching</li>
-              <li className="flex items-center gap-2">✓ WhatsApp masked flyers & brochures</li>
-              <li className="flex items-center gap-2">✓ 4 Dedicated broker land calculators</li>
-              <li className="flex items-center gap-2">✓ Owner Vault data isolation</li>
-            </ul>
-          </div>
-          <Link to="/register">
-            <Button pill className="w-full font-bold text-xs">
-              Start 14-Day Free Trial
-            </Button>
-          </Link>
-        </div>
-
-        {/* Annual Pass */}
-        <div className="p-6 bg-gradient-to-br from-white via-emerald-50/30 to-emerald-100/30 dark:from-slate-900 dark:via-emerald-950/20 dark:to-slate-900 border-2 border-emerald-600 rounded-3xl space-y-4 shadow-md relative flex flex-col justify-between">
-          <div className="space-y-3">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider inline-block">
-              Most Popular
-            </span>
-            <h2 className="text-3xl font-black text-ink font-heading">
-              ₹3,999 <span className="text-xs font-normal text-muted">/ Year</span>
-            </h2>
-            <p className="text-xs text-muted leading-relaxed">
-              Unlimited power for high-volume agencies and active brokers closing multiple deals each month.
-            </p>
-            <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-2 pt-2">
-              <li className="flex items-center gap-2 font-semibold">✓ Unlimited property listings & buyer leads</li>
-              <li className="flex items-center gap-2 font-semibold">✓ Multi-device real-time MongoDB cloud sync</li>
-              <li className="flex items-center gap-2 font-semibold">✓ Custom agency branding & RERA verified badge</li>
-              <li className="flex items-center gap-2 font-semibold">✓ Priority WhatsApp technical support</li>
-              <li className="flex items-center gap-2 font-semibold">✓ 7-Day Unconditional Refund Guarantee</li>
-            </ul>
-          </div>
-          <Link to="/register">
-            <Button pill className="w-full font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">
-              Get Annual Pass
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Assurance Footer */}
-      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>7-Day Money-Back Guarantee. Check our full <Link to="/refund" className="underline font-bold text-emerald-700 dark:text-emerald-400">Refund Policy</Link>.</span>
-        </div>
-        <Link to="/contact" className="text-emerald-700 dark:text-emerald-400 font-bold hover:underline shrink-0">
-          Need a Custom Agency Plan? Contact Us &rarr;
-        </Link>
-      </div>
+      <PricingSection showTitle={true} />
     </div>
   );
 };
@@ -324,7 +252,7 @@ export const TermsPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">4. Subscription Billing, Free Trial & Cancellations</h2>
           <p className="text-muted">
-            leadNivash provides a 14-day free trial on initial registration without requiring payment information. Annual subscriptions (₹3,999/year) grant unrestricted access to multi-device sync, cloud storage, and priority support. Subscriptions may be cancelled anytime from your Settings. For refund guidelines, please review our <Link to="/refund" className="underline font-bold text-emerald-700 dark:text-emerald-400">Refund Policy</Link>.
+            leadNivash provides a 14-day free trial on initial registration without requiring payment information. Subscriptions are offered as a Monthly Plan (₹399/month) or a Yearly Plan (₹3,999/year, with an exclusive special offer of ₹3,299/year available during your active 14-day free trial). Subscriptions grant unrestricted access to multi-device sync, cloud storage, and priority support. Subscriptions may be cancelled anytime from your Settings. For refund guidelines, please review our <Link to="/refund" className="underline font-bold text-emerald-700 dark:text-emerald-400">Refund Policy</Link>.
           </p>
         </section>
 
@@ -401,7 +329,7 @@ export const RefundPolicyPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">2. 7-Day Unconditional Refund Window</h2>
           <p className="text-muted">
-            If you upgrade to our Annual Pass (₹3,999/year) and find that the platform does not meet your agency’s operational expectations, you may request a <strong>100% full refund within 7 calendar days</strong> of your initial payment date.
+            If you upgrade to our Yearly Plan (standard ₹3,999/year or trial special offer ₹3,299/year) and find that the platform does not meet your agency’s operational expectations, you may request a <strong>100% full refund within 7 calendar days</strong> of your initial payment date.
           </p>
           <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 text-[11px] text-slate-700 dark:text-slate-300">
             <strong>Fair Use Condition:</strong> The refund will be granted in full provided the account has not exported bulk proprietary database reports exceeding normal trial usage.

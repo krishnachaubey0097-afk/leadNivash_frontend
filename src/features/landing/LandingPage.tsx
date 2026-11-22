@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   Share2,
-  Check,
   Play,
   Maximize2,
   Smartphone,
@@ -24,8 +23,6 @@ import {
   Lock,
   Calculator,
   BarChart3,
-  Crown,
-  Zap,
   Menu,
   X,
   LogIn,
@@ -38,6 +35,7 @@ import {
 } from 'lucide-react';
 import { apiClient } from '../../lib/api/client';
 import { useAuth } from '../auth/AuthProvider';
+import { PricingSection } from '../pricing/PricingSection';
 
 export const LandingPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -1998,257 +1996,8 @@ export const LandingPage: React.FC = () => {
         {/* Subtle top ambient light-ray effect */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[220px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-        <div className="space-y-14 relative z-10">
-          {/* 1. Section Header & Introduction */}
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <span className="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
-              TRANSPARENT INVESTMENT
-            </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-ink font-heading tracking-tight leading-tight">
-              Simple,{' '}
-              <span className="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">
-                High-ROI Pricing.
-              </span>
-            </h2>
-            <p className="text-sm sm:text-base text-muted max-w-xl mx-auto leading-relaxed font-normal">
-              Start with a free trial. Experience the workflow before deciding to upgrade.
-            </p>
-            <p className="text-xs text-muted/80 font-medium">
-              No complicated pricing. Start simple and grow with your business.
-            </p>
-          </div>
-
-          {/* 2. Exactly TWO Pricing Cards (Side-by-Side on Desktop) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
-
-            {/* PLAN ONE — STARTER PILOT */}
-            <div className="group rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 relative shadow-2xs">
-              <div className="space-y-6">
-                {/* Header & Badge */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold shadow-xs">
-                      <Zap className="w-4 h-4 text-emerald-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900 font-heading">
-                        Starter Pilot
-                      </h3>
-                      <span className="text-[10px] text-slate-500 block">14-Day Free Evaluation</span>
-                    </div>
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider border border-slate-200">
-                    FREE TO START
-                  </span>
-                </div>
-
-                {/* Price Display */}
-                <div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-4xl font-black text-slate-900 font-heading tracking-tight">₹0</span>
-                    <span className="text-xs font-bold text-slate-500">/ 14 Days Free Trial</span>
-                  </div>
-                  <p className="text-xs text-slate-600 leading-relaxed mt-2.5">
-                    Explore the essential leadNivash workflow and experience an organised way to manage property enquiries.
-                  </p>
-                </div>
-
-                {/* Divider */}
-                <div className="h-px bg-slate-100 w-full" />
-
-                {/* Feature Checklist with Explicit Limits */}
-                <div className="space-y-3 text-xs text-slate-700">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
-                    INCLUDED IN STARTER PILOT:
-                  </span>
-                  {[
-                    { text: 'Up to 15 property listings', limit: true },
-                    { text: 'Up to 10 active buyer profiles', limit: true },
-                    { text: 'WhatsApp Message Analyzer (10 parses)', limit: true },
-                    { text: 'Basic Property Matching engine', limit: false },
-                    { text: 'Standard single-photo shareable links', limit: false },
-                    { text: 'Essential 5-stage deal pipeline', limit: false },
-                  ].map((feat, i) => (
-                    <div key={i} className="flex items-start gap-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 border border-emerald-200">
-                        <Check className="w-3 h-3 stroke-[3]" />
-                      </div>
-                      <span className="leading-snug">
-                        {feat.text}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTA Button */}
-              <div className="pt-8">
-                <Link to="/register" className="block">
-                  <Button variant="secondary" pill className="w-full text-xs font-bold py-3 flex items-center justify-center gap-2 group-hover:border-emerald-500/60 transition-colors">
-                    <span>Start 14-Day Free Trial</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-                <span className="text-[10px] text-center text-slate-500 block mt-2">
-                  No credit card required · Instant access
-                </span>
-              </div>
-            </div>
-
-            {/* PLAN TWO — FOUNDER ANNUAL PASS (Highlighted Plan) */}
-            <div className="group rounded-3xl bg-gradient-to-b from-white via-white to-emerald-50/40 border-2 border-emerald-600/90 shadow-xl shadow-emerald-500/10 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-500/15 hover:-translate-y-1.5 transition-all duration-300 relative">
-              <div className="space-y-6">
-                {/* Header & Badge */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-xs">
-                      <Crown className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900 font-heading flex items-center gap-1.5">
-                        Founder Annual Pass
-                      </h3>
-                      <span className="text-[10px] text-emerald-700 font-semibold block">Full Broker OS</span>
-                    </div>
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
-                    FOUNDER OFFER
-                  </span>
-                </div>
-
-                {/* Price Display */}
-                <div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-4xl font-black text-slate-900 font-heading tracking-tight">₹3,999</span>
-                    <span className="text-xs font-bold text-slate-500">/ Per Year</span>
-                  </div>
-                  <div className="inline-block mt-1 px-2.5 py-0.5 rounded-md bg-emerald-100 border border-emerald-200 text-[11px] text-emerald-800 font-bold">
-                    Approximately ₹333 / month{' '}
-                    <span className="text-[10px] font-normal text-slate-500">(billed annually)</span>
-                  </div>
-                  <p className="text-xs text-slate-600 leading-relaxed mt-2.5">
-                    Everything you need to organise your property business, manage opportunities, and scale deal closings.
-                  </p>
-                </div>
-
-                {/* Divider */}
-                <div className="h-px bg-emerald-500/20 w-full" />
-
-                {/* Feature Checklist */}
-                <div className="space-y-3 text-xs text-slate-700">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 block">
-                    EVERYTHING IN PILOT, PLUS:
-                  </span>
-                  {[
-                    'Unlimited Property Listings (subject to fair-use limits)',
-                    'Unlimited Buyer Management & Profiles',
-                    'Full AI WhatsApp & Voice Parser (Unlimited)',
-                    'Multi-Image & Video Walkthrough Public Hosting',
-                    'Intelligent Auto-Matching with Reason Breakdown',
-                    'Complete Deal & Commission Tracking Pipeline',
-                    'Custom Agency Branding & Watermark Protection',
-                    'Dedicated Priority WhatsApp & Phone Support',
-                  ].map((feat, i) => (
-                    <div key={i} className="flex items-start gap-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                        <Check className="w-3 h-3 stroke-[3]" />
-                      </div>
-                      <span className="font-medium leading-snug">{feat}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTA Button with Button Shine */}
-              <div className="pt-8">
-                <Link to="/register" className="block">
-                  <div className="btn-shine-wrapper w-full flex">
-                    <div className="btn-shine-border" />
-                    <button
-                      type="button"
-                      className="relative z-10 w-full py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider transition shadow-md shadow-emerald-600/25 flex items-center justify-center gap-2 cursor-pointer min-h-[46px]"
-                    >
-                      <span>Upgrade to Founder Pass</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </Link>
-                <span className="text-[10px] text-center text-slate-500 block mt-2">
-                  14-day evaluation period included · Cancel anytime
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* 3. Compact Plan Comparison Strip */}
-          <div className="max-w-4xl mx-auto rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 space-y-6 shadow-sm text-left">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
-              <div>
-                <h3 className="text-base font-bold text-slate-900 font-heading">
-                  Everything You Need to Get Started.
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Detailed capability comparison between Starter Pilot and Founder Annual Pass.
-                </p>
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0">
-                Plan Comparison
-              </span>
-            </div>
-
-            {/* Comparison Table / Matrix */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-200 text-[11px] font-black uppercase tracking-wider text-slate-500">
-                    <th className="py-2.5 pr-4">Capability</th>
-                    <th className="py-2.5 px-4 text-center">Starter Pilot</th>
-                    <th className="py-2.5 pl-4 text-center text-emerald-700">
-                      Founder Annual Pass
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
-                  {[
-                    { cap: 'Trial Duration', p1: '14 Days Free', p2: '365 Days / Full Year' },
-                    { cap: 'Property Listings', p1: 'Up to 15 listings', p2: 'Unlimited (plan limits)' },
-                    { cap: 'Active Buyer Profiles', p1: 'Up to 10 profiles', p2: 'Unlimited (plan limits)' },
-                    { cap: 'AI WhatsApp Parsing', p1: '10 messages / month', p2: 'Full AI & Voice (Unlimited)' },
-                    { cap: 'Property Matching', p1: 'Basic Criteria', p2: 'Intelligent Auto-Matching' },
-                    { cap: 'Public Property Flyers', p1: 'Single Photo Links', p2: 'Multi-Image & Video Hosting' },
-                    { cap: 'Deal & Commission Tracking', p1: 'Essential Pipeline', p2: 'Full Deal & Commission Tracking' },
-                    { cap: 'Custom Agency Branding', p1: '—', p2: 'Logo & Custom Watermark' },
-                    { cap: 'Priority Support', p1: 'Community Support', p2: 'Dedicated WhatsApp & Phone' },
-                  ].map((row, idx) => (
-                    <tr key={idx} className="hover:bg-emerald-50/40 transition-colors">
-                      <td className="py-2.5 pr-4 font-semibold text-slate-900">{row.cap}</td>
-                      <td className="py-2.5 px-4 text-center text-slate-500">{row.p1}</td>
-                      <td className="py-2.5 pl-4 text-center font-bold text-emerald-700">
-                        {row.p2}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* 4. Trust Note & FAQ Link */}
-          <div className="text-center max-w-xl mx-auto space-y-2 pt-2">
-            <p className="text-xs text-muted leading-relaxed">
-              Your trial gives you time to experience leadNivash before choosing a paid plan.
-            </p>
-            <p className="text-xs text-muted">
-              Have questions about pricing?{' '}
-              <a
-                href="#inquiry-form"
-                className="text-emerald-700 dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"
-              >
-                <span>Talk to our team</span>
-                <ArrowRight className="w-3 h-3" />
-              </a>
-            </p>
-          </div>
+        <div className="relative z-10">
+          <PricingSection showTitle={true} />
         </div>
       </section>
 

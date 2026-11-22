@@ -19,7 +19,10 @@ import {
   Lock,
   Building2,
   User as UserIcon,
+  Sparkles,
+  Crown,
 } from 'lucide-react';
+import { SpecialOfferModal } from '../pricing/SpecialOfferModal';
 import { startInteractiveTour } from '../onboarding/OnboardingTour';
 
 export const SettingsPage: React.FC = () => {
@@ -39,6 +42,7 @@ export const SettingsPage: React.FC = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [inquiriesCount, setInquiriesCount] = useState<number>(0);
+  const [isSpecialOfferOpen, setIsSpecialOfferOpen] = useState(false);
 
   // Sync state whenever AuthContext user updates
   useEffect(() => {
@@ -154,6 +158,59 @@ export const SettingsPage: React.FC = () => {
           Verified Account
         </Badge>
       </div>
+
+      {/* Subscription & Free Trial Upgrade Card */}
+      <Card className="p-5 sm:p-6 space-y-4 border-2 border-emerald-500/30 bg-gradient-to-br from-white via-emerald-50/40 to-teal-50/30 dark:from-slate-900 dark:via-emerald-950/20 dark:to-slate-900 shadow-md rounded-2xl relative overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E5E9EE] dark:border-slate-800">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-brand-700 text-white flex items-center justify-center font-bold shadow-2xs">
+              <Crown className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-ink font-heading">
+                Subscription & Plan Status
+              </h3>
+              <span className="text-xs text-muted block">
+                Current: <strong className="text-ink font-semibold">{user?.plan?.tier === 'trial' || !user?.plan?.tier ? '14-Day Free Trial' : `${user.plan.tier.toUpperCase()} Plan`}</strong>
+              </span>
+            </div>
+          </div>
+          <Link
+            to="/pricing"
+            className="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-1 self-start sm:self-auto"
+          >
+            <span>View All Plans</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {/* Special Free Trial Upgrade Offer */}
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-800/80 border border-emerald-500/25 space-y-3">
+          <div className="flex items-center gap-1.5 text-amber-800 dark:text-amber-300 text-[11px] font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+            <span>Exclusive Free Trial Member Upgrade</span>
+          </div>
+          <div>
+            <h4 className="text-sm sm:text-base font-black text-ink font-heading">
+              Get the Yearly Plan for <span className="text-emerald-700 dark:text-emerald-400">₹3,299</span>{' '}
+              <span className="line-through text-muted text-xs font-normal">₹3,999</span> (Save ₹700)
+            </h4>
+            <p className="text-xs text-muted mt-0.5 leading-relaxed">
+              Upgrade while your 14-day trial is active to lock in unlimited listings, custom agency branding, and priority support for an entire year.
+            </p>
+          </div>
+          <div className="pt-1">
+            <button
+              type="button"
+              onClick={() => setIsSpecialOfferOpen(true)}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider shadow-md animate-trial-glow flex items-center justify-center gap-2 cursor-pointer transition min-h-[42px]"
+            >
+              <Crown className="w-4 h-4" />
+              <span>Claim Trial Upgrade — ₹3,299/yr</span>
+            </button>
+          </div>
+        </div>
+      </Card>
 
       {/* Agency Identity & Verified Badge Card */}
       <Card className="p-5 sm:p-6 space-y-4 border-emerald-500/25 bg-gradient-to-br from-white via-white to-emerald-50/30 shadow-xs rounded-2xl">
@@ -477,6 +534,11 @@ export const SettingsPage: React.FC = () => {
           <span>Sign Out of leadNivash</span>
         </button>
       </Card>
+
+      <SpecialOfferModal
+        isOpen={isSpecialOfferOpen}
+        onClose={() => setIsSpecialOfferOpen(false)}
+      />
     </div>
   );
 };
