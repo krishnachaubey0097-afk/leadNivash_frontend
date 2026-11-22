@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -9,12 +9,15 @@ import {
   Inbox,
   Settings,
   Shield,
+  Crown,
 } from 'lucide-react';
 import { useAuth } from '../../features/auth/AuthProvider';
+import { SpecialOfferModal } from '../../features/pricing/SpecialOfferModal';
 import clsx from 'clsx';
 
 export const Sidebar: React.FC = () => {
   const { user } = useAuth();
+  const [isSpecialOfferOpen, setIsSpecialOfferOpen] = useState(false);
 
   const navLinks = [
     { to: '/app', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -100,19 +103,48 @@ export const Sidebar: React.FC = () => {
         </nav>
       </div>
 
-      {/* Broker Profile Footer Card */}
-      <div className="p-4 bg-gradient-to-br from-bg to-brand-50/20 dark:to-brand-950/20 border border-border/80 rounded-2xl space-y-2">
+      {/* Broker Profile Footer Card with Special Trial Upgrade Button */}
+      <div className="p-4 bg-gradient-to-br from-bg via-white to-emerald-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border border-border/80 dark:border-slate-800 rounded-2xl space-y-2.5 shadow-2xs">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-black uppercase tracking-wider text-brand-700 dark:text-brand-600">
-            {user?.plan?.tier || 'Trial'} Plan
+            {user?.plan?.tier ? `${user.plan.tier.toUpperCase()} PLAN` : 'TRIAL PLAN'}
           </span>
-          <span className="flex h-2 w-2 rounded-full bg-brand-600" />
+          <span className="flex h-2 w-2 rounded-full bg-brand-600 animate-pulse" />
         </div>
         <div>
-          <p className="text-xs font-bold text-ink truncate">{user?.name || 'Partner Broker'}</p>
-          <p className="text-[11px] text-muted truncate">{user?.agency?.name || user?.email}</p>
+          <p className="text-xs font-bold text-ink truncate capitalize">{user?.name || 'Partner Broker'}</p>
+          <p className="text-[11px] text-muted truncate">{user?.agency?.name || user?.email || 'Direct Broker Agency'}</p>
         </div>
+
+        {/* Upgrade Button with Subtle Glow for Free Trial Users */}
+        {(user?.plan?.tier === 'trial' || !user?.plan?.tier) && (
+          <div className="pt-2 border-t border-border/60 dark:border-slate-800 space-y-1.5">
+            <div className="flex items-center justify-between text-[10px] text-amber-700 dark:text-amber-400 font-bold">
+              <span className="flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-amber-600" />
+                <span>Special Trial Deal</span>
+              </span>
+              <span className="bg-amber-100 dark:bg-amber-950/80 px-1.5 py-0.2 rounded text-[9px] border border-amber-300 dark:border-amber-700 font-extrabold">
+                -₹700 OFF
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsSpecialOfferOpen(true)}
+              className="w-full py-2.5 px-3 rounded-xl text-white font-extrabold text-[11px] uppercase tracking-wider shadow-md animate-trial-glow flex items-center justify-center gap-1.5 cursor-pointer transition min-h-[38px]"
+              title="Upgrade to Yearly Plan for ₹3,299 (Save ₹700)"
+            >
+              <Crown className="w-3.5 h-3.5" />
+              <span>Upgrade — ₹3,299/yr</span>
+            </button>
+          </div>
+        )}
       </div>
+
+      <SpecialOfferModal
+        isOpen={isSpecialOfferOpen}
+        onClose={() => setIsSpecialOfferOpen(false)}
+      />
     </aside>
   );
 };
