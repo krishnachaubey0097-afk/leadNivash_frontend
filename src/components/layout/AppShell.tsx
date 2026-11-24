@@ -38,7 +38,7 @@ export const AppShell: React.FC = () => {
         {user && !user.phone && (
           <Banner
             variant="warning"
-            message="Please complete your profile: A verified mobile number is required to enable masked client sharing and WhatsApp flyers."
+            message="Please complete your profile: a verified mobile number is required to enable masked client sharing and WhatsApp flyers."
           />
         )}
         {trialDaysRemaining !== null && trialDaysRemaining <= 7 && (
@@ -48,15 +48,15 @@ export const AppShell: React.FC = () => {
         {/* Top Header */}
         <TopBar />
 
-        {/* Body content with independent scrolling & strict horizontal boundary */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 lg:pb-8 max-w-5xl mx-auto w-full px-3.5 sm:px-4 pt-4">
+        {/* Body content — 16px horizontal padding, bottom padding for nav */}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 lg:pb-8 max-w-5xl mx-auto w-full px-4 pt-4">
           <Outlet />
         </main>
 
         {/* Mobile Bottom Navigation (lg:hidden) */}
         <BottomNav />
 
-        {/* First-Time User Onboarding Guided Tour (Stage 5) */}
+        {/* First-Time User Onboarding Guided Tour */}
         <OnboardingTour />
       </div>
     </div>

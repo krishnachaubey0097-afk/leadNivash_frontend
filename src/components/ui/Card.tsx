@@ -12,21 +12,21 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={clsx(
-          'rounded-card border transition-all duration-200',
-          // Variants
+          'rounded-card border transition-all duration-150',
+          // Variants — clean, no decorative gradients
           variant === 'default' &&
-            'bg-gradient-to-br from-white via-white to-emerald-50/20 border-border/90 shadow-card text-text',
+            'bg-white border-border shadow-card',
           variant === 'raised' &&
-            'bg-gradient-to-br from-white via-white to-emerald-50/40 border-border shadow-card-hover text-text',
+            'bg-white border-border shadow-card-hover',
           variant === 'flat' &&
-            'bg-gradient-to-br from-white via-[#F4F6F8] to-emerald-50/20 border-border/70 text-text',
+            'bg-bg border-border',
           variant === 'glow' &&
-            'bg-gradient-to-br from-white via-emerald-50/30 to-emerald-100/40 border-brand-600/30 shadow-glow text-text',
+            'bg-brand-50 border-brand-600/20',
           variant === 'dark' &&
-            'bg-gradient-to-br from-white via-emerald-50/40 to-emerald-100/30 text-ink border-emerald-500/30 shadow-card',
+            'bg-white border-brand-600/20 shadow-card',
           // Interactive Hover
           interactive &&
-            'hover:shadow-card-hover hover:border-brand-600/40 cursor-pointer active:scale-[0.99]',
+            'hover:shadow-card-hover hover:border-brand-600/30 cursor-pointer active:scale-[0.995]',
           className
         )}
         {...props}
@@ -44,7 +44,7 @@ export const CardHeader = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <div
     ref={ref}
-    className={clsx('p-5 pb-3 flex items-center justify-between gap-3', className)}
+    className={clsx('p-4 pb-3 flex items-center justify-between gap-3', className)}
     {...props}
   >
     {children}
@@ -58,7 +58,7 @@ export const CardTitle = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <h3
     ref={ref}
-    className={clsx('text-base font-black tracking-tight text-ink font-heading', className)}
+    className={clsx('text-card-title font-semibold text-ink', className)}
     {...props}
   >
     {children}
@@ -72,7 +72,7 @@ export const CardDescription = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <p
     ref={ref}
-    className={clsx('text-xs text-muted leading-relaxed', className)}
+    className={clsx('text-secondary text-muted leading-relaxed', className)}
     {...props}
   >
     {children}
@@ -84,7 +84,7 @@ export const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
-  <div ref={ref} className={clsx('p-5 pt-0', className)} {...props}>
+  <div ref={ref} className={clsx('p-4 pt-0', className)} {...props}>
     {children}
   </div>
 ));
@@ -96,7 +96,7 @@ export const CardFooter = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <div
     ref={ref}
-    className={clsx('p-5 pt-0 flex items-center justify-between border-t border-border/50 mt-4', className)}
+    className={clsx('p-4 pt-3 flex items-center justify-between border-t border-border mt-3', className)}
     {...props}
   >
     {children}

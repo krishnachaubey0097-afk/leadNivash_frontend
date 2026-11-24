@@ -50,15 +50,15 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={handleClose} title={title}>
       <div className="space-y-4">
-        <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-2xl flex items-start gap-2.5 text-xs text-danger">
+        <div className="p-3 bg-danger-bg border border-danger/15 rounded-card flex items-start gap-2.5 text-secondary text-danger">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{description}</span>
         </div>
 
         {expectedConfirmationPhrase && (
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-text">
-              Type <span className="font-bold text-ink">{expectedConfirmationPhrase}</span> to confirm:
+            <label className="block text-sm font-medium text-ink">
+              Type <span className="font-semibold text-ink">{expectedConfirmationPhrase}</span> to confirm:
             </label>
             <Input
               value={typedPhrase}
@@ -69,13 +69,12 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         )}
 
         <div className="flex items-center justify-end gap-2.5 pt-2">
-          <Button variant="ghost" size="sm" pill onClick={() => handleClose(false)} disabled={isLoading}>
+          <Button variant="ghost" size="sm" onClick={() => handleClose(false)} disabled={isLoading}>
             {cancelText}
           </Button>
           <Button
             variant={variant}
             size="sm"
-            pill
             disabled={!isConfirmed || isLoading}
             isLoading={isLoading}
             onClick={handleConfirmClick}

@@ -50,9 +50,9 @@ export const MoneyInput: React.FC<MoneyInputProps> = ({
   const inputId = id || name;
 
   return (
-    <div className="w-full space-y-1">
+    <div className="w-full space-y-1.5">
       {label && (
-        <label htmlFor={inputId} className="block text-xs font-semibold text-text uppercase tracking-wider">
+        <label htmlFor={inputId} className="block text-sm font-medium text-ink">
           {label}
         </label>
       )}
@@ -69,27 +69,27 @@ export const MoneyInput: React.FC<MoneyInputProps> = ({
           onChange={handleChange}
           placeholder={placeholder}
           className={clsx(
-            'w-full bg-surface border rounded-input py-2.5 pl-10 pr-24 text-base font-semibold text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600 transition',
-            error ? 'border-danger focus:ring-danger' : 'border-border'
+            'w-full bg-white border rounded-input h-12 pl-10 pr-24 text-base font-medium text-ink placeholder-faint focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-brand-600 transition-colors duration-150',
+            error ? 'border-danger focus:ring-danger focus:border-danger' : 'border-border'
           )}
         />
         {parsedPaise != null && parsedPaise > 0 && (
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded pointer-events-none">
+          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-meta font-semibold text-brand-700 bg-brand-50 px-2 py-0.5 rounded pointer-events-none">
             {formatShortPrice(parsedPaise)}
           </div>
         )}
       </div>
 
       {parsedPaise != null && parsedPaise > 0 && (
-        <p className="text-[11px] font-medium text-muted">
-          Understood: <span className="font-bold text-ink">{formatRupees(parsedPaise)}</span>
+        <p className="text-meta font-medium text-muted">
+          Understood: <span className="font-semibold text-ink">{formatRupees(parsedPaise)}</span>
         </p>
       )}
 
       {error ? (
-        <p className="text-xs text-danger font-medium mt-0.5">{error}</p>
+        <p className="text-meta text-danger font-medium">{error}</p>
       ) : hint ? (
-        <p className="text-[11px] text-muted mt-0.5">{hint}</p>
+        <p className="text-meta text-muted">{hint}</p>
       ) : null}
     </div>
   );

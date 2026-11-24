@@ -20,16 +20,16 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
     };
 
     return (
-      <div className="w-full space-y-1">
+      <div className="w-full space-y-1.5">
         {label && (
-          <label htmlFor={inputId} className="block text-xs font-semibold text-text uppercase tracking-wider">
+          <label htmlFor={inputId} className="block text-sm font-medium text-ink">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           <div className="absolute left-3.5 flex items-center gap-1.5 text-muted pointer-events-none select-none">
             <Phone className="w-4 h-4 text-brand-600" />
-            <span className="text-xs font-bold text-ink border-r border-border pr-2">+91</span>
+            <span className="text-sm font-medium text-ink border-r border-border pr-2">+91</span>
           </div>
           <input
             id={inputId}
@@ -41,17 +41,17 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             onChange={handleTextChange}
             placeholder="98123 45678"
             className={clsx(
-              'w-full bg-surface border rounded-input py-2.5 pl-20 pr-3.5 text-base font-medium text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600 transition',
-              error ? 'border-danger focus:ring-danger' : 'border-border',
+              'w-full bg-white border rounded-input h-12 pl-20 pr-3.5 text-base font-medium text-ink placeholder-faint focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-brand-600 transition-colors duration-150',
+              error ? 'border-danger focus:ring-danger focus:border-danger' : 'border-border',
               className
             )}
             {...props}
           />
         </div>
         {error ? (
-          <p className="text-xs text-danger font-medium mt-0.5">{error}</p>
+          <p className="text-meta text-danger font-medium">{error}</p>
         ) : hint ? (
-          <p className="text-[11px] text-muted mt-0.5">{hint}</p>
+          <p className="text-meta text-muted">{hint}</p>
         ) : null}
       </div>
     );

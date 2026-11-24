@@ -14,9 +14,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || props.name;
 
     return (
-      <div className="w-full space-y-1">
+      <div className="w-full space-y-1.5">
         {label && (
-          <label htmlFor={inputId} className="block text-xs font-semibold text-text uppercase tracking-wider">
+          <label htmlFor={inputId} className="block text-sm font-medium text-ink">
             {label}
           </label>
         )}
@@ -30,10 +30,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             className={clsx(
-              'w-full bg-surface border rounded-input py-2.5 text-base text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600 transition',
+              'w-full bg-white border rounded-input h-12 text-base text-ink placeholder-faint focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-brand-600 transition-colors duration-150',
               leftIcon ? 'pl-10' : 'pl-3.5',
               rightElement ? 'pr-12' : 'pr-3.5',
-              error ? 'border-danger focus:ring-danger' : 'border-border',
+              error ? 'border-danger focus:ring-danger focus:border-danger' : 'border-border',
               className
             )}
             {...props}
@@ -45,9 +45,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {error ? (
-          <p className="text-xs text-danger font-medium mt-0.5">{error}</p>
+          <p className="text-meta text-danger font-medium">{error}</p>
         ) : hint ? (
-          <p className="text-[11px] text-muted mt-0.5">{hint}</p>
+          <p className="text-meta text-muted">{hint}</p>
         ) : null}
       </div>
     );

@@ -138,26 +138,28 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
                 <span className="line-through font-mono font-medium">₹3,999 / year</span>
               </div>
               <div className="flex items-center justify-between text-emerald-700 dark:text-emerald-400 font-bold">
-                <span>Free Trial Special Discount:</span>
-                <span>- ₹700 (Exclusive)</span>
+                <span>Free Trial Broker Discount:</span>
+                <span>- ₹700 One-Time Grant</span>
               </div>
-              <div className="flex items-center justify-between pt-1 border-t border-dashed border-emerald-500/30 text-ink">
-                <span className="font-bold text-xs sm:text-sm">Your Special Upgrade Price:</span>
-                <div className="text-right">
-                  <span className="text-xl sm:text-2xl font-black text-emerald-700 dark:text-emerald-400 font-heading">
-                    ₹3,299
-                  </span>
-                  <span className="text-[10px] sm:text-[11px] text-muted font-normal block">/ Year (₹275/mo)</span>
-                </div>
+              <div className="pt-2 border-t border-[#E5E9EE] dark:border-slate-700/80 flex items-center justify-between text-sm sm:text-base font-black text-ink">
+                <span>Your Net Upgrade Price:</span>
+                <span className="text-emerald-700 dark:text-emerald-400 font-extrabold">
+                  ₹3,299 <span className="text-xs font-normal text-muted">/ year (₹275/mo)</span>
+                </span>
               </div>
             </div>
+          </div>
 
-            <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900/80 border border-[#E5E9EE] dark:border-slate-700/60 text-[11px] text-muted flex items-start gap-2">
-              <Clock className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-              <span>
-                <strong>Important:</strong> This ₹700 discount applies exclusively to the <strong>Yearly Plan</strong>. The
-                Monthly Plan remains at its standard price of <strong>₹399/month</strong>.
-              </span>
+          {/* Special Urgency Note for Brokers */}
+          <div className="p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-300/60 dark:border-amber-800/60 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
+            <Clock className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <p className="font-bold text-[11px] text-amber-950 dark:text-amber-100">
+                Special Pricing Granted Only During Active Trial Window
+              </p>
+              <p className="text-[10px] text-amber-900/90 dark:text-amber-300/90 leading-relaxed">
+                Lock in ₹3,299 renewal price for life. Once your trial ends, renewal defaults to regular ₹3,999/yr.
+              </p>
             </div>
           </div>
 

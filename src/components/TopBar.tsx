@@ -1,4 +1,5 @@
 import React from 'react';
+import { BRAND_NAME } from '../../config/constants';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { Settings as SettingsIcon, LogOut } from 'lucide-react';
@@ -18,7 +19,7 @@ export const TopBar: React.FC = () => {
           />
           <div className="flex flex-col">
             <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
-              lead<span className="text-primary font-black">Nivash</span>
+                {BRAND_NAME}
             </span>
             <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">
               Broker OS

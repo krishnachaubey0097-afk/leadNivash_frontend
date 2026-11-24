@@ -22,15 +22,15 @@ export const Skeleton: React.FC<SkeletonProps> = ({ className, ...props }) => {
  */
 export const StatCardSkeleton: React.FC = () => {
   return (
-    <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-border/80 shadow-xs space-y-3">
+    <div className="p-4 rounded-card bg-white border border-border shadow-card space-y-3">
       <div className="flex items-center justify-between">
         <Skeleton className="h-3.5 w-24 rounded-full" />
-        <Skeleton className="h-8 w-8 rounded-2xl" />
+        <Skeleton className="h-8 w-8 rounded-card" />
       </div>
       <div className="space-y-1 pt-1">
-        <Skeleton className="h-8 w-20 rounded-xl" />
+        <Skeleton className="h-8 w-20 rounded-lg" />
       </div>
-      <div className="pt-2 border-t border-border/50 flex items-center justify-between">
+      <div className="pt-2 border-t border-border flex items-center justify-between">
         <Skeleton className="h-4 w-14 rounded-full" />
         <Skeleton className="h-3 w-16 rounded-full" />
       </div>
@@ -43,9 +43,8 @@ export const StatCardSkeleton: React.FC = () => {
  */
 export const PropertyCardSkeleton: React.FC = () => {
   return (
-    <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-border/80 shadow-xs space-y-3.5">
-      {/* Photo Thumbnail Skeleton */}
-      <Skeleton className="w-full h-36 rounded-2xl" />
+    <div className="p-4 rounded-card bg-white border border-border shadow-card space-y-3.5">
+      <Skeleton className="w-full h-36 rounded-card" />
       <div className="flex items-center justify-between pt-1">
         <Skeleton className="h-4 w-36 rounded-lg" />
         <Skeleton className="h-4 w-16 rounded-full" />
@@ -55,7 +54,7 @@ export const PropertyCardSkeleton: React.FC = () => {
         <Skeleton className="h-4 w-14 rounded-md" />
         <Skeleton className="h-4 w-16 rounded-md" />
       </div>
-      <div className="flex items-center justify-between pt-2 border-t border-border/60">
+      <div className="flex items-center justify-between pt-2 border-t border-border">
         <Skeleton className="h-6 w-24 rounded-lg" />
         <div className="flex gap-2">
           <Skeleton className="h-8 w-24 rounded-full" />
@@ -71,10 +70,10 @@ export const PropertyCardSkeleton: React.FC = () => {
  */
 export const BuyerCardSkeleton: React.FC = () => {
   return (
-    <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-border/80 shadow-xs space-y-3.5">
+    <div className="p-4 rounded-card bg-white border border-border shadow-card space-y-3.5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Skeleton className="h-9 w-9 rounded-2xl" />
+          <Skeleton className="h-9 w-9 rounded-card" />
           <div className="space-y-1">
             <Skeleton className="h-4 w-28 rounded-lg" />
             <Skeleton className="h-3 w-20 rounded-md" />
@@ -83,7 +82,7 @@ export const BuyerCardSkeleton: React.FC = () => {
         <Skeleton className="h-5 w-16 rounded-full" />
       </div>
 
-      <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 space-y-2 border border-border/40">
+      <div className="p-3 rounded-input bg-bg space-y-2 border border-border">
         <div className="flex justify-between items-center">
           <Skeleton className="h-3 w-16 rounded-md" />
           <Skeleton className="h-4 w-24 rounded-md" />
@@ -91,7 +90,7 @@ export const BuyerCardSkeleton: React.FC = () => {
         <Skeleton className="h-3 w-40 rounded-md" />
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t border-border/60">
+      <div className="flex items-center justify-between pt-2 border-t border-border">
         <Skeleton className="h-7 w-20 rounded-full" />
         <div className="flex gap-1.5">
           <Skeleton className="h-8 w-8 rounded-full" />
@@ -107,8 +106,8 @@ export const BuyerCardSkeleton: React.FC = () => {
  */
 export const InquiryCardSkeleton: React.FC = () => {
   return (
-    <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-border/80 shadow-xs space-y-3">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border/60">
+    <div className="p-4 rounded-card bg-white border border-border shadow-card space-y-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border">
         <div className="flex items-center gap-3">
           <Skeleton className="w-9 h-9 rounded-full" />
           <div className="space-y-1">
@@ -119,7 +118,7 @@ export const InquiryCardSkeleton: React.FC = () => {
         <Skeleton className="h-5 w-20 rounded-full" />
       </div>
 
-      <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-1.5 border border-border/40">
+      <div className="p-3 rounded-input bg-bg space-y-1.5 border border-border">
         <Skeleton className="h-3 w-36 rounded-md" />
         <Skeleton className="h-3 w-56 rounded-md" />
       </div>
@@ -137,7 +136,7 @@ export const InquiryCardSkeleton: React.FC = () => {
  */
 export const MatchCardSkeleton: React.FC = () => {
   return (
-    <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-border/80 shadow-xs space-y-3">
+    <div className="p-4 rounded-card bg-white border border-border shadow-card space-y-3">
       <div className="flex items-center justify-between">
         <Skeleton className="h-5 w-20 rounded-full" />
         <Skeleton className="h-3 w-16 rounded-md" />
@@ -149,7 +148,7 @@ export const MatchCardSkeleton: React.FC = () => {
         <Skeleton className="h-4 w-20 rounded-md" />
       </div>
 
-      <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 flex items-center justify-between">
+      <div className="p-3 rounded-input bg-bg flex items-center justify-between">
         <div className="space-y-1">
           <Skeleton className="h-2.5 w-16 rounded-md" />
           <Skeleton className="h-3.5 w-24 rounded-md" />
@@ -160,7 +159,7 @@ export const MatchCardSkeleton: React.FC = () => {
         </div>
       </div>
 
-      <div className="pt-2 border-t border-border/60 flex items-center justify-between gap-2">
+      <div className="pt-2 border-t border-border flex items-center justify-between gap-2">
         <Skeleton className="h-8 flex-1 rounded-full" />
         <Skeleton className="h-8 w-20 rounded-full" />
       </div>
@@ -182,22 +181,20 @@ export const PropertyDetailSkeleton: React.FC = () => {
         </div>
       </div>
 
-      {/* Hero Gallery Placeholder */}
-      <Skeleton className="w-full h-64 sm:h-80 rounded-3xl" />
+      <Skeleton className="w-full h-64 sm:h-80 rounded-card-lg" />
 
-      {/* Headline & Specs Card */}
-      <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-border/80 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/60">
+      <div className="p-5 rounded-card bg-white border border-border shadow-card space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border">
           <div className="space-y-2">
-            <Skeleton className="h-6 w-56 rounded-xl" />
+            <Skeleton className="h-6 w-56 rounded-lg" />
             <Skeleton className="h-3.5 w-36 rounded-md" />
           </div>
-          <Skeleton className="h-8 w-28 rounded-xl" />
+          <Skeleton className="h-8 w-28 rounded-lg" />
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-1">
+            <div key={i} className="p-3 rounded-input bg-bg space-y-1">
               <Skeleton className="h-2.5 w-12 rounded-md" />
               <Skeleton className="h-4 w-16 rounded-md" />
             </div>
@@ -211,10 +208,9 @@ export const PropertyDetailSkeleton: React.FC = () => {
         </div>
       </div>
 
-      {/* Owner Contact Card */}
-      <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-border/80 space-y-3">
+      <div className="p-4 rounded-card bg-white border border-border space-y-3">
         <Skeleton className="h-4 w-36 rounded-md" />
-        <Skeleton className="h-10 w-full rounded-2xl" />
+        <Skeleton className="h-10 w-full rounded-input" />
       </div>
     </div>
   );
@@ -234,10 +230,10 @@ export const BuyerDetailSkeleton: React.FC = () => {
         </div>
       </div>
 
-      <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-border/80 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/60">
+      <div className="p-5 rounded-card bg-white border border-border shadow-card space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border">
           <div className="space-y-2">
-            <Skeleton className="h-6 w-48 rounded-xl" />
+            <Skeleton className="h-6 w-48 rounded-lg" />
             <Skeleton className="h-3.5 w-32 rounded-md" />
           </div>
           <Skeleton className="h-6 w-24 rounded-full" />
@@ -245,7 +241,7 @@ export const BuyerDetailSkeleton: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-1.5">
+            <div key={i} className="p-3.5 rounded-input bg-bg space-y-1.5">
               <Skeleton className="h-2.5 w-14 rounded-md" />
               <Skeleton className="h-4 w-24 rounded-md" />
             </div>
@@ -253,7 +249,6 @@ export const BuyerDetailSkeleton: React.FC = () => {
         </div>
       </div>
 
-      {/* Matching Listings Skeleton Grid */}
       <div className="space-y-3">
         <Skeleton className="h-5 w-48 rounded-md" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -270,12 +265,11 @@ export const BuyerDetailSkeleton: React.FC = () => {
  */
 export const FlyerSkeleton: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-3 sm:p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-bg p-4 sm:p-6 flex flex-col items-center">
       <div className="w-full max-w-2xl space-y-4">
-        {/* Brand header */}
-        <div className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center justify-between p-4 bg-white rounded-card border border-border shadow-card">
           <div className="flex items-center gap-3">
-            <Skeleton className="w-10 h-10 rounded-2xl" />
+            <Skeleton className="w-10 h-10 rounded-card" />
             <div className="space-y-1">
               <Skeleton className="h-4 w-32 rounded-md" />
               <Skeleton className="h-3 w-20 rounded-md" />
@@ -284,32 +278,29 @@ export const FlyerSkeleton: React.FC = () => {
           <Skeleton className="h-5 w-24 rounded-full" />
         </div>
 
-        {/* Media Carousel */}
-        <Skeleton className="w-full h-72 sm:h-96 rounded-3xl" />
+        <Skeleton className="w-full h-72 sm:h-96 rounded-card-lg" />
 
-        {/* Details Card */}
-        <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <div className="p-5 bg-white rounded-card border border-border shadow-card space-y-4">
           <div className="flex justify-between items-start">
             <div className="space-y-2">
-              <Skeleton className="h-6 w-56 rounded-xl" />
+              <Skeleton className="h-6 w-56 rounded-lg" />
               <Skeleton className="h-3.5 w-36 rounded-md" />
             </div>
-            <Skeleton className="h-7 w-24 rounded-xl" />
+            <Skeleton className="h-7 w-24 rounded-lg" />
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-16 rounded-2xl" />
+              <Skeleton key={i} className="h-16 rounded-input" />
             ))}
           </div>
         </div>
 
-        {/* Inquiry Card */}
-        <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+        <div className="p-5 bg-white rounded-card border border-border shadow-card space-y-3">
           <Skeleton className="h-5 w-40 rounded-md" />
-          <Skeleton className="h-10 w-full rounded-xl" />
-          <Skeleton className="h-10 w-full rounded-xl" />
-          <Skeleton className="h-10 w-full rounded-full" />
+          <Skeleton className="h-12 w-full rounded-input" />
+          <Skeleton className="h-12 w-full rounded-input" />
+          <Skeleton className="h-12 w-full rounded-full" />
         </div>
       </div>
     </div>

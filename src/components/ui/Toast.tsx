@@ -47,7 +47,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <ToastContext.Provider value={{ toast, success, error }}>
       {children}
-      {/* Toast Overlay with aria-live="polite" */}
+      {/* Toast Overlay */}
       <div
         aria-live="polite"
         className="fixed bottom-20 left-1/2 -translate-x-1/2 sm:bottom-6 sm:right-6 sm:left-auto sm:translate-x-0 z-50 flex flex-col gap-2 max-w-sm w-full px-4 pointer-events-none"
@@ -56,17 +56,17 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           <div
             key={t.id}
             className={clsx(
-              'pointer-events-auto flex items-center justify-between gap-3 p-3.5 rounded-card shadow-lg border backdrop-blur-md transition-all animate-in fade-in slide-in-from-bottom-2',
-              t.type === 'success' && 'bg-surface border-brand-600/30 text-ink',
-              t.type === 'error' && 'bg-surface border-danger/40 text-danger',
-              t.type === 'info' && 'bg-surface border-border text-ink'
+              'pointer-events-auto flex items-center justify-between gap-3 p-3.5 rounded-card shadow-lg border backdrop-blur-sm transition-all duration-200 animate-in fade-in slide-in-from-bottom-2',
+              t.type === 'success' && 'bg-white border-brand-600/20 text-ink',
+              t.type === 'error' && 'bg-white border-danger/30 text-ink',
+              t.type === 'info' && 'bg-white border-border text-ink'
             )}
           >
             <div className="flex items-center gap-2.5">
               {t.type === 'success' && <CheckCircle2 className="w-4 h-4 text-brand-600 shrink-0" />}
               {t.type === 'error' && <AlertCircle className="w-4 h-4 text-danger shrink-0" />}
               {t.type === 'info' && <Info className="w-4 h-4 text-info shrink-0" />}
-              <span className="text-xs font-semibold leading-snug">{t.message}</span>
+              <span className="text-secondary font-medium leading-snug">{t.message}</span>
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
@@ -76,14 +76,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                     t.action?.onClick();
                     removeToast(t.id);
                   }}
-                  className="text-xs font-bold text-brand-600 hover:underline cursor-pointer"
+                  className="text-secondary font-semibold text-brand-600 hover:underline cursor-pointer"
                 >
                   {t.action.label}
                 </button>
               )}
               <button
                 onClick={() => removeToast(t.id)}
-                className="text-muted hover:text-ink transition cursor-pointer"
+                className="text-muted hover:text-ink transition-colors cursor-pointer p-1"
                 aria-label="Close"
               >
                 <X className="w-3.5 h-3.5" />

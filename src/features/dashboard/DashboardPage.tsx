@@ -1,1243 +1,698 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
 import {
-  Sparkles,
-  Trophy,
-  ArrowRight,
-  TrendingUp,
-  Clock,
-  Trash2,
-  ArrowUpRight,
-  Send,
-  CheckCircle2,
-  Calendar,
   Building2,
+  Users,
+  Sparkles,
   Plus,
-  HelpCircle,
+  Search,
+  ArrowRight,
+  Send,
+  MessageSquare,
+  AlertCircle,
+  RotateCcw,
+  Clock,
+  Briefcase,
+  CheckCircle2,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
-import { StatCardSkeleton, MatchCardSkeleton } from '../../components/ui/Skeleton';
-import clsx from 'clsx';
+import { Badge } from '../../components/ui/Badge';
 import { formatRupees } from '../../lib/money';
-import { parseMessage, type ParseResult } from '../../lib/api/parse';
 import { fetchProperties, type PropertyItem } from '../../lib/api/properties';
 import { fetchBuyers, type BuyerItem } from '../../lib/api/buyers';
+import { fetchDeals, type DealItem } from '../../lib/api/deals';
+import { parseMessage, type ParseResult } from '../../lib/api/parse';
 import { useToast } from '../../components/ui/Toast';
-import { startInteractiveTour } from '../onboarding/OnboardingTour';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
-  const { success, error, toast } = useToast();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
-  // Quick Paste embedded state
-  const [quickInput, setQuickInput] = useState('');
-  const [isQuickParsing, setIsQuickParsing] = useState(false);
-  const [quickResult, setQuickResult] = useState<ParseResult | null>(null);
+  // Data states
+  const [properties, setProperties] = useState<PropertyItem[]>([]);
+  const [buyers, setBuyers] = useState<BuyerItem[]>([]);
+  const [deals, setDeals] = useState<DealItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleQuickParse = async () => {
-    if (!quickInput.trim() || quickInput.trim().length < 5) {
-      toast('Please paste a property or buyer message to extract.', 'error');
-      return;
-    }
-    setIsQuickParsing(true);
+  // Quick Paste state
+  const [pasteText, setPasteText] = useState('');
+  const [isParsing, setIsParsing] = useState(false);
+  const [parseResult, setParseResult] = useState<ParseResult | null>(null);
+
+  // Active segment toggle
+  const [activeSegment, setActiveSegment] = useState<'today' | 'pipeline'>('today');
+
+  const loadData = async (silent = false) => {
+    if (!silent) setIsLoading(true);
+    setError(null);
     try {
-      const res = await parseMessage(quickInput);
-      setQuickResult(res);
-      success(`Identified as ${res.itemType === 'listing' ? 'Property Listing' : 'Buyer Requirement'}.`);
-    } catch {
-      error('Could not extract message.');
+      const [propsData, buyersData, dealsData] = await Promise.all([
+        fetchProperties(),
+        fetchBuyers(),
+        fetchDeals(),
+      ]);
+      setProperties(Array.isArray(propsData) ? propsData : []);
+      setBuyers(Array.isArray(buyersData) ? buyersData : []);
+      setDeals(Array.isArray(dealsData) ? dealsData : []);
+    } catch (err) {
+      if (!silent) {
+        console.warn('Dashboard data sync error:', err);
+        setError('Unable to load dashboard data. Please check your connection.');
+      }
     } finally {
-      setIsQuickParsing(false);
+      if (!silent) setIsLoading(false);
     }
-  };
-
-  // Interactive Deal Pipeline State (defaults to empty for real user accounts)
-  const [pipelineDeals, setPipelineDeals] = useState<Array<{
-    id: string;
-    title: string;
-    locality: string;
-    clientName: string;
-    propertyPrice: number;
-    brokerageAmount: number;
-    stage: 'token' | 'agreement' | 'registry' | 'won';
-    date: string;
-  }>>([]);
-
-  // Real-Time Database Data Integration
-  const [dbProperties, setDbProperties] = useState<PropertyItem[]>([]);
-  const [dbBuyers, setDbBuyers] = useState<BuyerItem[]>([]);
-  const [isLoadingStats, setIsLoadingStats] = useState(true);
-  const [statsError, setStatsError] = useState<string | null>(null);
-
-  const loadDashboardData = (silent = false) => {
-    if (!silent) setIsLoadingStats(true);
-    setStatsError(null);
-    Promise.all([fetchProperties(), fetchBuyers()])
-      .then(([props, byrs]) => {
-        setDbProperties(props);
-        setDbBuyers(byrs);
-      })
-      .catch((err) => {
-        if (!silent) {
-          console.warn('Could not load dynamic dashboard stats:', err);
-          setStatsError('Unable to sync live inventory and leads. Please check connection and retry.');
-        }
-      })
-      .finally(() => {
-        if (!silent) setIsLoadingStats(false);
-      });
   };
 
   useEffect(() => {
-    loadDashboardData();
+    loadData();
 
-    const handleSync = () => {
-      loadDashboardData(true);
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        handleSync();
-      }
-    };
-
-    // Listen for data changes across tabs/actions/devices
+    const handleSync = () => loadData(true);
     window.addEventListener('leadnivash_data_changed', handleSync);
     window.addEventListener('focus', handleSync);
-    window.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('online', handleSync);
-
-    const interval = setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        handleSync();
-      }
-    }, 8000);
 
     return () => {
       window.removeEventListener('leadnivash_data_changed', handleSync);
       window.removeEventListener('focus', handleSync);
-      window.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('online', handleSync);
-      clearInterval(interval);
     };
   }, []);
 
-  // Dynamic Real Inventory & Client Matches
-  const matchesWaiting = React.useMemo(() => {
-    if (dbProperties.length === 0 || dbBuyers.length === 0) return [];
+  // Compute matches between available properties and active buyers
+  const matches = useMemo(() => {
+    if (properties.length === 0 || buyers.length === 0) return [];
     const results: Array<{
       id: string;
       score: number;
-      badge: 'perfect' | 'good';
       propertyTitle: string;
       locality: string;
       propertyPrice: number;
       buyerName: string;
       buyerBudget: string;
-      date: string;
+      badge: 'perfect' | 'good';
     }> = [];
 
-    for (const p of dbProperties) {
-      for (const b of dbBuyers) {
-        let score = 55;
+    const availableProps = properties.filter((p) => p.status === 'available');
+    const activeBuyers = buyers.filter((b) => b.status === 'active');
+
+    for (const p of availableProps) {
+      for (const b of activeBuyers) {
+        let score = 50;
         const pLoc = (p.locality || '').toLowerCase();
         const hasLocMatch = b.localities?.some((loc) => {
           const l = typeof loc === 'string' ? loc.toLowerCase() : loc.display.toLowerCase();
           return pLoc.includes(l) || l.includes(pLoc);
         });
-        if (hasLocMatch) score += 25;
+        if (hasLocMatch) score += 30;
         if (b.types?.some((t) => t.toLowerCase() === p.type?.toLowerCase())) score += 15;
 
-        if (score >= 70) {
+        if (score >= 65) {
           results.push({
             id: `match_${p._id}_${b._id}`,
             score: Math.min(score, 98),
-            badge: score >= 85 ? 'perfect' : 'good',
             propertyTitle: p.title,
-            locality: `${p.locality}, ${p.city || 'Panipat'}`,
+            locality: `${p.locality || ''}${p.city ? ', ' + p.city : ''}`,
             propertyPrice: p.priceDemandPaise,
             buyerName: b.name,
-            buyerBudget: b.budget?.maxPaise ? formatRupees(b.budget.maxPaise) : 'Budget Flexible',
-            date: 'Active',
+            buyerBudget: b.budget?.maxPaise ? formatRupees(b.budget.maxPaise) : 'Flexible',
+            badge: score >= 80 ? 'perfect' : 'good',
           });
         }
       }
     }
-    return results.slice(0, 4);
-  }, [dbProperties, dbBuyers]);
+    return results.sort((a, b) => b.score - a.score).slice(0, 4);
+  }, [properties, buyers]);
 
-  const totalPropertiesCount = dbProperties.length;
-  const activePropertiesCount = dbProperties.filter((p) => p.status === 'available').length;
-  const totalBuyersCount = dbBuyers.length;
-  const activeBuyersCount = dbBuyers.filter((b) => b.status === 'active').length;
-  const matchesWaitingCount = matchesWaiting.length;
-  const totalPipelinePaise = dbProperties.reduce((sum, p) => sum + (p.priceDemandPaise || 0), 0);
-  const projectedCommissionPaise = Math.round(totalPipelinePaise * 0.01);
+  // Derived real business metrics
+  const totalPropertiesCount = properties.length;
+  const activePropertiesCount = properties.filter((p) => p.status === 'available').length;
+  const totalBuyersCount = buyers.length;
+  const activeBuyersCount = buyers.filter((b) => b.status === 'active').length;
+  const matchesWaitingCount = matches.length;
+  const activeDeals = deals.filter((d) => d.stage !== 'paid' && d.stage !== 'lost');
+  const pendingActionsCount = activeDeals.length + matchesWaitingCount;
 
-  const advanceDealStage = (dealId: string) => {
-    setPipelineDeals((prev) =>
-      prev.map((d) => {
-        if (d.id !== dealId) return d;
-        const nextStage: 'token' | 'agreement' | 'registry' | 'won' =
-          d.stage === 'token'
-            ? 'agreement'
-            : d.stage === 'agreement'
-            ? 'registry'
-            : d.stage === 'registry'
-            ? 'won'
-            : 'won';
-        return { ...d, stage: nextStage };
-      })
-    );
-    success('Deal advanced to next milestone in pipeline!');
+  // Handle Quick Paste
+  const handleQuickParse = async () => {
+    if (!pasteText.trim()) return;
+    setIsParsing(true);
+    try {
+      const res = await parseMessage(pasteText);
+      setParseResult(res);
+      toast('Message parsed successfully. Click below to save or review in Quick Chat.', 'success');
+    } catch {
+      toast('Could not extract details. Opening Quick Chat...', 'info');
+      navigate('/app/paste');
+    } finally {
+      setIsParsing(false);
+    }
   };
 
-  // Top Segmented control per PRD §5.3: Today | Track Record
-  const [activeSegment, setActiveSegment] = useState<'today' | 'track-record'>('today');
+  const handleContinueInQuickChat = () => {
+    navigate('/app/paste', { state: { prefill: pasteText } });
+  };
 
-  // Track Record sub-tabs per PRD §5.3.2
-  const [trackRecordSubTab, setTrackRecordSubTab] = useState<
-    'active' | 'wins' | 'lost' | 'insights' | 'deleted'
-  >('active');
+  // Welcome broker display info
+  const firstName = user?.name ? user.name.split(' ')[0] : 'Broker';
+  const agencyName = user?.agency?.name;
+  const territory = user?.agency?.city || user?.city || 'Haryana';
+  const planTier = user?.plan?.tier || 'Trial';
 
   return (
-    <div className="space-y-5 pb-12">
-      {/* Light White + Green Gradient Welcome Banner (Apple-Class Crisp Glass) */}
-      <div className="rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-white via-white to-emerald-50/40 backdrop-blur-md border border-[#E5E9EE] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-600 to-brand-700 flex items-center justify-center font-bold text-white text-base shadow-2xs shrink-0 uppercase">
-            {(user?.name?.charAt(0) || user?.agency?.name?.charAt(0) || 'S').toUpperCase()}
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-base sm:text-lg font-bold font-heading tracking-tight text-ink capitalize">
-                Welcome back, {user?.name?.split(' ')[0] || 'Broker'}
-              </h1>
-              <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] text-[11px] font-semibold border border-emerald-500/20">
-                PRO ACTIVE
-              </span>
-            </div>
-            <p className="text-xs text-muted mt-0.5 font-medium">
-              {user?.agency?.name ? `${user.agency.name} · ` : ''}{user?.agency?.city || 'Haryana & NCR Hub'}
-            </p>
-          </div>
-        </div>
-
-        {/* Right side controls: Tour, Date pill & Segmented Toggle */}
-        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap justify-end">
-          <button
-            type="button"
-            onClick={() => startInteractiveTour()}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-50/60 text-brand-700 border border-[#E5E9EE] text-xs font-semibold transition shadow-2xs cursor-pointer min-h-[36px]"
-            title="Start Interactive Product Tour"
-          >
-            <HelpCircle className="w-3.5 h-3.5 text-brand-600" />
-            <span>Product Tour</span>
-          </button>
-
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#E5E9EE] text-xs font-semibold text-muted shadow-2xs min-h-[36px]">
-            <Calendar className="w-3.5 h-3.5 text-brand-600" />
-            <span>
-              {new Date().toLocaleDateString('en-IN', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              })}
+    <div className="space-y-4 pb-12 max-w-5xl mx-auto">
+      {/* ── 1. WELCOME SECTION ── */}
+      <div className="bg-white border border-border rounded-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-card">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-page-title font-semibold text-ink leading-tight">
+              Welcome back, {firstName}
+            </h1>
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-meta font-medium text-brand-700 bg-brand-50 border border-brand-200/50">
+              {planTier.toUpperCase()}
             </span>
           </div>
+          <p className="text-secondary text-muted mt-0.5 truncate">
+            {agencyName ? `${agencyName} · ` : ''}{territory}
+          </p>
+        </div>
 
-          {/* Segmented Control Pill */}
-          <div className="flex p-1 bg-slate-100 rounded-xl border border-[#E5E9EE] shadow-2xs">
-            <button
-              onClick={() => setActiveSegment('today')}
-              className={clsx(
-                'px-3.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer min-h-[32px]',
-                activeSegment === 'today'
-                  ? 'bg-brand-600 text-white shadow-2xs'
-                  : 'text-muted hover:text-ink'
-              )}
-            >
-              Today
-            </button>
-            <button
-              onClick={() => setActiveSegment('track-record')}
-              className={clsx(
-                'px-3.5 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer min-h-[32px]',
-                activeSegment === 'track-record'
-                  ? 'bg-brand-600 text-white shadow-2xs'
-                  : 'text-muted hover:text-ink'
-              )}
-            >
-              Track Record
-            </button>
-          </div>
+        {/* View toggle for Today vs Pipeline */}
+        <div className="flex items-center self-start sm:self-auto bg-surface-hover p-0.5 rounded-input border border-border shrink-0">
+          <button
+            type="button"
+            onClick={() => setActiveSegment('today')}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-[8px] transition-colors cursor-pointer ${
+              activeSegment === 'today'
+                ? 'bg-white text-ink shadow-sm'
+                : 'text-muted hover:text-ink'
+            }`}
+          >
+            Today
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveSegment('pipeline')}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-[8px] transition-colors cursor-pointer ${
+              activeSegment === 'pipeline'
+                ? 'bg-white text-ink shadow-sm'
+                : 'text-muted hover:text-ink'
+            }`}
+          >
+            Pipeline {activeDeals.length > 0 && `(${activeDeals.length})`}
+          </button>
         </div>
       </div>
 
-      {/* TODAY SEGMENT (§5.3.1) */}
+      {/* ── 2. MAIN ACTION AREA ── */}
+      <div className="space-y-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <Link to="/app/properties/new" className="block">
+            <Button
+              variant="primary"
+              size="md"
+              className="w-full justify-center gap-2 shadow-sm font-semibold"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Property</span>
+            </Button>
+          </Link>
+          <Link to="/app/buyers/new" className="block">
+            <Button
+              variant="secondary"
+              size="md"
+              className="w-full justify-center gap-2 font-semibold"
+            >
+              <Search className="w-4 h-4 text-brand-600" />
+              <span>Find a Buyer Match</span>
+            </Button>
+          </Link>
+        </div>
+
+        {/* Quick Chat Entry Point */}
+        <Link
+          to="/app/paste"
+          className="flex items-center justify-between p-3 bg-brand-50 border border-brand-200/60 rounded-card text-brand-700 hover:bg-brand-100 transition-colors"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Sparkles className="w-4 h-4 text-brand-600 shrink-0" />
+            <span className="text-sm font-semibold truncate">
+              Open Quick Chat
+            </span>
+          </div>
+          <span className="text-secondary text-brand-700 font-medium shrink-0 flex items-center gap-1">
+            <span>Voice & WhatsApp match</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </span>
+        </Link>
+      </div>
+
+      {/* ── ERROR STATE WITH RETRY ── */}
+      {error && (
+        <div className="p-3.5 bg-danger-bg border border-danger/20 rounded-card flex items-center justify-between gap-3 text-secondary text-danger">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => loadData(false)}
+            className="flex items-center gap-1 text-xs font-semibold hover:underline shrink-0"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Retry</span>
+          </button>
+        </div>
+      )}
+
+      {/* ── TODAY VIEW ── */}
       {activeSegment === 'today' && (
-        <div className="space-y-5">
-          {/* Empty Account Banner Prompting User to Add Properties */}
-          {dbProperties.length === 0 && !isLoadingStats && (
-            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/40 border border-emerald-500/25 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-              <div className="flex flex-col sm:flex-row items-center gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 shadow-2xs">
-                  <Building2 className="w-6 h-6" />
+        <div className="space-y-4">
+          {/* ── 3. DASHBOARD DATA SUMMARY CARDS ── */}
+          {isLoading ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="p-4 rounded-card bg-white border border-border shadow-card space-y-3">
+                  <div className="h-3 w-20 bg-border rounded animate-pulse" />
+                  <div className="h-7 w-12 bg-border rounded animate-pulse" />
+                  <div className="h-3 w-16 bg-border rounded animate-pulse" />
                 </div>
-                <div>
-                  <h3 className="text-base font-black text-ink font-heading">
-                    Please add your properties first
-                  </h3>
-                  <p className="text-xs text-muted mt-0.5 max-w-md">
-                    No data is available to display yet. Start by adding your first property listing or speak/type client messages in Quick Chat to find matches.
+              ))}
+            </div>
+          ) : totalPropertiesCount > 0 || totalBuyersCount > 0 ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {/* Card 1: Active Properties */}
+              <Link to="/app/properties" className="block">
+                <Card className="p-4 hover:border-brand-600/30 transition-colors" interactive>
+                  <div className="flex items-center justify-between">
+                    <span className="text-secondary font-medium text-muted">Active Properties</span>
+                    <Building2 className="w-4 h-4 text-muted" />
+                  </div>
+                  <div className="mt-2 flex items-baseline gap-1.5">
+                    <span className="text-2xl font-bold text-ink leading-none">
+                      {activePropertiesCount}
+                    </span>
+                    <span className="text-meta text-muted">available</span>
+                  </div>
+                  <p className="text-meta text-muted mt-2 pt-2 border-t border-border truncate">
+                    {totalPropertiesCount} total listing{totalPropertiesCount === 1 ? '' : 's'}
                   </p>
+                </Card>
+              </Link>
+
+              {/* Card 2: Active Buyer Inquiries */}
+              <Link to="/app/buyers" className="block">
+                <Card className="p-4 hover:border-brand-600/30 transition-colors" interactive>
+                  <div className="flex items-center justify-between">
+                    <span className="text-secondary font-medium text-muted">Buyer Inquiries</span>
+                    <Users className="w-4 h-4 text-muted" />
+                  </div>
+                  <div className="mt-2 flex items-baseline gap-1.5">
+                    <span className="text-2xl font-bold text-ink leading-none">
+                      {activeBuyersCount}
+                    </span>
+                    <span className="text-meta text-muted">active</span>
+                  </div>
+                  <p className="text-meta text-muted mt-2 pt-2 border-t border-border truncate">
+                    {totalBuyersCount} total lead{totalBuyersCount === 1 ? '' : 's'}
+                  </p>
+                </Card>
+              </Link>
+
+              {/* Card 3: New Matches */}
+              <Card className="p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-secondary font-medium text-muted">New Matches</span>
+                  <Sparkles className="w-4 h-4 text-brand-600" />
                 </div>
+                <div className="mt-2 flex items-baseline gap-1.5">
+                  <span className="text-2xl font-bold text-brand-600 leading-none">
+                    {matchesWaitingCount}
+                  </span>
+                  <span className="text-meta text-muted">ready</span>
+                </div>
+                <p className="text-meta text-muted mt-2 pt-2 border-t border-border truncate">
+                  {matchesWaitingCount > 0 ? 'Ready to pitch' : 'No pending matches'}
+                </p>
+              </Card>
+
+              {/* Card 4: Pending Follow-ups */}
+              <Card className="p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-secondary font-medium text-muted">Pending Actions</span>
+                  <Clock className="w-4 h-4 text-warn" />
+                </div>
+                <div className="mt-2 flex items-baseline gap-1.5">
+                  <span className="text-2xl font-bold text-ink leading-none">
+                    {pendingActionsCount}
+                  </span>
+                  <span className="text-meta text-muted">items</span>
+                </div>
+                <p className="text-meta text-muted mt-2 pt-2 border-t border-border truncate">
+                  {activeDeals.length} deal{activeDeals.length === 1 ? '' : 's'} in pipeline
+                </p>
+              </Card>
+            </div>
+          ) : null}
+
+          {/* ── 4. CONTEXT-SPECIFIC EMPTY STATES ── */}
+          {!isLoading && totalPropertiesCount === 0 && totalBuyersCount === 0 && (
+            <Card className="p-6 text-center space-y-4">
+              <div className="w-12 h-12 rounded-card bg-brand-50 text-brand-600 flex items-center justify-center mx-auto">
+                <Building2 className="w-6 h-6" />
               </div>
-              <div className="flex items-center gap-2 shrink-0 flex-wrap justify-center sm:justify-start">
-                <Link to="/app/properties/new">
-                  <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">
-                    <Plus className="w-3.5 h-3.5 mr-1" />
+              <div className="space-y-1 max-w-sm mx-auto">
+                <h3 className="text-card-title font-semibold text-ink">
+                  Let's get your first deal started
+                </h3>
+                <p className="text-secondary text-muted leading-relaxed">
+                  Add a property or paste a buyer requirement to find a match.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-1">
+                <Link to="/app/properties/new" className="w-full sm:w-auto">
+                  <Button variant="primary" size="md" className="w-full sm:w-auto">
+                    <Plus className="w-4 h-4 mr-1.5" />
                     <span>Add Property</span>
                   </Button>
                 </Link>
-                <Link to="/app/paste">
-                  <Button variant="secondary" size="sm" pill className="font-bold text-xs">
-                    <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
-                    <span>Quick Chat</span>
+                <Link to="/app/paste" className="w-full sm:w-auto">
+                  <Button variant="secondary" size="md" className="w-full sm:w-auto">
+                    <Sparkles className="w-4 h-4 mr-1.5 text-brand-600" />
+                    <span>Open Quick Chat</span>
                   </Button>
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => startInteractiveTour()}
-                  className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-slate-700 border border-emerald-500/30 text-xs font-bold text-emerald-800 dark:text-emerald-300 transition shadow-2xs flex items-center gap-1.5 cursor-pointer"
-                >
-                  <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Take Guided Tour</span>
-                </button>
               </div>
-            </div>
+            </Card>
           )}
 
-          {/* Quick Paste Hero Card (Integrated directly into Dashboard with Green+White Gradient) */}
-          <Card className="p-4 sm:p-5 bg-gradient-to-br from-white via-white to-emerald-50/30 border border-[#E5E9EE] shadow-card rounded-2xl space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="p-1.5 rounded-lg bg-[#E8F5EE] text-brand-700 border border-emerald-500/20">
-                  <Sparkles className="w-4 h-4" />
-                </span>
-                <div>
-                  <h2 className="text-sm sm:text-base font-bold text-ink font-heading leading-tight">
-                    Quick Paste WhatsApp Deal
-                  </h2>
-                  <p className="text-[11px] text-muted">
-                    Paste forwarded WhatsApp message to auto-extract property & client details.
-                  </p>
-                </div>
+          {!isLoading && totalPropertiesCount > 0 && totalBuyersCount === 0 && (
+            <Card className="p-5 text-center space-y-3">
+              <div className="w-11 h-11 rounded-card bg-brand-50 text-brand-600 flex items-center justify-center mx-auto">
+                <Users className="w-5 h-5" />
               </div>
-              <Link
-                to="/app/paste"
-                className="text-xs text-brand-700 font-semibold hover:underline hidden sm:flex items-center gap-1"
-              >
-                <span>Voice Dictation & Full View</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              <div className="space-y-1 max-w-md mx-auto">
+                <h3 className="text-card-title font-semibold text-ink">
+                  Find a buyer for your inventory
+                </h3>
+                <p className="text-secondary text-muted leading-relaxed">
+                  You have {activePropertiesCount} active propert{activePropertiesCount === 1 ? 'y' : 'ies'} listed. Add a buyer requirement or paste client messages to find an instant match.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-1">
+                <Link to="/app/buyers/new" className="w-full sm:w-auto">
+                  <Button variant="primary" size="sm" className="w-full sm:w-auto">
+                    <Plus className="w-4 h-4 mr-1.5" />
+                    <span>Add Buyer Requirement</span>
+                  </Button>
+                </Link>
+                <Link to="/app/paste" className="w-full sm:w-auto">
+                  <Button variant="secondary" size="sm" className="w-full sm:w-auto">
+                    <Sparkles className="w-4 h-4 mr-1.5 text-brand-600" />
+                    <span>Open Quick Chat</span>
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+          )}
+
+          {!isLoading && totalPropertiesCount === 0 && totalBuyersCount > 0 && (
+            <Card className="p-5 text-center space-y-3">
+              <div className="w-11 h-11 rounded-card bg-brand-50 text-brand-600 flex items-center justify-center mx-auto">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <div className="space-y-1 max-w-md mx-auto">
+                <h3 className="text-card-title font-semibold text-ink">
+                  Add properties to match your buyers
+                </h3>
+                <p className="text-secondary text-muted leading-relaxed">
+                  You have {activeBuyersCount} active buyer inquir{activeBuyersCount === 1 ? 'y' : 'ies'} waiting. Add property listings to discover matches and close deals.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-1">
+                <Link to="/app/properties/new" className="w-full sm:w-auto">
+                  <Button variant="primary" size="sm" className="w-full sm:w-auto">
+                    <Plus className="w-4 h-4 mr-1.5" />
+                    <span>Add Property</span>
+                  </Button>
+                </Link>
+                <Link to="/app/paste" className="w-full sm:w-auto">
+                  <Button variant="secondary" size="sm" className="w-full sm:w-auto">
+                    <Sparkles className="w-4 h-4 mr-1.5 text-brand-600" />
+                    <span>Open Quick Chat</span>
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+          )}
+
+          {/* ── 5. QUICK PASTE SECTION ── */}
+          <Card className="p-4 space-y-3">
+            <div>
+              <h2 className="text-card-title font-semibold text-ink">
+                Paste a WhatsApp message
+              </h2>
+              <p className="text-secondary text-muted mt-0.5">
+                Extract property or buyer details automatically.
+              </p>
             </div>
 
-            {/* Quick Textarea */}
-            <div className="space-y-2">
-              <textarea
-                rows={3}
-                value={quickInput}
-                onChange={(e) => setQuickInput(e.target.value)}
-                placeholder="e.g. 2 BHK luxury floor in Model Town Panipat demand 65 Lakhs negotiable. Contact 9876543210..."
-                className="w-full bg-white border border-[#E5E9EE] rounded-xl p-3 text-xs sm:text-sm text-ink placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-600 shadow-2xs transition"
-              />
+            <textarea
+              rows={3}
+              value={pasteText}
+              onChange={(e) => setPasteText(e.target.value)}
+              placeholder="e.g. 3 BHK floor in Sector 12 Panipat demand 85 Lakhs negotiable. Contact 9812345678..."
+              className="w-full bg-white border border-border rounded-input p-3 text-body text-ink placeholder-faint focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-brand-600 transition-colors resize-none"
+            />
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuickInput(
-                        '2 BHK builder floor in Model Town Panipat demand 65 Lakhs negotiable. North facing.'
-                      );
-                      setQuickResult(null);
-                    }}
-                    className="px-2.5 py-1 rounded-full bg-white hover:bg-brand-50 hover:text-brand-700 text-slate-600 text-[10px] font-semibold border border-border shadow-2xs transition cursor-pointer"
-                  >
-                    2 BHK Floor Sample
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuickInput(
-                        'Residential plot 250 Gaj in Sector 18 Panipat near HUDA park demand 85 Lakhs.'
-                      );
-                      setQuickResult(null);
-                    }}
-                    className="px-2.5 py-1 rounded-full bg-white hover:bg-brand-50 hover:text-brand-700 text-slate-600 text-[10px] font-semibold border border-border shadow-2xs transition cursor-pointer"
-                  >
-                    Sector 18 Plot Sample
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between sm:justify-end gap-2 pt-0.5 sm:pt-0">
-                  <Link
-                    to="/app/paste"
-                    className="sm:hidden inline-flex items-center gap-1 px-3 py-1.5 min-h-[44px] rounded-full bg-white dark:bg-slate-800 text-[11px] font-bold text-ink border border-border shadow-2xs"
-                  >
-                    <Sparkles className="w-3 h-3 text-brand-600" />
-                    <span>Voice & Full</span>
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={handleQuickParse}
-                    disabled={isQuickParsing || !quickInput.trim()}
-                    className="group rounded-full bg-gradient-to-r from-emerald-600 via-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-black uppercase tracking-wider px-4 py-2 min-h-[44px] flex items-center gap-2 shadow-md shadow-emerald-700/25 active:scale-[0.98] transition-all cursor-pointer"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-white/95 animate-pulse" />
-                    <span>Instant AI Parse</span>
-                    <Sparkles className="w-3.5 h-3.5 text-white" />
-                  </button>
-                </div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1">
+              <div className="flex items-center gap-1.5 text-meta text-muted">
+                <MessageSquare className="w-3.5 h-3.5 text-brand-600 shrink-0" />
+                <span>Supports forwarded listing & buyer texts</span>
               </div>
-            </div>
 
-            {/* Quick Result Preview Box if extracted */}
-            {quickResult && (
-              <div className="p-3 rounded-2xl bg-brand-50/60 dark:bg-brand-950/40 border border-brand-500/30 text-xs space-y-2 animate-in fade-in duration-200">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 font-bold text-ink">
-                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
-                    <span>
-                      {quickResult.itemType === 'listing'
-                        ? 'Extracted Property Listing'
-                        : 'Extracted Buyer Requirement'}
-                    </span>
-                  </div>
-                  <Badge variant="brand">
-                    {Math.round((quickResult.confidence.overall || 0.94) * 100)}% Confidence
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-                  <div className="p-2 rounded-xl bg-surface border border-border/80">
-                    <span className="text-muted block text-[10px] uppercase font-bold">Category</span>
-                    <span className="font-bold text-ink">
-                      {quickResult.itemType === 'listing'
-                        ? quickResult.extracted.property?.title || 'Residential'
-                        : quickResult.extracted.buyer?.propertyType || 'Buyer Requirement'}
-                    </span>
-                  </div>
-                  <div className="p-2 rounded-xl bg-surface border border-border/80">
-                    <span className="text-muted block text-[10px] uppercase font-bold">
-                      {quickResult.itemType === 'listing' ? 'Demand' : 'Budget'}
-                    </span>
-                    <span className="font-bold text-brand-700 dark:text-brand-600">
-                      {quickResult.itemType === 'listing'
-                        ? quickResult.extracted.property?.priceDemandRaw || '₹65 Lakhs'
-                        : quickResult.extracted.buyer?.budgetRaw || '₹85 Lakhs'}
-                    </span>
-                  </div>
-                  <div className="p-2 rounded-xl bg-surface border border-border/80">
-                    <span className="text-muted block text-[10px] uppercase font-bold">Locality</span>
-                    <span className="font-bold text-ink">
-                      {quickResult.itemType === 'listing'
-                        ? quickResult.extracted.property?.locality || 'Model Town'
-                        : quickResult.extracted.buyer?.localities?.join(', ') || 'Sector 18'}
-                    </span>
-                  </div>
-                  <div className="p-2 rounded-xl bg-surface border border-border/80">
-                    <span className="text-muted block text-[10px] uppercase font-bold">Size</span>
-                    <span className="font-bold text-ink">
-                      {quickResult.itemType === 'listing'
-                        ? `${quickResult.extracted.property?.sizeGaj || quickResult.extracted.property?.sizeValue || '180'} Gaj`
-                        : `${quickResult.extracted.buyer?.bhk ? quickResult.extracted.buyer.bhk.join(', ') + ' BHK' : '2-3 BHK'}`}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-end gap-2 pt-1">
-                  <button
+              <div className="flex items-center gap-2 justify-end">
+                {pasteText.trim() && (
+                  <Button
                     type="button"
-                    onClick={() => setQuickResult(null)}
-                    className="text-muted hover:text-ink text-[11px] font-semibold cursor-pointer px-2 py-1"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setPasteText('');
+                      setParseResult(null);
+                    }}
                   >
                     Clear
-                  </button>
-                  <Link to="/app/paste">
-                    <Button size="sm" pill className="text-xs font-bold">
-                      Open Full Review & Save
-                    </Button>
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleQuickParse}
+                  disabled={!pasteText.trim() || isParsing}
+                  isLoading={isParsing}
+                >
+                  <Sparkles className="w-3.5 h-3.5 mr-1 text-brand-600" />
+                  <span>Parse message</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  onClick={handleContinueInQuickChat}
+                >
+                  <span>Continue in Quick Chat</span>
+                  <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Parse Result Preview */}
+            {parseResult && (
+              <div className="p-3 bg-brand-50 border border-brand-200/60 rounded-input space-y-2 mt-2">
+                <div className="flex items-center justify-between text-xs font-semibold text-brand-700">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                    <span>
+                      Identified as {parseResult.itemType === 'listing' ? 'Property Listing' : 'Buyer Requirement'}
+                    </span>
+                  </span>
+                  <Badge variant="brand">
+                    {Math.round((parseResult.confidence.overall || 0.9) * 100)}% match
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between text-meta text-muted pt-1">
+                  <span>
+                    {parseResult.itemType === 'listing'
+                      ? parseResult.extracted.property?.title || 'Residential Property'
+                      : parseResult.extracted.buyer?.propertyType || 'Buyer Requirement'}
+                  </span>
+                  <Link
+                    to="/app/paste"
+                    state={{ prefill: pasteText }}
+                    className="text-brand-700 font-semibold hover:underline"
+                  >
+                    Save in Quick Chat &rarr;
                   </Link>
                 </div>
               </div>
             )}
           </Card>
 
-          {/* Error Banner with Retry if Loading Failed */}
-          {statsError && (
-            <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900 text-xs text-rose-800 dark:text-rose-300 flex items-center justify-between gap-3 shadow-xs">
-              <span>{statsError}</span>
-              <button
-                type="button"
-                onClick={() => loadDashboardData(false)}
-                className="px-3 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shrink-0 cursor-pointer shadow-2xs"
-              >
-                Retry Sync
-              </button>
-            </div>
-          )}
-
-          {/* 4 Financial & Operational Stat Cards with Rich Gradients & Zero Mobile Truncation */}
-          {isLoadingStats ? (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <StatCardSkeleton />
-              <StatCardSkeleton />
-              <StatCardSkeleton />
-              <StatCardSkeleton />
-            </div>
-          ) : totalPropertiesCount === 0 && totalBuyersCount === 0 ? (
-            /* First Inquiry / Zero-Data Onboarding Hub with Clear CTAs */
-            <div className="p-6 sm:p-10 text-center rounded-3xl bg-gradient-to-br from-white/95 via-emerald-50/60 to-emerald-100/40 dark:from-slate-900/95 dark:via-emerald-950/30 dark:to-slate-900/90 border border-emerald-500/30 shadow-sm space-y-6">
-              <div className="w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto shadow-sm">
-                <Sparkles className="w-8 h-8 stroke-[2.2]" />
-              </div>
-
-              <div className="space-y-2 max-w-lg mx-auto">
-                <h3 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
-                  Welcome to your Broker Hub, {user?.name?.split(' ')[0] || 'Broker'}!
-                </h3>
-                <p className="text-xs sm:text-sm text-muted leading-relaxed">
-                  Your workspace is ready. You haven't added any listings or buyer inquiries yet. Add your first property or client requirement below to activate automated AI matching and deal tracking.
-                </p>
-              </div>
-
-              {/* 3 High-Conversion Direct CTAs */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-                <Link to="/app/properties/new" className="w-full sm:w-auto">
-                  <Button pill className="w-full sm:w-auto font-bold text-xs sm:text-sm px-6 py-3 min-h-[44px] shadow-md shadow-emerald-700/20 bg-emerald-600 hover:bg-emerald-700 text-white justify-center">
-                    <Plus className="w-4 h-4 mr-1.5" />
-                    <span>Add 1st Property Listing</span>
-                  </Button>
-                </Link>
-
-                <Link to="/app/buyers/new" className="w-full sm:w-auto">
-                  <Button variant="secondary" pill className="w-full sm:w-auto font-bold text-xs sm:text-sm px-6 py-3 min-h-[44px] justify-center">
-                    <Plus className="w-4 h-4 mr-1.5" />
-                    <span>Add 1st Buyer Inquiry</span>
-                  </Button>
-                </Link>
-
-                <Link to="/app/paste" className="w-full sm:w-auto">
-                  <Button variant="secondary" pill className="w-full sm:w-auto font-bold text-xs sm:text-sm px-6 py-3 min-h-[44px] justify-center border-teal-500/40 text-teal-800 dark:text-teal-300">
-                    <Sparkles className="w-4 h-4 mr-1.5 text-teal-600" />
-                    <span>Quick Chat WhatsApp Extract</span>
-                  </Button>
-                </Link>
-              </div>
-
-              {/* 3 Step Matching Engine Explanation */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-4 border-t border-emerald-500/20 text-left">
-                <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-emerald-500/20 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-black text-[11px] flex items-center justify-center">1</span>
-                    <span className="font-bold text-xs text-ink">Add Listings & Leads</span>
-                  </div>
-                  <p className="text-[11px] text-muted">Create inventory listings or paste raw messages from WhatsApp groups.</p>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-emerald-500/20 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[11px] flex items-center justify-center">2</span>
-                    <span className="font-bold text-xs text-ink">Instant AI Matching</span>
-                  </div>
-                  <p className="text-[11px] text-muted">Locality, budget, and Marla/Gaj standards are automatically paired.</p>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-emerald-500/20 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-teal-600 text-white font-black text-[11px] flex items-center justify-center">3</span>
-                    <span className="font-bold text-xs text-ink">1-Click WhatsApp Pitch</span>
-                  </div>
-                  <p className="text-[11px] text-muted">Send verified flyers & WhatsApp pitch messages to close transactions faster.</p>
-                </div>
-              </div>
-
-              {/* Sample Growth & Match Performance Visualization (Clearly Labeled Preview) */}
-              <div className="pt-6 border-t border-emerald-500/20 space-y-3.5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-left">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span className="text-xs font-black uppercase tracking-wider text-ink font-heading">
-                      Sales & Deal Match Performance Visualization
-                    </span>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 text-[10px] font-extrabold border border-amber-300/60 shadow-2xs self-start sm:self-auto">
-                    <span>📊 PREVIEW</span>
-                    <span className="text-[9px] opacity-80">(Sample Chart · Activates automatically with your real data)</span>
-                  </span>
-                </div>
-
-                <p className="text-xs text-muted text-left leading-relaxed">
-                  This sample preview illustrates how your monthly inquiries, automated match velocity, and closed deals will visualize once you add your inventory and buyer leads above.
-                </p>
-
-                {/* Watermarked Sample Bar Chart */}
-                <div className="p-5 rounded-2xl bg-white/70 dark:bg-slate-900/60 border border-emerald-500/20 relative overflow-hidden">
-                  <div className="absolute top-3 right-3 z-10">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-700/80 dark:text-emerald-400/80 font-bold bg-emerald-50/90 dark:bg-emerald-950/90 px-2.5 py-0.5 rounded-md border border-emerald-500/30">
-                      Sample Preview
-                    </span>
-                  </div>
-
-                  {/* Monthly Activity Columns */}
-                  <div className="grid grid-cols-6 gap-2 sm:gap-4 items-end h-32 pt-6 pb-2">
-                    {[
-                      { month: 'Month 1', height: '35%', count: '6' },
-                      { month: 'Month 2', height: '55%', count: '12' },
-                      { month: 'Month 3', height: '45%', count: '9' },
-                      { month: 'Month 4', height: '85%', count: '24', highlight: true },
-                      { month: 'Month 5', height: '65%', count: '16' },
-                      { month: 'Month 6', height: '75%', count: '19' },
-                    ].map((col) => (
-                      <div key={col.month} className="flex flex-col items-center gap-1.5 h-full justify-end">
-                        <span className="text-[10px] font-bold text-muted">{col.count}</span>
-                        <div
-                          className={`w-full max-w-[42px] rounded-t-xl transition-all ${
-                            col.highlight
-                              ? 'bg-gradient-to-t from-emerald-600 to-teal-500 shadow-sm'
-                              : 'bg-emerald-200/70 dark:bg-emerald-900/40'
-                          }`}
-                          style={{ height: col.height }}
-                        />
-                        <span className="text-[10px] font-semibold text-muted">{col.month}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="pt-3 border-t border-border/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px] text-muted text-left">
-                    <span className="flex items-center gap-1.5 font-medium">
-                      <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                      <span>Sample Metric: Deal pipeline stage & collected brokerage trajectory</span>
-                    </span>
-                    <span className="text-emerald-700 dark:text-emerald-400 font-bold">
-                      Add 1st property or buyer to populate real portfolio data
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              {/* 1. Total Properties */}
-              <Card
-                className="p-3.5 sm:p-4 flex flex-col justify-between rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/40 border-emerald-500/20 shadow-xs hover:border-emerald-500/40 transition-all"
-                interactive
-              >
-              <div>
-                <div className="flex items-center justify-between gap-1">
-                  <span className="text-[11px] font-bold text-muted font-sans tracking-wide truncate">
-                    Properties
-                  </span>
-                  <Link
-                    to="/app/properties"
-                    className="w-8 h-8 rounded-lg bg-emerald-50 text-brand-700 flex items-center justify-center transition shrink-0 hover:bg-emerald-100"
-                    title="View Properties"
-                  >
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-                <div className="mt-1 flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-[26px] font-bold text-ink font-heading leading-tight">
-                    {isLoadingStats ? '...' : totalPropertiesCount}
-                  </span>
-                  <span className="text-xs text-muted font-medium">listings</span>
-                </div>
-              </div>
-              <div className="mt-2.5 pt-2 border-t border-[#E5E9EE] flex items-center justify-between text-[11px]">
-                <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] font-semibold text-[11px] shrink-0">
-                  Active
-                </span>
-                <span className="text-muted font-medium">{activePropertiesCount} Available</span>
-              </div>
-            </Card>
-
-            {/* 2. Active Buyers */}
-            <Card
-              className="p-3.5 sm:p-4 flex flex-col justify-between rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/30 border-[#E5E9EE] shadow-xs hover:border-brand-600/30 transition-all"
-              interactive
-            >
-              <div>
-                <div className="flex items-center justify-between gap-1">
-                  <span className="text-[11px] font-bold text-muted font-sans tracking-wide truncate">
-                    Active Buyers
-                  </span>
-                  <Link
-                    to="/app/buyers"
-                    className="w-8 h-8 rounded-lg bg-emerald-50/70 text-brand-700 flex items-center justify-center transition shrink-0 hover:bg-emerald-100"
-                    title="View Buyers"
-                  >
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-                <div className="mt-1 flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-[26px] font-bold text-ink font-heading leading-tight">
-                    {isLoadingStats ? '...' : totalBuyersCount}
-                  </span>
-                  <span className="text-xs text-muted font-medium">leads</span>
-                </div>
-              </div>
-              <div className="mt-2.5 pt-2 border-t border-[#E5E9EE] flex items-center justify-between text-[11px]">
-                <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] font-semibold text-[11px] shrink-0">
-                  {activeBuyersCount} Verified
-                </span>
-                <span className="text-muted font-medium">High Intent</span>
-              </div>
-            </Card>
-
-            {/* 3. Matches Waiting */}
-            <Card
-              className="p-3.5 sm:p-4 flex flex-col justify-between rounded-2xl bg-gradient-to-br from-white via-white to-emerald-50/50 border-emerald-500/25 shadow-xs hover:border-emerald-500/45 transition-all"
-              interactive
-            >
-              <div>
-                <div className="flex items-center justify-between gap-1">
-                  <span className="text-[11px] font-bold text-muted font-sans tracking-wide truncate">
-                    Matches Ready
-                  </span>
-                  <Link
-                    to="/app/properties"
-                    className="w-8 h-8 rounded-lg bg-emerald-50 text-brand-700 flex items-center justify-center transition shrink-0 hover:bg-emerald-100"
-                    title="View Matches"
-                  >
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-                <div className="mt-1 flex items-baseline gap-1.5">
-                  <span className="text-2xl sm:text-[26px] font-bold text-brand-700 font-heading leading-tight">
-                    {isLoadingStats ? '...' : matchesWaitingCount}
-                  </span>
-                  <span className="text-xs text-brand-700/80 font-medium">pairs</span>
-                </div>
-              </div>
-              <div className="mt-2.5 pt-2 border-t border-[#E5E9EE] flex items-center justify-between text-[11px]">
-                <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] font-semibold text-[11px] flex items-center gap-1 shrink-0">
-                  <Sparkles className="w-3 h-3" /> 85%+
-                </span>
-                <span className="text-muted font-medium">Matched</span>
-              </div>
-            </Card>
-
-            {/* 4. Projected Commission */}
-            <Card
-              className="p-3.5 sm:p-4 flex flex-col justify-between rounded-2xl bg-gradient-to-br from-white via-white to-emerald-100/30 border-emerald-500/20 shadow-xs hover:border-emerald-500/40 transition-all min-w-0"
-              interactive
-            >
-              <div>
-                <div className="flex items-center justify-between gap-1">
-                  <span className="text-[11px] font-bold text-muted font-sans tracking-wide truncate">
-                    Pipeline Fee
-                  </span>
-                  <span className="w-7 h-7 rounded-lg bg-[#E8F5EE] text-brand-700 flex items-center justify-center shrink-0">
-                    <Trophy className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-                <div className="mt-1 min-w-0">
-                  <span className="text-lg sm:text-2xl xl:text-[26px] font-bold text-ink font-heading tracking-tight block">
-                    {isLoadingStats ? '...' : formatRupees(projectedCommissionPaise)}
-                  </span>
-                </div>
-              </div>
-              <div className="mt-2.5 pt-2 border-t border-[#E5E9EE] flex items-center justify-between text-[11px]">
-                <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#017A3C] font-semibold text-[11px] shrink-0">
-                  1% avg fee
-                </span>
-                <span className="text-muted font-medium">{dbProperties.length} active</span>
-              </div>
-            </Card>
-          </div>
-          )}
-
-          {/* Deal Activity & Engagement Visualizer - Only rendered when inventory or buyers exist */}
-          {totalPropertiesCount > 0 || totalBuyersCount > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Dynamic Inventory & Lead Breakdown Chart */}
-              <Card className="p-5 sm:p-6 lg:col-span-2 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-sm font-black text-ink font-heading">
-                      Inventory & Deal Activity Overview
-                    </h3>
-                    <p className="text-[11px] text-muted">
-                      Real-time inventory and client matches in your account
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-brand-700 bg-brand-50 dark:bg-brand-950/60 px-2.5 py-1 rounded-full">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    <span>Real Data</span>
-                  </div>
-                </div>
-
-                {/* Dynamic Summary Cards instead of fake month bars */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-2">
-                  <div className="p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-500/20 text-center">
-                    <span className="text-[10px] uppercase font-bold text-muted block">Available Inventory</span>
-                    <span className="text-xl sm:text-2xl font-black text-emerald-800 dark:text-emerald-300 font-heading">
-                      {activePropertiesCount}
-                    </span>
-                    <span className="text-[10px] text-muted block mt-0.5">of {totalPropertiesCount} listings</span>
-                  </div>
-
-                  <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-500/20 text-center">
-                    <span className="text-[10px] uppercase font-bold text-muted block">Verified Leads</span>
-                    <span className="text-xl sm:text-2xl font-black text-blue-800 dark:text-blue-300 font-heading">
-                      {activeBuyersCount}
-                    </span>
-                    <span className="text-[10px] text-muted block mt-0.5">of {totalBuyersCount} clients</span>
-                  </div>
-
-                  <div className="p-3.5 rounded-2xl bg-teal-50/70 dark:bg-teal-950/30 border border-teal-500/20 text-center">
-                    <span className="text-[10px] uppercase font-bold text-muted block">Instant Matches</span>
-                    <span className="text-xl sm:text-2xl font-black text-teal-800 dark:text-teal-300 font-heading">
-                      {matchesWaitingCount}
-                    </span>
-                    <span className="text-[10px] text-muted block mt-0.5">ready to pitch</span>
-                  </div>
-                </div>
-
-                {/* Footer summary */}
-                <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs text-muted">
-                  <span className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-brand-700" />
-                    <span>Portfolio Demand: {formatRupees(totalPipelinePaise)}</span>
-                  </span>
-                  <span className="font-semibold text-ink">
-                    Est. Brokerage: {formatRupees(projectedCommissionPaise)}
-                  </span>
-                </div>
-              </Card>
-
-              {/* Pipeline Stage Distribution */}
-              <Card className="p-5 sm:p-6 space-y-4 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-sm font-black text-ink font-heading">Deal Pipeline Health</h3>
-                  <p className="text-[11px] text-muted">Active leads and inventory readiness</p>
-                </div>
-
-                <div className="space-y-3 py-2">
-                  <div>
-                    <div className="flex justify-between text-xs font-bold mb-1">
-                      <span className="text-text">Active Available Listings</span>
-                      <span className="text-brand-700">
-                        {totalPropertiesCount > 0
-                          ? `${Math.round((activePropertiesCount / totalPropertiesCount) * 100)}%`
-                          : '0%'}
-                      </span>
-                    </div>
-                    <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                      <div
-                        className="h-full bg-brand-600 rounded-full"
-                        style={{
-                          width: `${totalPropertiesCount > 0 ? (activePropertiesCount / totalPropertiesCount) * 100 : 0}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-bold mb-1">
-                      <span className="text-text">Verified Active Buyers</span>
-                      <span className="text-blue-600">
-                        {totalBuyersCount > 0
-                          ? `${Math.round((activeBuyersCount / totalBuyersCount) * 100)}%`
-                          : '0%'}
-                      </span>
-                    </div>
-                    <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                      <div
-                        className="h-full bg-blue-500 rounded-full"
-                        style={{
-                          width: `${totalBuyersCount > 0 ? (activeBuyersCount / totalBuyersCount) * 100 : 0}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-bold mb-1">
-                      <span className="text-text">Auto-Match Coverage</span>
-                      <span className="text-emerald-700">
-                        {totalPropertiesCount > 0 && totalBuyersCount > 0
-                          ? `${Math.min(100, Math.round((matchesWaitingCount / Math.max(1, totalBuyersCount)) * 100))}%`
-                          : '0%'}
-                      </span>
-                    </div>
-                    <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                      <div
-                        className="h-full bg-emerald-600 rounded-full"
-                        style={{
-                          width: `${
-                            totalPropertiesCount > 0 && totalBuyersCount > 0
-                              ? Math.min(100, (matchesWaitingCount / Math.max(1, totalBuyersCount)) * 100)
-                              : 0
-                          }%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-xl bg-bg border border-border/60 text-[11px] text-muted flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-600 shrink-0" />
-                  <span>Real portfolio metrics synchronized directly from your database.</span>
-                </div>
-              </Card>
-            </div>
-          ) : null}
-
-          {/* Top Matches Waiting Action Section - Only rendered when user has inventory or leads */}
-          {(totalPropertiesCount > 0 || totalBuyersCount > 0) && (
+          {/* ── 6. MATCHES LIST (WHEN REAL MATCHES EXIST) ── */}
+          {matches.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-base font-black text-ink font-heading">
-                    High-Priority Matches Waiting
+                  <h2 className="text-section-title font-semibold text-ink">
+                    New Matches
                   </h2>
-                  <p className="text-xs text-muted">
-                    Auto-matched inventory ready to be forwarded to clients
+                  <p className="text-secondary text-muted">
+                    Inventory paired with active buyer criteria
                   </p>
                 </div>
-                <Link to="/app/properties" className="text-xs font-bold text-brand-700 hover:underline flex items-center gap-1">
-                  View All Matches <ArrowRight className="w-3.5 h-3.5" />
+                <Link
+                  to="/app/properties"
+                  className="text-secondary font-semibold text-brand-700 hover:underline flex items-center gap-1"
+                >
+                  <span>View all</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
 
-              {isLoadingStats ? (
-                <div className="space-y-4">
-                  <MatchCardSkeleton />
-                  <MatchCardSkeleton />
-                </div>
-              ) : matchesWaiting.length === 0 ? (
-                <Card className="p-8 text-center space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 flex items-center justify-center mx-auto">
-                    <Building2 className="w-6 h-6" />
-                  </div>
-                  <h4 className="text-sm font-bold text-ink">
-                    No Active Matches Waiting
-                  </h4>
-                  <p className="text-xs text-muted max-w-sm mx-auto">
-                    All current buyer requirements have been processed. Add new properties or paste inquiries in Quick Chat to discover instant matches.
-                  </p>
-                  <div className="pt-2 flex items-center justify-center gap-2">
-                    <Link to="/app/properties/new">
-                      <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
-                        <Plus className="w-3.5 h-3.5 mr-1" />
-                        <span>Add Property</span>
-                      </Button>
-                    </Link>
-                    <Link to="/app/paste">
-                      <Button variant="secondary" size="sm" pill className="font-bold text-xs">
-                        <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
-                        <span>Quick Chat</span>
-                      </Button>
-                    </Link>
-                  </div>
-                </Card>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {matchesWaiting.map((match) => (
-                    <Card key={match.id} className="p-5 flex flex-col justify-between" interactive>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <Badge variant={match.badge as any} pill dot>
-                            {match.score}% Match
-                          </Badge>
-                          <span className="text-[11px] text-muted">{match.date}</span>
-                        </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {matches.map((match) => (
+                  <Card key={match.id} className="p-4 flex flex-col justify-between space-y-3">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Badge variant={match.badge} dot>
+                          {match.score}% match
+                        </Badge>
+                        <span className="text-card-title font-semibold text-brand-700">
+                          {formatRupees(match.propertyPrice)}
+                        </span>
+                      </div>
 
+                      <div>
+                        <h3 className="text-body font-semibold text-ink leading-snug">
+                          {match.propertyTitle}
+                        </h3>
+                        <p className="text-meta text-muted mt-0.5">{match.locality}</p>
+                      </div>
+
+                      <div className="p-2.5 rounded-input bg-bg border border-border flex items-center justify-between text-meta">
                         <div>
-                          <h3 className="text-sm font-bold text-ink hover:text-brand-700 transition">
-                            {match.propertyTitle}
-                          </h3>
-                          <p className="text-xs text-muted mt-0.5">{match.locality}</p>
-                          <span className="text-xs font-black text-brand-700 mt-1 block">
-                            {formatRupees(match.propertyPrice)}
-                          </span>
+                          <span className="text-faint block">Client</span>
+                          <span className="font-semibold text-ink">{match.buyerName}</span>
                         </div>
-
-                        <div className="p-3 rounded-xl bg-bg border border-border/60 flex items-center justify-between text-xs">
-                          <div>
-                            <span className="text-[10px] uppercase font-bold text-muted block">Client Lead</span>
-                            <span className="font-bold text-ink">{match.buyerName}</span>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-[10px] uppercase font-bold text-muted block">Target Budget</span>
-                            <span className="font-semibold text-text">{match.buyerBudget}</span>
-                          </div>
+                        <div className="text-right">
+                          <span className="text-faint block">Budget</span>
+                          <span className="font-medium text-muted">{match.buyerBudget}</span>
                         </div>
                       </div>
+                    </div>
 
-                      <div className="mt-4 pt-3 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-2">
-                        <a
-                          href={`https://wa.me/?text=${encodeURIComponent(
-                            `Hello! Here is a great property matching your requirement: ${match.propertyTitle} in ${match.locality}. Price: ${formatRupees(match.propertyPrice)}. Let me know if you would like to schedule a site visit!`
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full sm:flex-1"
+                    <div className="pt-2 border-t border-border flex items-center gap-2">
+                      <a
+                        href={`https://wa.me/?text=${encodeURIComponent(
+                          `Hello! I found a property matching your requirement: ${match.propertyTitle} in ${match.locality} for ${formatRupees(match.propertyPrice)}. Let me know if you would like to inspect it!`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1"
+                      >
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="w-full justify-center gap-1.5"
                         >
-                          <Button size="sm" pill className="w-full text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white min-h-[40px] justify-center">
-                            <Send className="w-3.5 h-3.5 mr-1" />
-                            <span>Send on WhatsApp</span>
-                          </Button>
-                        </a>
-
-                        <Link to="/app/properties" className="w-full sm:w-auto">
-                          <Button variant="secondary" size="sm" pill className="w-full sm:w-auto text-xs font-bold min-h-[40px] justify-center">
-                            View Flyer
-                          </Button>
-                        </Link>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
+                          <Send className="w-3.5 h-3.5" />
+                          <span>Pitch on WhatsApp</span>
+                        </Button>
+                      </a>
+                      <Link to="/app/properties">
+                        <Button variant="secondary" size="sm">
+                          Details
+                        </Button>
+                      </Link>
+                    </div>
+                  </Card>
+                ))}
+              </div>
             </div>
           )}
         </div>
       )}
 
-      {/* TRACK RECORD SEGMENT (§5.3.2) */}
-      {activeSegment === 'track-record' && (
-        <div className="space-y-6">
-          {/* Sub-tabs chips per PRD §5.3.2 */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-            {[
-              { id: 'active', label: 'Active Deals (Pipeline)' },
-              { id: 'wins', label: 'Wins & Closed Deals' },
-              { id: 'lost', label: 'Lost Analysis' },
-              { id: 'insights', label: 'Market Insights' },
-              { id: 'deleted', label: 'Recently Deleted Vault' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setTrackRecordSubTab(tab.id as any)}
-                className={clsx(
-                  'px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition cursor-pointer',
-                  trackRecordSubTab === tab.id
-                    ? 'bg-brand-700 text-white shadow-xs'
-                    : 'bg-surface border border-border/80 text-muted hover:text-ink'
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
+      {/* ── PIPELINE VIEW ── */}
+      {activeSegment === 'pipeline' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-section-title font-semibold text-ink">
+                Deal Pipeline
+              </h2>
+              <p className="text-secondary text-muted">
+                Active deal stages from inquiry to commission settlement
+              </p>
+            </div>
+            <Link to="/app/buyers">
+              <Button variant="secondary" size="sm">
+                <span>Manage deals</span>
+              </Button>
+            </Link>
           </div>
 
-          {/* Sub-tab view containers */}
-          <div>
-            {trackRecordSubTab === 'active' && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-base font-black text-ink font-heading">
-                    Active Pipeline Milestones ({pipelineDeals.filter((d) => d.stage !== 'won').length})
-                  </h3>
-                  <span className="text-xs text-muted">
-                    Advance deals as milestones are achieved
-                  </span>
-                </div>
-
-                {pipelineDeals.filter((d) => d.stage !== 'won').length === 0 ? (
-                  <Card className="p-8 text-center space-y-3">
-                    <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 flex items-center justify-center mx-auto">
-                      <Building2 className="w-6 h-6" />
-                    </div>
-                    <h4 className="text-sm font-bold text-ink">Please add your properties first</h4>
-                    <p className="text-xs text-muted max-w-sm mx-auto">
-                      No data is available to display yet. Start by adding your properties to track deals and milestones.
-                    </p>
-                    <div className="pt-2 flex items-center justify-center gap-2">
-                      <Link to="/app/properties/new">
-                        <Button size="sm" pill className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
-                          <Plus className="w-3.5 h-3.5 mr-1" />
-                          <span>Add Property</span>
-                        </Button>
-                      </Link>
-                    </div>
-                  </Card>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {pipelineDeals
-                      .filter((d) => d.stage !== 'won')
-                      .map((deal) => (
-                        <Card
-                          key={deal.id}
-                          className="p-5 flex flex-col justify-between border-emerald-500/30 hover:border-brand-600/60 transition shadow-sm space-y-4"
-                        >
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span
-                                className={clsx(
-                                  'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
-                                  deal.stage === 'token'
-                                    ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400'
-                                    : deal.stage === 'agreement'
-                                    ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400'
-                                    : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400'
-                                )}
-                              >
-                                {deal.stage === 'token'
-                                  ? 'Token Bayana'
-                                  : deal.stage === 'agreement'
-                                  ? 'Agreement Done'
-                                  : 'Registry Ready'}
-                              </span>
-                              <span className="text-[11px] text-muted">{deal.date}</span>
-                            </div>
-
-                            <div>
-                              <h4 className="text-sm font-bold text-ink">{deal.title}</h4>
-                              <p className="text-xs text-muted">{deal.locality}</p>
-                            </div>
-
-                            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border flex items-center justify-between text-xs">
-                              <div>
-                                <span className="text-[10px] text-muted uppercase font-bold block">Client</span>
-                                <span className="font-bold text-ink">{deal.clientName}</span>
-                              </div>
-                              <div className="text-right">
-                                <span className="text-[10px] text-muted uppercase font-bold block">Brokerage</span>
-                                <span className="font-black text-brand-700 dark:text-brand-600">
-                                  ₹{deal.brokerageAmount.toLocaleString('en-IN')}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            pill
-                            onClick={() => advanceDealStage(deal.id)}
-                            className="w-full text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs"
-                          >
-                            <span>Advance Milestone</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </Button>
-                        </Card>
-                      ))}
+          {deals.length === 0 ? (
+            <Card className="p-6 text-center space-y-3">
+              <div className="w-12 h-12 rounded-card bg-surface-hover text-muted flex items-center justify-center mx-auto">
+                <Briefcase className="w-6 h-6" />
+              </div>
+              <h3 className="text-card-title font-semibold text-ink">
+                No active deals in pipeline
+              </h3>
+              <p className="text-secondary text-muted max-w-sm mx-auto leading-relaxed">
+                When you share properties and advance client discussions, your active deals and projected commissions will appear here.
+              </p>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {deals.map((deal) => (
+                <Card key={deal._id} className="p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-meta font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-surface-hover text-ink">
+                      {deal.stage}
+                    </span>
+                    <span className="text-meta text-muted">
+                      {new Date(deal.createdAt).toLocaleDateString('en-IN', {
+                        day: 'numeric',
+                        month: 'short',
+                      })}
+                    </span>
                   </div>
-                )}
-              </div>
-            )}
 
-            {trackRecordSubTab === 'wins' && (
-              <div className="space-y-4">
-                {pipelineDeals.filter((d) => d.stage === 'won').length === 0 ? (
-                  <Card className="p-8 text-center space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mx-auto shadow-xs">
-                      <Trophy className="w-6 h-6 stroke-[1.8]" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white font-heading">
-                        No Closed Wins Recorded Yet
-                      </h4>
-                      <p className="text-xs text-muted max-w-sm mx-auto leading-relaxed">
-                        When deals advance through Token Bayana, Agreement, and Registry completion, your earned brokerage commissions and closed records will appear here.
-                      </p>
-                    </div>
-                  </Card>
-                ) : (
-                  <>
-                    <div className="p-5 rounded-3xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black shadow-md">
-                          <Trophy className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <h3 className="text-base font-black text-ink font-heading">
-                            Closed Wins: ₹{pipelineDeals.filter((d) => d.stage === 'won').reduce((s, d) => s + d.brokerageAmount, 0).toLocaleString('en-IN')} Earned
-                          </h3>
-                          <p className="text-xs text-muted">
-                            {pipelineDeals.filter((d) => d.stage === 'won').length} Completed registry transactions logged.
-                          </p>
-                        </div>
-                      </div>
-                      <Badge variant="sold">100% Collected</Badge>
-                    </div>
+                  <div>
+                    <h4 className="text-body font-semibold text-ink truncate">
+                      {deal.propertyTitleSnapshot || 'Property Deal'}
+                    </h4>
+                    <p className="text-meta text-muted mt-0.5">
+                      Value: {formatRupees(deal.valuePaise)}
+                    </p>
+                  </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {pipelineDeals
-                        .filter((d) => d.stage === 'won')
-                        .map((deal) => (
-                          <Card key={deal.id} className="p-5 space-y-2 border-amber-500/30 text-left">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
-                                Closed Won Deal
-                              </span>
-                              <span className="text-xs text-muted">{deal.date}</span>
-                            </div>
-                            <h4 className="text-base font-black text-ink font-heading">{deal.title}</h4>
-                            <p className="text-xs text-muted">{deal.locality} · Client: {deal.clientName}</p>
-                            <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
-                              <span className="text-muted">Net Collected Commission</span>
-                              <span className="font-black text-emerald-700 dark:text-emerald-400 text-sm">
-                                ₹{deal.brokerageAmount.toLocaleString('en-IN')}
-                              </span>
-                            </div>
-                          </Card>
-                        ))}
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-
-            {trackRecordSubTab === 'lost' && (
-              <Card className="p-8 text-center space-y-4 max-w-lg mx-auto">
-                <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 text-muted flex items-center justify-center mx-auto">
-                  <Clock className="w-7 h-7" />
-                </div>
-                <h3 className="text-base font-black text-ink font-heading">
-                  Lost Deal Reasons & Insights
-                </h3>
-                <p className="text-xs text-muted leading-relaxed">
-                  Log why deals fall through (price too high, buyer shifted location, loan rejected) to optimize future matches.
-                </p>
-              </Card>
-            )}
-
-            {trackRecordSubTab === 'insights' && (
-              <Card className="p-8 text-center space-y-4 max-w-lg mx-auto">
-                <div className="w-14 h-14 rounded-2xl bg-blue-50 text-info dark:bg-blue-950/60 flex items-center justify-center mx-auto">
-                  <Sparkles className="w-7 h-7" />
-                </div>
-                <h3 className="text-base font-black text-ink font-heading">
-                  Locality Supply & Demand Insights
-                </h3>
-                <p className="text-xs text-muted leading-relaxed">
-                  Panipat & NCR market trends: High buyer demand in Model Town & Sector 12 with low 3 BHK inventory supply.
-                </p>
-              </Card>
-            )}
-
-            {trackRecordSubTab === 'deleted' && (
-              <Card className="p-8 text-center space-y-4 max-w-lg mx-auto">
-                <div className="w-14 h-14 rounded-2xl bg-rose-50 text-danger dark:bg-rose-950/60 flex items-center justify-center mx-auto">
-                  <Trash2 className="w-7 h-7" />
-                </div>
-                <h3 className="text-base font-black text-ink font-heading">
-                  Recently Deleted Vault (30 Days)
-                </h3>
-                <p className="text-xs text-muted leading-relaxed">
-                  Accidentally deleted a property listing or buyer lead? Recover it anytime within 30 days.
-                </p>
-              </Card>
-            )}
-          </div>
+                  <div className="p-2.5 rounded-input bg-bg border border-border flex items-center justify-between text-meta">
+                    <span className="text-muted">Expected Commission</span>
+                    <span className="font-semibold text-brand-700">
+                      {formatRupees(deal.commission.expectedPaise)}
+                    </span>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

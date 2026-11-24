@@ -1,50 +1,58 @@
+/* =============================================
+   LeadNivash Design System — Tokens v2
+   Colors, spacing, typography, and shadows
+   ============================================= */
+
 :root {
-  /* Brand Emerald / Green (Sampled directly from LeadNivesh Logo) */
-  --brand-50: #E8F5EE;
-  --brand-100: #D1F2E0;
-  --brand-200: #A3E5C2;
-  --brand-500: #018E45;
-  --brand-600: #018E45; /* Primary logo green */
-  --brand-700: #017A3C; /* White text buttons & links (WCAG AA) */
+  /* ── Brand Colors ── */
+  --brand-50: #ECFDF5;    /* Soft emerald background */
+  --brand-100: #D1FAE5;
+  --brand-200: #A7F3D0;
+  --brand-500: #018E45;    /* Primary emerald (logo-matched) */
+  --brand-600: #018E45;
+  --brand-700: #017A3C;    /* WCAG AA on white */
   --brand-800: #016230;
   --brand-900: #014B25;
   --brand-950: #003318;
 
-  /* Typography Colors (Brand Navy & Slate Charcoal) */
-  --ink: #0E2235;   /* Logo Navy for headings and dark titles */
-  --text: #33475B;  /* Slate Charcoal for body text */
-  --muted: #64748B; /* Secondary metadata and hints */
-  --faint: #94A3B8;
+  /* ── Navy ── */
+  --navy: #0E2235;
 
-  /* Surfaces & Backgrounds */
-  --bg: #F4F6F8;
+  /* ── Typography Colors ── */
+  --ink: #0F172A;          /* Main text / headings */
+  --text: #0F172A;         /* Body text (slate-900) */
+  --muted: #475569;        /* Secondary text (slate-600) */
+  --faint: #94A3B8;        /* Metadata / placeholders */
+
+  /* ── Surfaces & Backgrounds ── */
+  --bg: #F8FAFC;
   --surface: #FFFFFF;
   --surface-raised: #FFFFFF;
-  --surface-hover: #F8FAFC;
-  --border: #E5E9EE;
-  --border-subtle: #F0F3F6;
+  --surface-hover: #F1F5F9;
+  --border: #E2E8F0;
+  --border-subtle: #F1F5F9;
 
-  /* Semantic Accents */
+  /* ── Semantic Accents ── */
   --gold: #D97706;
   --gold-text: #B45309;
   --gold-bg: #FEF3C7;
   --info: #2563EB;
   --info-bg: #EFF6FF;
-  --warn: #B45309;
-  --warn-bg: #FEF3C7;
-  --danger: #E11D48;
-  --danger-bg: #FFE4E6;
+  --warn: #D97706;
+  --warn-bg: #FFFBEB;
+  --danger: #DC2626;
+  --danger-bg: #FEF2F2;
 
-  /* Crisp SaaS Shadows (Subtle & Clean) */
-  --shadow-card: 0 1px 3px 0 rgba(14, 34, 53, 0.05), 0 1px 2px -1px rgba(14, 34, 53, 0.02);
-  --shadow-card-hover: 0 4px 12px -2px rgba(14, 34, 53, 0.08), 0 2px 4px -2px rgba(14, 34, 53, 0.03);
-  --shadow-glow: 0 0 25px -5px rgba(1, 142, 69, 0.15);
+  /* ── Shadows (subtle, restrained) ── */
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+  --shadow-card-hover: 0 4px 12px -2px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-glow: none; /* No decorative glows */
 }
 
 [data-theme='dark'],
 .dark {
-  /* Brand Emerald (Dark Mode) */
-  --brand-50: #06281F;
+  /* ── Brand Emerald (Dark Mode) ── */
+  --brand-50: #062B1E;
   --brand-100: #0B3B2F;
   --brand-200: #0D4E3E;
   --brand-500: #10B981;
@@ -54,13 +62,13 @@
   --brand-900: #A7F3D0;
   --brand-950: #ECFDF5;
 
-  /* Typography Colors (Dark Mode) */
+  /* ── Typography (Dark) ── */
   --ink: #F8FAFC;
-  --text: #CBD5E1;
+  --text: #E2E8F0;
   --muted: #94A3B8;
   --faint: #64748B;
 
-  /* Surfaces & Backgrounds (Dark Mode) */
+  /* ── Surfaces (Dark) ── */
   --bg: #0B0F17;
   --surface: #131B2B;
   --surface-raised: #1A2438;
@@ -68,7 +76,7 @@
   --border: #1E293B;
   --border-subtle: #172033;
 
-  /* Semantic Accents (Dark Mode) */
+  /* ── Semantic (Dark) ── */
   --gold: #F59E0B;
   --gold-text: #FBBF24;
   --gold-bg: #2B1D04;
@@ -76,16 +84,16 @@
   --info-bg: #0F203C;
   --warn: #FBBF24;
   --warn-bg: #3B2A05;
-  --danger: #FB7185;
+  --danger: #EF4444;
   --danger-bg: #371118;
 
-  /* Shadows (Dark Mode) */
-  --shadow-card: 0 4px 24px -2px rgba(0, 0, 0, 0.5), 0 1px 3px 0 rgba(0, 0, 0, 0.4);
-  --shadow-card-hover: 0 16px 36px -4px rgba(0, 0, 0, 0.6), 0 4px 12px 0 rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 50px -10px rgba(16, 185, 129, 0.25);
+  /* ── Shadows (Dark) ── */
+  --shadow-card: 0 2px 8px -2px rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 2px 6px 0 rgba(0, 0, 0, 0.3);
+  --shadow-glow: none;
 }
 
-/* Large-text mode (§6.5) */
+/* Large-text mode (accessibility) */
 html[data-text='lg'] {
   font-size: 112.5%;
 }

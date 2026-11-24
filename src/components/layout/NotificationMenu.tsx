@@ -54,7 +54,6 @@ export const NotificationMenu: React.FC = () => {
   useEffect(() => {
     loadNotifications();
 
-    // Listen for custom platform sync events
     const handleSync = () => loadNotifications();
     window.addEventListener('leadnivash_data_changed', handleSync);
     window.addEventListener('focus', handleSync);
@@ -121,13 +120,13 @@ export const NotificationMenu: React.FC = () => {
   const getIcon = (type: NotificationItem['type']) => {
     switch (type) {
       case 'inquiry':
-        return <Inbox className="w-4 h-4 text-emerald-600 shrink-0" />;
+        return <Inbox className="w-4 h-4 text-brand-600 shrink-0" />;
       case 'match':
-        return <Sparkles className="w-4 h-4 text-blue-600 shrink-0" />;
+        return <Sparkles className="w-4 h-4 text-info shrink-0" />;
       case 'deal':
-        return <Trophy className="w-4 h-4 text-amber-600 shrink-0" />;
+        return <Trophy className="w-4 h-4 text-gold shrink-0" />;
       default:
-        return <Info className="w-4 h-4 text-slate-500 shrink-0" />;
+        return <Info className="w-4 h-4 text-muted shrink-0" />;
     }
   };
 
@@ -135,13 +134,13 @@ export const NotificationMenu: React.FC = () => {
     <DropdownMenu.Root onOpenChange={(open) => open && loadNotifications()}>
       <DropdownMenu.Trigger asChild>
         <button
-          className="relative w-11 h-11 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer focus:outline-none"
+          className="relative w-10 h-10 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-surface-hover transition-colors duration-150 cursor-pointer focus:outline-none"
           aria-label="Notifications"
           title={unreadCount > 0 ? `${unreadCount} unread notifications` : 'Notifications'}
         >
-          <Bell className="w-5 h-5 sm:w-4 sm:h-4" />
+          <Bell className="w-5 h-5" />
           {unreadCount > 0 && (
-            <span className="absolute top-2 right-2 min-w-[16px] h-4 px-1 rounded-full bg-emerald-600 text-white text-[9px] font-black flex items-center justify-center shadow-xs animate-pulse">
+            <span className="absolute top-1.5 right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-brand-600 text-white text-[9px] font-bold flex items-center justify-center">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
@@ -150,29 +149,29 @@ export const NotificationMenu: React.FC = () => {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="z-50 w-[320px] sm:w-[380px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-0 rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 text-left overflow-hidden"
+          className="z-50 w-[320px] sm:w-[360px] bg-white dark:bg-[var(--surface)] border border-border p-0 rounded-card shadow-xl animate-in fade-in zoom-in-95 duration-150 text-left overflow-hidden"
           sideOffset={8}
           align="end"
         >
           {/* Header */}
-          <div className="p-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/60 dark:bg-slate-800/40">
+          <div className="p-3.5 border-b border-border flex items-center justify-between bg-bg">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider font-heading">
+              <span className="text-secondary font-semibold text-ink">
                 Notifications
               </span>
               {unreadCount > 0 && (
-                <span className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                  {unreadCount} New
+                <span className="bg-brand-50 text-brand-700 text-meta font-medium px-2 py-0.5 rounded-full">
+                  {unreadCount} new
                 </span>
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-[11px]">
+            <div className="flex items-center gap-2 text-meta">
               {unreadCount > 0 && (
                 <button
                   type="button"
                   onClick={handleMarkAllRead}
-                  className="text-emerald-700 dark:text-emerald-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                  className="text-brand-700 font-medium hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <CheckCheck className="w-3.5 h-3.5" />
                   <span>Mark all read</span>
@@ -182,7 +181,7 @@ export const NotificationMenu: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="text-muted hover:text-danger font-semibold flex items-center gap-1 cursor-pointer transition"
+                  className="text-muted hover:text-danger font-medium flex items-center gap-1 cursor-pointer transition-colors"
                 >
                   <Trash2 className="w-3 h-3" />
                   <span>Clear</span>
@@ -191,19 +190,18 @@ export const NotificationMenu: React.FC = () => {
             </div>
           </div>
 
-          {/* List of Notifications */}
-          <div className="max-h-[360px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60">
+          {/* Notification List */}
+          <div className="max-h-[360px] overflow-y-auto divide-y divide-border">
             {notifications.length === 0 ? (
-              /* Genuine Zero Notifications State */
               <div className="p-8 text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto shadow-xs">
-                  <Bell className="w-6 h-6 stroke-[1.8]" />
+                <div className="w-12 h-12 rounded-card bg-brand-50 text-brand-700 flex items-center justify-center mx-auto">
+                  <Bell className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white font-heading">
+                  <h4 className="text-body font-semibold text-ink">
                     No new notifications
                   </h4>
-                  <p className="text-xs text-muted max-w-[240px] mx-auto leading-relaxed">
+                  <p className="text-secondary text-muted max-w-[240px] mx-auto leading-relaxed">
                     You're all caught up! Real inquiries, deal milestones, and match alerts will appear here.
                   </p>
                 </div>
@@ -213,40 +211,39 @@ export const NotificationMenu: React.FC = () => {
                 <div
                   key={n.id}
                   onClick={() => !n.isRead && handleMarkSingleRead(n.id)}
-                  className={`p-3.5 flex items-start justify-between gap-3 transition cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60 ${
-                    !n.isRead ? 'bg-emerald-50/40 dark:bg-emerald-950/20' : ''
+                  className={`p-3.5 flex items-start justify-between gap-3 transition-colors duration-150 cursor-pointer hover:bg-surface-hover ${
+                    !n.isRead ? 'bg-brand-50/40' : ''
                   }`}
                 >
                   <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                    <div className="p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs">
+                    <div className="p-2 rounded-input bg-bg border border-border">
                       {getIcon(n.type)}
                     </div>
                     <div className="space-y-0.5 flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-1">
                         <h5
-                          className={`text-xs truncate ${
+                          className={`text-secondary truncate ${
                             !n.isRead
-                              ? 'font-black text-slate-900 dark:text-white'
-                              : 'font-semibold text-slate-700 dark:text-slate-300'
+                              ? 'font-semibold text-ink'
+                              : 'font-medium text-muted'
                           }`}
                         >
                           {n.title}
                         </h5>
-                        <span className="text-[10px] text-muted whitespace-nowrap">
+                        <span className="text-meta text-faint whitespace-nowrap">
                           {formatRelativeTime(n.createdAt)}
                         </span>
                       </div>
-                      <p className="text-[11px] text-muted line-clamp-2 leading-relaxed">
+                      <p className="text-meta text-muted line-clamp-2 leading-relaxed">
                         {n.message}
                       </p>
                     </div>
                   </div>
 
-                  {/* Delete individual notification button */}
                   <button
                     type="button"
                     onClick={(e) => handleDelete(e, n.id)}
-                    className="w-6 h-6 rounded-lg text-slate-400 hover:text-danger hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center justify-center transition shrink-0 cursor-pointer"
+                    className="w-7 h-7 rounded-lg text-faint hover:text-danger hover:bg-danger-bg flex items-center justify-center transition-colors duration-150 shrink-0 cursor-pointer"
                     title="Delete notification"
                   >
                     <X className="w-3.5 h-3.5" />
