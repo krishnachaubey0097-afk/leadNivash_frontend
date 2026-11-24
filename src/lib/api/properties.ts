@@ -324,6 +324,19 @@ export async function createProperty(data: CreatePropertyDto): Promise<PropertyI
   return res;
 }
 
+export async function updateProperty(
+  id: string,
+  data: Partial<CreatePropertyDto>
+): Promise<PropertyItem> {
+  const res = await apiClient.patch<any, any>(`/properties/${id}`, data);
+  localPropertiesStore = localPropertiesStore.map((p) => (p._id === id ? { ...p, ...res } : p));
+  persistLocalProperties(localPropertiesStore);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('leadnivash_data_changed'));
+  }
+  return res;
+}
+
 export async function updatePropertyStatus(
   id: string,
   status: 'available' | 'hold' | 'sold' | 'rented'
