@@ -16,8 +16,11 @@ export interface NotificationsResponse {
 }
 
 export const fetchNotifications = async (): Promise<NotificationsResponse> => {
-  const res = await apiClient.get<any, { success: boolean; data: NotificationsResponse }>('/notifications');
-  return res.data || { notifications: [], unreadCount: 0 };
+  const res: any = await apiClient.get('/notifications');
+  if (res && Array.isArray(res.notifications)) {
+    return res as NotificationsResponse;
+  }
+  return res?.data || { notifications: [], unreadCount: 0 };
 };
 
 export const markNotificationRead = async (id: string): Promise<void> => {
