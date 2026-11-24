@@ -18,10 +18,17 @@ import {
   Layers,
   ArrowUpRight,
   Maximize2,
+  MoreVertical,
+  ArrowUpDown,
+  Eye,
+  PauseCircle,
+  CheckCircle,
+  PlayCircle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
+import { Sheet } from '../../components/ui/Sheet';
 import { useToast } from '../../components/ui/Toast';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { ErrorState } from '../../components/ui/ErrorState';
@@ -59,16 +66,22 @@ const formatLastUpdated = (dateString?: string): string => {
   return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
 };
 
+type SortOption = 'newest' | 'urgency' | 'budget_desc' | 'budget_asc';
+
 // =========================================================================
-// 1. BUYERS LIST PAGE (PROMPT 3 REDESIGN)
+// 1. BUYERS & INQUIRIES WORKFLOW LIST PAGE (PROMPT 4 REDESIGN)
 // =========================================================================
 export const BuyersListPage: React.FC = () => {
   const { success, error } = useToast();
   const [buyers, setBuyers] = useState<BuyerItem[]>([]);
-  const [urgencyFilter, setUrgencyFilter] = useState<string>('all');
+  const [filterMode, setFilterMode] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<SortOption>('newest');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
+
+  // Secondary Action Menu Sheet State
+  const [activeMenuBuyer, setActiveMenuBuyer] = useState<BuyerItem | null>(null);
   const [buyerToDelete, setBuyerToDelete] = useState<{ id: string; name: string } | null>(null);
   const [isDeletingBuyer, setIsDeletingBuyer] = useState<boolean>(false);
 
@@ -80,10 +93,26 @@ export const BuyersListPage: React.FC = () => {
       setBuyers((prev) => prev.filter((b) => b._id !== buyerToDelete.id));
       success(`Buyer requirement for "${buyerToDelete.name}" deleted successfully`);
       setBuyerToDelete(null);
+      setActiveMenuBuyer(null);
     } catch {
       error('Failed to delete buyer inquiry');
     } finally {
       setIsDeletingBuyer(false);
+    }
+  };
+
+  const handleUpdateStatus = async (buyer: BuyerItem, newStatus: 'active' | 'paused' | 'closed') => {
+    try {
+      await updateBuyer(buyer._id, { status: newStatus });
+      setBuyers((prev) =>
+        prev.map((b) => (b._id === buyer._id ? { ...b, status: newStatus } : b))
+      );
+      if (activeMenuBuyer?._id === buyer._id) {
+        setActiveMenuBuyer((prev) => (prev ? { ...prev, status: newStatus } : null));
+      }
+      success(`Inquiry marked as ${newStatus.toUpperCase()}`);
+    } catch {
+      error('Could not update inquiry status');
     }
   };
 
@@ -129,28 +158,39 @@ export const BuyersListPage: React.FC = () => {
     };
   }, []);
 
-  // Filter chips definitions per Prompt 3
+  // Filter chips definitions
   const filterChips = [
     { label: 'All', value: 'all' },
-    { label: 'Immediate', value: 'hot' },
-    { label: 'Within a Month', value: 'warm' },
-    { label: 'Flexible', value: 'cold' },
+    { label: 'Immediate', value: 'immediate' },
+    { label: 'Within a Month', value: 'within_month' },
+    { label: 'Active', value: 'active' },
+    { label: 'On Hold', value: 'paused' },
+    { label: 'Closed', value: 'closed' },
+    { label: 'Flexible', value: 'flexible' },
   ];
 
-  // Active inquiries count (real ground truth count)
+  // Real ground truth statistics
   const activeInquiriesCount = useMemo(() => {
     return buyers.filter((b) => b.status === 'active' || !b.status).length;
   }, [buyers]);
 
-  // Client-side instant filter and search
-  const filteredBuyers = useMemo(() => {
-    return buyers.filter((b) => {
-      // 1. Urgency filter
-      if (urgencyFilter !== 'all') {
-        if (b.urgency !== urgencyFilter) return false;
-      }
+  const immediateCount = useMemo(() => {
+    return buyers.filter((b) => b.urgency === 'hot' && (b.status === 'active' || !b.status)).length;
+  }, [buyers]);
 
-      // 2. Search query (buyer name, phone, locality, requirement type, notes)
+  // Client-side filtering and sorting
+  const processedBuyers = useMemo(() => {
+    // 1. Filter
+    const filtered = buyers.filter((b) => {
+      // Filter Mode
+      if (filterMode === 'immediate' && b.urgency !== 'hot') return false;
+      if (filterMode === 'within_month' && b.urgency !== 'warm') return false;
+      if (filterMode === 'flexible' && b.urgency !== 'cold') return false;
+      if (filterMode === 'active' && b.status !== 'active' && Boolean(b.status)) return false;
+      if (filterMode === 'paused' && b.status !== 'paused') return false;
+      if (filterMode === 'closed' && b.status !== 'closed') return false;
+
+      // Search Query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const matchesName = (b.name || '').toLowerCase().includes(q);
@@ -168,14 +208,34 @@ export const BuyersListPage: React.FC = () => {
 
       return true;
     });
-  }, [buyers, urgencyFilter, searchQuery]);
+
+    // 2. Sort
+    return filtered.sort((a, b) => {
+      if (sortBy === 'urgency') {
+        const urgencyWeight = { hot: 3, warm: 2, cold: 1 };
+        const wA = urgencyWeight[a.urgency || 'warm'] || 2;
+        const wB = urgencyWeight[b.urgency || 'warm'] || 2;
+        if (wB !== wA) return wB - wA;
+      }
+      if (sortBy === 'budget_desc') {
+        return (b.budget?.maxPaise || 0) - (a.budget?.maxPaise || 0);
+      }
+      if (sortBy === 'budget_asc') {
+        return (a.budget?.maxPaise || 0) - (b.budget?.maxPaise || 0);
+      }
+      // Default: newest first
+      const dateA = new Date(a.createdAt || a.updatedAt || 0).getTime();
+      const dateB = new Date(b.createdAt || b.updatedAt || 0).getTime();
+      return dateB - dateA;
+    });
+  }, [buyers, filterMode, searchQuery, sortBy]);
 
   return (
     <div className="space-y-4 pb-12 max-w-5xl mx-auto text-left">
       {/* ── 1. TOP SECTION ── */}
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-xl sm:text-2xl font-bold text-ink leading-tight">
               Buyers
             </h1>
@@ -183,6 +243,16 @@ export const BuyersListPage: React.FC = () => {
               <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold text-brand-700 bg-brand-50 border border-brand-200/60">
                 {activeInquiriesCount} Active
               </span>
+            )}
+            {!isLoading && immediateCount > 0 && (
+              <button
+                type="button"
+                onClick={() => setFilterMode('immediate')}
+                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/80 cursor-pointer hover:bg-rose-100 transition"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                <span>{immediateCount} Immediate Attention</span>
+              </button>
             )}
           </div>
           <p className="text-xs sm:text-sm text-secondary text-muted mt-0.5 truncate">
@@ -224,29 +294,49 @@ export const BuyersListPage: React.FC = () => {
         )}
       </div>
 
-      {/* ── 3. HORIZONTALLY SCROLLABLE FILTER CHIPS ── */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none touch-pan-x">
-        {filterChips.map((f) => {
-          const isSelected = urgencyFilter === f.value;
-          return (
-            <button
-              key={f.value}
-              type="button"
-              onClick={() => setUrgencyFilter(f.value)}
-              className={clsx(
-                'px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer shrink-0 border',
-                isSelected
-                  ? 'bg-brand-600 text-white border-brand-600 shadow-xs'
-                  : 'bg-white text-muted border-border hover:text-ink hover:border-slate-300'
-              )}
-            >
-              {f.label}
-            </button>
-          );
-        })}
+      {/* ── 3. FILTER STRIP & SORT SELECTOR ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        {/* Horizontally scrollable filter chips */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none touch-pan-x flex-1">
+          {filterChips.map((f) => {
+            const isSelected = filterMode === f.value;
+            return (
+              <button
+                key={f.value}
+                type="button"
+                onClick={() => setFilterMode(f.value)}
+                className={clsx(
+                  'px-3.5 py-1.5 sm:py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer shrink-0 border',
+                  isSelected
+                    ? 'bg-brand-600 text-white border-brand-600 shadow-xs'
+                    : 'bg-white text-muted border-border hover:text-ink hover:border-slate-300'
+                )}
+              >
+                {f.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Compact Sort Selector */}
+        <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-auto">
+          <ArrowUpDown className="w-3.5 h-3.5 text-muted" />
+          <span className="text-xs text-muted">Sort:</span>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as SortOption)}
+            aria-label="Sort inquiries"
+            className="text-xs font-semibold text-ink bg-white border border-border rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer shadow-xs"
+          >
+            <option value="newest">Newest First</option>
+            <option value="urgency">Urgency First</option>
+            <option value="budget_desc">Budget (High to Low)</option>
+            <option value="budget_asc">Budget (Low to High)</option>
+          </select>
+        </div>
       </div>
 
-      {/* ── 4. BUYER CARDS GRID / EMPTY STATES / LOADING SKELETON ── */}
+      {/* ── 4. INQUIRIES LIST / EMPTY STATES / SKELETON ── */}
       {fetchError ? (
         <ErrorState onRetry={() => loadBuyers(false)} message={fetchError} />
       ) : isLoading ? (
@@ -259,17 +349,17 @@ export const BuyersListPage: React.FC = () => {
           <BuyerCardSkeleton />
         </div>
       ) : buyers.length === 0 ? (
-        /* Empty State: No buyer inquiries yet (Prompt 3 Spec) */
+        /* Empty State: Prompt 4 Specific Wording */
         <Card className="p-8 sm:p-12 text-center space-y-4 rounded-2xl bg-white border border-border shadow-card">
           <div className="w-14 h-14 rounded-full bg-emerald-50 text-brand-600 flex items-center justify-center mx-auto shadow-xs">
             <Users className="w-7 h-7" />
           </div>
           <div className="space-y-1.5 max-w-sm mx-auto">
             <h3 className="text-base sm:text-lg font-bold text-ink">
-              No buyer inquiries yet
+              No inquiries to show
             </h3>
             <p className="text-xs sm:text-sm text-secondary text-muted leading-relaxed">
-              Add a buyer requirement or paste a WhatsApp message to discover matching properties.
+              New buyer requirements will appear here when you add them or capture them through Quick Chat.
             </p>
           </div>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2.5">
@@ -277,17 +367,17 @@ export const BuyersListPage: React.FC = () => {
               <Button
                 variant="primary"
                 size="md"
-                className="w-full sm:w-auto font-semibold gap-1.5"
+                className="w-full sm:w-auto font-semibold gap-1.5 min-h-[48px]"
               >
                 <Plus className="w-4 h-4" />
-                <span>Add Buyer</span>
+                <span>Add Buyer Inquiry</span>
               </Button>
             </Link>
             <Link to="/app/paste" className="w-full sm:w-auto">
               <Button
                 variant="secondary"
                 size="md"
-                className="w-full sm:w-auto font-semibold gap-1.5"
+                className="w-full sm:w-auto font-semibold gap-1.5 min-h-[48px]"
               >
                 <Sparkles className="w-4 h-4 text-brand-600" />
                 <span>Open Quick Chat</span>
@@ -295,20 +385,20 @@ export const BuyersListPage: React.FC = () => {
             </Link>
           </div>
         </Card>
-      ) : filteredBuyers.length === 0 ? (
-        /* Contextual Search / Filter Empty State */
+      ) : processedBuyers.length === 0 ? (
+        /* Contextual Search Empty State */
         <Card className="p-8 text-center space-y-3 rounded-2xl bg-white border border-border shadow-card">
           <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto">
             <Search className="w-5 h-5" />
           </div>
           <div className="space-y-1 max-w-sm mx-auto">
             <h3 className="text-sm font-bold text-ink">
-              No matching buyer inquiries
+              No matching inquiries
             </h3>
             <p className="text-xs text-secondary text-muted">
               {searchQuery
-                ? `No buyers matched "${searchQuery}". Try a different name, locality or clear your search.`
-                : 'No buyer requirements found for the selected timeline filter.'}
+                ? `No inquiries matched "${searchQuery}". Try a different name, locality or clear filters.`
+                : 'No buyer requirements found for the selected filter.'}
             </p>
           </div>
           <div className="pt-2">
@@ -317,7 +407,8 @@ export const BuyersListPage: React.FC = () => {
               size="sm"
               onClick={() => {
                 setSearchQuery('');
-                setUrgencyFilter('all');
+                setFilterMode('all');
+                setSortBy('newest');
               }}
               className="font-semibold text-xs"
             >
@@ -326,38 +417,58 @@ export const BuyersListPage: React.FC = () => {
           </div>
         </Card>
       ) : (
-        /* Buyer Cards Grid */
+        /* Inquiries Grid */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {filteredBuyers.map((buyer) => {
-            // Localities text preview
+          {processedBuyers.map((buyer) => {
+            // Locality text
             const localityList = buyer.localities || [];
             const localityText = localityList.length > 0
-              ? localityList
-                  .map((l) => (typeof l === 'string' ? l : l.display))
-                  .join(', ')
+              ? localityList.map((l) => (typeof l === 'string' ? l : l.display)).join(', ')
               : buyer.anyLocality
               ? 'Any Locality'
               : 'Panipat';
 
-            // Size range in Gaj (if available)
+            // Size range in Gaj (if specified)
             const hasSize = buyer.sizeGaj && (buyer.sizeGaj.min || buyer.sizeGaj.max);
             const sizeText = hasSize
               ? `${buyer.sizeGaj?.min ? `${buyer.sizeGaj.min}` : 'Min'} - ${buyer.sizeGaj?.max ? `${buyer.sizeGaj.max}` : 'Max'} Gaj`
               : null;
 
-            // Clean phone for WhatsApp action
+            // Formatted budget
+            const budgetText = buyer.budget?.minPaise
+              ? `${formatRupees(buyer.budget.minPaise)} — ${formatRupees(buyer.budget.maxPaise)}`
+              : `Up to ${formatRupees(buyer.budget?.maxPaise || 0)}`;
+
             const cleanPhone = (buyer.phone || '').replace(/[^0-9]/g, '');
+            const clientFirstName = (buyer.name || 'Client').split(' ')[0];
+            const requirementTypes = (buyer.types || []).join(', ') || 'Property';
+
+            // Pre-filled WhatsApp follow up message
+            const followUpMessage = `Namaste ${clientFirstName} ji, aapki ${requirementTypes} requirement (Budget: ${budgetText}) ke baare mein follow-up karna tha. Mere paas matching properties available hain. Kab baat kar sakte hain?`;
+            const followUpUrl = cleanPhone
+              ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(followUpMessage)}`
+              : undefined;
+
+            const isClosed = buyer.status === 'closed';
+            const isPaused = buyer.status === 'paused';
 
             return (
               <Card
                 key={buyer._id}
-                className="p-4 sm:p-5 flex flex-col justify-between rounded-card bg-white border border-border hover:border-brand-600/40 hover:shadow-card transition-all"
+                className={clsx(
+                  'p-4 sm:p-5 flex flex-col justify-between rounded-card bg-white border transition-all',
+                  isClosed
+                    ? 'border-slate-200/80 opacity-75'
+                    : isPaused
+                    ? 'border-amber-200/80'
+                    : 'border-border hover:border-brand-600/40 hover:shadow-card'
+                )}
               >
                 <div className="space-y-3">
-                  {/* Top Header: Property Type / Requirement & Urgency Chip */}
+                  {/* Header Strip: Types, Locality & Status Badges */}
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      {/* Property Types Chips */}
+                      {/* Property Types Wanted */}
                       <div className="flex flex-wrap items-center gap-1.5 mb-1">
                         {(buyer.types || ['Any Type']).map((type) => (
                           <span
@@ -378,50 +489,69 @@ export const BuyersListPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Timeline / Urgency Badge */}
-                    <span
-                      className={clsx(
-                        'shrink-0 px-2.5 py-0.5 rounded-full text-[11px] font-semibold flex items-center gap-1.5 border',
-                        buyer.urgency === 'hot'
-                          ? 'bg-rose-50 text-rose-700 border-rose-200'
-                          : buyer.urgency === 'warm'
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                          : 'bg-slate-100 text-slate-700 border-slate-200'
-                      )}
-                    >
+                    {/* Status & Urgency Badges */}
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      {/* Current Status Badge */}
                       <span
                         className={clsx(
-                          'w-1.5 h-1.5 rounded-full',
-                          buyer.urgency === 'hot'
-                            ? 'bg-rose-500 animate-pulse'
-                            : buyer.urgency === 'warm'
-                            ? 'bg-emerald-500'
-                            : 'bg-slate-400'
+                          'px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border',
+                          buyer.status === 'closed'
+                            ? 'bg-slate-100 text-slate-600 border-slate-200'
+                            : buyer.status === 'paused'
+                            ? 'bg-amber-50 text-amber-700 border-amber-200'
+                            : 'bg-emerald-50 text-emerald-800 border-emerald-200'
                         )}
-                      />
-                      <span>
-                        {buyer.urgency === 'hot'
-                          ? 'Immediate'
-                          : buyer.urgency === 'warm'
-                          ? 'Within a Month'
-                          : 'Flexible'}
+                      >
+                        {buyer.status === 'closed'
+                          ? 'Closed'
+                          : buyer.status === 'paused'
+                          ? 'On Hold'
+                          : 'Active'}
                       </span>
-                    </span>
+
+                      {/* Urgency Badge */}
+                      <span
+                        className={clsx(
+                          'px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1 border',
+                          buyer.urgency === 'hot'
+                            ? 'bg-rose-50 text-rose-700 border-rose-200'
+                            : buyer.urgency === 'warm'
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                            : 'bg-slate-100 text-slate-700 border-slate-200'
+                        )}
+                      >
+                        <span
+                          className={clsx(
+                            'w-1.5 h-1.5 rounded-full',
+                            buyer.urgency === 'hot'
+                              ? 'bg-rose-500 animate-pulse'
+                              : buyer.urgency === 'warm'
+                              ? 'bg-emerald-500'
+                              : 'bg-slate-400'
+                          )}
+                        />
+                        <span>
+                          {buyer.urgency === 'hot'
+                            ? 'Immediate'
+                            : buyer.urgency === 'warm'
+                            ? 'Within Month'
+                            : 'Flexible'}
+                        </span>
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Budget Band (Strongest Visual Hierarchy per Prompt 3) */}
+                  {/* Budget (Strongest Visual Hierarchy) */}
                   <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70 space-y-0.5">
                     <span className="text-[11px] font-semibold text-muted uppercase tracking-wider block">
                       Target Budget
                     </span>
                     <div className="text-base sm:text-lg font-bold text-ink">
-                      {buyer.budget?.minPaise
-                        ? `${formatRupees(buyer.budget.minPaise)} — ${formatRupees(buyer.budget.maxPaise)}`
-                        : `Up to ${formatRupees(buyer.budget?.maxPaise || 0)}`}
+                      {budgetText}
                     </div>
                   </div>
 
-                  {/* Additional Metadata: Size in Gaj & Client Identity */}
+                  {/* Additional Metadata: Size & Client Identifier */}
                   <div className="space-y-1.5 pt-0.5 text-xs text-secondary text-muted">
                     {sizeText && (
                       <div className="flex items-center gap-1.5">
@@ -439,7 +569,7 @@ export const BuyersListPage: React.FC = () => {
                         )}
                       </div>
 
-                      {/* Last updated indicator */}
+                      {/* Date received or last updated */}
                       <span className="text-[11px] text-muted shrink-0 flex items-center gap-1">
                         <Clock className="w-3 h-3 text-slate-400" />
                         <span>{formatLastUpdated(buyer.updatedAt || buyer.createdAt)}</span>
@@ -448,50 +578,40 @@ export const BuyersListPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* ── 5. CARD ACTION STRIP ── */}
+                {/* ── 5. CARD ACTION BAR (Prompt 4 Spec: Primary action & Secondary action menu) ── */}
                 <div className="mt-3.5 pt-3 border-t border-border flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
-                    {/* Direct WhatsApp Contact */}
-                    {cleanPhone && (
+                    {/* Follow Up via WhatsApp */}
+                    {followUpUrl && (
                       <a
-                        href={`https://wa.me/${cleanPhone}`}
+                        href={followUpUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="min-h-[40px] px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-brand-700 text-xs font-semibold flex items-center gap-1 transition"
-                        title="Chat with Buyer on WhatsApp"
+                        className="min-h-[40px] px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-brand-700 text-xs font-semibold flex items-center gap-1.5 transition"
+                        title="Follow up with Buyer on WhatsApp"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />
-                        <span className="hidden xs:inline">WhatsApp</span>
+                        <span>Follow up</span>
                       </a>
                     )}
 
-                    {/* Edit Requirement */}
-                    <Link
-                      to={`/app/buyers/${buyer._id}/edit`}
-                      className="min-h-[40px] min-w-[40px] px-2.5 py-1.5 rounded-lg border border-border hover:bg-slate-50 text-slate-600 hover:text-ink text-xs font-semibold flex items-center justify-center gap-1 transition"
-                      title="Edit Requirement"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span className="hidden sm:inline">Edit</span>
-                    </Link>
-
-                    {/* Delete Requirement */}
+                    {/* Secondary Action Menu Button (3 Dots) */}
                     <button
                       type="button"
-                      onClick={() => setBuyerToDelete({ id: buyer._id, name: buyer.name })}
-                      className="min-h-[40px] min-w-[40px] p-2 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer flex items-center justify-center"
-                      title="Delete Buyer Inquiry"
+                      onClick={() => setActiveMenuBuyer(buyer)}
+                      className="min-h-[40px] min-w-[40px] p-2 rounded-lg border border-border hover:bg-slate-50 text-slate-600 hover:text-ink transition flex items-center justify-center cursor-pointer"
+                      title="More Actions & Status"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <MoreVertical className="w-4 h-4" />
                     </button>
                   </div>
 
-                  {/* Primary Card Action: View Details & Live Matches */}
+                  {/* Primary Card Action: Find Matching Properties */}
                   <Link
                     to={`/app/buyers/${buyer._id}`}
                     className="min-h-[40px] px-3.5 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-xs shrink-0"
                   >
-                    <span>View Matches</span>
+                    <span>Find Matches</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
@@ -500,6 +620,145 @@ export const BuyersListPage: React.FC = () => {
           })}
         </div>
       )}
+
+      {/* ── SECONDARY ACTION SHEET FOR MOBILE ── */}
+      <Sheet
+        open={Boolean(activeMenuBuyer)}
+        onOpenChange={(open) => {
+          if (!open) setActiveMenuBuyer(null);
+        }}
+        title={activeMenuBuyer ? activeMenuBuyer.name : 'Inquiry Actions'}
+        description={activeMenuBuyer ? `Manage status and actions for this inquiry` : undefined}
+      >
+        {activeMenuBuyer && (
+          <div className="space-y-4 pt-1 text-xs">
+            {/* Contact quick view */}
+            <div className="p-3 rounded-xl bg-slate-50 border border-border flex items-center justify-between">
+              <div>
+                <span className="text-[11px] text-muted block uppercase font-semibold">Client Phone</span>
+                <span className="font-semibold text-ink text-sm">{activeMenuBuyer.phone}</span>
+              </div>
+              <span
+                className={clsx(
+                  'px-2.5 py-1 rounded-full text-xs font-bold uppercase',
+                  activeMenuBuyer.status === 'closed'
+                    ? 'bg-slate-200 text-slate-700'
+                    : activeMenuBuyer.status === 'paused'
+                    ? 'bg-amber-100 text-amber-800'
+                    : 'bg-emerald-100 text-emerald-800'
+                )}
+              >
+                {activeMenuBuyer.status || 'Active'}
+              </span>
+            </div>
+
+            {/* Quick Status Update Section (Prompt 4 Spec: Update inquiry status) */}
+            <div className="space-y-1.5">
+              <label className="font-semibold text-ink uppercase tracking-wider text-[11px] block">
+                Update Inquiry Status
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleUpdateStatus(activeMenuBuyer, 'active')}
+                  className={clsx(
+                    'min-h-[44px] p-2 rounded-xl font-semibold text-xs transition cursor-pointer border flex flex-col items-center justify-center gap-1',
+                    activeMenuBuyer.status === 'active' || !activeMenuBuyer.status
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                      : 'bg-white border-border text-slate-700 hover:bg-slate-50'
+                  )}
+                >
+                  <PlayCircle className="w-4 h-4" />
+                  <span>Active</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleUpdateStatus(activeMenuBuyer, 'paused')}
+                  className={clsx(
+                    'min-h-[44px] p-2 rounded-xl font-semibold text-xs transition cursor-pointer border flex flex-col items-center justify-center gap-1',
+                    activeMenuBuyer.status === 'paused'
+                      ? 'bg-amber-600 text-white border-amber-600 shadow-xs'
+                      : 'bg-white border-border text-slate-700 hover:bg-slate-50'
+                  )}
+                >
+                  <PauseCircle className="w-4 h-4" />
+                  <span>On Hold</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleUpdateStatus(activeMenuBuyer, 'closed')}
+                  className={clsx(
+                    'min-h-[44px] p-2 rounded-xl font-semibold text-xs transition cursor-pointer border flex flex-col items-center justify-center gap-1',
+                    activeMenuBuyer.status === 'closed'
+                      ? 'bg-slate-800 text-white border-slate-800 shadow-xs'
+                      : 'bg-white border-border text-slate-700 hover:bg-slate-50'
+                  )}
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  <span>Closed</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Navigational & Editing Actions */}
+            <div className="space-y-2 pt-2 border-t border-border">
+              <Link
+                to={`/app/buyers/${activeMenuBuyer._id}`}
+                onClick={() => setActiveMenuBuyer(null)}
+                className="w-full min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-ink font-semibold flex items-center justify-between transition"
+              >
+                <div className="flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-brand-600" />
+                  <span>Open Inquiry Details & Live Matches</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-muted" />
+              </Link>
+
+              <Link
+                to={`/app/buyers/${activeMenuBuyer._id}/edit`}
+                onClick={() => setActiveMenuBuyer(null)}
+                className="w-full min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-ink font-semibold flex items-center justify-between transition"
+              >
+                <div className="flex items-center gap-2">
+                  <Edit3 className="w-4 h-4 text-brand-600" />
+                  <span>Edit Buyer Requirement</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-muted" />
+              </Link>
+
+              {activeMenuBuyer.phone && (
+                <a
+                  href={`tel:${activeMenuBuyer.phone}`}
+                  className="w-full min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-ink font-semibold flex items-center justify-between transition"
+                >
+                  <div className="flex items-center gap-2">
+                    <MessageCircle className="w-4 h-4 text-brand-600" />
+                    <span>Direct Call / Dial Phone</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted" />
+                </a>
+              )}
+            </div>
+
+            {/* Destructive Action */}
+            <div className="pt-2 border-t border-border">
+              <button
+                type="button"
+                onClick={() => {
+                  setBuyerToDelete({ id: activeMenuBuyer._id, name: activeMenuBuyer.name });
+                  setActiveMenuBuyer(null);
+                }}
+                className="w-full min-h-[44px] px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Delete Buyer Inquiry</span>
+              </button>
+            </div>
+          </div>
+        )}
+      </Sheet>
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog
@@ -518,7 +777,7 @@ export const BuyersListPage: React.FC = () => {
 };
 
 // =========================================================================
-// 2. ADD & EDIT BUYER FORM PAGE (PROMPT 3 SPEC)
+// 2. ADD & EDIT BUYER FORM PAGE
 // =========================================================================
 export const BuyerNewPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -1022,7 +1281,7 @@ export const BuyerNewPage: React.FC = () => {
 };
 
 // =========================================================================
-// 3. BUYER DETAIL & MATCH MATRIX PAGE (PROMPT 3 SPEC)
+// 3. BUYER DETAIL & MATCH MATRIX PAGE
 // =========================================================================
 export const BuyerDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -1045,6 +1304,17 @@ export const BuyerDetailPage: React.FC = () => {
       error('Failed to delete buyer requirement');
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleUpdateStatus = async (newStatus: 'active' | 'paused' | 'closed') => {
+    if (!buyer) return;
+    try {
+      await updateBuyer(buyer._id, { status: newStatus });
+      setBuyer((prev) => (prev ? { ...prev, status: newStatus } : null));
+      success(`Inquiry marked as ${newStatus.toUpperCase()}`);
+    } catch {
+      error('Could not update inquiry status');
     }
   };
 
@@ -1119,10 +1389,26 @@ export const BuyerDetailPage: React.FC = () => {
       <Card className="p-4 sm:p-6 space-y-4 rounded-2xl bg-white border border-border shadow-card">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-border">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-xl sm:text-2xl font-bold text-ink">
                 {buyer.name}
               </h1>
+
+              {/* Status Badge */}
+              <span
+                className={clsx(
+                  'px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider border',
+                  buyer.status === 'closed'
+                    ? 'bg-slate-100 text-slate-700 border-slate-200'
+                    : buyer.status === 'paused'
+                    ? 'bg-amber-50 text-amber-800 border-amber-200'
+                    : 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                )}
+              >
+                {buyer.status === 'closed' ? 'Closed' : buyer.status === 'paused' ? 'On Hold' : 'Active'}
+              </span>
+
+              {/* Urgency Badge */}
               <span
                 className={clsx(
                   'px-2.5 py-0.5 rounded-full text-[11px] font-semibold flex items-center gap-1.5 border',
@@ -1182,6 +1468,47 @@ export const BuyerDetailPage: React.FC = () => {
               {(buyer.types || []).join(', ') || 'Any Type'}
             </span>
           </div>
+        </div>
+
+        {/* Status Update Quick Toggles */}
+        <div className="pt-2 flex items-center gap-2">
+          <span className="text-xs text-muted font-medium">Status:</span>
+          <button
+            type="button"
+            onClick={() => handleUpdateStatus('active')}
+            className={clsx(
+              'px-2.5 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer',
+              buyer.status === 'active' || !buyer.status
+                ? 'bg-emerald-600 text-white border-emerald-600'
+                : 'bg-white border-border text-slate-700 hover:bg-slate-50'
+            )}
+          >
+            Active
+          </button>
+          <button
+            type="button"
+            onClick={() => handleUpdateStatus('paused')}
+            className={clsx(
+              'px-2.5 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer',
+              buyer.status === 'paused'
+                ? 'bg-amber-600 text-white border-amber-600'
+                : 'bg-white border-border text-slate-700 hover:bg-slate-50'
+            )}
+          >
+            On Hold
+          </button>
+          <button
+            type="button"
+            onClick={() => handleUpdateStatus('closed')}
+            className={clsx(
+              'px-2.5 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer',
+              buyer.status === 'closed'
+                ? 'bg-slate-800 text-white border-slate-800'
+                : 'bg-white border-border text-slate-700 hover:bg-slate-50'
+            )}
+          >
+            Closed
+          </button>
         </div>
 
         {buyer.notes && (
