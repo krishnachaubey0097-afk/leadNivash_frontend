@@ -34,12 +34,12 @@ export const TopBar: React.FC = () => {
   const isDashboard = location.pathname.replace(/\/+$/, '') === '/app' || location.pathname === '/app/';
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-white border-b border-border transition-colors duration-150">
+    <header className="sticky top-0 z-30 w-full bg-surface border-b border-border transition-colors duration-150">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
         {/* Left side: Brand Logo & leadNivash Name */}
         <div className="flex items-center gap-2.5 min-w-0">
           <Link to="/app" className="flex items-center gap-2 shrink-0 group" aria-label="leadNivash Home">
-            <div className="w-8 h-8 rounded-lg bg-white border border-border p-1 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-surface border border-border p-1 flex items-center justify-center">
               <img src="/logo-icon.png" alt="leadNivash" className="w-full h-full object-contain" />
             </div>
             <span className="text-base font-bold text-ink leading-none">

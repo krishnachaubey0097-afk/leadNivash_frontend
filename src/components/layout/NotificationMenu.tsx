@@ -204,16 +204,16 @@ export const NotificationMenu: React.FC = () => {
           sideOffset={8}
           collisionPadding={12}
           align="end"
-          className="z-50 w-[calc(100vw-24px)] sm:w-[380px] max-w-[380px] bg-white border border-border p-0 rounded-2xl shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200 text-left overflow-hidden"
+          className="z-50 w-[calc(100vw-24px)] sm:w-[380px] max-w-[380px] bg-surface border border-border p-0 rounded-2xl shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200 text-left overflow-hidden"
         >
           {/* Header */}
-          <div className="p-3.5 border-b border-border flex items-center justify-between bg-slate-50/80">
+          <div className="p-3.5 border-b border-border flex items-center justify-between bg-surface-hover">
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-bold text-ink">
                 Notifications
               </h3>
               {unreadCount > 0 && (
-                <span className="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                <span className="bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
                   {unreadCount} new
                 </span>
               )}
@@ -224,7 +224,7 @@ export const NotificationMenu: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleMarkAllRead}
-                  className="text-[11px] text-brand-700 font-semibold hover:text-brand-800 flex items-center gap-1 cursor-pointer transition"
+                  className="text-[11px] text-brand-700 dark:text-brand-400 font-semibold hover:text-brand-800 flex items-center gap-1 cursor-pointer transition"
                   title="Mark all as read"
                 >
                   <CheckCheck className="w-3.5 h-3.5" />
@@ -236,7 +236,7 @@ export const NotificationMenu: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="text-[11px] text-muted hover:text-rose-600 font-semibold flex items-center gap-1 cursor-pointer transition"
+                  className="text-[11px] text-muted hover:text-rose-600 dark:hover:text-rose-400 font-semibold flex items-center gap-1 cursor-pointer transition"
                   title="Clear all"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ export const NotificationMenu: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="w-7 h-7 rounded-lg text-muted hover:text-ink hover:bg-slate-200/70 flex items-center justify-center transition cursor-pointer"
+                className="w-7 h-7 rounded-lg text-muted hover:text-ink hover:bg-surface-hover flex items-center justify-center transition cursor-pointer"
                 title="Close"
                 aria-label="Close"
               >
@@ -258,11 +258,11 @@ export const NotificationMenu: React.FC = () => {
           </div>
 
           {/* Notification List with Safe Internal Scrolling */}
-          <div className="max-h-[min(480px,70vh)] overflow-y-auto divide-y divide-slate-100 overscroll-contain">
+          <div className="max-h-[min(480px,70vh)] overflow-y-auto divide-y divide-border overscroll-contain">
             {notifications.length === 0 ? (
               /* Prompt 7 Empty State Specification */
               <div className="p-8 text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center justify-center mx-auto shadow-2xs">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 flex items-center justify-center mx-auto shadow-2xs">
                   <Bell className="w-6 h-6 stroke-[2]" />
                 </div>
                 <div className="space-y-1">
@@ -283,8 +283,8 @@ export const NotificationMenu: React.FC = () => {
                     key={n.id}
                     onClick={() => handleNotificationClick(n)}
                     className={clsx(
-                      'p-3.5 flex items-start justify-between gap-3 transition cursor-pointer hover:bg-slate-50',
-                      !n.isRead ? 'bg-emerald-50/30' : 'bg-white'
+                      'p-3.5 flex items-start justify-between gap-3 transition cursor-pointer hover:bg-surface-hover',
+                      !n.isRead ? 'bg-emerald-50/30 dark:bg-emerald-950/20' : 'bg-surface'
                     )}
                   >
                     <div className="flex items-start gap-2.5 flex-1 min-w-0">
@@ -294,7 +294,7 @@ export const NotificationMenu: React.FC = () => {
 
                       <div className="space-y-0.5 flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1.5">
-                          <h4 className={clsx('text-xs truncate', !n.isRead ? 'font-bold text-ink' : 'font-medium text-slate-700')}>
+                          <h4 className={clsx('text-xs truncate', !n.isRead ? 'font-bold text-ink' : 'font-medium text-slate-700 dark:text-slate-300')}>
                             {n.title}
                           </h4>
                           <span className="text-[10px] text-muted whitespace-nowrap shrink-0">
@@ -314,7 +314,7 @@ export const NotificationMenu: React.FC = () => {
                       <button
                         type="button"
                         onClick={(e) => handleDelete(e, n.id)}
-                        className="w-6 h-6 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition cursor-pointer"
+                        className="w-6 h-6 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition cursor-pointer"
                         title="Delete notification"
                         aria-label="Delete"
                       >

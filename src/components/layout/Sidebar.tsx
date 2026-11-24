@@ -30,11 +30,11 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="hidden lg:flex flex-col w-60 h-screen sticky top-0 bg-white border-r border-border shrink-0 p-4 justify-between overflow-y-auto select-none">
+    <aside className="hidden lg:flex flex-col w-60 h-screen sticky top-0 bg-surface border-r border-border shrink-0 p-4 justify-between overflow-y-auto select-none">
       <div className="space-y-6">
         {/* Brand Header */}
         <Link to="/app" className="flex items-center gap-2.5 px-2 py-1 group">
-          <div className="w-8 h-8 rounded-lg bg-white border border-border p-1 group-hover:border-brand-600/30 transition-colors duration-150">
+          <div className="w-8 h-8 rounded-lg bg-surface border border-border p-1 group-hover:border-brand-600/30 transition-colors duration-150">
             <img src="/logo-icon.png" alt="leadNivash Logo" className="w-full h-full object-contain" />
           </div>
           <div>
