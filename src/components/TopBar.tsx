@@ -1,5 +1,5 @@
 import React from 'react';
-import { BRAND_NAME } from '../../config/constants';
+import { BRAND_NAME } from '../config/constants';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { Settings as SettingsIcon, LogOut } from 'lucide-react';

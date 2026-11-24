@@ -158,7 +158,7 @@ export const DashboardPage: React.FC = () => {
   // Welcome broker display info
   const firstName = user?.name ? user.name.split(' ')[0] : 'Broker';
   const agencyName = user?.agency?.name;
-  const territory = user?.agency?.city || user?.city || 'Haryana';
+  const territory = user?.agency?.city || 'Haryana';
   const planTier = user?.plan?.tier || 'Trial';
 
   return (
