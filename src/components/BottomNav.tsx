@@ -55,8 +55,8 @@ export const BottomNav: React.FC = () => {
               clsx(
                 'w-14 h-14 rounded-full flex flex-col items-center justify-center shadow-lg transition-transform active:scale-95 border-4 border-bg',
                 isActive
-                  ? 'bg-primary text-white ring-4 ring-primary/30'
-                  : 'bg-primary hover:bg-primary-focus text-white'
+                  ? 'bg-brand-600 text-white shadow-lg'
+                  : 'bg-brand-600 hover:bg-brand-700 text-white'
               )
             }
           >

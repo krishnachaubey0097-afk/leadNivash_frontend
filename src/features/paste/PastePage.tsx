@@ -639,7 +639,7 @@ export const PastePage: React.FC = () => {
                         className={clsx(
                           'w-9 h-9 rounded-full flex items-center justify-center transition shadow-xs cursor-pointer',
                           isListening
-                            ? 'bg-brand-600 text-white ring-4 ring-brand-600/30 animate-pulse'
+                            ? 'bg-brand-600 text-white shadow-md scale-105 animate-pulse'
                             : 'bg-white border-2 border-brand-600 text-brand-600 hover:bg-brand-50'
                         )}
                         title={isListening ? 'Stop voice input' : 'Speak message (voice input)'}

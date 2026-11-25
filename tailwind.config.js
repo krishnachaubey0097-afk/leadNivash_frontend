@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      ringColor: {
+        DEFAULT: '#018E45',
+      },
       colors: {
         brand: {
           50: 'var(--brand-50)',
