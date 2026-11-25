@@ -617,17 +617,17 @@ export const BuyersListPage: React.FC = () => {
       {/* ── 1. TOP HEADER SECTION ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-ink-900 to-brand-700 bg-clip-text text-transparent leading-tight">
               Buyers
             </h1>
             {!isLoading && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold text-brand-700 bg-brand-50 border border-brand-200/60">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold text-lime bg-ink-black tabular-nums">
                 {activeTab === 'inquiries' ? unifiedInquiries.length : buyers.length}
               </span>
             )}
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5 truncate">
+          <p className="text-xs sm:text-sm text-ink-700 mt-0.5 truncate">
             Active client requirements and purchase inquiries
           </p>
         </div>
@@ -645,22 +645,22 @@ export const BuyersListPage: React.FC = () => {
       </div>
 
       {/* ── 1B. SEGMENTED TABS: All buyers | Inquiries ── */}
-      <div className="inline-flex items-center p-1 bg-slate-100 rounded-full border border-border/70">
+      <div className="inline-flex items-center p-1 bg-[#E9EDF1] rounded-xl border border-line">
         <button
           type="button"
           onClick={() => handleTabChange('buyers')}
           className={clsx(
-            'px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all cursor-pointer inline-flex items-center gap-2',
+            'px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition-all cursor-pointer inline-flex items-center gap-2',
             activeTab === 'buyers'
-              ? 'bg-white text-slate-900 shadow-xs'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-ink-black text-white shadow-xs'
+              : 'text-ink-700 hover:text-ink-900'
           )}
         >
           <span>All buyers</span>
           <span
             className={clsx(
-              'text-[11px] px-1.5 py-0.5 rounded-full leading-none font-bold',
-              activeTab === 'buyers' ? 'bg-brand-50 text-brand-700' : 'bg-slate-200/70 text-slate-600'
+              'text-[11px] px-1.5 py-0.5 rounded-full leading-none font-bold tabular-nums',
+              activeTab === 'buyers' ? 'bg-lime text-ink-black' : 'bg-white text-ink-700'
             )}
           >
             {buyers.length}
@@ -671,17 +671,17 @@ export const BuyersListPage: React.FC = () => {
           type="button"
           onClick={() => handleTabChange('inquiries')}
           className={clsx(
-            'px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all cursor-pointer inline-flex items-center gap-2',
+            'px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition-all cursor-pointer inline-flex items-center gap-2',
             activeTab === 'inquiries'
-              ? 'bg-white text-slate-900 shadow-xs'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-ink-black text-white shadow-xs'
+              : 'text-ink-700 hover:text-ink-900'
           )}
         >
           <span>Inquiries</span>
           <span
             className={clsx(
-              'text-[11px] px-1.5 py-0.5 rounded-full leading-none font-bold',
-              activeTab === 'inquiries' ? 'bg-brand-50 text-brand-700' : 'bg-slate-200/70 text-slate-600'
+              'text-[11px] px-1.5 py-0.5 rounded-full leading-none font-bold tabular-nums',
+              activeTab === 'inquiries' ? 'bg-lime text-ink-black' : 'bg-white text-ink-700'
             )}
           >
             {unifiedInquiries.length}
@@ -1499,9 +1499,9 @@ export const BuyersListPage: React.FC = () => {
                   href={`https://wa.me/${selectedInquiry.clientPhone.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3.5 h-10 rounded-lg bg-brand-600 hover:bg-brand-700 text-xs font-semibold text-white"
+                  className="btn-cashfree-primary btn-shine-sweep inline-flex items-center gap-1.5 px-3.5 h-10 rounded-[11px] text-xs font-semibold text-white"
                 >
-                  <MessageCircle className="w-3.5 h-3.5" />
+                  <MessageCircle className="w-3.5 h-3.5 text-lime" />
                   <span>Follow up</span>
                 </a>
               )}
@@ -2282,9 +2282,9 @@ export const BuyerDetailPage: React.FC = () => {
               href={`https://wa.me/${cleanPhone}`}
               target="_blank"
               rel="noreferrer"
-              className="min-h-[40px] px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition"
+              className="btn-cashfree-primary btn-shine-sweep min-h-[40px] px-3.5 py-1.5 rounded-[11px] text-white font-semibold text-xs flex items-center gap-1.5 transition"
             >
-              <MessageCircle className="w-3.5 h-3.5" />
+              <MessageCircle className="w-3.5 h-3.5 text-lime" />
               <span>WhatsApp</span>
             </a>
           )}
@@ -2518,9 +2518,9 @@ export const BuyerDetailPage: React.FC = () => {
                         href={pitchUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="min-h-[44px] px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition"
+                        className="btn-cashfree-primary btn-shine-sweep min-h-[44px] px-4 py-2 rounded-[11px] text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition"
                       >
-                        <MessageCircle className="w-3.5 h-3.5" />
+                        <MessageCircle className="w-3.5 h-3.5 text-lime" />
                         <span>Pitch on WhatsApp</span>
                       </a>
                     )}

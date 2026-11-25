@@ -226,10 +226,10 @@ export const InquiriesPage: React.FC = () => {
       {/* ── 1. CLEAN TOP HEADER ── */}
       <div className="flex items-start justify-between gap-3 pt-1">
         <div className="space-y-0.5">
-          <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-ink-900 to-brand-700 bg-clip-text text-transparent font-heading tracking-tight">
             Inquiries
           </h1>
-          <p className="text-xs text-muted">
+          <p className="text-xs text-ink-700">
             Track and follow up on incoming leads from flyers and buyers.
           </p>
         </div>
@@ -237,10 +237,10 @@ export const InquiriesPage: React.FC = () => {
         <button
           type="button"
           onClick={handleExportCsv}
-          className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-surface-hover text-ink text-xs font-semibold flex items-center gap-1.5 shadow-2xs transition cursor-pointer shrink-0 min-h-[40px]"
+          className="px-3.5 py-2 rounded-xl bg-white border border-line hover:border-ink-black/30 hover:bg-lime-soft/50 text-ink-900 text-xs font-semibold flex items-center gap-1.5 shadow-2xs transition cursor-pointer shrink-0 min-h-[40px]"
           title="Export records to CSV"
         >
-          <Download className="w-3.5 h-3.5 text-ink-500" />
+          <Download className="w-3.5 h-3.5 text-brand-600" />
           <span className="hidden sm:inline">Export</span> CSV
         </button>
       </div>
@@ -385,16 +385,16 @@ export const InquiriesPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-1 max-w-xs mx-auto">
                   <Link
                     to="/app/properties"
-                    className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs min-h-[42px]"
+                    className="btn-cashfree-primary btn-shine-sweep w-full py-2.5 px-4 rounded-[12px] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition min-h-[42px]"
                   >
-                    <Share2 className="w-3.5 h-3.5" />
+                    <Share2 className="w-3.5 h-3.5 text-lime" />
                     <span>Share Property Flyers</span>
                   </Link>
                   <Link
                     to="/app/paste"
-                    className="w-full py-2.5 px-4 rounded-xl bg-surface border border-border hover:bg-surface-hover text-ink font-semibold text-xs flex items-center justify-center gap-1.5 transition min-h-[42px]"
+                    className="w-full py-2.5 px-4 rounded-[12px] bg-white border border-line hover:bg-lime-soft/50 text-ink-900 font-semibold text-xs flex items-center justify-center gap-1.5 transition min-h-[42px]"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                    <Sparkles className="w-3.5 h-3.5 text-brand-600" />
                     <span>Open Quick Chat</span>
                   </Link>
                 </div>
@@ -488,9 +488,9 @@ export const InquiriesPage: React.FC = () => {
                         href={whatsappUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition min-h-[40px]"
+                        className="btn-cashfree-primary btn-shine-sweep px-3.5 py-2 rounded-[11px] text-white text-xs font-bold flex items-center gap-1.5 transition min-h-[40px]"
                       >
-                        <MessageCircle className="w-3.5 h-3.5" />
+                        <MessageCircle className="w-3.5 h-3.5 text-lime" />
                         <span>WhatsApp</span>
                       </a>
 
@@ -557,16 +557,16 @@ export const InquiriesPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-1 max-w-xs mx-auto">
                   <Link
                     to="/app/buyers/new"
-                    className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs min-h-[42px]"
+                    className="btn-cashfree-primary btn-shine-sweep w-full py-2.5 px-4 rounded-[12px] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition min-h-[42px]"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-3.5 h-3.5 text-lime" />
                     <span>Add Buyer Requirement</span>
                   </Link>
                   <Link
                     to="/app/paste"
-                    className="w-full py-2.5 px-4 rounded-xl bg-surface border border-border hover:bg-surface-hover text-ink font-semibold text-xs flex items-center justify-center gap-1.5 transition min-h-[42px]"
+                    className="w-full py-2.5 px-4 rounded-[12px] bg-white border border-line hover:bg-lime-soft/50 text-ink-900 font-semibold text-xs flex items-center justify-center gap-1.5 transition min-h-[42px]"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                    <Sparkles className="w-3.5 h-3.5 text-brand-600" />
                     <span>Open Quick Chat</span>
                   </Link>
                 </div>
@@ -585,7 +585,7 @@ export const InquiriesPage: React.FC = () => {
                 >
                   <div className="flex items-start justify-between gap-2.5 pb-2.5 border-b border-border">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-800 font-bold text-sm flex items-center justify-center shrink-0 border border-blue-500/20">
+                      <div className="w-10 h-10 rounded-full bg-lime-soft text-brand-700 font-bold text-sm flex items-center justify-center shrink-0 border border-lime">
                         {bInq.clientName.charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0">
@@ -634,15 +634,15 @@ export const InquiriesPage: React.FC = () => {
 
                     <div className="text-right shrink-0">
                       <span className="text-[10px] uppercase font-bold text-muted block">Budget</span>
-                      <span className="font-black text-blue-700 font-sans">
+                      <span className="font-black text-brand-700 font-sans">
                         {bInq.budgetRange}
                       </span>
                     </div>
                   </div>
 
                   {bInq.message && (
-                    <div className="text-xs text-slate-700 p-2.5 rounded-xl bg-surface border border-border leading-relaxed flex items-start gap-2">
-                      <MessageSquare className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
+                    <div className="text-xs text-ink-700 p-2.5 rounded-xl bg-surface border border-line leading-relaxed flex items-start gap-2">
+                      <MessageSquare className="w-3.5 h-3.5 text-brand-600 shrink-0 mt-0.5" />
                       <span className="italic">"{bInq.message}"</span>
                     </div>
                   )}
@@ -653,9 +653,9 @@ export const InquiriesPage: React.FC = () => {
                         href={whatsappUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition min-h-[40px]"
+                        className="btn-cashfree-primary btn-shine-sweep px-3.5 py-2 rounded-[11px] text-white text-xs font-bold flex items-center gap-1.5 transition min-h-[40px]"
                       >
-                        <MessageCircle className="w-3.5 h-3.5" />
+                        <MessageCircle className="w-3.5 h-3.5 text-lime" />
                         <span>WhatsApp</span>
                       </a>
 
@@ -751,9 +751,9 @@ export const InquiriesPage: React.FC = () => {
                   href={`https://wa.me/${selectedPropertyInquiry.clientPhone.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
+                  className="btn-cashfree-primary btn-shine-sweep px-3.5 py-2 rounded-[11px] text-white text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
                 >
-                  <MessageCircle className="w-3.5 h-3.5" />
+                  <MessageCircle className="w-3.5 h-3.5 text-lime" />
                   <span>WhatsApp</span>
                 </a>
               </div>
@@ -761,7 +761,7 @@ export const InquiriesPage: React.FC = () => {
               <Link
                 to="/app/buyers/new"
                 onClick={() => setSelectedPropertyInquiry(null)}
-                className="px-3.5 py-2 rounded-xl border border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 text-xs font-bold flex items-center gap-1 min-h-[40px]"
+                className="px-3.5 py-2 rounded-xl border border-lime bg-lime-soft text-ink-900 hover:bg-lime/55 text-xs font-bold flex items-center gap-1 min-h-[40px]"
               >
                 <UserCheck className="w-3.5 h-3.5" />
                 <span>Save as Buyer</span>
@@ -777,7 +777,7 @@ export const InquiriesPage: React.FC = () => {
           <Card className="w-full max-w-lg p-5 sm:p-6 space-y-4 bg-white border border-border shadow-2xl rounded-2xl text-left relative">
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-800 flex items-center justify-center font-bold text-sm">
+                <div className="w-10 h-10 rounded-full bg-lime-soft border border-lime text-brand-700 flex items-center justify-center font-bold text-sm">
                   {selectedBuyerInquiry.clientName.charAt(0)}
                 </div>
                 <div>
@@ -802,7 +802,7 @@ export const InquiriesPage: React.FC = () => {
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted">
                   Target Requirement
                 </span>
-                <span className="font-extrabold text-blue-700 font-sans">{selectedBuyerInquiry.budgetRange}</span>
+                <span className="font-extrabold text-brand-700 font-sans">{selectedBuyerInquiry.budgetRange}</span>
               </div>
               <h4 className="font-bold text-ink text-sm">{selectedBuyerInquiry.requirement}</h4>
               <p className="text-[11px] text-muted">{selectedBuyerInquiry.locality}</p>
@@ -834,8 +834,8 @@ export const InquiriesPage: React.FC = () => {
                     className={clsx(
                       'py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer border min-h-[40px]',
                       selectedBuyerInquiry.status === st
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
-                        : 'bg-surface border-border text-muted hover:text-ink'
+                        ? 'bg-ink-black text-white border-ink-black shadow-xs'
+                        : 'bg-surface border-border text-ink-700 hover:text-ink-900'
                     )}
                   >
                     {st}
@@ -848,18 +848,18 @@ export const InquiriesPage: React.FC = () => {
               <div className="flex items-center gap-2">
                 <a
                   href={`tel:${selectedBuyerInquiry.clientPhone}`}
-                  className="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
+                  className="px-3.5 py-2 rounded-xl bg-white border border-line hover:bg-lime-soft/50 text-ink-900 text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
                 >
-                  <Phone className="w-3.5 h-3.5" />
+                  <Phone className="w-3.5 h-3.5 text-brand-600" />
                   <span>Call</span>
                 </a>
                 <a
                   href={`https://wa.me/${selectedBuyerInquiry.clientPhone.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
+                  className="btn-cashfree-primary btn-shine-sweep px-3.5 py-2 rounded-[11px] text-white text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
                 >
-                  <MessageCircle className="w-3.5 h-3.5" />
+                  <MessageCircle className="w-3.5 h-3.5 text-lime" />
                   <span>WhatsApp</span>
                 </a>
               </div>
@@ -867,9 +867,9 @@ export const InquiriesPage: React.FC = () => {
               <Link
                 to="/app/buyers"
                 onClick={() => setSelectedBuyerInquiry(null)}
-                className="px-3.5 py-2 rounded-xl border border-blue-600/40 text-blue-700 hover:bg-blue-50 text-xs font-bold flex items-center gap-1 min-h-[40px]"
+                className="px-3.5 py-2 rounded-xl border border-lime bg-lime-soft text-ink-900 hover:bg-lime/55 text-xs font-bold flex items-center gap-1 min-h-[40px]"
               >
-                <Sparkles className="w-3.5 h-3.5" />
+                <Sparkles className="w-3.5 h-3.5 text-brand-700" />
                 <span>View Matches</span>
               </Link>
             </div>

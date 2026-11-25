@@ -54,7 +54,7 @@ export const AppShell: React.FC = () => {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-[radial-gradient(ellipse_85%_280px_at_50%_0%,rgba(255,255,255,0.96)_0%,rgba(1,142,69,0.055)_52%,transparent_100%)]">
         {/* Global Alert Banners */}
         {!isOnline && <Banner variant="offline" />}
         {isServerWaking && <Banner variant="server-waking" />}

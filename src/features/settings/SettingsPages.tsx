@@ -295,11 +295,11 @@ export const SettingsPage: React.FC = () => {
               className={clsx(
                 'px-3 py-2 rounded-full text-xs font-semibold whitespace-nowrap inline-flex items-center gap-1.5 border shrink-0 transition cursor-pointer',
                 isActive
-                  ? 'bg-brand-50 text-brand-700 border-brand-200'
-                  : 'bg-white text-slate-600 border-border hover:bg-slate-50'
+                  ? 'bg-ink-black text-white border-ink-black shadow-2xs'
+                  : 'bg-white text-ink-700 border-line hover:bg-lime-soft/50'
               )}
             >
-              <Icon className="w-3.5 h-3.5" />
+              <Icon className={clsx('w-3.5 h-3.5', isActive ? 'text-lime' : 'text-brand-600')} />
               <span>{item.label}</span>
             </button>
           );
@@ -309,7 +309,7 @@ export const SettingsPage: React.FC = () => {
       {/* Two-Column Desktop Settings Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 lg:gap-8 items-start">
         {/* LEFT COLUMN: Section Links + Bottom Plain Legal & Destructive Log out */}
-        <aside className="hidden lg:flex flex-col justify-between bg-white border border-border rounded-[14px] p-2.5 sticky top-20 space-y-4">
+        <aside className="hidden lg:flex flex-col justify-between bg-white border border-line rounded-[14px] p-2.5 sticky top-20 space-y-4 shadow-2xs">
           <nav className="space-y-1" aria-label="Settings sections">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -320,16 +320,16 @@ export const SettingsPage: React.FC = () => {
                   type="button"
                   onClick={() => setActiveSection(item.id)}
                   className={clsx(
-                    'w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer text-left',
+                    'w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-sm font-medium transition-colors cursor-pointer text-left',
                     isActive
-                      ? 'bg-brand-50 text-brand-700 font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-ink-black text-white font-semibold shadow-2xs'
+                      : 'text-ink-700 hover:bg-lime-soft/50 hover:text-ink-900'
                   )}
                 >
                   <Icon
                     className={clsx(
                       'w-4 h-4 shrink-0',
-                      isActive ? 'text-brand-600' : 'text-slate-400'
+                      isActive ? 'text-lime' : 'text-brand-600'
                     )}
                   />
                   <span className="truncate">{item.label}</span>

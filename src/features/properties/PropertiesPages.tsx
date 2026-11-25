@@ -329,17 +329,17 @@ export const PropertiesListPage: React.FC = () => {
       {/* ── 1. TOP HEADER SECTION ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-ink-900 to-brand-700 bg-clip-text text-transparent leading-tight">
               Properties
             </h1>
             {!isLoading && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold text-brand-700 bg-brand-50 border border-brand-200/60">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold text-lime bg-ink-black tabular-nums">
                 {properties.length}
               </span>
             )}
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5 truncate">
+          <p className="text-xs sm:text-sm text-ink-700 mt-0.5 truncate">
             Manage your listings and availability
           </p>
         </div>

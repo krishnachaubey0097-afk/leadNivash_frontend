@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Layers,
   ArrowLeft,
+  ArrowUpRight,
   RotateCcw,
   Share2,
 } from 'lucide-react';
@@ -389,13 +390,19 @@ ${agencyOrOwnerName}`;
       {/* ======================================================== */}
       {activeTool === null ? (
         <div className="space-y-5">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-ink-900 leading-tight">
-              Broker Tools
-            </h1>
-            <p className="text-xs sm:text-sm text-ink-500 mt-0.5">
-              Calculators and ready-to-use tools for everyday property deals.
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-ink-900 to-brand-700 bg-clip-text text-transparent leading-tight">
+                Broker Tools
+              </h1>
+              <p className="text-xs sm:text-sm text-ink-700 mt-0.5">
+                Calculators and ready-to-use tools for everyday property deals.
+              </p>
+            </div>
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ink-black text-white text-xs font-semibold border border-white/10 self-start sm:self-auto shrink-0 shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />
+              <span>5 Haryana &amp; Panipat Tools</span>
+            </span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -407,34 +414,37 @@ ${agencyOrOwnerName}`;
                   type="button"
                   onClick={() => handleSelectTool(tool.id)}
                   className={clsx(
-                    'rounded-[14px] border bg-white p-4 text-left transition-all duration-150 hover:-translate-y-[1.5px] lg:hover:border-lime hover:shadow-md group cursor-pointer flex items-center justify-between gap-3.5',
-                    tool.isMostUsed ? 'border-lime' : 'border-line'
+                    'rounded-[14px] border bg-white p-4 text-left transition-all duration-150 hover:-translate-y-[1.5px] lg:hover:border-ink-black/30 hover:shadow-md group cursor-pointer flex items-center justify-between gap-3.5',
+                    tool.isMostUsed ? 'border-ink-black/25 border-t-2 border-t-lime shadow-2xs' : 'border-line'
                   )}
                 >
-                  {/* 40px icon tile: brand-50 + green icon ALWAYS */}
-                  <div className="w-10 h-10 rounded-[12px] bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                  {/* 40px icon tile: lime-soft / brand-50 + green icon */}
+                  <div className="w-10 h-10 rounded-[12px] bg-lime-soft border border-lime/60 text-brand-700 group-hover:bg-ink-black group-hover:text-lime group-hover:border-ink-black flex items-center justify-center shrink-0 transition-colors">
                     <Icon className="w-5 h-5" />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
-                        <h2 className="text-base font-semibold text-ink-900 group-hover:text-brand-700 transition-colors">
+                        <h2 className="text-base font-semibold text-ink-900 group-hover:text-brand-700 transition-colors truncate">
                           {tool.label}
                         </h2>
                         {tool.isMostUsed && (
-                          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 shrink-0 whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-ink-black text-white shrink-0 whitespace-nowrap">
+                            <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />
                             Most used
                           </span>
                         )}
                       </div>
-                      {/* Whole-tile hover affordance ("Open tool" chevron appears on hover without reserving space when idle) */}
-                      <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-brand-600 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 whitespace-nowrap">
-                        <span className="hidden 2xl:inline">Open tool</span>
-                        <ChevronRight className="w-4 h-4" />
+                      {/* Always crisp Open arrow pill (never faded opacity-0 ghost text) */}
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-ink-700 group-hover:text-ink-900 shrink-0 whitespace-nowrap">
+                        <span className="hidden 2xl:inline">Open</span>
+                        <span className="w-6 h-6 rounded-[8px] bg-lime-soft border border-line text-brand-700 group-hover:bg-ink-black group-hover:text-lime group-hover:border-ink-black inline-flex items-center justify-center transition-colors">
+                          <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.2]" />
+                        </span>
                       </span>
                     </div>
-                    <p className="text-[13px] text-slate-500 mt-0.5 leading-snug">
+                    <p className="text-[13px] text-ink-500 mt-0.5 leading-snug">
                       {tool.desc}
                     </p>
                   </div>
@@ -478,11 +488,11 @@ ${agencyOrOwnerName}`;
                     className={clsx(
                       'px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer inline-flex items-center gap-1.5 shrink-0 border',
                       isSelected
-                        ? 'bg-lime text-ink-900 border-lime font-bold'
-                        : 'bg-white text-ink-700 hover:text-ink-900 border-line hover:bg-slate-50'
+                        ? 'bg-ink-black text-white border-ink-black font-bold shadow-2xs'
+                        : 'bg-white text-ink-700 hover:text-ink-900 border-line hover:bg-lime-soft/50'
                     )}
                   >
-                    <Icon className="w-3.5 h-3.5" />
+                    <Icon className={clsx('w-3.5 h-3.5', isSelected ? 'text-lime' : 'text-brand-600')} />
                     <span>{t.label}</span>
                   </button>
                 );
@@ -845,10 +855,13 @@ ${agencyOrOwnerName}`;
                       href={`https://wa.me/?text=${encodeURIComponent(emiQuoteText)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 h-9 rounded-input bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm inline-flex items-center gap-1.5 transition shadow-xs whitespace-nowrap"
+                      className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                     >
-                      <Share2 className="w-3.5 h-3.5" />
+                      <Share2 className="w-3.5 h-3.5 text-lime" />
                       <span>Share on WhatsApp</span>
+                      <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+                        <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
+                      </span>
                     </a>
                   </div>
                 </div>
@@ -1013,10 +1026,13 @@ ${agencyOrOwnerName}`;
                       href={`https://wa.me/?text=${encodeURIComponent(registryQuoteText)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 h-9 rounded-input bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm inline-flex items-center gap-1.5 transition shadow-xs whitespace-nowrap"
+                      className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                     >
-                      <Share2 className="w-3.5 h-3.5" />
+                      <Share2 className="w-3.5 h-3.5 text-lime" />
                       <span>Share on WhatsApp</span>
+                      <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+                        <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
+                      </span>
                     </a>
                   </div>
                 </div>
@@ -1178,10 +1194,13 @@ ${agencyOrOwnerName}`;
                       href={`https://wa.me/?text=${encodeURIComponent(areaQuoteText)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 h-9 rounded-input bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm inline-flex items-center gap-1.5 transition shadow-xs whitespace-nowrap"
+                      className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                     >
-                      <Share2 className="w-3.5 h-3.5" />
+                      <Share2 className="w-3.5 h-3.5 text-lime" />
                       <span>Share on WhatsApp</span>
+                      <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+                        <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
+                      </span>
                     </a>
                   </div>
                 </div>
@@ -1333,10 +1352,13 @@ ${agencyOrOwnerName}`;
                       href={`https://wa.me/?text=${encodeURIComponent(commissionQuoteText)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 h-9 rounded-input bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm inline-flex items-center gap-1.5 transition shadow-xs whitespace-nowrap"
+                      className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                     >
-                      <Share2 className="w-3.5 h-3.5" />
+                      <Share2 className="w-3.5 h-3.5 text-lime" />
                       <span>Share on WhatsApp</span>
+                      <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+                        <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
+                      </span>
                     </a>
                   </div>
                 </div>
@@ -1421,10 +1443,13 @@ ${agencyOrOwnerName}`;
                     href={`https://wa.me/?text=${encodeURIComponent(activeTemplate.text)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 h-9 rounded-input bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm inline-flex items-center gap-1.5 transition shadow-xs whitespace-nowrap"
+                    className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                   >
-                    <Share2 className="w-3.5 h-3.5" />
+                    <Share2 className="w-3.5 h-3.5 text-lime" />
                     <span>Share on WhatsApp</span>
+                    <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+                      <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
+                    </span>
                   </a>
                 </div>
               </Card>

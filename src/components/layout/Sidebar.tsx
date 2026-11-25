@@ -91,14 +91,19 @@ export const Sidebar: React.FC = () => {
   return (
     <aside
       className={clsx(
-        'hidden lg:flex flex-col h-screen sticky top-0 shrink-0 bg-ink-black text-white border-r border-white/10 select-none z-20 transition-all duration-200 relative overflow-hidden',
+        'hidden lg:flex flex-col h-screen sticky top-0 shrink-0 text-white border-r border-emerald-950/60 select-none z-20 transition-all duration-200 relative overflow-hidden',
+        'bg-[linear-gradient(168deg,#12140F_0%,#15291B_38%,#0F311E_72%,#12140F_100%)]',
         isCollapsed ? 'w-[76px] p-2.5' : 'w-[248px] p-4'
       )}
     >
-      {/* Subtle Top Ambient Radial Sheen matching Cashfree Dark Surface */}
+      {/* Subtle Top & Bottom Forest-Green + Lime Radial Sheens (10% Dark Brand Anchor) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-[radial-gradient(ellipse_at_top_left,rgba(215,247,154,0.12)_0%,rgba(1,142,69,0.08)_42%,transparent_75%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-[radial-gradient(ellipse_at_top_left,rgba(215,247,154,0.16)_0%,rgba(1,142,69,0.14)_45%,transparent_78%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-[radial-gradient(ellipse_at_bottom_right,rgba(1,142,69,0.22)_0%,rgba(215,247,154,0.06)_45%,transparent_80%)]"
       />
 
       {/* ── Brand Header ── */}
