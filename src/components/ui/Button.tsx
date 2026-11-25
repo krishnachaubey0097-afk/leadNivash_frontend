@@ -42,7 +42,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           variant === 'soft' &&
             'bg-brand-50 text-brand-700 hover:bg-brand-100 border border-brand-200/50',
           variant === 'dark' &&
-            'bg-navy text-white hover:bg-[#132D45] shadow-sm',
+            'bg-ink-black text-white hover:bg-ink-900 shadow-sm',
           // Sizes — touch targets ≥ 48px on mobile, compact on desktop
           size === 'sm' && 'min-h-[44px] sm:min-h-0 h-10 sm:h-9 px-3.5 text-sm gap-1.5',
           size === 'md' && 'min-h-[48px] sm:min-h-0 h-12 sm:h-11 px-5 text-btn gap-2',

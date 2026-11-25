@@ -22,8 +22,8 @@ export const SegmentedControl: React.FC<SegmentedControlProps> = ({ options, act
           onClick={() => onChange(opt.value)}
           className={`flex-1 whitespace-nowrap text-center text-sm font-medium py-2 px-3 rounded-[8px] transition-all duration-150 min-h-[36px] cursor-pointer ${
             opt.value === active
-              ? 'text-ink bg-white shadow-sm'
-              : 'text-muted hover:text-ink'
+              ? 'text-ink-900 bg-white shadow-sm'
+              : 'text-ink-700 hover:text-ink-900'
           }`}
         >
           {opt.label}

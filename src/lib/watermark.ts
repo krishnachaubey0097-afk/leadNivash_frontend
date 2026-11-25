@@ -72,8 +72,8 @@ export const applyWatermarkToImage = (
           ctx.fillStyle = grad;
           ctx.fillRect(0, y - 20, width, bannerHeight + 20);
 
-          // Top emerald accent line on banner
-          ctx.fillStyle = '#00875A';
+          // Top brand accent line on banner
+          ctx.fillStyle = '#018E45';
           ctx.fillRect(0, y - 2, width, 4);
 
           // Text metrics

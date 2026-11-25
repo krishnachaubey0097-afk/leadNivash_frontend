@@ -28,10 +28,10 @@ export const PricingPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-5xl mx-auto space-y-6 text-left">
+    <div className="min-h-screen bg-cream text-ink-700 p-4 sm:p-6 max-w-5xl mx-auto space-y-6 text-left">
       <Link
         to="/"
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 dark:text-emerald-400 hover:underline"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>

@@ -44,7 +44,7 @@ export const Badge: React.FC<BadgeProps> = ({
         variant === 'perfect' && 'bg-brand-50 text-brand-700 font-bold',
         variant === 'good' && 'bg-info-bg text-info',
         variant === 'stretch' && 'bg-warn-bg text-warn',
-        variant === 'neutral' && 'bg-surface-hover text-muted',
+        variant === 'neutral' && 'bg-surface-hover text-ink-700',
         className
       )}
     >

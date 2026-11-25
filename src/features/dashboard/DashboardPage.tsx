@@ -405,7 +405,7 @@ export const DashboardPage: React.FC = () => {
           <h1 className="text-[22px] font-bold text-slate-900 leading-tight">
             Dashboard
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-ink-700 dark:text-slate-400 mt-0.5">
             {greeting}, {firstName} · {agencyName}, {territory}
           </p>
         </div>

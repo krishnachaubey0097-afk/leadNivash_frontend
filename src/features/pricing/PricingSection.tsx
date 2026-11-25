@@ -34,8 +34,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
   };
 
   const whatsappMonthlyUrl = `https://wa.me/918570089497?text=${encodeURIComponent(
-    `Hello LeadNivash, I want to subscribe to the Monthly Plan (₹399/month). My registered account is: ${
-      user?.phone || user?.email || 'New Broker'
+    `Hello LeadNivash, I want to subscribe to the Monthly Plan (₹399/month). My registered account is: ${user?.phone || user?.email || 'New Broker'
     }.`
   )}`;
 
@@ -62,41 +61,42 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
       {/* ========================================================================= */}
       {/* 2. STRATEGIC SPECIAL UPGRADE OFFER BANNER FOR FREE TRIAL USERS           */}
       {/* ========================================================================= */}
-      <div className="rounded-3xl p-5 sm:p-6 bg-gradient-to-br from-white via-emerald-50/50 to-teal-50/40 dark:from-slate-900 dark:via-emerald-950/20 dark:to-slate-900 border-2 border-emerald-500/30 shadow-md relative overflow-hidden">
-        {/* Ambient Top Glow Line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-600 via-teal-400 to-emerald-500" />
+      <div className="rounded-[20px] p-5 sm:p-6 bg-surface dark:bg-slate-900 border border-line dark:border-slate-800 shadow-md relative overflow-hidden">
+        {/* Top Accent Line */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-ink-black" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 relative z-10">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-[11px] font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lime text-ink-black text-[11px] font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-ink-black shrink-0" />
               <span>Special Free Trial Upgrade Offer</span>
             </div>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-black text-ink font-heading tracking-tight">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-black text-ink-900 font-heading tracking-tight">
               Upgrade to the Yearly Plan for{' '}
-              <span className="text-emerald-700 dark:text-emerald-400 font-black">₹3,299</span>{' '}
-              <span className="line-through text-muted text-base font-normal">₹3,999</span>{' '}
-              <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/80 px-2 py-0.5 rounded-md ml-1 border border-emerald-300/80">
+              <span className="text-brand-700 font-black">₹3,299</span>{' '}
+              <span className="line-through text-ink-500 text-base font-normal">₹3,999</span>{' '}
+              <span className="text-xs font-bold text-ink-black bg-lime px-2 py-0.5 rounded-md ml-1">
                 Save ₹700
               </span>
             </h3>
-            <p className="text-xs sm:text-sm text-muted leading-relaxed">
+            <p className="text-xs sm:text-sm text-ink-700 leading-relaxed">
               Available exclusively to brokers during their <strong>14-Day Free Trial</strong>. Lock in unlimited property listings,
               instant WhatsApp AI parsing, and priority verified badges for an entire year.
             </p>
           </div>
 
-          {/* Animated Glowing Upgrade Button */}
+          {/* Primary Landing Offer Button (--ink-black fill + white text + small --lime arrow chip) */}
           <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <button
               type="button"
               onClick={handleOpenSpecialOffer}
-              className="px-6 py-3.5 rounded-input bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-sm flex items-center justify-center gap-2 cursor-pointer transition min-h-[46px] whitespace-nowrap"
+              className="group pl-5 pr-2.5 py-2.5 rounded-[18px] bg-ink-black hover:bg-ink-900 text-white font-semibold text-sm shadow-sm flex items-center justify-center gap-3 cursor-pointer transition min-h-[48px] whitespace-nowrap"
               title="Claim Free Trial Special Offer"
             >
-              <Crown className="w-4 h-4" />
               <span>Claim Offer: ₹3,299/yr</span>
-              <ArrowRight className="w-4 h-4" />
+              <span className="w-7 h-7 rounded-[10px] bg-lime text-ink-black flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5">
+                <ArrowRight className="w-4 h-4" />
+              </span>
             </button>
           </div>
         </div>
@@ -105,7 +105,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
       {/* ========================================================================= */}
       {/* 3. MOBILE SEGMENTED CONTROL TABS (Responsive View Switcher)                */}
       {/* ========================================================================= */}
-      <div className="flex lg:hidden items-center justify-center p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-[#E5E9EE] dark:border-slate-700 max-w-md mx-auto">
+      <div className="flex lg:hidden items-center justify-center p-1 bg-surface dark:bg-slate-800 rounded-[16px] border border-line dark:border-slate-700 max-w-md mx-auto">
         <button
           type="button"
           onClick={() => setMobileTab('all')}
@@ -164,7 +164,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
         {/* PLAN 1: FREE TRIAL PLAN (₹0 / 14 DAYS)                   */}
         {/* ======================================================== */}
         {(mobileTab === 'all' || mobileTab === 'trial') && (
-          <div className="rounded-3xl bg-white dark:bg-slate-900 border border-[#E5E9EE] dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between text-left shadow-xs hover:border-emerald-500/40 hover:shadow-md transition-all duration-300">
+          <div className="rounded-[20px] bg-surface dark:bg-slate-900 border border-line dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between text-left shadow-xs hover:border-ink-black/30 hover:shadow-md transition-all duration-300">
             <div className="space-y-5">
               {/* Header & Badge */}
               <div className="flex items-center justify-between">
@@ -263,7 +263,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
         {/* PLAN 2: MONTHLY PLAN (₹399 / MONTH)                      */}
         {/* ======================================================== */}
         {(mobileTab === 'all' || mobileTab === 'monthly') && (
-          <div className="rounded-3xl bg-white dark:bg-slate-900 border border-[#E5E9EE] dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between text-left shadow-xs hover:border-emerald-500/40 hover:shadow-md transition-all duration-300">
+          <div className="rounded-[20px] bg-surface dark:bg-slate-900 border border-line dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between text-left shadow-xs hover:border-ink-black/30 hover:shadow-md transition-all duration-300">
             <div className="space-y-5">
               {/* Header & Badge */}
               <div className="flex items-center justify-between">
@@ -328,7 +328,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 rel="noopener noreferrer"
                 className="block"
               >
-                <Button pill className="w-full text-xs font-bold py-3 bg-slate-900 hover:bg-slate-800 text-white min-h-[44px]">
+                <Button className="w-full text-xs font-bold py-3 rounded-[16px] bg-ink-black hover:bg-ink-900 text-white min-h-[44px]">
                   <span>Get Monthly Plan — ₹399/mo</span>
                   <ArrowRight className="w-3.5 h-3.5 ml-1" />
                 </Button>
@@ -344,24 +344,24 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
         {/* PLAN 3: YEARLY PLAN (₹3,999 OR SPECIAL ₹3,299 TRIAL DEAL) */}
         {/* ======================================================== */}
         {(mobileTab === 'all' || mobileTab === 'yearly') && (
-          <div className="rounded-3xl bg-gradient-to-br from-white via-white to-emerald-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border-2 border-emerald-600 shadow-xl shadow-emerald-500/10 p-6 sm:p-7 flex flex-col justify-between text-left relative transition-all duration-300">
+          <div className="rounded-[20px] bg-surface dark:bg-slate-900 border-2 border-ink-black shadow-xl p-6 sm:p-7 flex flex-col justify-between text-left relative transition-all duration-300">
             {/* Top Ribbon Badge */}
             <div className="space-y-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white flex items-center justify-center font-bold shadow-xs">
-                    <Crown className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center font-bold shadow-2xs">
+                    <Crown className="w-5 h-5 text-brand-700" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-ink font-heading flex items-center gap-1.5">
+                    <h3 className="text-base font-bold text-ink-900 font-heading flex items-center gap-1.5">
                       <span>Yearly Plan</span>
                     </h3>
-                    <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold block">
+                    <span className="text-[11px] text-brand-700 font-semibold block">
                       Annual Pass · Best Value
                     </span>
                   </div>
                 </div>
-                <span className="px-2.5 py-1 rounded-full bg-emerald-700 text-white text-[10px] font-black uppercase tracking-wider shadow-2xs">
+                <span className="px-2.5 py-1 rounded-full bg-lime text-ink-black text-[10px] font-black uppercase tracking-wider shadow-2xs">
                   MOST POPULAR
                 </span>
               </div>
@@ -371,14 +371,14 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 {isTrialOfferActive ? (
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-black text-emerald-700 dark:text-emerald-400 font-heading tracking-tight">
+                      <span className="text-4xl font-black text-ink-900 font-heading tracking-tight">
                         ₹3,299
                       </span>
-                      <span className="line-through text-muted text-base font-semibold">₹3,999</span>
-                      <span className="text-xs font-bold text-muted">/ Year</span>
+                      <span className="line-through text-ink-500 text-base font-semibold">₹3,999</span>
+                      <span className="text-xs font-bold text-ink-500">/ Year</span>
                     </div>
-                    <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5EE] dark:bg-emerald-950/60 border border-emerald-500/25 text-[#017A3C] dark:text-emerald-300 text-[11px] font-bold shadow-2xs">
-                      <Sparkles className="w-3.5 h-3.5 text-[#018E45] shrink-0" />
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lime-soft border border-line text-ink-900 text-[11px] font-bold shadow-2xs">
+                      <Sparkles className="w-3.5 h-3.5 text-brand-700 shrink-0" />
                       <span>Special Trial Offer · Save ₹700 Instantly</span>
                     </div>
                   </div>
@@ -423,23 +423,27 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               </div>
             </div>
 
-            {/* CTA Button (solid crisp emerald, no glow) */}
+            {/* CTA Button (--ink-black fill + white text + small --lime arrow chip) */}
             <div className="pt-6 space-y-2">
               <button
                 type="button"
                 onClick={handleOpenSpecialOffer}
-                className="w-full py-3.5 px-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs tracking-wide shadow-sm flex items-center justify-center gap-2 cursor-pointer transition min-h-[46px] whitespace-nowrap"
+                className="group w-full py-2.5 pl-4 pr-2.5 rounded-[16px] bg-ink-black hover:bg-ink-900 text-white font-bold text-xs tracking-wide shadow-sm flex items-center justify-between gap-2 cursor-pointer transition min-h-[48px] whitespace-nowrap"
               >
-                <Crown className="w-4 h-4 shrink-0" />
-                <span>
-                  {isTrialOfferActive
-                    ? 'Claim Trial Offer — ₹3,299/yr'
-                    : 'Upgrade to Yearly Pass — ₹3,999'}
+                <span className="flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-lime shrink-0" />
+                  <span>
+                    {isTrialOfferActive
+                      ? 'Claim Trial Offer — ₹3,299/yr'
+                      : 'Upgrade to Yearly Pass — ₹3,999'}
+                  </span>
                 </span>
-                <ArrowRight className="w-4 h-4 shrink-0" />
+                <span className="w-7 h-7 rounded-[10px] bg-lime text-ink-black flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5">
+                  <ArrowRight className="w-4 h-4 shrink-0" />
+                </span>
               </button>
-              <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted text-center">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <div className="flex items-center justify-center gap-1.5 text-[10px] text-ink-500 text-center">
+                <ShieldCheck className="w-3.5 h-3.5 text-brand-700 shrink-0" />
                 <span>7-Day 100% Money-Back Guarantee · Cancel anytime</span>
               </div>
             </div>
@@ -450,7 +454,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
       {/* ========================================================================= */}
       {/* 5. TRUST FOOTER & FAQ CALLOUT                                             */}
       {/* ========================================================================= */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-[#E5E9EE] dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-2xs">
+      <div className="p-4 sm:p-5 rounded-[20px] bg-surface dark:bg-slate-900 border border-line dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-2xs">
         <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-300">
           <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>

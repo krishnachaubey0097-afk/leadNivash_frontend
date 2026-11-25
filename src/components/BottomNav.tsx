@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 export const BottomNav: React.FC = () => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[#0E1522] border-t border-slate-200 dark:border-slate-800 pb-safe shadow-lg">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface dark:bg-[var(--surface)] border-t border-line dark:border-slate-800 pb-safe shadow-lg">
       <div className="max-w-md mx-auto px-3 h-16 flex items-center justify-between relative">
         {/* Today */}
         <NavLink
@@ -53,7 +53,7 @@ export const BottomNav: React.FC = () => {
             to="/app/paste"
             className={({ isActive }) =>
               clsx(
-                'w-14 h-14 rounded-full flex flex-col items-center justify-center shadow-lg transition-transform active:scale-95 border-4 border-slate-50 dark:border-[#0B0F17]',
+                'w-14 h-14 rounded-full flex flex-col items-center justify-center shadow-lg transition-transform active:scale-95 border-4 border-bg dark:border-[var(--bg)]',
                 isActive
                   ? 'bg-primary text-white ring-4 ring-primary/30'
                   : 'bg-primary hover:bg-primary-focus text-white'

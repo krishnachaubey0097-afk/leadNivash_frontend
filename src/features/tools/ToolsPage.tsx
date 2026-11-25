@@ -63,7 +63,7 @@ const SplitDonut: React.FC<{
           cy="34"
           r={r}
           fill="none"
-          stroke="#E2E8F0"
+          stroke="var(--line)"
           strokeWidth="8"
         />
         <circle
@@ -71,7 +71,7 @@ const SplitDonut: React.FC<{
           cy="34"
           r={r}
           fill="none"
-          stroke="#00875A"
+          stroke="var(--brand-600)"
           strokeWidth="8"
           strokeDasharray={`${dash} ${c}`}
           strokeLinecap="round"

@@ -95,10 +95,10 @@ export const Sidebar: React.FC = () => {
           </div>
           {!isCollapsed && (
             <div className="truncate">
-              <span className="text-base font-bold text-navy dark:text-white leading-none tracking-tight block">
+              <span className="text-base font-bold text-ink-900 dark:text-white leading-none tracking-tight block">
                 {BRAND_NAME}
               </span>
-              <span className="text-meta text-muted block mt-0.5 font-normal">
+              <span className="text-meta text-ink-700 dark:text-slate-400 block mt-0.5 font-normal">
                 Broker OS
               </span>
             </div>
@@ -124,7 +124,7 @@ export const Sidebar: React.FC = () => {
                     : 'gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium',
                   isActive
                     ? 'bg-brand-50 text-brand-700 shadow-2xs font-semibold'
-                    : 'text-muted hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-ink'
+                    : 'text-ink-700 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-ink-900'
                 )
               }
             >
@@ -133,7 +133,7 @@ export const Sidebar: React.FC = () => {
                   <Icon
                     className={clsx(
                       'w-5 h-5 shrink-0',
-                      isActive ? 'text-brand-600' : 'text-muted'
+                      isActive ? 'text-brand-700' : 'text-ink-700 dark:text-slate-400'
                     )}
                     strokeWidth={isActive ? 2.2 : 1.8}
                   />
@@ -195,7 +195,7 @@ export const Sidebar: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsSpecialOfferOpen(true)}
-              className="w-full mt-1.5 py-1.5 px-3 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold whitespace-nowrap truncate transition-colors duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1"
+              className="w-full mt-1.5 py-1.5 px-3 rounded-lg bg-brand-700 hover:bg-brand-800 text-white text-xs font-semibold whitespace-nowrap truncate transition-colors duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-700 focus:ring-offset-1"
             >
               Upgrade
             </button>
@@ -233,14 +233,14 @@ export const Sidebar: React.FC = () => {
                 <p className="text-secondary font-medium text-ink truncate capitalize">
                   {user?.name || 'Partner broker'}
                 </p>
-                <div className="flex items-center gap-1.5 text-meta text-muted">
+                <div className="flex items-center gap-1.5 text-meta text-ink-700 dark:text-slate-400">
                   <Link
                     to="/app/settings"
-                    className="hover:text-ink hover:underline text-[11px]"
+                    className="hover:text-ink-900 hover:underline text-[11px]"
                   >
                     Settings
                   </Link>
-                  <span className="text-muted/40">·</span>
+                  <span className="text-ink-500">·</span>
                   <button
                     type="button"
                     onClick={logout}
