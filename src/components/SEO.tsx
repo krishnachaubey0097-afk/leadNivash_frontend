@@ -6,7 +6,7 @@ export const SITE_URL = 'https://lead-nivash-frontend.vercel.app';
 export const DEFAULT_TITLE = 'LeadNivash | Turn Messages into Property Deals';
 export const DEFAULT_DESCRIPTION =
   'AI-powered WhatsApp real estate broker OS for property listings, buyer matching, Pan-India stamp duty calculators, and deal closing across India.';
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/hero-bg.jpg`;
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 export interface SEOProps {
   title?: string;

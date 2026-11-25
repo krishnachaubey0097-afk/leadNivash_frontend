@@ -1,29 +1,26 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/logo-icon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#018E45" />
-    <meta name="robots" content="index, follow" data-static-seo="true" />
-    <meta
-      name="description"
-      content="AI-powered WhatsApp real estate broker OS for property listings, buyer matching, Pan-India stamp duty calculators, and deal closing across India."
-      data-static-seo="true"
-    />
-    <meta
-      name="keywords"
-      content="real estate broker CRM, property matching software, Pan-India stamp duty calculator, WhatsApp property parser, LeadNivash, broker operating system"
-      data-static-seo="true"
-    />
-    <link rel="canonical" href="https://lead-nivash-frontend.vercel.app/" data-static-seo="true" />
 
-    <!--
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/logo-icon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#018E45" />
+  <meta name="robots" content="index, follow" data-static-seo="true" />
+  <meta name="description"
+    content="AI-powered WhatsApp real estate broker OS for property listings, buyer matching, Pan-India stamp duty calculators, and deal closing across India."
+    data-static-seo="true" />
+  <meta name="keywords"
+    content="real estate broker CRM, property matching software, Pan-India stamp duty calculator, WhatsApp property parser, LeadNivash, broker operating system"
+    data-static-seo="true" />
+  <link rel="canonical" href="https://lead-nivash-frontend.vercel.app/" data-static-seo="true" />
+
+  <!--
       SPA SEO NOTE:
       LeadNivash is a React + Vite client-side SPA. Per-route <title>, meta description,
-      canonical links, and JSON-LD structured data are injected dynamically via react-helmet-async.
-      Non-JS social crawlers (WhatsApp, LinkedIn, Twitter/X, Facebook) read the static fallback
-      Open Graph & Twitter Card tags below unless SSR or edge pre-rendering is enabled later.
+      canonical links, and JSON-LD structured data are injected dynamically via react-helmet-async,
+      and social link crawlers (WhatsApp, LinkedIn, Twitter/X, Facebook) receive per-route/flyer
+      Open Graph tags via /api/seo-meta while falling back to the static tags below.
     -->
 
     <!-- Open Graph / Facebook / WhatsApp -->
@@ -37,7 +34,7 @@
       content="AI-powered WhatsApp real estate broker OS for property listings, buyer matching, Pan-India stamp duty calculators, and deal closing across India."
       data-static-seo="true"
     />
-    <meta property="og:image" content="https://lead-nivash-frontend.vercel.app/hero-bg.jpg" data-static-seo="true" />
+    <meta property="og:image" content="https://lead-nivash-frontend.vercel.app/og-image.png" data-static-seo="true" />
     <meta property="og:image:width" content="1200" data-static-seo="true" />
     <meta property="og:image:height" content="630" data-static-seo="true" />
     <meta property="og:image:alt" content="LeadNivash | Turn Messages into Property Deals" data-static-seo="true" />
@@ -51,24 +48,25 @@
       content="AI-powered WhatsApp real estate broker OS for property listings, buyer matching, Pan-India stamp duty calculators, and deal closing across India."
       data-static-seo="true"
     />
-    <meta name="twitter:image" content="https://lead-nivash-frontend.vercel.app/hero-bg.jpg" data-static-seo="true" />
+    <meta name="twitter:image" content="https://lead-nivash-frontend.vercel.app/og-image.png" data-static-seo="true" />
 
-    <title data-static-seo="true">LeadNivash | Turn Messages into Property Deals</title>
+  <title data-static-seo="true">LeadNivash | Turn Messages into Property Deals</title>
 
-    <!-- Google Fonts: Plus Jakarta Sans & Inter with font-display: swap -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Google Fonts: Plus Jakarta Sans & Inter with font-display: swap -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet" />
 
-    <!-- Zero-FOUC external script (no inline code for strict CSP) -->
-    <script src="/theme-init.js"></script>
-  </head>
-  <body class="bg-[var(--bg)] text-[var(--text)] antialiased selection:bg-brand-50 selection:text-brand-700">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <!-- Zero-FOUC external script (no inline code for strict CSP) -->
+  <script src="/theme-init.js"></script>
+</head>
+
+<body class="bg-[var(--bg)] text-[var(--text)] antialiased selection:bg-brand-50 selection:text-brand-700">
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
