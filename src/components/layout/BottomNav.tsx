@@ -13,7 +13,7 @@ const navItems = [
 
 export const BottomNav: React.FC = () => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[var(--surface)] border-t border-border pb-safe lg:hidden select-none">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border pb-safe lg:hidden select-none">
       <div className="max-w-md mx-auto px-2 h-16 flex items-stretch justify-around">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -27,7 +27,7 @@ export const BottomNav: React.FC = () => {
                   'flex flex-col items-center justify-center flex-1 py-1.5 min-h-[48px] min-w-[48px] text-[11px] font-medium transition-colors duration-150 relative gap-0.5',
                   isActive
                     ? 'text-brand-700 font-semibold'
-                    : 'text-ink-700 dark:text-slate-400 hover:text-ink-900'
+                    : 'text-ink-700 hover:text-ink-900'
                 )
               }
             >

@@ -246,7 +246,7 @@ export const InquiriesPage: React.FC = () => {
       </div>
 
       {/* ── 2. CLEAN 2-TAB SEGMENTED CONTROL ── */}
-      <div className="grid grid-cols-2 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-border/70 text-xs">
+      <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-2xl border border-border/70 text-xs">
         <button
           type="button"
           onClick={() => {
@@ -267,7 +267,7 @@ export const InquiriesPage: React.FC = () => {
               'px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none shrink-0',
               activeTab === 'property'
                 ? 'bg-white/80 text-ink-900'
-                : 'bg-slate-200 dark:bg-slate-700 text-ink-700'
+                : 'bg-slate-200 text-ink-700'
             )}
           >
             {propertyInquiries.length}
@@ -294,7 +294,7 @@ export const InquiriesPage: React.FC = () => {
               'px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none shrink-0',
               activeTab === 'buyer'
                 ? 'bg-white/80 text-ink-900'
-                : 'bg-slate-200 dark:bg-slate-700 text-ink-700'
+                : 'bg-slate-200 text-ink-700'
             )}
           >
             {buyerInquiries.length}
@@ -365,8 +365,8 @@ export const InquiriesPage: React.FC = () => {
             </div>
           ) : filteredPropertyInquiries.length === 0 ? (
             /* POLISHED EMPTY STATE */
-            <Card className="p-8 sm:p-10 text-center space-y-4 rounded-2xl border-border bg-white dark:bg-slate-900 shadow-xs">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-500/20 flex items-center justify-center mx-auto shadow-2xs">
+            <Card className="p-8 sm:p-10 text-center space-y-4 rounded-2xl border-border bg-white shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-500/20 flex items-center justify-center mx-auto shadow-2xs">
                 <Building2 className="w-6 h-6 stroke-[2]" />
               </div>
 
@@ -409,12 +409,12 @@ export const InquiriesPage: React.FC = () => {
               return (
                 <Card
                   key={inq.id}
-                  className="p-4 sm:p-5 space-y-3.5 border-border bg-white dark:bg-slate-900 shadow-xs rounded-2xl hover:border-emerald-600/30 transition text-left"
+                  className="p-4 sm:p-5 space-y-3.5 border-border bg-white shadow-xs rounded-2xl hover:border-emerald-600/30 transition text-left"
                 >
                   {/* Client Info Header */}
                   <div className="flex items-start justify-between gap-2.5 pb-2.5 border-b border-border">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 font-bold text-sm flex items-center justify-center shrink-0 border border-emerald-500/20">
+                      <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-800 font-bold text-sm flex items-center justify-center shrink-0 border border-emerald-500/20">
                         {inq.clientName.charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0">
@@ -434,8 +434,8 @@ export const InquiriesPage: React.FC = () => {
                           inq.status === 'new'
                             ? 'bg-ink-black text-white border border-ink-black'
                             : inq.status === 'contacted'
-                            ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200'
-                            : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                         )}
                       >
                         {inq.status === 'new' && <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />}
@@ -454,7 +454,7 @@ export const InquiriesPage: React.FC = () => {
                   </div>
 
                   {/* Property Inquired Strip */}
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border flex items-center justify-between gap-2 text-xs">
+                  <div className="p-3 rounded-xl bg-slate-50 border border-border flex items-center justify-between gap-2 text-xs">
                     <div className="min-w-0 flex-1">
                       <span className="font-bold text-ink text-xs sm:text-sm block truncate">
                         {inq.propertyTitle}
@@ -467,7 +467,7 @@ export const InquiriesPage: React.FC = () => {
 
                     <div className="text-right shrink-0">
                       <span className="text-[10px] uppercase font-bold text-muted block">Asking</span>
-                      <span className="font-black text-emerald-700 dark:text-emerald-400 font-sans">
+                      <span className="font-black text-emerald-700 font-sans">
                         {inq.demand}
                       </span>
                     </div>
@@ -475,7 +475,7 @@ export const InquiriesPage: React.FC = () => {
 
                   {/* Client Note / Message */}
                   {inq.message && (
-                    <div className="text-xs text-slate-700 dark:text-slate-300 p-2.5 rounded-xl bg-surface border border-border leading-relaxed flex items-start gap-2">
+                    <div className="text-xs text-slate-700 p-2.5 rounded-xl bg-surface border border-border leading-relaxed flex items-start gap-2">
                       <MessageSquare className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
                       <span className="italic">"{inq.message}"</span>
                     </div>
@@ -496,7 +496,7 @@ export const InquiriesPage: React.FC = () => {
 
                       <a
                         href={`tel:${inq.clientPhone}`}
-                        className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-ink text-xs font-bold flex items-center gap-1.5 transition min-h-[40px]"
+                        className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-slate-100 text-ink text-xs font-bold flex items-center gap-1.5 transition min-h-[40px]"
                       >
                         <Phone className="w-3.5 h-3.5" />
                         <span>Call</span>
@@ -505,7 +505,7 @@ export const InquiriesPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setSelectedPropertyInquiry(inq)}
-                        className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-muted hover:text-ink text-xs font-semibold flex items-center gap-1 transition min-h-[40px]"
+                        className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-slate-100 text-muted hover:text-ink text-xs font-semibold flex items-center gap-1 transition min-h-[40px]"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>Details</span>
@@ -517,7 +517,7 @@ export const InquiriesPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => markPropertyStatus(inq.id, 'converted')}
-                          className="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline px-2 py-1 cursor-pointer flex items-center gap-1"
+                          className="text-xs font-bold text-emerald-700 hover:underline px-2 py-1 cursor-pointer flex items-center gap-1"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Convert to Buyer</span>
@@ -537,8 +537,8 @@ export const InquiriesPage: React.FC = () => {
         <div className="space-y-3">
           {filteredBuyerInquiries.length === 0 ? (
             /* POLISHED EMPTY STATE */
-            <Card className="p-8 sm:p-10 text-center space-y-4 rounded-2xl border-border bg-white dark:bg-slate-900 shadow-xs">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-500/20 flex items-center justify-center mx-auto shadow-2xs">
+            <Card className="p-8 sm:p-10 text-center space-y-4 rounded-2xl border-border bg-white shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-500/20 flex items-center justify-center mx-auto shadow-2xs">
                 <Users className="w-6 h-6 stroke-[2]" />
               </div>
 
@@ -581,11 +581,11 @@ export const InquiriesPage: React.FC = () => {
               return (
                 <Card
                   key={bInq.id}
-                  className="p-4 sm:p-5 space-y-3.5 border-border bg-white dark:bg-slate-900 shadow-xs rounded-2xl hover:border-emerald-600/30 transition text-left"
+                  className="p-4 sm:p-5 space-y-3.5 border-border bg-white shadow-xs rounded-2xl hover:border-emerald-600/30 transition text-left"
                 >
                   <div className="flex items-start justify-between gap-2.5 pb-2.5 border-b border-border">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 font-bold text-sm flex items-center justify-center shrink-0 border border-blue-500/20">
+                      <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-800 font-bold text-sm flex items-center justify-center shrink-0 border border-blue-500/20">
                         {bInq.clientName.charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0">
@@ -603,8 +603,8 @@ export const InquiriesPage: React.FC = () => {
                         className={clsx(
                           'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
                           bInq.urgency === 'Immediate'
-                            ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border border-rose-200'
-                            : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200'
+                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                            : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                         )}
                       >
                         {bInq.urgency}
@@ -621,7 +621,7 @@ export const InquiriesPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border flex items-center justify-between gap-2 text-xs">
+                  <div className="p-3 rounded-xl bg-slate-50 border border-border flex items-center justify-between gap-2 text-xs">
                     <div className="min-w-0 flex-1">
                       <span className="font-bold text-ink text-xs sm:text-sm block truncate">
                         {bInq.requirement}
@@ -634,14 +634,14 @@ export const InquiriesPage: React.FC = () => {
 
                     <div className="text-right shrink-0">
                       <span className="text-[10px] uppercase font-bold text-muted block">Budget</span>
-                      <span className="font-black text-blue-700 dark:text-blue-400 font-sans">
+                      <span className="font-black text-blue-700 font-sans">
                         {bInq.budgetRange}
                       </span>
                     </div>
                   </div>
 
                   {bInq.message && (
-                    <div className="text-xs text-slate-700 dark:text-slate-300 p-2.5 rounded-xl bg-surface border border-border leading-relaxed flex items-start gap-2">
+                    <div className="text-xs text-slate-700 p-2.5 rounded-xl bg-surface border border-border leading-relaxed flex items-start gap-2">
                       <MessageSquare className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
                       <span className="italic">"{bInq.message}"</span>
                     </div>
@@ -661,7 +661,7 @@ export const InquiriesPage: React.FC = () => {
 
                       <a
                         href={`tel:${bInq.clientPhone}`}
-                        className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-ink text-xs font-bold flex items-center gap-1.5 transition min-h-[40px]"
+                        className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-slate-100 text-ink text-xs font-bold flex items-center gap-1.5 transition min-h-[40px]"
                       >
                         <Phone className="w-3.5 h-3.5" />
                         <span>Call</span>
@@ -670,7 +670,7 @@ export const InquiriesPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setSelectedBuyerInquiry(bInq)}
-                        className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-muted hover:text-ink text-xs font-semibold flex items-center gap-1 transition min-h-[40px]"
+                        className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-slate-100 text-muted hover:text-ink text-xs font-semibold flex items-center gap-1 transition min-h-[40px]"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>Details</span>
@@ -679,7 +679,7 @@ export const InquiriesPage: React.FC = () => {
 
                     <Link
                       to="/app/buyers"
-                      className="text-xs font-bold text-brand-700 dark:text-brand-400 hover:underline px-2 py-1 flex items-center gap-1"
+                      className="text-xs font-bold text-brand-700 hover:underline px-2 py-1 flex items-center gap-1"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
                       <span>Check Matches</span>
@@ -695,10 +695,10 @@ export const InquiriesPage: React.FC = () => {
       {/* ── PROPERTY INQUIRY DETAILS MODAL ── */}
       {selectedPropertyInquiry && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
-          <Card className="w-full max-w-lg p-5 sm:p-6 space-y-4 bg-white dark:bg-slate-900 border border-border shadow-2xl rounded-2xl text-left relative">
+          <Card className="w-full max-w-lg p-5 sm:p-6 space-y-4 bg-white border border-border shadow-2xl rounded-2xl text-left relative">
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center justify-center font-bold text-sm">
+                <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold text-sm">
                   {selectedPropertyInquiry.clientName.charAt(0)}
                 </div>
                 <div>
@@ -712,18 +712,18 @@ export const InquiriesPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedPropertyInquiry(null)}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-ink hover:bg-slate-100 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border space-y-1 text-xs">
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-border space-y-1 text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted">
                   Inquired Property
                 </span>
-                <span className="font-extrabold text-emerald-700 dark:text-emerald-400 font-sans">{selectedPropertyInquiry.demand}</span>
+                <span className="font-extrabold text-emerald-700 font-sans">{selectedPropertyInquiry.demand}</span>
               </div>
               <h4 className="font-bold text-ink text-sm">{selectedPropertyInquiry.propertyTitle}</h4>
               <p className="text-[11px] text-muted">{selectedPropertyInquiry.locality}</p>
@@ -742,7 +742,7 @@ export const InquiriesPage: React.FC = () => {
               <div className="flex items-center gap-2">
                 <a
                   href={`tel:${selectedPropertyInquiry.clientPhone}`}
-                  className="px-3.5 py-2 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
+                  className="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
                 >
                   <Phone className="w-3.5 h-3.5" />
                   <span>Call</span>
@@ -761,7 +761,7 @@ export const InquiriesPage: React.FC = () => {
               <Link
                 to="/app/buyers/new"
                 onClick={() => setSelectedPropertyInquiry(null)}
-                className="px-3.5 py-2 rounded-xl border border-emerald-600/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 text-xs font-bold flex items-center gap-1 min-h-[40px]"
+                className="px-3.5 py-2 rounded-xl border border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 text-xs font-bold flex items-center gap-1 min-h-[40px]"
               >
                 <UserCheck className="w-3.5 h-3.5" />
                 <span>Save as Buyer</span>
@@ -774,10 +774,10 @@ export const InquiriesPage: React.FC = () => {
       {/* ── BUYER INQUIRY DETAILS MODAL ── */}
       {selectedBuyerInquiry && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
-          <Card className="w-full max-w-lg p-5 sm:p-6 space-y-4 bg-white dark:bg-slate-900 border border-border shadow-2xl rounded-2xl text-left relative">
+          <Card className="w-full max-w-lg p-5 sm:p-6 space-y-4 bg-white border border-border shadow-2xl rounded-2xl text-left relative">
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 flex items-center justify-center font-bold text-sm">
+                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-800 flex items-center justify-center font-bold text-sm">
                   {selectedBuyerInquiry.clientName.charAt(0)}
                 </div>
                 <div>
@@ -791,18 +791,18 @@ export const InquiriesPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedBuyerInquiry(null)}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-ink hover:bg-slate-100 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border space-y-1 text-xs">
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-border space-y-1 text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted">
                   Target Requirement
                 </span>
-                <span className="font-extrabold text-blue-700 dark:text-blue-400 font-sans">{selectedBuyerInquiry.budgetRange}</span>
+                <span className="font-extrabold text-blue-700 font-sans">{selectedBuyerInquiry.budgetRange}</span>
               </div>
               <h4 className="font-bold text-ink text-sm">{selectedBuyerInquiry.requirement}</h4>
               <p className="text-[11px] text-muted">{selectedBuyerInquiry.locality}</p>
@@ -848,7 +848,7 @@ export const InquiriesPage: React.FC = () => {
               <div className="flex items-center gap-2">
                 <a
                   href={`tel:${selectedBuyerInquiry.clientPhone}`}
-                  className="px-3.5 py-2 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
+                  className="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold flex items-center gap-1.5 min-h-[40px]"
                 >
                   <Phone className="w-3.5 h-3.5" />
                   <span>Call</span>
@@ -867,7 +867,7 @@ export const InquiriesPage: React.FC = () => {
               <Link
                 to="/app/buyers"
                 onClick={() => setSelectedBuyerInquiry(null)}
-                className="px-3.5 py-2 rounded-xl border border-blue-600/40 text-blue-700 dark:text-blue-400 hover:bg-blue-50 text-xs font-bold flex items-center gap-1 min-h-[40px]"
+                className="px-3.5 py-2 rounded-xl border border-blue-600/40 text-blue-700 hover:bg-blue-50 text-xs font-bold flex items-center gap-1 min-h-[40px]"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>View Matches</span>

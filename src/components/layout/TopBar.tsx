@@ -36,18 +36,18 @@ export const TopBar: React.FC = () => {
   const isDashboard = location.pathname.replace(/\/+$/, '') === '/app' || location.pathname === '/app/';
 
   return (
-    <header className="sticky top-0 z-30 w-full h-14 sm:h-16 bg-white/85 dark:bg-[var(--bg)]/85 backdrop-blur-md border-b border-border transition-colors duration-150">
+    <header className="sticky top-0 z-30 w-full h-14 sm:h-16 bg-white/85 backdrop-blur-md border-b border-border transition-colors duration-150">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
         {/* LEFT = Desktop: page title only (Jakarta 22/700 navy) + optional one-line subtitle (13 ink-500)
                  Mobile: brand logo + title */}
         <div className="min-w-0 flex items-center">
           {/* Desktop Left: Page Title & Subtitle */}
           <div className="hidden lg:flex flex-col justify-center">
-            <h1 className="font-jakarta font-bold text-[22px] text-ink-900 dark:text-white leading-tight truncate">
+            <h1 className="font-jakarta font-bold text-[22px] text-ink-900 leading-tight truncate">
               {title}
             </h1>
             {subtitle && (
-              <p className="text-[13px] text-ink-700 dark:text-slate-400 font-normal truncate mt-0.5">
+              <p className="text-[13px] text-ink-700 font-normal truncate mt-0.5">
                 {subtitle}
               </p>
             )}
@@ -59,7 +59,7 @@ export const TopBar: React.FC = () => {
               <div className="w-8 h-8 rounded-lg bg-surface border border-border p-1 flex items-center justify-center">
                 <img src="/logo-icon.png" alt={BRAND_NAME} className="w-full h-full object-contain" />
               </div>
-              <span className="text-base font-bold text-ink-900 dark:text-white leading-none">
+              <span className="text-base font-bold text-ink-900 leading-none">
                 {BRAND_NAME}
               </span>
             </Link>

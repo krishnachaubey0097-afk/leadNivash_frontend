@@ -7,7 +7,6 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { Modal } from '../../components/ui/Modal';
 import { useToast } from '../../components/ui/Toast';
 import { apiClient } from '../../lib/api/client';
-import { useTheme } from '../../lib/theme';
 import { BRAND_NAME, PLAN_PRICING } from '../../config/constants';
 import {
   ShieldCheck,
@@ -23,9 +22,6 @@ import {
   Crown,
   MapPin,
   FileText,
-  Sun,
-  Moon,
-  Monitor,
   Phone,
   Mail,
   AlertTriangle,
@@ -44,8 +40,7 @@ type SettingsSection =
   | 'inboxes'
   | 'help'
   | 'privacy'
-  | 'legal'
-  | 'appearance';
+  | 'legal';
 
 const VALID_SECTIONS: SettingsSection[] = [
   'account',
@@ -55,7 +50,6 @@ const VALID_SECTIONS: SettingsSection[] = [
   'help',
   'privacy',
   'legal',
-  'appearance',
 ];
 
 const DELETE_CONFIRM_PHRASE = 'DELETE MY ACCOUNT';
@@ -63,7 +57,6 @@ const DELETE_CONFIRM_PHRASE = 'DELETE MY ACCOUNT';
 export const SettingsPage: React.FC = () => {
   const { user, refreshUser, logout } = useAuth();
   const { success, error } = useToast();
-  const { mode, setMode } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const nameInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -270,7 +263,6 @@ export const SettingsPage: React.FC = () => {
       { id: 'help', label: 'Help', icon: HelpCircle },
       { id: 'privacy', label: 'Privacy & data', icon: Lock },
       { id: 'legal', label: 'Legal', icon: FileText },
-      { id: 'appearance', label: 'Appearance', icon: Sun },
     ];
 
   const handleEditProfileClick = () => {
@@ -282,7 +274,7 @@ export const SettingsPage: React.FC = () => {
     <div className="space-y-6 max-w-[1200px] mx-auto pb-16 text-left">
       {/* Page Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-tight">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
           Settings
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
@@ -317,7 +309,7 @@ export const SettingsPage: React.FC = () => {
       {/* Two-Column Desktop Settings Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 lg:gap-8 items-start">
         {/* LEFT COLUMN: Section Links + Bottom Plain Legal & Destructive Log out */}
-        <aside className="hidden lg:flex flex-col justify-between bg-white dark:bg-slate-900 border border-border rounded-[14px] p-2.5 sticky top-20 space-y-4">
+        <aside className="hidden lg:flex flex-col justify-between bg-white border border-border rounded-[14px] p-2.5 sticky top-20 space-y-4">
           <nav className="space-y-1" aria-label="Settings sections">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -375,7 +367,7 @@ export const SettingsPage: React.FC = () => {
         {/* RIGHT COLUMN: Profile Header + Active Section Panel */}
         <div className="space-y-5 min-w-0">
           {/* Top Profile Header (Flat Card, NOT Glass, 64px Circle Avatar, Edit top-right) */}
-          <Card className="p-5 flex items-center justify-between gap-4 rounded-[14px] border border-border bg-white dark:bg-slate-900">
+          <Card className="p-5 flex items-center justify-between gap-4 rounded-[14px] border border-border bg-white">
             <div className="flex items-center gap-4 min-w-0">
               <div className="w-16 h-16 rounded-full bg-brand-50 border border-brand-200 text-brand-700 font-bold text-xl flex items-center justify-center shrink-0">
                 {displayInitials}
@@ -383,7 +375,7 @@ export const SettingsPage: React.FC = () => {
 
               <div className="min-w-0 space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-[18px] font-bold text-ink-900 dark:text-white leading-snug truncate capitalize">
+                  <h2 className="text-[18px] font-bold text-ink-900 leading-snug truncate capitalize">
                     {displayTitle}
                   </h2>
                   {isBackendVerified && (
@@ -415,9 +407,9 @@ export const SettingsPage: React.FC = () => {
 
           {/* SECTION: ACCOUNT */}
           {activeSection === 'account' && (
-            <Card className="p-5 sm:p-6 space-y-5 rounded-[14px] border border-border bg-white dark:bg-slate-900">
+            <Card className="p-5 sm:p-6 space-y-5 rounded-[14px] border border-border bg-white">
               <div className="pb-3 border-b border-border">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-slate-900">
                   Account
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -438,7 +430,7 @@ export const SettingsPage: React.FC = () => {
                       value={name}
                       placeholder="Broker or representative name"
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full h-11 bg-white dark:bg-slate-900 border border-border rounded-input px-3.5 text-sm text-ink font-sans focus:outline-none focus:ring-2 focus:ring-brand-600"
+                      className="w-full h-11 bg-white border border-border rounded-input px-3.5 text-sm text-ink font-sans focus:outline-none focus:ring-2 focus:ring-brand-600"
                     />
                   </div>
 
@@ -452,7 +444,7 @@ export const SettingsPage: React.FC = () => {
                       value={agencyName}
                       placeholder="Agency or brokerage firm name"
                       onChange={(e) => setAgencyName(e.target.value)}
-                      className="w-full h-11 bg-white dark:bg-slate-900 border border-border rounded-input px-3.5 text-sm text-ink font-sans focus:outline-none focus:ring-2 focus:ring-brand-600"
+                      className="w-full h-11 bg-white border border-border rounded-input px-3.5 text-sm text-ink font-sans focus:outline-none focus:ring-2 focus:ring-brand-600"
                     />
                   </div>
 
@@ -465,7 +457,7 @@ export const SettingsPage: React.FC = () => {
                       value={reraNo}
                       placeholder="e.g. HRERA-PKL-01-2024"
                       onChange={(e) => setReraNo(e.target.value)}
-                      className="w-full h-11 bg-white dark:bg-slate-900 border border-border rounded-input px-3.5 text-sm text-ink font-sans focus:outline-none focus:ring-2 focus:ring-brand-600"
+                      className="w-full h-11 bg-white border border-border rounded-input px-3.5 text-sm text-ink font-sans focus:outline-none focus:ring-2 focus:ring-brand-600"
                     />
                   </div>
 
@@ -478,7 +470,7 @@ export const SettingsPage: React.FC = () => {
                       value={agencyCity}
                       placeholder="e.g. Panipat, Karnal, Gurgaon"
                       onChange={(e) => setAgencyCity(e.target.value)}
-                      className="w-full h-11 bg-white dark:bg-slate-900 border border-border rounded-input px-3.5 text-sm text-ink font-sans focus:outline-none focus:ring-2 focus:ring-brand-600"
+                      className="w-full h-11 bg-white border border-border rounded-input px-3.5 text-sm text-ink font-sans focus:outline-none focus:ring-2 focus:ring-brand-600"
                     />
                   </div>
                 </div>
@@ -495,7 +487,7 @@ export const SettingsPage: React.FC = () => {
                         type="text"
                         disabled
                         value={user?.phone || (user as any)?.phoneE164 || 'Not registered'}
-                        className="w-full h-11 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-input pl-3.5 pr-9 text-sm font-medium text-slate-700 dark:text-slate-300 font-sans cursor-not-allowed"
+                        className="w-full h-11 bg-slate-50 border border-border rounded-input pl-3.5 pr-9 text-sm font-medium text-slate-700 font-sans cursor-not-allowed"
                       />
                       <Lock className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
@@ -512,7 +504,7 @@ export const SettingsPage: React.FC = () => {
                         type="email"
                         disabled
                         value={user?.email || 'Not provided'}
-                        className="w-full h-11 bg-slate-50 dark:bg-slate-800/60 border border-border rounded-input pl-3.5 pr-9 text-sm font-medium text-slate-700 dark:text-slate-300 font-sans cursor-not-allowed"
+                        className="w-full h-11 bg-slate-50 border border-border rounded-input pl-3.5 pr-9 text-sm font-medium text-slate-700 font-sans cursor-not-allowed"
                       />
                       <Lock className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
@@ -589,9 +581,9 @@ export const SettingsPage: React.FC = () => {
 
           {/* SECTION: REGIONAL PREFERENCES */}
           {activeSection === 'regional' && (
-            <Card className="p-5 sm:p-6 space-y-5 rounded-[14px] border border-border bg-white dark:bg-slate-900">
+            <Card className="p-5 sm:p-6 space-y-5 rounded-[14px] border border-border bg-white">
               <div className="pb-3 border-b border-border">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-slate-900">
                   Regional preferences
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -689,9 +681,9 @@ export const SettingsPage: React.FC = () => {
 
           {/* SECTION: INBOXES */}
           {activeSection === 'inboxes' && (
-            <Card className="p-5 sm:p-6 space-y-4 rounded-[14px] border border-border bg-white dark:bg-slate-900">
+            <Card className="p-5 sm:p-6 space-y-4 rounded-[14px] border border-border bg-white">
               <div className="pb-3 border-b border-border">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-slate-900">
                   Quick inboxes
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -730,9 +722,9 @@ export const SettingsPage: React.FC = () => {
 
           {/* SECTION: HELP */}
           {activeSection === 'help' && (
-            <Card className="p-5 sm:p-6 space-y-4 rounded-[14px] border border-border bg-white dark:bg-slate-900">
+            <Card className="p-5 sm:p-6 space-y-4 rounded-[14px] border border-border bg-white">
               <div className="pb-3 border-b border-border">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-slate-900">
                   Help & onboarding
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -767,10 +759,10 @@ export const SettingsPage: React.FC = () => {
           {/* SECTION: PRIVACY & DATA (Two clearly separate actions, NOT one pink mega-card) */}
           {activeSection === 'privacy' && (
             <div className="space-y-4">
-              <Card className="p-5 sm:p-6 space-y-3 rounded-[14px] border border-border bg-white dark:bg-slate-900">
+              <Card className="p-5 sm:p-6 space-y-3 rounded-[14px] border border-border bg-white">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                    <h3 className="text-base font-bold text-slate-900">
                       Download my data
                     </h3>
                     <p className="text-xs text-slate-500 leading-relaxed max-w-lg">
@@ -793,9 +785,9 @@ export const SettingsPage: React.FC = () => {
                 </div>
               </Card>
 
-              <Card className="p-5 sm:p-6 space-y-3 rounded-[14px] border border-border bg-white dark:bg-slate-900">
+              <Card className="p-5 sm:p-6 space-y-3 rounded-[14px] border border-border bg-white">
                 <div className="space-y-1">
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-base font-bold text-slate-900">
                     Delete my account
                   </h3>
                   <p className="text-xs text-slate-500 leading-relaxed max-w-lg">
@@ -823,9 +815,9 @@ export const SettingsPage: React.FC = () => {
 
           {/* SECTION: LEGAL */}
           {activeSection === 'legal' && (
-            <Card className="p-5 sm:p-6 space-y-4 rounded-[14px] border border-border bg-white dark:bg-slate-900">
+            <Card className="p-5 sm:p-6 space-y-4 rounded-[14px] border border-border bg-white">
               <div className="pb-3 border-b border-border">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-slate-900">
                   Legal & compliance
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -849,49 +841,6 @@ export const SettingsPage: React.FC = () => {
                     <ExternalLink className="w-4 h-4 text-slate-400" />
                   </Link>
                 ))}
-              </div>
-            </Card>
-          )}
-
-          {/* SECTION: APPEARANCE */}
-          {activeSection === 'appearance' && (
-            <Card className="p-5 sm:p-6 space-y-4 rounded-[14px] border border-line bg-white dark:bg-slate-900">
-              <div className="pb-3 border-b border-line">
-                <h3 className="text-base font-bold text-ink-900 dark:text-white">
-                  Appearance
-                </h3>
-                <p className="text-xs text-ink-500 mt-0.5">
-                  Choose your workspace theme. Applies immediately across {BRAND_NAME}.
-                </p>
-              </div>
-
-              <div className="inline-grid grid-cols-3 p-1 bg-[#E9EDF1] dark:bg-slate-800 rounded-xl border border-line gap-1 w-full sm:w-auto">
-                {(
-                  [
-                    { id: 'light', label: 'Light', icon: Sun },
-                    { id: 'dark', label: 'Dark', icon: Moon },
-                    { id: 'system', label: 'System', icon: Monitor },
-                  ] as const
-                ).map((opt) => {
-                  const Icon = opt.icon;
-                  const active = mode === opt.id;
-                  return (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => setMode(opt.id)}
-                      className={clsx(
-                        'relative px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition duration-200 cursor-pointer whitespace-nowrap',
-                        active
-                          ? 'bg-white dark:bg-slate-900 text-ink-900 dark:text-white border border-line shadow-xs after:content-[""] after:absolute after:bottom-0.5 after:left-2.5 after:right-2.5 after:h-[2px] after:rounded-full after:bg-lime'
-                          : 'text-ink-700 hover:text-ink-900 dark:text-slate-300 border border-transparent'
-                      )}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span>{opt.label}</span>
-                    </button>
-                  );
-                })}
               </div>
             </Card>
           )}

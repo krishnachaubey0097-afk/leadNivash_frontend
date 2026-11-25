@@ -8,7 +8,7 @@ export const TopBar: React.FC = () => {
   const { user, logout } = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-[var(--bg)]/90 backdrop-blur-md border-b border-line dark:border-slate-800 transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md border-b border-line transition-colors">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo and Brand */}
         <Link to="/app/today" className="flex items-center gap-2.5 group">
@@ -18,10 +18,10 @@ export const TopBar: React.FC = () => {
             className="w-8 h-8 object-contain transition-transform group-hover:scale-105"
           />
           <div className="flex flex-col">
-            <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
+            <span className="text-lg font-extrabold tracking-tight text-slate-900 leading-none">
                 {BRAND_NAME}
             </span>
-            <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">
+            <span className="text-[10px] font-medium text-slate-500 uppercase tracking-widest mt-0.5">
               Broker OS
             </span>
           </div>
@@ -33,16 +33,16 @@ export const TopBar: React.FC = () => {
           <Link
             to="/app/settings"
             title="Agency & Profile Settings"
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
+            className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
           >
             <SettingsIcon className="w-5 h-5" />
           </Link>
 
           {/* User Badge & Logout */}
           {user && (
-            <div className="flex items-center pl-2 border-l border-slate-200 dark:border-slate-800 gap-2">
+            <div className="flex items-center pl-2 border-l border-slate-200 gap-2">
               <div className="hidden sm:flex flex-col text-right">
-                <span className="text-xs font-semibold text-slate-900 dark:text-white">
+                <span className="text-xs font-semibold text-slate-900">
                   {user.fullName || 'Broker'}
                 </span>
                 <span className="text-[10px] text-primary font-medium capitalize">
@@ -52,7 +52,7 @@ export const TopBar: React.FC = () => {
               <button
                 onClick={() => logout()}
                 title="Logout"
-                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition-colors"
+                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
               >
                 <LogOut className="w-4 h-4" />
               </button>

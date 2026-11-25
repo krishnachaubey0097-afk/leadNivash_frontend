@@ -410,10 +410,10 @@ export const DashboardPage: React.FC = () => {
       {/* ── TOP HEADER / GREETING BAR ── */}
       <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
         <div>
-          <h1 className="text-[22px] font-bold text-ink-900 dark:text-white leading-tight">
+          <h1 className="text-[22px] font-bold text-ink-900 leading-tight">
             Dashboard
           </h1>
-          <p className="text-sm text-ink-700 dark:text-slate-400 mt-0.5">
+          <p className="text-sm text-ink-700 mt-0.5">
             {greeting}, {firstName} · {agencyName}, {territory}
           </p>
         </div>

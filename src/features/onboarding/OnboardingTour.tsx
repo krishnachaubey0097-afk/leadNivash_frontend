@@ -466,7 +466,7 @@ export const OnboardingTour: React.FC = () => {
       aria-modal="true"
       aria-label="LeadNivash Guided Product Tour"
     >
-      <div className="relative w-full max-w-xl max-h-[92vh] flex flex-col rounded-3xl bg-white dark:bg-slate-900 border border-emerald-500/35 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-left">
+      <div className="relative w-full max-w-xl max-h-[92vh] flex flex-col rounded-3xl bg-white border border-emerald-500/35 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-left">
         {/* Top Gradient Header Strip */}
         <div className="bg-gradient-to-r from-emerald-600 via-emerald-600 to-teal-700 p-4 sm:p-5 text-white relative shrink-0">
           <button
@@ -512,11 +512,11 @@ export const OnboardingTour: React.FC = () => {
         <div className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-sm">
           {/* 1. Section Purpose */}
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-xs uppercase tracking-wider">
               <Compass className="w-3.5 h-3.5" />
               <span>Section Purpose</span>
             </div>
-            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
               {step.sectionPurpose}
             </p>
           </div>
@@ -532,12 +532,12 @@ export const OnboardingTour: React.FC = () => {
               {step.keyButtons.map((btn, idx) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-border/80 space-y-1.5 transition hover:border-emerald-500/30"
+                  className="p-3 rounded-2xl bg-slate-50 border border-border/80 space-y-1.5 transition hover:border-emerald-500/30"
                 >
                   <div className="flex items-center justify-between gap-2 flex-wrap">
                     <span className="font-black text-ink text-xs flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0" />
-                      <span className="bg-emerald-100/80 dark:bg-emerald-950/70 text-emerald-900 dark:text-emerald-300 px-2 py-0.5 rounded-md font-mono text-[11px] font-bold">
+                      <span className="bg-emerald-100/80 text-emerald-900 px-2 py-0.5 rounded-md font-mono text-[11px] font-bold">
                         {btn.buttonName}
                       </span>
                     </span>
@@ -546,11 +546,11 @@ export const OnboardingTour: React.FC = () => {
                     </span>
                   </div>
 
-                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
+                  <p className="text-[11px] text-slate-600 leading-snug">
                     <strong className="text-ink">Purpose:</strong> {btn.whatItDoes}
                   </p>
 
-                  <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-emerald-500/20 text-[11px] text-emerald-900 dark:text-emerald-300 flex items-start gap-1.5 leading-snug">
+                  <div className="p-2 rounded-xl bg-white border border-emerald-500/20 text-[11px] text-emerald-900 flex items-start gap-1.5 leading-snug">
                     <Zap className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
                     <span>
                       <strong>When clicked:</strong> {btn.whatHappensWhenClicked}
@@ -562,10 +562,10 @@ export const OnboardingTour: React.FC = () => {
           </div>
 
           {/* 3. What Happens Summary */}
-          <div className="p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-500/20 text-xs text-emerald-950 dark:text-emerald-200 leading-relaxed flex items-start gap-2">
+          <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-500/20 text-xs text-emerald-950 leading-relaxed flex items-start gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
             <div>
-              <strong className="block text-emerald-900 dark:text-emerald-300 mb-0.5">
+              <strong className="block text-emerald-900 mb-0.5">
                 How this accelerates your deals:
               </strong>
               <span>{step.whatHappensSummary}</span>
@@ -574,10 +574,10 @@ export const OnboardingTour: React.FC = () => {
 
           {/* 4. Pro Tip */}
           {step.proTip && (
-            <div className="p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-500/20 text-xs text-amber-950 dark:text-amber-200 flex items-start gap-2 leading-relaxed">
+            <div className="p-3 rounded-2xl bg-amber-50/70 border border-amber-500/20 text-xs text-amber-950 flex items-start gap-2 leading-relaxed">
               <Lightbulb className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
               <div>
-                <strong className="font-bold text-amber-900 dark:text-amber-300">Broker Pro Tip: </strong>
+                <strong className="font-bold text-amber-900">Broker Pro Tip: </strong>
                 <span>{step.proTip}</span>
               </div>
             </div>
@@ -586,7 +586,7 @@ export const OnboardingTour: React.FC = () => {
           {/* Live background indication */}
           <div className="pt-1 flex items-center justify-between text-[11px] text-muted border-t border-border/60">
             <span>Viewing active screen:</span>
-            <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400">
+            <span className="font-mono font-bold text-emerald-700">
               {step.route}
             </span>
           </div>
@@ -608,7 +608,7 @@ export const OnboardingTour: React.FC = () => {
                   'h-2 rounded-full transition-all cursor-pointer',
                   idx === currentStepIndex
                     ? 'w-6 bg-emerald-600'
-                    : 'w-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300'
+                    : 'w-2 bg-slate-200 hover:bg-slate-300'
                 )}
                 aria-label={`Go to step ${idx + 1}`}
                 title={`Step ${idx + 1}: ${s.title}`}

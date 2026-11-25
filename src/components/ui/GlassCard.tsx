@@ -15,7 +15,7 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
       <div
         ref={ref}
         className={clsx(
-          'rounded-[20px] bg-white/70 dark:bg-slate-900/60 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-lg p-5 transition-all duration-200',
+          'rounded-[20px] bg-white/70 backdrop-blur-md border border-white/40 shadow-lg p-5 transition-all duration-200',
           interactive && 'hover:-translate-y-0.5 hover:shadow-xl hover:border-brand-600/30 cursor-pointer',
           className
         )}

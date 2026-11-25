@@ -46,7 +46,7 @@ export const Chip: React.FC<ChipProps> = ({
         variant === 'perfect' && 'bg-brand-50 text-brand-700 font-bold',
         variant === 'good' && 'bg-blue-50 text-blue-700',
         variant === 'stretch' && 'bg-amber-50 text-amber-700',
-        variant === 'neutral' && 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300',
+        variant === 'neutral' && 'bg-slate-100 text-slate-700',
         className
       )}
       {...props}

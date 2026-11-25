@@ -41,9 +41,9 @@ export const CookieConsentBanner: React.FC = () => {
       aria-label="Cookie consent banner"
       className="fixed bottom-3 sm:bottom-6 inset-x-3 sm:inset-x-auto sm:right-6 sm:max-w-md z-50 animate-in fade-in slide-in-from-bottom-4 duration-300"
     >
-      <div className="bg-white dark:bg-slate-900 border border-emerald-500/30 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-slate-950/20 text-slate-900 dark:text-slate-100 text-xs space-y-3">
+      <div className="bg-white border border-emerald-500/30 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-slate-950/20 text-slate-900 text-xs space-y-3">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-bold font-heading text-sm">
+          <div className="flex items-center gap-2 text-emerald-700 font-bold font-heading text-sm">
             <Cookie className="w-4 h-4 shrink-0" />
             <span>Privacy & Cookie Choices</span>
           </div>
@@ -51,28 +51,28 @@ export const CookieConsentBanner: React.FC = () => {
             type="button"
             onClick={handleEssentialOnly}
             aria-label="Dismiss cookie notice"
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition p-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="text-slate-400 hover:text-slate-600 transition p-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+        <p className="text-[11px] text-slate-600 leading-relaxed">
           We use essential cookies and secured local tokens to maintain your broker session, preserve your regional calculation standards, and protect private owner listings. We do not sell data or use third-party ad trackers.
         </p>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100">
           <div className="flex items-center gap-2 text-[10px]">
             <Link
               to="/cookies"
-              className="text-emerald-700 dark:text-emerald-400 hover:underline font-semibold"
+              className="text-emerald-700 hover:underline font-semibold"
             >
               Cookie Policy
             </Link>
             <span>·</span>
             <Link
               to="/privacy"
-              className="text-emerald-700 dark:text-emerald-400 hover:underline font-semibold"
+              className="text-emerald-700 hover:underline font-semibold"
             >
               Privacy Policy
             </Link>
@@ -82,7 +82,7 @@ export const CookieConsentBanner: React.FC = () => {
             <button
               type="button"
               onClick={handleEssentialOnly}
-              className="px-2.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-200 transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="px-2.5 py-1.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-[11px] font-semibold text-slate-700 transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
             >
               Essential Only
             </button>

@@ -136,7 +136,7 @@ export const LinearProgressBar: React.FC<LinearProgressBarProps> = ({
       )}
       <div
         className={clsx(
-          'w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden relative',
+          'w-full bg-slate-100 rounded-full overflow-hidden relative',
           heightClasses
         )}
       >

@@ -31,7 +31,7 @@ export const PricingPage: React.FC = () => {
     <div className="min-h-screen bg-cream text-ink-700 p-4 sm:p-6 max-w-5xl mx-auto space-y-6 text-left">
       <Link
         to="/"
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 dark:text-emerald-400 hover:underline"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:underline"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
@@ -53,13 +53,13 @@ export const PrivacyPage: React.FC = () => {
     <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
       <Link
         to="/"
-        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2"
+        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 hover:underline mb-2"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
 
       <div className="space-y-1">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-[11px] border border-emerald-500/30">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold text-[11px] border border-emerald-500/30">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
           <span>DPDPA 2023 Compliant · Owner Vault Isolation</span>
         </div>
@@ -70,7 +70,7 @@ export const PrivacyPage: React.FC = () => {
       </div>
 
       {/* Owner Vault Isolation Highlight */}
-      <div className="p-5 rounded-3xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 space-y-2">
+      <div className="p-5 rounded-3xl bg-emerald-50 border border-emerald-500/30 space-y-2">
         <div className="flex items-center gap-2">
           <Lock className="w-5 h-5 text-emerald-600 shrink-0" />
           <h2 className="text-sm font-bold text-ink">The Owner Vault Isolation Guarantee</h2>
@@ -85,13 +85,13 @@ export const PrivacyPage: React.FC = () => {
         {/* Section 1 */}
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink flex items-center gap-2">
-            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">1</span>
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black flex items-center justify-center">1</span>
             Data We Collect & Data Minimization
           </h2>
           <p className="text-muted">
             We adhere strictly to the principle of data minimization—we only collect data that is necessary to provide real estate brokerage management services:
           </p>
-          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+          <ul className="list-disc pl-5 space-y-1 text-slate-700">
             <li><strong>Broker Account Information:</strong> Full name, phone number, agency name, city/hub, and optional RERA registration number.</li>
             <li><strong>Property Inventory (Owner Vault):</strong> Property type, location/colony, bedrooms, demand price, and private owner contact details (for your exclusive use).</li>
             <li><strong>Buyer Requirements:</strong> Client budget, preferred localities, bedroom preferences, and contact phone number.</li>
@@ -103,13 +103,13 @@ export const PrivacyPage: React.FC = () => {
         {/* Section 2 */}
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink flex items-center gap-2">
-            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">2</span>
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black flex items-center justify-center">2</span>
             Lawful Basis & How Data Is Used
           </h2>
           <p className="text-muted">
             Your data is processed in accordance with the Digital Personal Data Protection Act (DPDPA 2023) and the Information Technology (SPDI) Rules 2011 on the following lawful bases:
           </p>
-          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+          <ul className="list-disc pl-5 space-y-1 text-slate-700">
             <li><strong>Contractual Performance:</strong> Providing Quick Chat requirement matching, deal pipeline tracking, and masked flyer creation.</li>
             <li><strong>Broker-Directed Disclosures:</strong> When you generate a shareable property flyer, LeadNivash generates a masked marketing card that hides the owner’s private phone number and address, displaying only your agency’s contact details.</li>
             <li><strong>Consent:</strong> Sending onboarding walk-throughs and customer support communications over WhatsApp.</li>
@@ -119,22 +119,22 @@ export const PrivacyPage: React.FC = () => {
         {/* Section 3 */}
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink flex items-center gap-2">
-            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">3</span>
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black flex items-center justify-center">3</span>
             Third-Party Sub-Processors & Infrastructure
           </h2>
           <p className="text-muted">
             We partner only with vetted cloud infrastructure providers who comply with industry-standard encryption protocols:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
               <h3 className="font-bold text-ink">MongoDB Atlas</h3>
               <p className="text-[11px] text-muted mt-0.5">Encrypted cloud database storage with TLS 1.3 in-transit and AES-256 at-rest encryption.</p>
             </div>
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
               <h3 className="font-bold text-ink">Cloudinary Media</h3>
               <p className="text-[11px] text-muted mt-0.5">Secure, signed property photo uploads with automated watermark protection.</p>
             </div>
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
               <h3 className="font-bold text-ink">Vercel Edge Network</h3>
               <p className="text-[11px] text-muted mt-0.5">Global edge hosting and SSL termination with automated DDoS defense.</p>
             </div>
@@ -144,23 +144,23 @@ export const PrivacyPage: React.FC = () => {
         {/* Section 4 */}
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink flex items-center gap-2">
-            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">4</span>
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black flex items-center justify-center">4</span>
             Your Rights: Data Export, Correction & Deletion
           </h2>
           <p className="text-muted">
             Under applicable data protection laws, you retain full ownership of your data and have the following rights:
           </p>
-          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
-            <li><strong>Right to Access & Export:</strong> You can export all your properties, buyers, and deals in JSON or CSV format directly from the <Link to="/app/settings" className="underline font-bold text-emerald-700 dark:text-emerald-400">Settings</Link> page at any time.</li>
+          <ul className="list-disc pl-5 space-y-1 text-slate-700">
+            <li><strong>Right to Access & Export:</strong> You can export all your properties, buyers, and deals in JSON or CSV format directly from the <Link to="/app/settings" className="underline font-bold text-emerald-700">Settings</Link> page at any time.</li>
             <li><strong>Right to Rectification:</strong> You can edit and update property listings, buyer criteria, and profile details directly within the app.</li>
-            <li><strong>Right to Erasure (Account Deletion):</strong> You can request permanent account and data deletion by clicking "Request Account Deletion" in Settings or by emailing <a href="mailto:privacy@leadnivash.com" className="underline font-bold text-emerald-700 dark:text-emerald-400">privacy@leadnivash.com</a>. Upon verification, all your data will be permanently purged within 30 days.</li>
+            <li><strong>Right to Erasure (Account Deletion):</strong> You can request permanent account and data deletion by clicking "Request Account Deletion" in Settings or by emailing <a href="mailto:privacy@leadnivash.com" className="underline font-bold text-emerald-700">privacy@leadnivash.com</a>. Upon verification, all your data will be permanently purged within 30 days.</li>
           </ul>
         </section>
 
         {/* Section 5 */}
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink flex items-center gap-2">
-            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">5</span>
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black flex items-center justify-center">5</span>
             Protection of Minors
           </h2>
           <p className="text-muted">
@@ -171,16 +171,16 @@ export const PrivacyPage: React.FC = () => {
         {/* Section 6 */}
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink flex items-center gap-2">
-            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-[10px] font-black flex items-center justify-center">6</span>
+            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black flex items-center justify-center">6</span>
             Grievance Officer & Inquiries
           </h2>
           <p className="text-muted">
             For any inquiries, privacy concerns, or data erasure requests, please contact our Data Protection Officer:
           </p>
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1 text-[11px]">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1 text-[11px]">
             <p><strong>Grievance & Privacy Officer:</strong> LeadNivash Legal & Compliance Team</p>
-            <p><strong>Email:</strong> <a href="mailto:privacy@leadnivash.com" className="underline font-bold text-emerald-700 dark:text-emerald-400">privacy@leadnivash.com</a></p>
-            <p><strong>Support Telephone:</strong> <a href="tel:+919876543210" className="underline font-bold text-emerald-700 dark:text-emerald-400">+91 98765 43210</a></p>
+            <p><strong>Email:</strong> <a href="mailto:privacy@leadnivash.com" className="underline font-bold text-emerald-700">privacy@leadnivash.com</a></p>
+            <p><strong>Support Telephone:</strong> <a href="tel:+919876543210" className="underline font-bold text-emerald-700">+91 98765 43210</a></p>
             <p><strong>Operating Territory:</strong> Panipat & Gurugram, Haryana, India</p>
           </div>
         </section>
@@ -201,13 +201,13 @@ export const TermsPage: React.FC = () => {
     <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
       <Link
         to="/"
-        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2"
+        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 hover:underline mb-2"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
 
       <div className="space-y-1">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-[11px] border border-emerald-500/30">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold text-[11px] border border-emerald-500/30">
           <Scale className="w-3.5 h-3.5 text-emerald-600" />
           <span>Commercial Broker Agreement · India Jurisdiction</span>
         </div>
@@ -229,12 +229,12 @@ export const TermsPage: React.FC = () => {
         {/* Section 2 */}
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">2. Calculations, Stamp Duty & Circle Rate Disclaimer</h2>
-          <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-900 space-y-1.5">
-            <div className="flex items-center gap-2 text-amber-900 dark:text-amber-200 font-bold">
+          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-300 space-y-1.5">
+            <div className="flex items-center gap-2 text-amber-900 font-bold">
               <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
               <span>Important Regulatory Disclaimer</span>
             </div>
-            <p className="text-[11px] text-amber-800 dark:text-amber-300 leading-relaxed">
+            <p className="text-[11px] text-amber-800 leading-relaxed">
               The Circle Rate, Tehsil Stamp Duty, Loan EMI, and Land Unit Conversion (Gaj, Marla, Kanal, Bigha) tools provided on LeadNivash are automated calculation engines based on published municipal notifications and general sub-registrar guidelines. Because circle rates and registration charges may vary based on colony classifications, collector rate updates, and sub-registrar discretionary verification, <strong>all calculations must be verified with the competent Tehsil or Sub-Registrar office prior to deed execution</strong>. LeadNivash shall not be held liable for any registry discrepancy or financial loss arising from reliance on automated estimates.
             </p>
           </div>
@@ -252,7 +252,7 @@ export const TermsPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">4. Subscription Billing, Free Trial & Cancellations</h2>
           <p className="text-muted">
-            LeadNivash provides a 14-day free trial on initial registration without requiring payment information. Subscriptions are offered as a Monthly Plan (₹399/month) or a Yearly Plan (₹3,999/year, with an exclusive special offer of ₹3,299/year available during your active 14-day free trial). Subscriptions grant unrestricted access to multi-device sync, cloud storage, and priority support. Subscriptions may be cancelled anytime from your Settings. For refund guidelines, please review our <Link to="/refund" className="underline font-bold text-emerald-700 dark:text-emerald-400">Refund Policy</Link>.
+            LeadNivash provides a 14-day free trial on initial registration without requiring payment information. Subscriptions are offered as a Monthly Plan (₹399/month) or a Yearly Plan (₹3,999/year, with an exclusive special offer of ₹3,299/year available during your active 14-day free trial). Subscriptions grant unrestricted access to multi-device sync, cloud storage, and priority support. Subscriptions may be cancelled anytime from your Settings. For refund guidelines, please review our <Link to="/refund" className="underline font-bold text-emerald-700">Refund Policy</Link>.
           </p>
         </section>
 
@@ -262,7 +262,7 @@ export const TermsPage: React.FC = () => {
           <p className="text-muted">
             You agree not to use LeadNivash to:
           </p>
-          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+          <ul className="list-disc pl-5 space-y-1 text-slate-700">
             <li>Post fraudulent, deceptive, or non-existent property listings.</li>
             <li>Interfere with, reverse-engineer, or breach tenant isolation boundaries.</li>
             <li>Send unsolicited, spam, or harassing communications to buyers or brokers.</li>
@@ -302,13 +302,13 @@ export const RefundPolicyPage: React.FC = () => {
     <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
       <Link
         to="/"
-        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2"
+        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 hover:underline mb-2"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
 
       <div className="space-y-1">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-[11px] border border-emerald-500/30">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold text-[11px] border border-emerald-500/30">
           <RefreshCw className="w-3.5 h-3.5 text-emerald-600" />
           <span>7-Day Money-Back Guarantee · Zero Risk</span>
         </div>
@@ -331,7 +331,7 @@ export const RefundPolicyPage: React.FC = () => {
           <p className="text-muted">
             If you upgrade to our Yearly Plan (standard ₹3,999/year or trial special offer ₹3,299/year) and find that the platform does not meet your agency’s operational expectations, you may request a <strong>100% full refund within 7 calendar days</strong> of your initial payment date.
           </p>
-          <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 text-[11px] text-slate-700 dark:text-slate-300">
+          <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-500/30 text-[11px] text-slate-700">
             <strong>Fair Use Condition:</strong> The refund will be granted in full provided the account has not exported bulk proprietary database reports exceeding normal trial usage.
           </div>
         </section>
@@ -339,9 +339,9 @@ export const RefundPolicyPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">3. How to Request a Refund</h2>
           <p className="text-muted">
-            To initiate a refund, simply send an email to <a href="mailto:billing@leadnivash.com" className="underline font-bold text-emerald-700 dark:text-emerald-400">billing@leadnivash.com</a> or message our WhatsApp Support at <a href="https://wa.me/919876543210" className="underline font-bold text-emerald-700 dark:text-emerald-400">+91 98765 43210</a> with:
+            To initiate a refund, simply send an email to <a href="mailto:billing@leadnivash.com" className="underline font-bold text-emerald-700">billing@leadnivash.com</a> or message our WhatsApp Support at <a href="https://wa.me/919876543210" className="underline font-bold text-emerald-700">+91 98765 43210</a> with:
           </p>
-          <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+          <ul className="list-disc pl-5 space-y-1 text-slate-700">
             <li>Your registered broker mobile number or login email.</li>
             <li>Payment transaction ID / invoice reference.</li>
             <li>A brief description of why the platform was not a fit (for our engineering improvement).</li>
@@ -358,7 +358,7 @@ export const RefundPolicyPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">5. Subscription Cancellation</h2>
           <p className="text-muted">
-            You may cancel future renewals of your subscription at any time via your <Link to="/app/settings" className="underline font-bold text-emerald-700 dark:text-emerald-400">Settings</Link> portal. Upon cancellation, your account will remain active until the end of the paid annual term, after which it will safely downgrade to read-only access.
+            You may cancel future renewals of your subscription at any time via your <Link to="/app/settings" className="underline font-bold text-emerald-700">Settings</Link> portal. Upon cancellation, your account will remain active until the end of the paid annual term, after which it will safely downgrade to read-only access.
           </p>
         </section>
       </div>
@@ -378,13 +378,13 @@ export const CookiePolicyPage: React.FC = () => {
     <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
       <Link
         to="/"
-        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 hover:underline mb-2"
+        className="inline-flex items-center gap-1.5 font-bold text-emerald-700 hover:underline mb-2"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
 
       <div className="space-y-1">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-[11px] border border-emerald-500/30">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold text-[11px] border border-emerald-500/30">
           <Cookie className="w-3.5 h-3.5 text-emerald-600" />
           <span>Zero Third-Party Ad Trackers</span>
         </div>
@@ -406,30 +406,30 @@ export const CookiePolicyPage: React.FC = () => {
           <h2 className="text-sm font-bold text-ink">2. Categories of Cookies We Use</h2>
           
           <div className="space-y-3">
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
               <h3 className="font-bold text-ink flex items-center justify-between">
                 <span>Strictly Essential Tokens</span>
-                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/80 px-2 py-0.5 rounded-full">Mandatory</span>
+                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Mandatory</span>
               </h3>
               <p className="text-[11px] text-muted mt-1">
                 Required for core authentication and security. Includes JWT authentication headers, cross-site request forgery defenses, and multi-device session continuity. These tokens cannot be deactivated without logging you out.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
               <h3 className="font-bold text-ink flex items-center justify-between">
                 <span>Functional & Preference Tokens</span>
-                <span className="text-[10px] font-bold text-brand-700 dark:text-brand-400 bg-brand-100 dark:bg-brand-950/80 px-2 py-0.5 rounded-full">Functional</span>
+                <span className="text-[10px] font-bold text-brand-700 bg-brand-100 px-2 py-0.5 rounded-full">Functional</span>
               </h3>
               <p className="text-[11px] text-muted mt-1">
                 Remembers your regional calculation preferences (e.g., 25 Gaj vs 30.25 Gaj per Marla for Panipat/Haryana), UI theme (Dark/Light mode), and cookie consent state.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
               <h3 className="font-bold text-ink flex items-center justify-between">
                 <span>Performance & Speed Telemetry</span>
-                <span className="text-[10px] font-bold text-slate-700 dark:text-slate-400 bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-full">Anonymized</span>
+                <span className="text-[10px] font-bold text-slate-700 bg-slate-200 px-2 py-0.5 rounded-full">Anonymized</span>
               </h3>
               <p className="text-[11px] text-muted mt-1">
                 Powered by Vercel Speed Insights to monitor Core Web Vitals and page render latency. All metrics are aggregated and anonymous.
@@ -512,7 +512,7 @@ export const ContactPage: React.FC = () => {
     <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-xl mx-auto space-y-6 text-left">
       <Link
         to="/"
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:underline"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
@@ -530,7 +530,7 @@ export const ContactPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <a
           href="tel:+919876543210"
-          className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-border/80 shadow-2xs hover:border-emerald-500/40 flex items-center gap-2.5 text-xs font-bold text-ink transition"
+          className="p-3.5 rounded-2xl bg-white border border-border/80 shadow-2xs hover:border-emerald-500/40 flex items-center gap-2.5 text-xs font-bold text-ink transition"
         >
           <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
             <Phone className="w-4 h-4" />
@@ -545,7 +545,7 @@ export const ContactPage: React.FC = () => {
           href="https://wa.me/919876543210?text=Hello%20leadNivash%20team,%20I%20have%20a%20query%20about%20the%20broker%20platform."
           target="_blank"
           rel="noreferrer"
-          className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-border/80 shadow-2xs hover:border-emerald-500/40 flex items-center gap-2.5 text-xs font-bold text-ink transition"
+          className="p-3.5 rounded-2xl bg-white border border-border/80 shadow-2xs hover:border-emerald-500/40 flex items-center gap-2.5 text-xs font-bold text-ink transition"
         >
           <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
             <MessageCircle className="w-4 h-4" />
@@ -558,7 +558,7 @@ export const ContactPage: React.FC = () => {
 
         <a
           href="mailto:contact@leadnivash.com"
-          className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-border/80 shadow-2xs hover:border-emerald-500/40 flex items-center gap-2.5 text-xs font-bold text-ink transition"
+          className="p-3.5 rounded-2xl bg-white border border-border/80 shadow-2xs hover:border-emerald-500/40 flex items-center gap-2.5 text-xs font-bold text-ink transition"
         >
           <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
             <Mail className="w-4 h-4" />
@@ -571,13 +571,13 @@ export const ContactPage: React.FC = () => {
       </div>
 
       {errorMsg && (
-        <div className="p-3.5 bg-rose-50 border border-rose-200 dark:bg-rose-950/40 dark:border-rose-900 rounded-2xl text-xs text-rose-700 dark:text-rose-300">
+        <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-700">
           {errorMsg}
         </div>
       )}
 
       {submitted ? (
-        <div className="p-6 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-500/30 rounded-3xl space-y-2 text-center text-xs">
+        <div className="p-6 bg-emerald-50 border border-emerald-500/30 rounded-3xl space-y-2 text-center text-xs">
           <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto mb-2" />
           <h3 className="text-base font-black text-ink font-heading">Message Received</h3>
           <p className="text-muted max-w-sm mx-auto">
@@ -643,7 +643,7 @@ export const ContactPage: React.FC = () => {
             />
           </div>
 
-          <div className="flex items-start gap-2 pt-1 text-[11px] text-slate-600 dark:text-slate-400">
+          <div className="flex items-start gap-2 pt-1 text-[11px] text-slate-600">
             <input
               type="checkbox"
               id="contact-consent"
@@ -653,7 +653,7 @@ export const ContactPage: React.FC = () => {
             />
             <label htmlFor="contact-consent">
               I agree to the{' '}
-              <Link to="/privacy" className="text-emerald-700 dark:text-emerald-400 underline font-semibold">
+              <Link to="/privacy" className="text-emerald-700 underline font-semibold">
                 Privacy Policy
               </Link>{' '}
               and consent to being contacted regarding this inquiry.

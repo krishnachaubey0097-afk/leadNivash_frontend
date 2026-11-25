@@ -32,7 +32,7 @@ export const Modal: React.FC<ModalProps> = ({
         <RadixDialog.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200" />
         <RadixDialog.Content
           className={clsx(
-            'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-32px)] max-w-lg bg-white dark:bg-[var(--surface)] border border-border p-6 rounded-[20px] shadow-2xl focus:outline-none animate-in fade-in zoom-in-95 duration-200',
+            'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-32px)] max-w-lg bg-white border border-border p-6 rounded-[20px] shadow-2xl focus:outline-none animate-in fade-in zoom-in-95 duration-200',
             className
           )}
         >
@@ -49,7 +49,7 @@ export const Modal: React.FC<ModalProps> = ({
             </div>
             <RadixDialog.Close asChild>
               <button
-                className="text-muted hover:text-ink p-1.5 -mr-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-150 cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="text-muted hover:text-ink p-1.5 -mr-1.5 rounded-lg hover:bg-slate-100 transition-colors duration-150 cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-600"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />

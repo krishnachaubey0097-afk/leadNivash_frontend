@@ -103,7 +103,7 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
       aria-labelledby="upgrade-modal-title"
     >
       <div
-        className="relative w-full max-w-[480px] bg-white dark:bg-slate-900 rounded-[20px] border border-border shadow-2xl p-6 text-left space-y-5 animate-in zoom-in-95 duration-150"
+        className="relative w-full max-w-[480px] bg-white rounded-[20px] border border-border shadow-2xl p-6 text-left space-y-5 animate-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header + Top-Right Close Button */}
@@ -114,7 +114,7 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
             </span>
             <h2
               id="upgrade-modal-title"
-              className="text-xl font-bold text-slate-900 dark:text-white leading-snug"
+              className="text-xl font-bold text-slate-900 leading-snug"
             >
               Unlock full {BRAND_NAME} Pro
             </h2>
@@ -123,7 +123,7 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-9 h-9 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            className="w-9 h-9 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer shrink-0"
             aria-label="Close upgrade modal"
           >
             <X className="w-4 h-4" />
@@ -131,7 +131,7 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
         </div>
 
         {/* Pricing Summary: Struck-through original price + discounted price on one line each (no wrapping) */}
-        <div className="p-4 rounded-[14px] bg-slate-50 dark:bg-slate-800/70 border border-border space-y-2">
+        <div className="p-4 rounded-[14px] bg-slate-50 border border-border space-y-2">
           <div className="flex items-center justify-between gap-3 text-sm whitespace-nowrap">
             <span className="text-slate-500">Standard yearly price</span>
             <span className="line-through text-slate-400 font-medium tabular-nums">
@@ -139,7 +139,7 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
             </span>
           </div>
           <div className="flex items-center justify-between gap-3 whitespace-nowrap pt-1 border-t border-border/70">
-            <span className="text-sm font-semibold text-slate-900 dark:text-white">
+            <span className="text-sm font-semibold text-slate-900">
               Trial offer price
             </span>
             <span className="text-lg font-bold text-brand-700 tabular-nums">
@@ -149,7 +149,7 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
         </div>
 
         {/* Short Benefit Bullets */}
-        <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+        <ul className="space-y-2 text-sm text-slate-700">
           {[
             'Unlimited property listings and buyer requirements',
             'Instant WhatsApp AI parser and client match engine',
@@ -182,7 +182,7 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-1.5 text-center text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+            className="w-full py-1.5 text-center text-xs font-medium text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
           >
             Continue with free trial
           </button>

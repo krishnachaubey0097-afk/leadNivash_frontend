@@ -72,7 +72,7 @@ export const Sidebar: React.FC = () => {
     <aside
       className={clsx(
         'hidden lg:flex flex-col h-screen sticky top-0 shrink-0 border-r border-border select-none z-20 transition-all duration-200',
-        'bg-[rgba(18,20,15,0.04)] dark:bg-ink-black backdrop-blur-md',
+        'bg-[rgba(18,20,15,0.04)] backdrop-blur-md',
         isCollapsed ? 'w-[72px] p-2.5' : 'w-[240px] p-4'
       )}
     >
@@ -95,10 +95,10 @@ export const Sidebar: React.FC = () => {
           </div>
           {!isCollapsed && (
             <div className="truncate">
-              <span className="text-base font-bold text-ink-900 dark:text-white leading-none tracking-tight block">
+              <span className="text-base font-bold text-ink-900 leading-none tracking-tight block">
                 {BRAND_NAME}
               </span>
-              <span className="text-meta text-ink-700 dark:text-slate-400 block mt-0.5 font-normal">
+              <span className="text-meta text-ink-700 block mt-0.5 font-normal">
                 Broker OS
               </span>
             </div>
@@ -124,7 +124,7 @@ export const Sidebar: React.FC = () => {
                     : 'gap-3 px-3.5 py-2.5 rounded-full text-sm font-medium',
                   isActive
                     ? 'bg-brand-50 text-brand-700 shadow-2xs font-semibold'
-                    : 'text-ink-700 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-ink-900'
+                    : 'text-ink-700 hover:bg-slate-100/80 hover:text-ink-900'
                 )
               }
             >
@@ -133,7 +133,7 @@ export const Sidebar: React.FC = () => {
                   <Icon
                     className={clsx(
                       'w-5 h-5 shrink-0',
-                      isActive ? 'text-brand-700' : 'text-ink-700 dark:text-slate-400'
+                      isActive ? 'text-brand-700' : 'text-ink-700'
                     )}
                     strokeWidth={isActive ? 2.2 : 1.8}
                   />
@@ -177,12 +177,12 @@ export const Sidebar: React.FC = () => {
             type="button"
             onClick={() => setIsSpecialOfferOpen(true)}
             title="Upgrade plan"
-            className="w-10 h-10 mx-auto rounded-[14px] bg-white/95 dark:bg-slate-800/80 border border-border text-brand-700 flex items-center justify-center hover:bg-brand-50 hover:border-brand-600/30 transition-colors duration-150 cursor-pointer"
+            className="w-10 h-10 mx-auto rounded-[14px] bg-white/95 border border-border text-brand-700 flex items-center justify-center hover:bg-brand-50 hover:border-brand-600/30 transition-colors duration-150 cursor-pointer"
           >
             <Crown className="w-4 h-4 text-brand-600" />
           </button>
         ) : (
-          <div className="p-3.5 rounded-[16px] bg-white/95 dark:bg-slate-800/80 border border-border/80 shadow-xs space-y-2">
+          <div className="p-3.5 rounded-[16px] bg-white/95 border border-border/80 shadow-xs space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-brand-700">
                 {planTier}
@@ -218,7 +218,7 @@ export const Sidebar: React.FC = () => {
               type="button"
               onClick={toggleCollapse}
               title="Expand sidebar"
-              className="w-8 h-8 rounded-lg text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-lg text-muted hover:text-ink hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -233,7 +233,7 @@ export const Sidebar: React.FC = () => {
                 <p className="text-secondary font-medium text-ink truncate capitalize">
                   {user?.name || 'Partner broker'}
                 </p>
-                <div className="flex items-center gap-1.5 text-meta text-ink-700 dark:text-slate-400">
+                <div className="flex items-center gap-1.5 text-meta text-ink-700">
                   <Link
                     to="/app/settings"
                     className="hover:text-ink-900 hover:underline text-[11px]"
@@ -257,7 +257,7 @@ export const Sidebar: React.FC = () => {
               type="button"
               onClick={toggleCollapse}
               title="Collapse sidebar"
-              className="w-7 h-7 rounded-lg text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center shrink-0 transition-colors cursor-pointer"
+              className="w-7 h-7 rounded-lg text-muted hover:text-ink hover:bg-slate-100 flex items-center justify-center shrink-0 transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>

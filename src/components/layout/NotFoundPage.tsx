@@ -10,7 +10,7 @@ export const NotFoundPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-4 sm:p-6 text-center">
-      <div className="relative max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200 p-6 sm:p-8 rounded-3xl shadow-xl space-y-5 text-center">
+      <div className="relative max-w-md w-full bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl shadow-xl space-y-5 text-center">
         {/* Logo */}
         <Link to="/" className="inline-flex items-center gap-2 mb-2 group">
           <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 p-1.5 shadow-2xs group-hover:border-emerald-600/40 transition flex items-center justify-center">
@@ -22,7 +22,7 @@ export const NotFoundPage: React.FC = () => {
         </Link>
 
         <div className="space-y-2">
-          <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs font-black tracking-widest uppercase border border-emerald-300/40 inline-block">
+          <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-black tracking-widest uppercase border border-emerald-300/40 inline-block">
             Error 404
           </span>
           <h1 className="text-2xl font-black text-ink font-heading tracking-tight">

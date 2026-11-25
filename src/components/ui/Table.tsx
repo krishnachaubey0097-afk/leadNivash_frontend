@@ -19,7 +19,7 @@ export const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <thead ref={ref} className={clsx('border-b border-border bg-slate-50/60 dark:bg-slate-900/40', className)} {...props} />
+  <thead ref={ref} className={clsx('border-b border-border bg-slate-50/60', className)} {...props} />
 ));
 TableHeader.displayName = 'TableHeader';
 
@@ -38,7 +38,7 @@ export const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={clsx(
-      'border-b border-border transition-colors duration-150 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer',
+      'border-b border-border transition-colors duration-150 hover:bg-slate-50 cursor-pointer',
       className
     )}
     {...props}
@@ -83,7 +83,7 @@ export const ListRow = React.forwardRef<
   <div
     ref={ref}
     className={clsx(
-      'p-3.5 rounded-lg border border-transparent hover:border-border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-150 flex items-center justify-between gap-3',
+      'p-3.5 rounded-lg border border-transparent hover:border-border hover:bg-slate-50 transition-colors duration-150 flex items-center justify-between gap-3',
       className
     )}
     {...props}

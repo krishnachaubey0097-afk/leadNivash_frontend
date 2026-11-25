@@ -53,7 +53,7 @@ export const AvatarMenu: React.FC<AvatarMenuProps> = ({ inquiryCount = 0 }) => {
 
         <DropdownMenu.Portal>
           <DropdownMenu.Content
-            className="z-50 min-w-[210px] bg-white dark:bg-[var(--surface)] border border-border p-1.5 rounded-[16px] shadow-xl animate-in fade-in zoom-in-95 duration-150"
+            className="z-50 min-w-[210px] bg-white border border-border p-1.5 rounded-[16px] shadow-xl animate-in fade-in zoom-in-95 duration-150"
             sideOffset={8}
             align="end"
           >

@@ -201,10 +201,10 @@ export const NotificationMenu: React.FC = () => {
           sideOffset={8}
           collisionPadding={12}
           align="end"
-          className="z-50 w-[calc(100vw-24px)] sm:w-[380px] lg:w-[380px] max-w-[400px] bg-surface lg:bg-white/85 lg:dark:bg-slate-900/85 lg:backdrop-blur-md border border-border p-0 rounded-2xl lg:rounded-[20px] shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200 text-left overflow-hidden"
+          className="z-50 w-[calc(100vw-24px)] sm:w-[380px] lg:w-[380px] max-w-[400px] bg-surface lg:bg-white/85 lg:backdrop-blur-md border border-border p-0 rounded-2xl lg:rounded-[20px] shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200 text-left overflow-hidden"
         >
           {/* Header */}
-          <div className="p-3.5 border-b border-border flex items-center justify-between gap-2 bg-white/60 dark:bg-slate-900/60">
+          <div className="p-3.5 border-b border-border flex items-center justify-between gap-2 bg-white/60">
             <div className="flex items-center gap-2 min-w-0">
               <h3 className="text-sm font-bold text-ink">
                 Notifications
@@ -221,7 +221,7 @@ export const NotificationMenu: React.FC = () => {
                 type="button"
                 disabled={unreadCount === 0}
                 onClick={handleMarkAllRead}
-                className="text-xs text-brand-700 dark:text-brand-400 font-semibold hover:text-brand-800 flex items-center gap-1 cursor-pointer transition disabled:opacity-40 disabled:text-slate-400 disabled:cursor-not-allowed whitespace-nowrap"
+                className="text-xs text-brand-700 font-semibold hover:text-brand-800 flex items-center gap-1 cursor-pointer transition disabled:opacity-40 disabled:text-slate-400 disabled:cursor-not-allowed whitespace-nowrap"
                 title={unreadCount === 0 ? 'No unread notifications' : 'Mark all as read'}
               >
                 <CheckCheck className="w-3.5 h-3.5" />
@@ -232,7 +232,7 @@ export const NotificationMenu: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="text-xs text-muted hover:text-rose-600 dark:hover:text-rose-400 font-semibold flex items-center gap-1 cursor-pointer transition"
+                  className="text-xs text-muted hover:text-rose-600 font-semibold flex items-center gap-1 cursor-pointer transition"
                   title="Clear all"
                   aria-label="Clear all notifications"
                 >
@@ -244,7 +244,7 @@ export const NotificationMenu: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="w-7 h-7 rounded-lg text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition cursor-pointer"
+                className="w-7 h-7 rounded-lg text-muted hover:text-ink hover:bg-slate-100 flex items-center justify-center transition cursor-pointer"
                 title="Close"
                 aria-label="Close notifications"
               >
@@ -273,7 +273,7 @@ export const NotificationMenu: React.FC = () => {
                     'px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer border',
                     selected
                       ? 'bg-lime text-ink-900 border-lime font-bold'
-                      : 'bg-white/80 dark:bg-slate-800/80 text-ink-700 dark:text-slate-300 border-border hover:bg-slate-100'
+                      : 'bg-white/80 text-ink-700 border-border hover:bg-slate-100'
                   )}
                 >
                   {chip.label}
@@ -287,7 +287,7 @@ export const NotificationMenu: React.FC = () => {
             {filteredNotifications.length === 0 ? (
               /* Empty State */
               <div className="p-8 text-center space-y-3">
-                <div className="w-12 h-12 rounded-[14px] bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 rounded-[14px] bg-slate-100 text-slate-500 flex items-center justify-center mx-auto">
                   <Bell className="w-6 h-6 stroke-[1.8]" />
                 </div>
                 <div className="space-y-1">
@@ -308,8 +308,8 @@ export const NotificationMenu: React.FC = () => {
                     key={n.id}
                     onClick={() => handleNotificationClick(n)}
                     className={clsx(
-                      'p-3.5 flex items-start justify-between gap-3 transition cursor-pointer hover:bg-slate-50/90 dark:hover:bg-slate-800/70',
-                      !n.isRead ? 'bg-lime-soft/60 dark:bg-slate-800/80' : 'bg-white/70 dark:bg-slate-900/60'
+                      'p-3.5 flex items-start justify-between gap-3 transition cursor-pointer hover:bg-slate-50/90',
+                      !n.isRead ? 'bg-lime-soft/60' : 'bg-white/70'
                     )}
                   >
                     <div className="flex items-start gap-2.5 flex-1 min-w-0">
@@ -319,7 +319,7 @@ export const NotificationMenu: React.FC = () => {
 
                       <div className="space-y-0.5 flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1.5">
-                          <h4 className={clsx('text-xs truncate', !n.isRead ? 'font-bold text-ink' : 'font-medium text-slate-700 dark:text-slate-300')}>
+                          <h4 className={clsx('text-xs truncate', !n.isRead ? 'font-bold text-ink' : 'font-medium text-slate-700')}>
                             {n.title}
                           </h4>
                           <span className="text-[10px] text-muted whitespace-nowrap shrink-0">
@@ -339,7 +339,7 @@ export const NotificationMenu: React.FC = () => {
                       <button
                         type="button"
                         onClick={(e) => handleDelete(e, n.id)}
-                        className="w-6 h-6 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition cursor-pointer"
+                        className="w-6 h-6 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition cursor-pointer"
                         title="Delete notification"
                         aria-label="Delete"
                       >

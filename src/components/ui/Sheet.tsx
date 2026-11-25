@@ -26,7 +26,7 @@ export const Sheet: React.FC<SheetProps> = ({
         <RadixDialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" />
         <RadixDialog.Content
           className={clsx(
-            'fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] bg-white dark:bg-[var(--surface)] border-t border-border p-5 rounded-t-sheet shadow-xl overflow-y-auto focus:outline-none animate-in slide-in-from-bottom duration-200 sm:max-w-lg sm:mx-auto sm:rounded-card sm:border sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2',
+            'fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] bg-white border-t border-border p-5 rounded-t-sheet shadow-xl overflow-y-auto focus:outline-none animate-in slide-in-from-bottom duration-200 sm:max-w-lg sm:mx-auto sm:rounded-card sm:border sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2',
             className
           )}
         >

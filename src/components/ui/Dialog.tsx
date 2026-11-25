@@ -26,7 +26,7 @@ export const Dialog: React.FC<DialogProps> = ({
         <RadixDialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" />
         <RadixDialog.Content
           className={clsx(
-            'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-32px)] max-w-md bg-white dark:bg-[var(--surface)] border border-border p-5 rounded-card-lg shadow-xl focus:outline-none animate-in fade-in zoom-in-95 duration-200',
+            'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-32px)] max-w-md bg-white border border-border p-5 rounded-card-lg shadow-xl focus:outline-none animate-in fade-in zoom-in-95 duration-200',
             className
           )}
         >

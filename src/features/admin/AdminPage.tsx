@@ -269,11 +269,11 @@ export const AdminPage: React.FC = () => {
   };
 
   const planBadgeVariants: Record<string, string> = {
-    trial: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300',
-    starter: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/60 dark:text-blue-300',
-    pro: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300',
-    team: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300',
-    agency: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300',
+    trial: 'bg-amber-50 text-amber-700 border-amber-200',
+    starter: 'bg-blue-50 text-blue-700 border-blue-200',
+    pro: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    team: 'bg-purple-50 text-purple-700 border-purple-200',
+    agency: 'bg-rose-50 text-rose-700 border-rose-200',
   };
 
   return (
@@ -282,7 +282,7 @@ export const AdminPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/70 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20">
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600">
               <Shield className="w-5 h-5" />
             </div>
             <h1 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight">
@@ -303,14 +303,14 @@ export const AdminPage: React.FC = () => {
               fetchLeads();
             }}
             disabled={isUsageLoading}
-            className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 text-ink font-bold flex items-center gap-1.5 border border-border shadow-2xs hover:bg-slate-50 transition cursor-pointer disabled:opacity-50"
+            className="px-3 py-1.5 rounded-full bg-white text-ink font-bold flex items-center gap-1.5 border border-border shadow-2xs hover:bg-slate-50 transition cursor-pointer disabled:opacity-50"
             title="Refresh metrics"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-emerald-600 ${isUsageLoading ? 'animate-spin' : ''}`} />
             <span>Refreshed {lastRefreshed}</span>
           </button>
 
-          <span className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 font-bold flex items-center gap-1.5 border border-emerald-200/50">
+          <span className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 font-bold flex items-center gap-1.5 border border-emerald-200/50">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -327,7 +327,7 @@ export const AdminPage: React.FC = () => {
           onClick={() => setActiveTab('telemetry')}
           className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold border-b-2 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'telemetry'
-              ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+              ? 'border-emerald-600 text-emerald-600'
               : 'border-transparent text-muted hover:text-ink'
           }`}
         >
@@ -340,7 +340,7 @@ export const AdminPage: React.FC = () => {
           onClick={() => setActiveTab('users')}
           className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold border-b-2 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'users'
-              ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+              ? 'border-emerald-600 text-emerald-600'
               : 'border-transparent text-muted hover:text-ink'
           }`}
         >
@@ -353,7 +353,7 @@ export const AdminPage: React.FC = () => {
           onClick={() => setActiveTab('leads')}
           className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold border-b-2 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'leads'
-              ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+              ? 'border-emerald-600 text-emerald-600'
               : 'border-transparent text-muted hover:text-ink'
           }`}
         >
@@ -366,7 +366,7 @@ export const AdminPage: React.FC = () => {
           onClick={() => setActiveTab('audit')}
           className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold border-b-2 transition cursor-pointer whitespace-nowrap ${
             activeTab === 'audit'
-              ? 'border-emerald-600 text-emerald-600 dark:border-emerald-400 dark:text-emerald-400'
+              ? 'border-emerald-600 text-emerald-600'
               : 'border-transparent text-muted hover:text-ink'
           }`}
         >
@@ -380,7 +380,7 @@ export const AdminPage: React.FC = () => {
         <div className="space-y-6">
           {/* Top Operational Status Banner */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            <Card className="p-4 bg-white dark:bg-slate-900 border-border">
+            <Card className="p-4 bg-white border-border">
               <div className="flex items-center gap-2 text-muted text-xs font-semibold">
                 <Database className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Database Cluster</span>
@@ -392,7 +392,7 @@ export const AdminPage: React.FC = () => {
               <span className="text-[10px] text-muted">Primary Replica Set Connected</span>
             </Card>
 
-            <Card className="p-4 bg-white dark:bg-slate-900 border-border">
+            <Card className="p-4 bg-white border-border">
               <div className="flex items-center gap-2 text-muted text-xs font-semibold">
                 <Clock className="w-3.5 h-3.5 text-blue-600" />
                 <span>Service Uptime</span>
@@ -403,7 +403,7 @@ export const AdminPage: React.FC = () => {
               <span className="text-[10px] text-muted">Node.js Server Process</span>
             </Card>
 
-            <Card className="p-4 bg-white dark:bg-slate-900 border-border">
+            <Card className="p-4 bg-white border-border">
               <div className="flex items-center gap-2 text-muted text-xs font-semibold">
                 <HardDrive className="w-3.5 h-3.5 text-purple-600" />
                 <span>Memory (Heap Used)</span>
@@ -416,12 +416,12 @@ export const AdminPage: React.FC = () => {
               </span>
             </Card>
 
-            <Card className="p-4 bg-white dark:bg-slate-900 border-border">
+            <Card className="p-4 bg-white border-border">
               <div className="flex items-center gap-2 text-muted text-xs font-semibold">
                 <Server className="w-3.5 h-3.5 text-slate-600" />
                 <span>Environment</span>
               </div>
-              <div className="mt-2 text-lg font-bold text-slate-800 dark:text-slate-100 font-heading capitalize">
+              <div className="mt-2 text-lg font-bold text-slate-800 font-heading capitalize">
                 {usage?.systemHealth?.environment || 'production'}
               </div>
               <span className="text-[10px] text-muted">RSS: {usage?.systemHealth?.memoryUsageMb?.rss || 0} MB</span>
@@ -445,7 +445,7 @@ export const AdminPage: React.FC = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               <Card className="p-4 border-emerald-500/30 bg-emerald-50/20">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+                  <span className="text-xs font-semibold text-emerald-800">
                     Online Right Now
                   </span>
                   <span className="relative flex h-2.5 w-2.5">
@@ -517,7 +517,7 @@ export const AdminPage: React.FC = () => {
                     <span className="text-[11px] font-bold text-muted block line-clamp-1">{sec.section}</span>
                     <span className="text-2xl font-black text-ink font-heading mt-1.5 block">{sec.count}</span>
                   </div>
-                  <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold mt-2">
+                  <span className="text-[10px] text-emerald-700 font-semibold mt-2">
                     {sec.unit}
                   </span>
                 </Card>
@@ -526,7 +526,7 @@ export const AdminPage: React.FC = () => {
           </div>
 
           {/* Privacy & Compliance Assurance Card */}
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-border text-xs flex items-start gap-3">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-border text-xs flex items-start gap-3">
             <Shield className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
               <p className="font-bold text-ink">Strict Admin Access & Zero-PII Visibility Policy</p>
@@ -550,7 +550,7 @@ export const AdminPage: React.FC = () => {
                 value={userSearch}
                 onChange={(e) => setUserSearch(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && fetchUsers()}
-                className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-border bg-white dark:bg-slate-900 text-ink focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-border bg-white text-ink focus:outline-none focus:ring-1 focus:ring-emerald-500"
               />
             </div>
 
@@ -563,7 +563,7 @@ export const AdminPage: React.FC = () => {
                   className={`px-3 py-1 rounded-full font-bold uppercase text-[10px] transition cursor-pointer ${
                     tierFilter === tier
                       ? 'bg-emerald-600 text-white'
-                      : 'bg-slate-100 text-muted hover:bg-slate-200 dark:bg-slate-800'
+                      : 'bg-slate-100 text-muted hover:bg-slate-200'
                   }`}
                 >
                   {tier}
@@ -575,7 +575,7 @@ export const AdminPage: React.FC = () => {
           {isUsersLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-16 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                <div key={i} className="h-16 rounded-xl bg-slate-100 animate-pulse" />
               ))}
             </div>
           ) : users.length === 0 ? (
@@ -587,7 +587,7 @@ export const AdminPage: React.FC = () => {
           ) : (
             <div className="overflow-x-auto rounded-2xl border border-border">
               <table className="w-full text-left text-xs text-ink">
-                <thead className="bg-slate-50 dark:bg-slate-900/60 text-muted font-bold uppercase text-[10px] tracking-wider border-b border-border">
+                <thead className="bg-slate-50 text-muted font-bold uppercase text-[10px] tracking-wider border-b border-border">
                   <tr>
                     <th className="p-3.5">Broker / Account</th>
                     <th className="p-3.5">Contact Details</th>
@@ -599,10 +599,10 @@ export const AdminPage: React.FC = () => {
                 </thead>
                 <tbody className="divide-y divide-border/60">
                   {users.map((u) => (
-                    <tr key={u._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
+                    <tr key={u._id} className="hover:bg-slate-50/50 transition">
                       <td className="p-3.5">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold flex items-center justify-center shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center shrink-0">
                             {u.name.charAt(0).toUpperCase()}
                           </div>
                           <div>
@@ -619,8 +619,8 @@ export const AdminPage: React.FC = () => {
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                             u.role === 'admin'
-                              ? 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300'
-                              : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                              ? 'bg-purple-100 text-purple-700'
+                              : 'bg-slate-100 text-slate-700'
                           }`}
                         >
                           {u.role}
@@ -640,7 +640,7 @@ export const AdminPage: React.FC = () => {
                           value={u.plan?.tier || 'trial'}
                           disabled={updatingUserId === u._id}
                           onChange={(e) => handlePlanChange(u._id, e.target.value as any)}
-                          className="px-2 py-1 text-[11px] rounded-lg border border-border bg-white dark:bg-slate-900 font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer disabled:opacity-50"
+                          className="px-2 py-1 text-[11px] rounded-lg border border-border bg-white font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer disabled:opacity-50"
                         >
                           <option value="trial">Trial</option>
                           <option value="starter">Starter</option>
@@ -671,8 +671,8 @@ export const AdminPage: React.FC = () => {
                 onClick={() => setLeadSubTab('contacts')}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
                   leadSubTab === 'contacts'
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                    : 'bg-slate-100 text-muted hover:bg-slate-200 dark:bg-slate-800'
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-100 text-muted hover:bg-slate-200'
                 }`}
               >
                 Landing Page Leads ({contacts.length})
@@ -682,8 +682,8 @@ export const AdminPage: React.FC = () => {
                 onClick={() => setLeadSubTab('inquiries')}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
                   leadSubTab === 'inquiries'
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                    : 'bg-slate-100 text-muted hover:bg-slate-200 dark:bg-slate-800'
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-100 text-muted hover:bg-slate-200'
                 }`}
               >
                 Flyer Property Inquiries ({inquiries.length})
@@ -693,7 +693,7 @@ export const AdminPage: React.FC = () => {
             <button
               type="button"
               onClick={leadSubTab === 'contacts' ? exportContactsCsv : exportInquiriesCsv}
-              className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 text-ink text-xs font-bold flex items-center gap-1.5 border border-border shadow-2xs hover:bg-slate-50 transition cursor-pointer"
+              className="px-3 py-1.5 rounded-full bg-white text-ink text-xs font-bold flex items-center gap-1.5 border border-border shadow-2xs hover:bg-slate-50 transition cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 text-emerald-600" />
               <span>Export {leadSubTab === 'contacts' ? 'Contacts' : 'Inquiries'} (CSV)</span>
@@ -706,7 +706,7 @@ export const AdminPage: React.FC = () => {
               {isLeadsLoading ? (
                 <div className="space-y-3">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-28 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                    <div key={i} className="h-28 rounded-xl bg-slate-100 animate-pulse" />
                   ))}
                 </div>
               ) : contacts.length === 0 ? (
@@ -727,7 +727,7 @@ export const AdminPage: React.FC = () => {
                     >
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/70 pb-2">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold flex items-center justify-center shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center shrink-0">
                             {lead.name.charAt(0)}
                           </div>
                           <div>
@@ -745,7 +745,7 @@ export const AdminPage: React.FC = () => {
 
                         <div className="flex items-center gap-2 text-[11px] text-muted">
                           {lead.city && (
-                            <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-medium">
+                            <span className="px-2 py-0.5 rounded bg-slate-100 font-medium">
                               {lead.city}
                             </span>
                           )}
@@ -753,7 +753,7 @@ export const AdminPage: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border text-xs text-ink leading-relaxed flex items-start gap-2">
+                      <div className="p-2.5 rounded-xl bg-slate-50 border border-border text-xs text-ink leading-relaxed flex items-start gap-2">
                         <MessageSquare className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
                         <span>"{lead.message}"</span>
                       </div>
@@ -762,7 +762,7 @@ export const AdminPage: React.FC = () => {
                         <div className="flex items-center gap-2 text-xs">
                           <a
                             href={`tel:${lead.phone}`}
-                            className="px-3 py-1 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold flex items-center gap-1.5"
+                            className="px-3 py-1 rounded-full bg-slate-900 text-white font-bold flex items-center gap-1.5"
                           >
                             <Phone className="w-3 h-3" />
                             <span>Call</span>
@@ -812,7 +812,7 @@ export const AdminPage: React.FC = () => {
                     >
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/70 pb-2">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 font-bold flex items-center justify-center shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-800 font-bold flex items-center justify-center shrink-0">
                             {inq.name.charAt(0)}
                           </div>
                           <div>
@@ -822,7 +822,7 @@ export const AdminPage: React.FC = () => {
                         </div>
 
                         <div className="flex items-center gap-2 text-[11px] text-muted">
-                          <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 font-bold text-[10px] flex items-center gap-1">
+                          <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold text-[10px] flex items-center gap-1">
                             <Building2 className="w-3 h-3" />
                             {propTitle}
                           </span>
@@ -831,7 +831,7 @@ export const AdminPage: React.FC = () => {
                       </div>
 
                       {inq.message && (
-                        <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border text-xs text-ink leading-relaxed">
+                        <div className="p-2.5 rounded-xl bg-slate-50 border border-border text-xs text-ink leading-relaxed">
                           "{inq.message}"
                         </div>
                       )}
@@ -840,7 +840,7 @@ export const AdminPage: React.FC = () => {
                         <div className="flex items-center gap-2 text-xs">
                           <a
                             href={`tel:${inq.phone}`}
-                            className="px-3 py-1 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold flex items-center gap-1.5"
+                            className="px-3 py-1 rounded-full bg-slate-900 text-white font-bold flex items-center gap-1.5"
                           >
                             <Phone className="w-3 h-3" />
                             <span>Call</span>
@@ -879,7 +879,7 @@ export const AdminPage: React.FC = () => {
 
           <div className="overflow-x-auto rounded-2xl border border-border">
             <table className="w-full text-left text-xs text-ink">
-              <thead className="bg-slate-50 dark:bg-slate-900/60 text-muted font-bold uppercase text-[10px] tracking-wider border-b border-border">
+              <thead className="bg-slate-50 text-muted font-bold uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
                   <th className="p-3.5">Event Type</th>
                   <th className="p-3.5">Entity Scope</th>
@@ -896,13 +896,13 @@ export const AdminPage: React.FC = () => {
                   </tr>
                 ) : (
                   (usage?.recentEvents || []).map((ev) => (
-                    <tr key={ev.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
+                    <tr key={ev.id} className="hover:bg-slate-50/50 transition">
                       <td className="p-3.5">
-                        <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 font-mono text-[10px] font-bold border border-emerald-200/50">
+                        <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-mono text-[10px] font-bold border border-emerald-200/50">
                           {ev.type}
                         </span>
                       </td>
-                      <td className="p-3.5 capitalize font-medium text-slate-700 dark:text-slate-300">
+                      <td className="p-3.5 capitalize font-medium text-slate-700">
                         {ev.entityType}
                       </td>
                       <td className="p-3.5 font-mono text-[11px] text-muted">

@@ -17,7 +17,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           colors: {
@@ -72,7 +71,6 @@
     
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
-    .dark ::-webkit-scrollbar-thumb { background: #334155; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -149,7 +147,7 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#0B0F17] text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-800 transition-colors">
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-800 transition-colors">
 
   <!-- ======================================================== -->
   <!-- EXPERIENCE 1: PUBLIC MARKETING LANDING PAGE              -->
@@ -157,20 +155,20 @@
   <div id="page-landing" class="flex-1 flex flex-col">
     
     <!-- Top Sticky Landing Navbar -->
-    <header class="sticky top-0 z-40 bg-white/85 dark:bg-[#0B0F17]/85 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 transition-all">
+    <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-slate-200 transition-all">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <!-- Logo -->
         <a href="#hero" class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 shadow-xs">
+          <div class="w-8 h-8 rounded-xl bg-white border border-slate-200 p-1 shadow-xs">
             <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-full h-full object-contain">
           </div>
-          <span class="text-lg font-black tracking-tight text-slate-900 dark:text-white font-heading">
+          <span class="text-lg font-black tracking-tight text-slate-900 font-heading">
             lead<span class="text-emerald-600">Nivash</span>
           </span>
         </a>
 
         <!-- Desktop Navigation Links -->
-        <nav class="hidden md:flex items-center gap-7 text-xs font-bold text-slate-500 dark:text-slate-400">
+        <nav class="hidden md:flex items-center gap-7 text-xs font-bold text-slate-500">
           <a href="#how-it-works" class="hover:text-emerald-600 transition">How It Works</a>
           <a href="#features" class="hover:text-emerald-600 transition">Features</a>
           <a href="#financial-impact" class="hover:text-emerald-600 transition">ROI Calculator</a>
@@ -459,20 +457,20 @@
     </section>
 
     <!-- SECTION 2 — PURPOSE-BUILT FOR AGENTS: PRODUCT DEMO UPGRADE -->
-    <section id="capabilities" class="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800 relative overflow-hidden">
+    <section id="capabilities" class="py-16 sm:py-24 px-4 sm:px-6 bg-white border-y border-slate-200 relative overflow-hidden">
       <!-- Subtle top ambient glow -->
       <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[200px] bg-gradient-to-b from-emerald-500/8 via-transparent to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="max-w-6xl mx-auto space-y-12 relative z-10 text-center">
         <!-- 1. Section Header -->
         <div class="space-y-3 max-w-2xl mx-auto">
-          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700">
             PURPOSE-BUILT FOR AGENTS
           </span>
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-heading tracking-tight leading-tight">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-heading tracking-tight leading-tight">
             Everything You Need to <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">Turn Enquiries into Deals.</span>
           </h2>
-          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+          <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
             One organised workspace for your properties, buyers, WhatsApp requirements and brokerage pipeline.
           </p>
         </div>
@@ -482,18 +480,18 @@
           <!-- Format Selector Bar -->
           <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-4">
             <div class="flex items-center gap-2">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/80 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 text-xs font-bold shadow-xs">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-700 text-xs font-bold shadow-xs">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 REAL PRODUCT WALKTHROUGH
               </span>
             </div>
 
-            <div class="inline-flex items-center p-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-xs font-bold shadow-xs">
+            <div class="inline-flex items-center p-1 bg-slate-100 border border-slate-200 rounded-full text-xs font-bold shadow-xs">
               <button onclick="setVideoAspect('desktop')" id="btn-video-desktop" class="px-3.5 py-1.5 rounded-full bg-emerald-700 text-white flex items-center gap-1.5 transition cursor-pointer">
                 <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
                 <span>Desktop (16:9)</span>
               </button>
-              <button onclick="setVideoAspect('mobile')" id="btn-video-mobile" class="px-3.5 py-1.5 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 transition cursor-pointer">
+              <button onclick="setVideoAspect('mobile')" id="btn-video-mobile" class="px-3.5 py-1.5 rounded-full text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
                 <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
                 <span>Mobile (9:16)</span>
               </button>
@@ -501,7 +499,7 @@
           </div>
 
           <!-- Video Player Container with Responsive Aspect Ratio -->
-          <div id="video-frame" class="mx-auto aspect-video w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500">
+          <div id="video-frame" class="mx-auto aspect-video w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500">
             <video id="demo-video-player" class="w-full h-full object-cover object-center" playsinline poster="./assets/images/leadnivash-desktop-poster.webp">
               <source id="demo-video-source" src="./assets/videos/leadnivash-desktop-demo.mp4" type="video/mp4">
             </video>
@@ -518,63 +516,63 @@
 
         <!-- 6. Core Capabilities Strip -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 pt-4 text-left">
-          <div class="group p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
-            <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+          <div class="group p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
               <i data-lucide="building-2" class="w-4 h-4"></i>
             </div>
             <div>
-              <h5 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors leading-tight">Smart Property Inventory</h5>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight mt-1">Centralised listings with private vault</p>
+              <h5 class="text-xs font-bold text-slate-900 group-hover:text-emerald-600 transition-colors leading-tight">Smart Property Inventory</h5>
+              <p class="text-[11px] text-slate-500 leading-tight mt-1">Centralised listings with private vault</p>
             </div>
           </div>
 
-          <div class="group p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
-            <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+          <div class="group p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
               <i data-lucide="users" class="w-4 h-4"></i>
             </div>
             <div>
-              <h5 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors leading-tight">Buyer Requirements</h5>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight mt-1">Active budgets, localities & criteria</p>
+              <h5 class="text-xs font-bold text-slate-900 group-hover:text-emerald-600 transition-colors leading-tight">Buyer Requirements</h5>
+              <p class="text-[11px] text-slate-500 leading-tight mt-1">Active budgets, localities & criteria</p>
             </div>
           </div>
 
-          <div class="group p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
-            <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+          <div class="group p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
               <i data-lucide="message-square" class="w-4 h-4"></i>
             </div>
             <div>
-              <h5 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors leading-tight">WhatsApp Analyzer</h5>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight mt-1">Instant extraction of BHK, size & price</p>
+              <h5 class="text-xs font-bold text-slate-900 group-hover:text-emerald-600 transition-colors leading-tight">WhatsApp Analyzer</h5>
+              <p class="text-[11px] text-slate-500 leading-tight mt-1">Instant extraction of BHK, size & price</p>
             </div>
           </div>
 
-          <div class="group p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
-            <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+          <div class="group p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
               <i data-lucide="sparkles" class="w-4 h-4"></i>
             </div>
             <div>
-              <h5 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors leading-tight">Intelligent Matching</h5>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight mt-1">Percentage scores & matching reasons</p>
+              <h5 class="text-xs font-bold text-slate-900 group-hover:text-emerald-600 transition-colors leading-tight">Intelligent Matching</h5>
+              <p class="text-[11px] text-slate-500 leading-tight mt-1">Percentage scores & matching reasons</p>
             </div>
           </div>
 
-          <div class="group p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
-            <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+          <div class="group p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
               <i data-lucide="share-2" class="w-4 h-4"></i>
             </div>
             <div>
-              <h5 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors leading-tight">Masked Flyers</h5>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight mt-1">Agency watermarked brochures</p>
+              <h5 class="text-xs font-bold text-slate-900 group-hover:text-emerald-600 transition-colors leading-tight">Masked Flyers</h5>
+              <p class="text-[11px] text-slate-500 leading-tight mt-1">Agency watermarked brochures</p>
             </div>
           </div>
 
-          <div class="group p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
-            <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+          <div class="group p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 space-y-2 cursor-default">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
               <i data-lucide="trending-up" class="w-4 h-4"></i>
             </div>
             <div>
-              <h5 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors leading-tight">Deal & Commission</h5>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight mt-1">Track stages, pipeline & earnings</p>
+              <h5 class="text-xs font-bold text-slate-900 group-hover:text-emerald-600 transition-colors leading-tight">Deal & Commission</h5>
+              <p class="text-[11px] text-slate-500 leading-tight mt-1">Track stages, pipeline & earnings</p>
             </div>
           </div>
         </div>
@@ -589,13 +587,13 @@
       <div class="relative z-10 space-y-12 text-center">
         <!-- 1. Section Header -->
         <div class="space-y-3 max-w-2xl mx-auto">
-          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700">
             SIMPLE WORKFLOW
           </span>
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-heading tracking-tight leading-tight">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-heading tracking-tight leading-tight">
             From WhatsApp Message to <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">Property Deal.</span>
           </h2>
-          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+          <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
             Stop searching through endless chats and manually organising information. leadNivash helps you manage the entire workflow.
           </p>
         </div>
@@ -603,18 +601,18 @@
         <!-- 3 & 4. Interactive Connected Progress Line & Stepper -->
         <div class="max-w-4xl mx-auto text-left">
           <div class="flex items-center justify-between pb-3 px-1">
-            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+            <span class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span id="workflow-stage-counter">Stage 1 of 5 · Continuous Flow</span>
             </span>
-            <button onclick="toggleWorkflowPause()" id="btn-workflow-pause" class="text-[11px] font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 transition cursor-pointer">
+            <button onclick="toggleWorkflowPause()" id="btn-workflow-pause" class="text-[11px] font-bold text-slate-500 hover:text-slate-900 px-2.5 py-1 rounded-full border border-slate-200 bg-white transition cursor-pointer">
               Pause Flow
             </button>
           </div>
 
           <!-- Connecting Stepper Bar -->
           <div class="relative mb-8">
-            <div class="absolute top-5 inset-x-8 h-0.5 bg-slate-200 dark:bg-slate-800 -z-0">
+            <div class="absolute top-5 inset-x-8 h-0.5 bg-slate-200 -z-0">
               <div id="workflow-progress-line" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500 w-0"></div>
             </div>
 
@@ -623,32 +621,32 @@
                 <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-600/30 scale-110 ring-4 ring-emerald-500/20">
                   <i data-lucide="message-square" class="w-4 h-4"></i>
                 </div>
-                <span class="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 font-extrabold hidden sm:inline">01. Paste</span>
+                <span class="text-[11px] font-bold text-emerald-700 font-extrabold hidden sm:inline">01. Paste</span>
               </button>
 
               <button type="button" onclick="setWorkflowStep(1)" class="workflow-step-btn group flex flex-col items-center gap-2 cursor-pointer focus:outline-none">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white border-slate-300 text-slate-500">
                   <i data-lucide="sparkles" class="w-4 h-4"></i>
                 </div>
                 <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">02. AI Extraction</span>
               </button>
 
               <button type="button" onclick="setWorkflowStep(2)" class="workflow-step-btn group flex flex-col items-center gap-2 cursor-pointer focus:outline-none">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white border-slate-300 text-slate-500">
                   <i data-lucide="layers" class="w-4 h-4"></i>
                 </div>
                 <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">03. Save & Organise</span>
               </button>
 
               <button type="button" onclick="setWorkflowStep(3)" class="workflow-step-btn group flex flex-col items-center gap-2 cursor-pointer focus:outline-none">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white border-slate-300 text-slate-500">
                   <i data-lucide="search" class="w-4 h-4"></i>
                 </div>
                 <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">04. Find Matches</span>
               </button>
 
               <button type="button" onclick="setWorkflowStep(4)" class="workflow-step-btn group flex flex-col items-center gap-2 cursor-pointer focus:outline-none">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white border-slate-300 text-slate-500">
                   <i data-lucide="share-2" class="w-4 h-4"></i>
                 </div>
                 <span class="text-[11px] font-bold text-slate-500 hidden sm:inline">05. Share & Track</span>
@@ -657,21 +655,21 @@
           </div>
 
           <!-- Active Stage Showcase Card -->
-          <div class="rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-5 sm:p-8 shadow-2xl transition-all duration-500">
+          <div class="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white/90 backdrop-blur-xl p-5 sm:p-8 shadow-2xl transition-all duration-500">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
               <!-- Left Narrative -->
               <div class="lg:col-span-5 space-y-4">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 text-xs font-bold shadow-xs" id="workflow-pill-label">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold shadow-xs" id="workflow-pill-label">
                   STEP 01 — PASTE A MESSAGE
                 </div>
-                <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-heading leading-snug" id="workflow-heading">
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900 font-heading leading-snug" id="workflow-heading">
                   Paste a Message
                 </h3>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-normal" id="workflow-desc">
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal" id="workflow-desc">
                   Copy a buyer requirement or property listing from WhatsApp and paste it into leadNivash.
                 </p>
                 <div class="pt-2 flex items-center gap-3">
-                  <button type="button" onclick="nextWorkflowStep()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-xs font-bold transition cursor-pointer">
+                  <button type="button" onclick="nextWorkflowStep()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold transition cursor-pointer">
                     <span>Next Stage</span>
                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                   </button>
@@ -705,49 +703,49 @@
 
         <!-- 5 Connected Step Cards Grid (At a glance overview) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 pt-4 text-left">
-          <div onclick="setWorkflowStep(0)" class="workflow-overview-card group p-4 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-500 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20 -translate-y-1 transition-all duration-300 cursor-pointer space-y-2">
+          <div onclick="setWorkflowStep(0)" class="workflow-overview-card group p-4 rounded-2xl bg-emerald-50/90 border border-emerald-500 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20 -translate-y-1 transition-all duration-300 cursor-pointer space-y-2">
             <div class="flex items-center justify-between">
               <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs"><i data-lucide="message-square" class="w-4 h-4"></i></span>
-              <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400">STEP 01</span>
+              <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">STEP 01</span>
             </div>
-            <h5 class="text-xs font-extrabold text-emerald-900 dark:text-emerald-300 leading-tight">Paste a Message</h5>
-            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">Copy a buyer requirement or property listing from WhatsApp and paste it into leadNivash.</p>
+            <h5 class="text-xs font-extrabold text-emerald-900 leading-tight">Paste a Message</h5>
+            <p class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">Copy a buyer requirement or property listing from WhatsApp and paste it into leadNivash.</p>
           </div>
 
-          <div onclick="setWorkflowStep(1)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
+          <div onclick="setWorkflowStep(1)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 border border-slate-200/80 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
             <div class="flex items-center justify-between">
-              <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
+              <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="sparkles" class="w-4 h-4"></i></span>
               <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">STEP 02</span>
             </div>
-            <h5 class="text-xs font-bold text-slate-900 dark:text-white leading-tight">AI Understands It</h5>
-            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">AI extracts important information such as name, budget, property type, locality, area and contact details.</p>
+            <h5 class="text-xs font-bold text-slate-900 leading-tight">AI Understands It</h5>
+            <p class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">AI extracts important information such as name, budget, property type, locality, area and contact details.</p>
           </div>
 
-          <div onclick="setWorkflowStep(2)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
+          <div onclick="setWorkflowStep(2)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 border border-slate-200/80 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
             <div class="flex items-center justify-between">
-              <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="layers" class="w-4 h-4"></i></span>
+              <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="layers" class="w-4 h-4"></i></span>
               <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">STEP 03</span>
             </div>
-            <h5 class="text-xs font-bold text-slate-900 dark:text-white leading-tight">Save and Organise</h5>
-            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">Review the extracted information, correct anything necessary and save the buyer or property record.</p>
+            <h5 class="text-xs font-bold text-slate-900 leading-tight">Save and Organise</h5>
+            <p class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">Review the extracted information, correct anything necessary and save the buyer or property record.</p>
           </div>
 
-          <div onclick="setWorkflowStep(3)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
+          <div onclick="setWorkflowStep(3)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 border border-slate-200/80 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
             <div class="flex items-center justify-between">
-              <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="search" class="w-4 h-4"></i></span>
+              <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="search" class="w-4 h-4"></i></span>
               <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">STEP 04</span>
             </div>
-            <h5 class="text-xs font-bold text-slate-900 dark:text-white leading-tight">Find Matches</h5>
-            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">The matching engine compares buyer requirements against available inventory and explains why a property matches.</p>
+            <h5 class="text-xs font-bold text-slate-900 leading-tight">Find Matches</h5>
+            <p class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">The matching engine compares buyer requirements against available inventory and explains why a property matches.</p>
           </div>
 
-          <div onclick="setWorkflowStep(4)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
+          <div onclick="setWorkflowStep(4)" class="workflow-overview-card group p-4 rounded-2xl bg-white/90 border border-slate-200/80 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2">
             <div class="flex items-center justify-between">
-              <span class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="share-2" class="w-4 h-4"></i></span>
+              <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs group-hover:text-emerald-600"><i data-lucide="share-2" class="w-4 h-4"></i></span>
               <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">STEP 05</span>
             </div>
-            <h5 class="text-xs font-bold text-slate-900 dark:text-white leading-tight">Share and Track</h5>
-            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">Generate a branded masked property flyer, share it with the buyer and track the opportunity through your deal pipeline.</p>
+            <h5 class="text-xs font-bold text-slate-900 leading-tight">Share and Track</h5>
+            <p class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">Generate a branded masked property flyer, share it with the buyer and track the opportunity through your deal pipeline.</p>
           </div>
         </div>
       </div>
@@ -756,27 +754,27 @@
     <!-- ========================================================= -->
     <!-- SECTION 4 — FEATURES (CORE CAPABILITIES SHOWCASE)          -->
     <!-- ========================================================= -->
-    <section id="features" class="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50/70 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800 relative overflow-hidden">
+    <section id="features" class="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50/70 border-y border-slate-200 relative overflow-hidden">
       <!-- Subtle top ambient light-ray effect -->
       <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[220px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="max-w-6xl mx-auto space-y-12 relative z-10">
         <!-- 1. Section Header & Introduction -->
         <div class="text-center max-w-2xl mx-auto space-y-3">
-          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700">
             CORE CAPABILITIES
           </span>
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-heading tracking-tight leading-tight">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-heading tracking-tight leading-tight">
             Everything Your Property Business Needs. <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">In One Place.</span>
           </h2>
-          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-normal">
+          <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
             From organising properties and understanding WhatsApp enquiries to matching buyers and tracking commissions, leadNivash brings your brokerage workflow together.
           </p>
         </div>
 
         <!-- Compact Section Sub-label -->
         <div class="flex items-center justify-center">
-          <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800/50 text-emerald-800 dark:text-emerald-300 text-xs font-extrabold tracking-wide shadow-xs">
+          <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-extrabold tracking-wide shadow-xs">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             ONE WORKSPACE. SIX POWERFUL CAPABILITIES.
           </span>
@@ -785,18 +783,18 @@
         <!-- 2 & 3. 6 Main Feature Cards (3-column, 2-row layout on desktop) -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- FEATURE 01 — SMART PROPERTY INVENTORY -->
-          <div onclick="selectFeatureCard(0)" id="feature-card-0" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+          <div onclick="selectFeatureCard(0)" id="feature-card-0" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
             <div class="space-y-3 text-left">
               <div class="flex items-center justify-between">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                   <i data-lucide="building-2" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 01</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-heading">
                 Smart Property Inventory
               </h3>
-              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p class="text-xs text-slate-600 leading-relaxed">
                 Keep all your property listings organised in one place, with important details and private owner information securely managed.
               </p>
             </div>
@@ -822,18 +820,18 @@
           </div>
 
           <!-- FEATURE 02 — BUYER REQUIREMENTS -->
-          <div onclick="selectFeatureCard(1)" id="feature-card-1" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+          <div onclick="selectFeatureCard(1)" id="feature-card-1" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
             <div class="space-y-3 text-left">
               <div class="flex items-center justify-between">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                   <i data-lucide="users" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 02</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-heading">
                 Buyer Requirements
               </h3>
-              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p class="text-xs text-slate-600 leading-relaxed">
                 Organise buyer preferences, budgets, preferred localities and property criteria so you can act quickly when listings become available.
               </p>
             </div>
@@ -861,18 +859,18 @@
           </div>
 
           <!-- FEATURE 03 — WHATSAPP MESSAGE ANALYZER -->
-          <div onclick="selectFeatureCard(2)" id="feature-card-2" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+          <div onclick="selectFeatureCard(2)" id="feature-card-2" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
             <div class="space-y-3 text-left">
               <div class="flex items-center justify-between">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                   <i data-lucide="message-square" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 03</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-heading">
                 WhatsApp Message Analyzer
               </h3>
-              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p class="text-xs text-slate-600 leading-relaxed">
                 Extract structured property information from unstructured WhatsApp text without manual data entry.
               </p>
             </div>
@@ -894,18 +892,18 @@
           </div>
 
           <!-- FEATURE 04 — INTELLIGENT PROPERTY MATCHING -->
-          <div onclick="selectFeatureCard(3)" id="feature-card-3" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+          <div onclick="selectFeatureCard(3)" id="feature-card-3" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
             <div class="space-y-3 text-left">
               <div class="flex items-center justify-between">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                   <i data-lucide="sparkles" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 04</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-heading">
                 Intelligent Property Matching
               </h3>
-              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p class="text-xs text-slate-600 leading-relaxed">
                 Connect buyer requirements with relevant property listings automatically based on locality, property type and budget.
               </p>
             </div>
@@ -928,18 +926,18 @@
           </div>
 
           <!-- FEATURE 05 — MASKED PROPERTY FLYERS -->
-          <div onclick="selectFeatureCard(4)" id="feature-card-4" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+          <div onclick="selectFeatureCard(4)" id="feature-card-4" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
             <div class="space-y-3 text-left">
               <div class="flex items-center justify-between">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                   <i data-lucide="share-2" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 05</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-heading">
                 Masked Property Flyers
               </h3>
-              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p class="text-xs text-slate-600 leading-relaxed">
                 Generate clean, shareable property flyers with your agency branding while keeping private owner contact details securely protected.
               </p>
             </div>
@@ -964,18 +962,18 @@
           </div>
 
           <!-- FEATURE 06 — DEAL & COMMISSION TRACKING -->
-          <div onclick="selectFeatureCard(5)" id="feature-card-5" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
+          <div onclick="selectFeatureCard(5)" id="feature-card-5" class="feature-card group p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5">
             <div class="space-y-3 text-left">
               <div class="flex items-center justify-between">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
                   <i data-lucide="trending-up" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">FEATURE 06</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors font-heading">
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-heading">
                 Deal & Commission Tracking
               </h3>
-              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p class="text-xs text-slate-600 leading-relaxed">
                 Follow opportunities through deal stages and keep track of expected and received brokerage commissions.
               </p>
             </div>
@@ -1016,36 +1014,36 @@
     <!-- ========================================================= -->
     <!-- SECTION 5 — FINANCIAL IMPACT & COMMISSION ROI CALCULATOR   -->
     <!-- ========================================================= -->
-    <section id="financial-impact" class="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50/70 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800 relative overflow-hidden">
+    <section id="financial-impact" class="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50/70 border-y border-slate-200 relative overflow-hidden">
       <!-- Subtle top ambient light-ray effect -->
       <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[220px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="max-w-5xl mx-auto space-y-12 relative z-10">
         <!-- 1. Section Header & Introduction -->
         <div class="text-center max-w-2xl mx-auto space-y-3">
-          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700">
             FINANCIAL IMPACT
           </span>
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-heading tracking-tight leading-tight">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-heading tracking-tight leading-tight">
             Your Next Deal Could Be <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">Worth More Than You Think.</span>
           </h2>
-          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-normal">
+          <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
             Organise your opportunities, reduce missed matches and keep your brokerage pipeline moving.
           </p>
         </div>
 
         <!-- 2. Interactive Financial Dashboard (Two-Column Layout) -->
-        <div class="rounded-3xl bg-white/95 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl shadow-emerald-950/5 overflow-hidden">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-slate-200 dark:divide-slate-800">
+        <div class="rounded-3xl bg-white/95 border border-slate-200 shadow-xl shadow-emerald-950/5 overflow-hidden">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
             
             <!-- LEFT COLUMN: Financial Assumptions & Controls (7 Cols on desktop) -->
             <div class="lg:col-span-7 p-6 sm:p-8 lg:p-10 space-y-8 text-left">
-              <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-                <h3 class="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white font-heading flex items-center gap-2">
+              <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                <h3 class="text-sm font-black uppercase tracking-wider text-slate-900 font-heading flex items-center gap-2">
                   <i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i>
                   Brokerage Assumptions
                 </h3>
-                <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                <span class="text-[11px] font-semibold text-slate-500">
                   Adjust variables in real time
                 </span>
               </div>
@@ -1053,11 +1051,11 @@
               <!-- INPUT 01 — PROPERTY DEAL VALUE -->
               <div class="space-y-3.5">
                 <div class="flex justify-between items-baseline">
-                  <label for="deal-slider" class="text-xs font-bold text-slate-900 dark:text-white">
+                  <label for="deal-slider" class="text-xs font-bold text-slate-900">
                     Property Deal Value
                   </label>
                   <div class="flex items-baseline gap-1">
-                    <span class="text-lg sm:text-xl font-black text-emerald-700 dark:text-emerald-400 font-mono" id="calc-val-label">
+                    <span class="text-lg sm:text-xl font-black text-emerald-700 font-mono" id="calc-val-label">
                       ₹75,00,000
                     </span>
                   </div>
@@ -1065,13 +1063,13 @@
 
                 <!-- Suggested Shortcuts -->
                 <div class="flex items-center gap-2">
-                  <button type="button" id="btn-val-45" onclick="setCalcVal(4500000)" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-emerald-500/50 hover:text-slate-900 dark:hover:text-white">
+                  <button type="button" id="btn-val-45" onclick="setCalcVal(4500000)" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer bg-slate-50 text-slate-600 border border-slate-200 hover:border-emerald-500/50 hover:text-slate-900">
                     ₹45 Lakh
                   </button>
                   <button type="button" id="btn-val-75" onclick="setCalcVal(7500000)" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer bg-emerald-600 text-white shadow-xs ring-2 ring-emerald-500/30">
                     ₹75 Lakh
                   </button>
-                  <button type="button" id="btn-val-150" onclick="setCalcVal(15000000)" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-emerald-500/50 hover:text-slate-900 dark:hover:text-white">
+                  <button type="button" id="btn-val-150" onclick="setCalcVal(15000000)" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer bg-slate-50 text-slate-600 border border-slate-200 hover:border-emerald-500/50 hover:text-slate-900">
                     ₹1.5 Crore
                   </button>
                 </div>
@@ -1086,10 +1084,10 @@
                     step="500000"
                     value="7500000"
                     oninput="updateLandingCalc()"
-                    class="w-full accent-emerald-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer transition-all"
+                    class="w-full accent-emerald-600 h-2 bg-slate-200 rounded-lg cursor-pointer transition-all"
                     aria-label="Property Deal Value Slider"
                   />
-                  <div class="flex justify-between text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                  <div class="flex justify-between text-[10px] font-medium text-slate-500">
                     <span>₹20 Lakh</span>
                     <span>₹1.5 Crore</span>
                     <span>₹3 Crore</span>
@@ -1100,23 +1098,23 @@
               <!-- INPUT 02 — COMMISSION PERCENTAGE -->
               <div class="space-y-3.5">
                 <div class="flex justify-between items-baseline">
-                  <span class="text-xs font-bold text-slate-900 dark:text-white">
+                  <span class="text-xs font-bold text-slate-900">
                     Commission Percentage
                   </span>
-                  <span class="text-base font-black text-amber-600 dark:text-amber-400 font-mono" id="calc-rate-label">
+                  <span class="text-base font-black text-amber-600 font-mono" id="calc-rate-label">
                     1.5%
                   </span>
                 </div>
 
                 <!-- Premium Segmented Controls -->
-                <div class="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                  <button type="button" id="btn-rate-1" onclick="setCalcRate(1.0)" class="py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                <div class="grid grid-cols-3 gap-2 p-1 rounded-xl bg-slate-100 border border-slate-200">
+                  <button type="button" id="btn-rate-1" onclick="setCalcRate(1.0)" class="py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center text-slate-500 hover:text-slate-900">
                     1.0%
                   </button>
-                  <button type="button" id="btn-rate-15" onclick="setCalcRate(1.5)" class="py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs ring-1 ring-emerald-500/40">
+                  <button type="button" id="btn-rate-15" onclick="setCalcRate(1.5)" class="py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center bg-white text-emerald-700 shadow-xs ring-1 ring-emerald-500/40">
                     1.5%
                   </button>
-                  <button type="button" id="btn-rate-2" onclick="setCalcRate(2.0)" class="py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                  <button type="button" id="btn-rate-2" onclick="setCalcRate(2.0)" class="py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center text-slate-500 hover:text-slate-900">
                     2.0%
                   </button>
                 </div>
@@ -1125,10 +1123,10 @@
               <!-- INPUT 03 — MONTHLY DEALS CLOSED -->
               <div class="space-y-3.5">
                 <div class="flex justify-between items-baseline">
-                  <label for="deals-slider" class="text-xs font-bold text-slate-900 dark:text-white">
+                  <label for="deals-slider" class="text-xs font-bold text-slate-900">
                     Monthly Deals Closed
                   </label>
-                  <span class="text-base font-black text-slate-900 dark:text-white font-mono" id="calc-deals-label">
+                  <span class="text-base font-black text-slate-900 font-mono" id="calc-deals-label">
                     3 deals / month
                   </span>
                 </div>
@@ -1142,10 +1140,10 @@
                     step="1"
                     value="3"
                     oninput="updateLandingCalc()"
-                    class="w-full accent-emerald-600 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer transition-all"
+                    class="w-full accent-emerald-600 h-2 bg-slate-200 rounded-lg cursor-pointer transition-all"
                     aria-label="Monthly Deals Closed Slider"
                   />
-                  <div class="flex justify-between text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                  <div class="flex justify-between text-[10px] font-medium text-slate-500">
                     <span>1 deal/month</span>
                     <span>5 deals/month</span>
                     <span>10 deals/month</span>
@@ -1155,50 +1153,50 @@
             </div>
 
             <!-- RIGHT COLUMN: Calculated Commission Results (5 Cols on desktop) -->
-            <div class="lg:col-span-5 p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-emerald-500/5 via-teal-500/5 to-slate-900/5 dark:from-emerald-950/40 dark:via-slate-900/60 dark:to-slate-950 text-left flex flex-col justify-between space-y-7">
+            <div class="lg:col-span-5 p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-emerald-500/5 via-teal-500/5 to-slate-900/5 text-left flex flex-col justify-between space-y-7">
               
               <div class="space-y-6">
                 <div class="flex items-center justify-between border-b border-emerald-500/20 pb-3">
-                  <span class="text-[10px] font-black uppercase tracking-widest text-emerald-800 dark:text-emerald-300">
+                  <span class="text-[10px] font-black uppercase tracking-widest text-emerald-800">
                     PROJECTION SUMMARY
                   </span>
-                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-300 dark:border-emerald-800">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">
                     Live Calculation
                   </span>
                 </div>
 
                 <!-- RESULT 01: Estimated Commission Per Deal -->
                 <div class="space-y-1">
-                  <span class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 dark:text-slate-400 block">
+                  <span class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 block">
                     ESTIMATED COMMISSION PER DEAL
                   </span>
-                  <div class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-heading tracking-tight" id="calc-per-deal">
+                  <div class="text-2xl sm:text-3xl font-black text-slate-900 font-heading tracking-tight" id="calc-per-deal">
                     ₹1,12,500
                   </div>
                 </div>
 
                 <!-- RESULT 02: Estimated Monthly Commission (Most Prominent) -->
-                <div class="p-4 sm:p-5 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-emerald-500/40 shadow-lg shadow-emerald-500/5 space-y-1 relative overflow-hidden">
+                <div class="p-4 sm:p-5 rounded-2xl bg-white/90 border border-emerald-500/40 shadow-lg shadow-emerald-500/5 space-y-1 relative overflow-hidden">
                   <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl pointer-events-none"></div>
-                  <div class="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                  <div class="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-emerald-700">
                     <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
                     ESTIMATED MONTHLY COMMISSION
                   </div>
-                  <div class="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-600 dark:text-emerald-400 font-heading tracking-tight drop-shadow-2xs" id="calc-monthly">
+                  <div class="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-600 font-heading tracking-tight drop-shadow-2xs" id="calc-monthly">
                     ₹3,37,500
                   </div>
-                  <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium pt-0.5" id="calc-monthly-sub">
+                  <p class="text-[11px] text-slate-500 font-medium pt-0.5" id="calc-monthly-sub">
                     Calculated across 3 deals / month at 1.5% brokerage
                   </p>
                 </div>
 
                 <!-- RESULT 03: Projected Annual Brokerage -->
                 <div class="space-y-1">
-                  <span class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 dark:text-slate-400 block">
+                  <span class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 block">
                     PROJECTED ANNUAL BROKERAGE
                   </span>
-                  <div class="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400 font-heading">
-                    <span id="calc-annual">₹40,50,000</span> <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 font-sans">/ year</span>
+                  <div class="text-xl sm:text-2xl font-black text-amber-600 font-heading">
+                    <span id="calc-annual">₹40,50,000</span> <span class="text-xs font-semibold text-slate-500 font-sans">/ year</span>
                   </div>
                 </div>
 
@@ -1253,7 +1251,7 @@
               </div>
 
               <!-- 10. Financial Disclaimer -->
-              <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed border-t border-slate-200 dark:border-slate-800/80 pt-3">
+              <p class="text-[10px] text-slate-500 leading-relaxed border-t border-slate-200 pt-3">
                 Illustrative estimates based on your selected property value, commission percentage and number of monthly deals. Actual brokerage earnings depend on completed transactions and agreed commission terms. leadNivash does not guarantee income.
               </p>
             </div>
@@ -1272,16 +1270,16 @@
       <div class="space-y-14 relative z-10">
         <!-- 1. Section Header & Introduction -->
         <div class="text-center max-w-2xl mx-auto space-y-3">
-          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700">
             TRANSPARENT INVESTMENT
           </span>
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-heading tracking-tight leading-tight">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-heading tracking-tight leading-tight">
             Simple, <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">High-ROI Pricing.</span>
           </h2>
-          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-normal">
+          <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
             Start with a free trial. Experience the workflow before deciding to upgrade.
           </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          <p class="text-xs text-slate-500 font-medium">
             No complicated pricing. Start simple and grow with your business.
           </p>
         </div>
@@ -1290,22 +1288,22 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
           
           <!-- PLAN ONE — STARTER PILOT -->
-          <div class="group rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 relative">
+          <div class="group rounded-3xl bg-white/90 border border-slate-200 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300 relative">
             <div class="space-y-6">
               <!-- Header & Badge -->
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
-                  <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold shadow-xs">
+                  <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold shadow-xs">
                     <i data-lucide="zap" class="w-4 h-4 text-emerald-600"></i>
                   </div>
                   <div>
-                    <h3 class="text-base font-bold text-slate-900 dark:text-white font-heading">
+                    <h3 class="text-base font-bold text-slate-900 font-heading">
                       Starter Pilot
                     </h3>
-                    <span class="text-[10px] text-slate-500 dark:text-slate-400 block">Essential Evaluation</span>
+                    <span class="text-[10px] text-slate-500 block">Essential Evaluation</span>
                   </div>
                 </div>
-                <span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-black uppercase tracking-wider border border-slate-200 dark:border-slate-700">
+                <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider border border-slate-200">
                   FREE TO START
                 </span>
               </div>
@@ -1313,54 +1311,54 @@
               <!-- Price Display -->
               <div>
                 <div class="flex items-baseline gap-1.5">
-                  <span class="text-4xl font-black text-slate-900 dark:text-white font-heading tracking-tight">₹0</span>
-                  <span class="text-xs font-bold text-slate-500 dark:text-slate-400">/ 14 Days Free Trial</span>
+                  <span class="text-4xl font-black text-slate-900 font-heading tracking-tight">₹0</span>
+                  <span class="text-xs font-bold text-slate-500">/ 14 Days Free Trial</span>
                 </div>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-2.5">
+                <p class="text-xs text-slate-600 leading-relaxed mt-2.5">
                   Explore the essential leadNivash workflow and experience a more organised way to manage your property business.
                 </p>
               </div>
 
               <!-- Divider -->
-              <div class="h-px bg-slate-200 dark:bg-slate-800 w-full"></div>
+              <div class="h-px bg-slate-200 w-full"></div>
 
               <!-- Feature Checklist -->
-              <div class="space-y-3 text-xs text-slate-800 dark:text-slate-200">
+              <div class="space-y-3 text-xs text-slate-800">
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
                   INCLUDED IN STARTER PILOT:
                 </span>
                 <div class="flex items-start gap-2.5">
-                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     <i data-lucide="check" class="w-3 h-3"></i>
                   </div>
                   <span class="leading-snug">Up to 15 property listings</span>
                 </div>
                 <div class="flex items-start gap-2.5">
-                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     <i data-lucide="check" class="w-3 h-3"></i>
                   </div>
                   <span class="leading-snug">Up to 10 active buyer profiles</span>
                 </div>
                 <div class="flex items-start gap-2.5">
-                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     <i data-lucide="check" class="w-3 h-3"></i>
                   </div>
                   <span class="leading-snug">WhatsApp Requirement Analyzer</span>
                 </div>
                 <div class="flex items-start gap-2.5">
-                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     <i data-lucide="check" class="w-3 h-3"></i>
                   </div>
                   <span class="leading-snug">Basic Property Matching</span>
                 </div>
                 <div class="flex items-start gap-2.5">
-                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     <i data-lucide="check" class="w-3 h-3"></i>
                   </div>
                   <span class="leading-snug">Standard Shareable Links</span>
                 </div>
                 <div class="flex items-start gap-2.5">
-                  <div class="w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div class="w-4 h-4 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     <i data-lucide="check" class="w-3 h-3"></i>
                   </div>
                   <span class="leading-snug">Essential Dashboard Features</span>
@@ -1370,18 +1368,18 @@
 
             <!-- CTA Button -->
             <div class="pt-8">
-              <button onclick="openApp('dashboard')" class="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
+              <button onclick="openApp('dashboard')" class="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
                 <span>Start Free Trial</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </button>
-              <span class="text-[10px] text-center text-slate-500 dark:text-slate-400 block mt-2">
+              <span class="text-[10px] text-center text-slate-500 block mt-2">
                 No credit card required · Instant access
               </span>
             </div>
           </div>
 
           <!-- PLAN TWO — FOUNDER ANNUAL PASS (Highlighted Plan) -->
-          <div class="group rounded-3xl bg-gradient-to-b from-white via-white to-emerald-50/40 dark:from-slate-900/95 dark:via-slate-900/95 dark:to-emerald-950/25 border-2 border-emerald-600/90 shadow-xl shadow-emerald-500/10 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-500/15 hover:-translate-y-1.5 transition-all duration-300 relative">
+          <div class="group rounded-3xl bg-gradient-to-b from-white via-white to-emerald-50/40 border-2 border-emerald-600/90 shadow-xl shadow-emerald-500/10 p-6 sm:p-8 flex flex-col justify-between text-left hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-500/15 hover:-translate-y-1.5 transition-all duration-300 relative">
             <div class="space-y-6">
               <!-- Header & Badge -->
               <div class="flex items-center justify-between">
@@ -1390,10 +1388,10 @@
                     <i data-lucide="crown" class="w-4 h-4"></i>
                   </div>
                   <div>
-                    <h3 class="text-base font-bold text-slate-900 dark:text-white font-heading flex items-center gap-1.5">
+                    <h3 class="text-base font-bold text-slate-900 font-heading flex items-center gap-1.5">
                       Founder Annual Pass
                     </h3>
-                    <span class="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold block">Full Broker OS</span>
+                    <span class="text-[10px] text-emerald-700 font-semibold block">Full Broker OS</span>
                   </div>
                 </div>
                 <span class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
@@ -1404,13 +1402,13 @@
               <!-- Price Display -->
               <div>
                 <div class="flex items-baseline gap-1.5">
-                  <span class="text-4xl font-black text-slate-900 dark:text-white font-heading tracking-tight">₹3,999</span>
-                  <span class="text-xs font-bold text-slate-500 dark:text-slate-400">/ Per Year</span>
+                  <span class="text-4xl font-black text-slate-900 font-heading tracking-tight">₹3,999</span>
+                  <span class="text-xs font-bold text-slate-500">/ Per Year</span>
                 </div>
-                <div class="inline-block mt-1 px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 text-[11px] text-emerald-800 dark:text-emerald-300 font-bold">
-                  Approximately ₹333 / month <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">(billed annually)</span>
+                <div class="inline-block mt-1 px-2.5 py-0.5 rounded-md bg-emerald-100 border border-emerald-200 text-[11px] text-emerald-800 font-bold">
+                  Approximately ₹333 / month <span class="text-[10px] font-normal text-slate-500">(billed annually)</span>
                 </div>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-2.5">
+                <p class="text-xs text-slate-600 leading-relaxed mt-2.5">
                   Everything you need to organise your property business, manage opportunities and grow your brokerage workflow.
                 </p>
               </div>
@@ -1419,8 +1417,8 @@
               <div class="h-px bg-emerald-500/20 w-full"></div>
 
               <!-- Feature Checklist -->
-              <div class="space-y-3 text-xs text-slate-800 dark:text-slate-200">
-                <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 block">
+              <div class="space-y-3 text-xs text-slate-800">
+                <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700 block">
                   EVERYTHING IN PILOT, PLUS:
                 </span>
                 <div class="flex items-start gap-2.5">
@@ -1474,7 +1472,7 @@
                 <span>Get Started</span>
                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </button>
-              <span class="text-[10px] text-center text-slate-500 dark:text-slate-400 block mt-2">
+              <span class="text-[10px] text-center text-slate-500 block mt-2">
                 14-day evaluation period included · Cancel anytime
               </span>
             </div>
@@ -1482,17 +1480,17 @@
         </div>
 
         <!-- 3. Compact Plan Comparison Strip -->
-        <div class="max-w-4xl mx-auto rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 space-y-6 shadow-sm text-left">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div class="max-w-4xl mx-auto rounded-3xl bg-white/90 border border-slate-200 p-6 sm:p-8 space-y-6 shadow-sm text-left">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-4">
             <div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white font-heading">
+              <h3 class="text-base font-bold text-slate-900 font-heading">
                 Everything You Need to Get Started.
               </h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p class="text-xs text-slate-500 mt-0.5">
                 Detailed capability comparison between Starter Pilot and Founder Annual Pass.
               </p>
             </div>
-            <span class="text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shrink-0">
+            <span class="text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0">
               Plan Comparison
             </span>
           </div>
@@ -1501,59 +1499,59 @@
           <div class="overflow-x-auto">
             <table class="w-full text-xs text-left border-collapse">
               <thead>
-                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-black uppercase tracking-wider text-slate-400">
+                <tr class="border-b border-slate-200 text-[11px] font-black uppercase tracking-wider text-slate-400">
                   <th class="py-2.5 pr-4">Capability</th>
                   <th class="py-2.5 px-4 text-center">Starter Pilot</th>
-                  <th class="py-2.5 pl-4 text-center text-emerald-700 dark:text-emerald-400">
+                  <th class="py-2.5 pl-4 text-center text-emerald-700">
                     Founder Annual Pass
                   </th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300 font-medium">
-                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Trial Duration</td>
+              <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
+                <tr class="hover:bg-emerald-50/30 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900">Trial Duration</td>
                   <td class="py-2.5 px-4 text-center text-slate-500">14 Days Free</td>
-                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">365 Days / Full Year</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700">365 Days / Full Year</td>
                 </tr>
-                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Property Listings</td>
+                <tr class="hover:bg-emerald-50/30 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900">Property Listings</td>
                   <td class="py-2.5 px-4 text-center text-slate-500">Up to 15 listings</td>
-                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Unlimited (plan limits)</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700">Unlimited (plan limits)</td>
                 </tr>
-                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Active Buyer Profiles</td>
+                <tr class="hover:bg-emerald-50/30 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900">Active Buyer Profiles</td>
                   <td class="py-2.5 px-4 text-center text-slate-500">Up to 10 profiles</td>
-                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Unlimited (plan limits)</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700">Unlimited (plan limits)</td>
                 </tr>
-                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">AI WhatsApp Parsing</td>
+                <tr class="hover:bg-emerald-50/30 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900">AI WhatsApp Parsing</td>
                   <td class="py-2.5 px-4 text-center text-slate-500">Standard Analyzer</td>
-                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Full AI WhatsApp Parser</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700">Full AI WhatsApp Parser</td>
                 </tr>
-                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Property Matching</td>
+                <tr class="hover:bg-emerald-50/30 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900">Property Matching</td>
                   <td class="py-2.5 px-4 text-center text-slate-500">Basic Criteria</td>
-                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Intelligent Auto-Matching</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700">Intelligent Auto-Matching</td>
                 </tr>
-                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Public Property Flyers</td>
+                <tr class="hover:bg-emerald-50/30 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900">Public Property Flyers</td>
                   <td class="py-2.5 px-4 text-center text-slate-500">Standard Links</td>
-                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Multi-Image Branded Hosting</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700">Multi-Image Branded Hosting</td>
                 </tr>
-                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Deal & Commission Tracking</td>
+                <tr class="hover:bg-emerald-50/30 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900">Deal & Commission Tracking</td>
                   <td class="py-2.5 px-4 text-center text-slate-500">Essential Pipeline</td>
-                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Full Deal & Commission Tracking</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700">Full Deal & Commission Tracking</td>
                 </tr>
-                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Custom Agency Branding</td>
+                <tr class="hover:bg-emerald-50/30 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900">Custom Agency Branding</td>
                   <td class="py-2.5 px-4 text-center text-slate-500">—</td>
-                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Logo & Custom Contact Protection</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700">Logo & Custom Contact Protection</td>
                 </tr>
-                <tr class="hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 transition-colors">
-                  <td class="py-2.5 pr-4 font-semibold text-slate-900 dark:text-white">Priority Support</td>
+                <tr class="hover:bg-emerald-50/30 transition-colors">
+                  <td class="py-2.5 pr-4 font-semibold text-slate-900">Priority Support</td>
                   <td class="py-2.5 px-4 text-center text-slate-500">Standard Support</td>
-                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700 dark:text-emerald-400">Dedicated Priority Support</td>
+                  <td class="py-2.5 pl-4 text-center font-bold text-emerald-700">Dedicated Priority Support</td>
                 </tr>
               </tbody>
             </table>
@@ -1562,11 +1560,11 @@
 
         <!-- 4. Trust Note & FAQ Link -->
         <div class="text-center max-w-xl mx-auto space-y-2 pt-2">
-          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+          <p class="text-xs text-slate-500 leading-relaxed">
             Your trial gives you time to experience leadNivash before choosing a paid plan.
           </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            Have questions about pricing? <a href="#inquiry-form" class="text-emerald-700 dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"><span>Talk to our team</span><i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+          <p class="text-xs text-slate-500">
+            Have questions about pricing? <a href="#inquiry-form" class="text-emerald-700 font-bold hover:underline inline-flex items-center gap-1"><span>Talk to our team</span><i data-lucide="arrow-right" class="w-3 h-3"></i></a>
           </p>
         </div>
       </div>
@@ -1575,20 +1573,20 @@
     <!-- ========================================================= -->
     <!-- SECTION 7 — WHY CHOOSE leadNivash?                        -->
     <!-- ========================================================= -->
-    <section id="why-leadnivash" class="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50/70 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800 relative overflow-hidden">
+    <section id="why-leadnivash" class="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50/70 border-y border-slate-200 relative overflow-hidden">
       <!-- Subtle top ambient emerald sunrise / radial light effect -->
       <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[220px] bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="max-w-6xl mx-auto space-y-12 relative z-10">
         <!-- Section Introduction -->
         <div class="text-center max-w-2xl mx-auto space-y-3">
-          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500">
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest text-emerald-700">
             WHY LEADNIVASH
           </span>
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white font-heading tracking-tight leading-tight">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-heading tracking-tight leading-tight">
             Built Around the Way Property Brokers <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">Actually Work.</span>
           </h2>
-          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-normal">
+          <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
             LeadNivash helps you organise property enquiries, find relevant matches, protect business relationships, and keep deals moving — all without depending on scattered WhatsApp messages and manual tracking.
           </p>
         </div>
@@ -1597,10 +1595,10 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch text-left">
           
           <!-- CARD 1 — NEVER LOSE A MATCH -->
-          <div class="group rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
+          <div class="group rounded-3xl bg-white/90 border border-slate-200 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
             <div class="space-y-4">
               <div class="flex items-center justify-between">
-                <div class="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
                   <i data-lucide="search" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">
@@ -1609,13 +1607,13 @@
               </div>
 
               <div class="space-y-1.5">
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white font-heading group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                <h3 class="text-lg font-bold text-slate-900 font-heading group-hover:text-emerald-600 transition-colors">
                   Never Lose a Match
                 </h3>
-                <p class="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                <p class="text-xs font-semibold text-emerald-700">
                   Keep buyer requirements and property inventory organised so relevant opportunities are easier to identify.
                 </p>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pt-1">
+                <p class="text-xs text-slate-600 leading-relaxed pt-1">
                   Stop searching through endless conversations to remember who needs what. Keep buyer requirements and property details organised, making it easier to discover relevant property matches.
                 </p>
               </div>
@@ -1663,10 +1661,10 @@
           </div>
 
           <!-- CARD 2 — PROTECT YOUR BUSINESS RELATIONSHIPS -->
-          <div class="group rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
+          <div class="group rounded-3xl bg-white/90 border border-slate-200 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
             <div class="space-y-4">
               <div class="flex items-center justify-between">
-                <div class="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
                   <i data-lucide="shield-check" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">
@@ -1675,13 +1673,13 @@
               </div>
 
               <div class="space-y-1.5">
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white font-heading group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                <h3 class="text-lg font-bold text-slate-900 font-heading group-hover:text-emerald-600 transition-colors">
                   Protect Your Business Relationships
                 </h3>
-                <p class="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                <p class="text-xs font-semibold text-emerald-700">
                   Share property information professionally without exposing confidential owner contact details.
                 </p>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pt-1">
+                <p class="text-xs text-slate-600 leading-relaxed pt-1">
                   Create branded, shareable property flyers while keeping sensitive owner contact information protected. Present properties professionally and maintain control over how your business information is shared.
                 </p>
               </div>
@@ -1724,10 +1722,10 @@
           </div>
 
           <!-- CARD 3 — MANAGE MORE, WORK SMARTER -->
-          <div class="group rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
+          <div class="group rounded-3xl bg-white/90 border border-slate-200 p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 transition-all duration-300">
             <div class="space-y-4">
               <div class="flex items-center justify-between">
-                <div class="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all">
                   <i data-lucide="trending-up" class="w-5 h-5"></i>
                 </div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">
@@ -1736,13 +1734,13 @@
               </div>
 
               <div class="space-y-1.5">
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white font-heading group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                <h3 class="text-lg font-bold text-slate-900 font-heading group-hover:text-emerald-600 transition-colors">
                   Manage More, Work Smarter
                 </h3>
-                <p class="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                <p class="text-xs font-semibold text-emerald-700">
                   Reduce repetitive manual work and keep deals and commissions organised.
                 </p>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pt-1">
+                <p class="text-xs text-slate-600 leading-relaxed pt-1">
                   Spend less time manually entering information and tracking conversations. Organise properties, buyer requirements, deal progress, and commissions in one structured workflow.
                 </p>
               </div>
@@ -1828,10 +1826,10 @@
     </section>
 
     <!-- SECTION 8 — FOOTER -->
-    <footer class="mt-auto py-10 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 text-center space-y-2">
+    <footer class="mt-auto py-10 border-t border-slate-200 text-xs text-slate-500 text-center space-y-2">
       <div class="flex items-center justify-center gap-2">
         <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-5 h-5 object-contain">
-        <span class="font-bold text-slate-900 dark:text-white">lead<span class="text-emerald-600">Nivash</span></span>
+        <span class="font-bold text-slate-900">lead<span class="text-emerald-600">Nivash</span></span>
       </div>
       <p>© 2026 leadNivash. All rights reserved. Designed for Indian property brokers.</p>
     </footer>
@@ -1844,13 +1842,13 @@
   <div id="page-app" class="hidden flex-1 flex flex-col min-h-screen">
     
     <!-- TOP APP BAR WITH UPPER-RIGHT SETTING ICON PER USER COMMAND -->
-    <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0B0F17]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-14 flex items-center justify-between">
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 px-4 h-14 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
-        <div class="w-7 h-7 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 shadow-xs">
+        <div class="w-7 h-7 rounded-lg bg-white border border-slate-200 p-1 shadow-xs">
           <img src="./frontend/public/logo-icon.png" alt="leadNivash" class="w-full h-full object-contain">
         </div>
         <div>
-          <h2 class="text-sm font-black text-slate-900 dark:text-white font-heading leading-tight" id="app-title">Dashboard</h2>
+          <h2 class="text-sm font-black text-slate-900 font-heading leading-tight" id="app-title">Dashboard</h2>
           <span class="text-[9px] text-emerald-600 font-bold flex items-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             Sharma Real Estate · Live
@@ -1860,7 +1858,7 @@
 
       <!-- UPPER TOP RIGHT CORNER: SETTINGS ICON PER USER INSTRUCTION -->
       <div class="flex items-center gap-2">
-        <button onclick="openSettingsModal()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer" title="Settings & Account">
+        <button onclick="openSettingsModal()" class="w-9 h-9 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center hover:bg-slate-200 transition cursor-pointer" title="Settings & Account">
           <i data-lucide="settings" class="w-4 h-4"></i>
         </button>
       </div>
@@ -1877,8 +1875,8 @@
         <!-- Welcome Banner -->
         <div class="flex items-center justify-between">
           <div>
-            <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Broker Operating System</span>
-            <h2 class="text-xl font-black text-slate-900 dark:text-white font-heading">Welcome back, Broker</h2>
+            <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Broker Operating System</span>
+            <h2 class="text-xl font-black text-slate-900 font-heading">Welcome back, Broker</h2>
           </div>
           <button onclick="openLanding()" class="text-xs text-slate-500 hover:text-emerald-700 flex items-center gap-1 font-semibold cursor-pointer">
             <span>Website</span>
@@ -1887,29 +1885,29 @@
         </div>
 
         <!-- QUICK PASTE PROMINENT FEATURE ON DASHBOARD PER USER INSTRUCTION -->
-        <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-white via-white to-emerald-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20 border border-emerald-500/30 shadow-card space-y-3">
+        <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-white via-white to-emerald-50/40 border border-emerald-500/30 shadow-card space-y-3">
           <div class="flex items-center gap-2">
-            <span class="p-1.5 rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
+            <span class="p-1.5 rounded-xl bg-emerald-50 text-emerald-700">
               <i data-lucide="sparkles" class="w-4 h-4"></i>
             </span>
-            <h3 class="text-sm font-black text-slate-900 dark:text-white font-heading">
+            <h3 class="text-sm font-black text-slate-900 font-heading">
               Quick Paste — Extract WhatsApp Messages
             </h3>
           </div>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
+          <p class="text-xs text-slate-500">
             Paste raw property listings or client requirements. AI extracts BHK, price, and location in seconds.
           </p>
 
           <div class="space-y-2">
             <div class="flex gap-2">
-              <input type="text" id="dash-quick-input" value="Urgent 3 BHK Model Town 200 gaj demand 1.25 Cr owner 9876543210" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              <input type="text" id="dash-quick-input" value="Urgent 3 BHK Model Town 200 gaj demand 1.25 Cr owner 9876543210" class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               <button onclick="executeQuickParse()" class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs cursor-pointer">
                 Extract
               </button>
             </div>
 
             <!-- Dynamic live extraction pill output -->
-            <div id="dash-parse-output" class="p-2.5 rounded-xl bg-emerald-100/70 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[11px] font-semibold flex items-center justify-between">
+            <div id="dash-parse-output" class="p-2.5 rounded-xl bg-emerald-100/70 text-emerald-800 text-[11px] font-semibold flex items-center justify-between">
               <span>Extracted: <strong>3 BHK</strong> · <strong>200 Gaj</strong> · <strong>Model Town</strong> · <strong>₹1.25 Cr</strong></span>
               <span class="bg-emerald-700 text-white px-2 py-0.5 rounded-full font-bold text-[10px]">96% Match</span>
             </div>
@@ -1918,53 +1916,53 @@
 
         <!-- 4 Financial Stat Cards (Quixotic Style) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Listings</span>
-            <span class="text-2xl font-black text-slate-900 dark:text-white font-heading block">24</span>
-            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded-full">+14% this month</span>
+            <span class="text-2xl font-black text-slate-900 font-heading block">24</span>
+            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">+14% this month</span>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Active Buyers</span>
-            <span class="text-2xl font-black text-slate-900 dark:text-white font-heading block">18</span>
-            <span class="text-[10px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded-full">+4 qualified</span>
+            <span class="text-2xl font-black text-slate-900 font-heading block">18</span>
+            <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded-full">+4 qualified</span>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Matches Waiting</span>
             <span class="text-2xl font-black text-emerald-600 font-heading block">9</span>
-            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded-full">85%+ score</span>
+            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">85%+ score</span>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1">
             <span class="text-[10px] font-bold text-slate-400 uppercase">Pipeline Value</span>
             <span class="text-2xl font-black text-amber-600 font-heading block">₹3.4L</span>
-            <span class="text-[10px] font-bold text-amber-700 bg-amber-50 dark:bg-amber-950/60 px-1.5 py-0.5 rounded-full">1% broker fee</span>
+            <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">1% broker fee</span>
           </div>
         </div>
 
         <!-- High-Priority Matches Section -->
         <div class="space-y-2.5">
           <div class="flex items-center justify-between">
-            <h4 class="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">High-Priority Matches Waiting</h4>
+            <h4 class="text-xs font-black uppercase tracking-wider text-slate-700">High-Priority Matches Waiting</h4>
             <span class="text-xs text-emerald-700 font-bold">2 Ready Today</span>
           </div>
 
-          <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
             <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">
                 96% Match
               </span>
               <span class="text-[10px] text-slate-400">Model Town, Panipat</span>
             </div>
-            <h5 class="text-sm font-bold text-slate-900 dark:text-white">3 BHK Luxury Builder Floor · ₹1.25 Cr</h5>
+            <h5 class="text-sm font-bold text-slate-900">3 BHK Luxury Builder Floor · ₹1.25 Cr</h5>
             <p class="text-xs text-slate-500">Client: Rajesh Sharma (Budget: ₹1.20 - 1.35 Cr)</p>
             <div class="flex gap-2 pt-1">
               <a href="https://wa.me/?text=Hello!%20Here%20is%20a%20great%203%20BHK%20Builder%20Floor%20in%20Model%20Town%20Panipat." target="_blank" class="flex-1 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs">
                 <i data-lucide="send" class="w-3.5 h-3.5"></i>
                 <span>Share on WhatsApp</span>
               </a>
-              <button onclick="setTab('properties')" class="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold cursor-pointer">
+              <button onclick="setTab('properties')" class="px-4 py-2 rounded-full bg-slate-100 text-slate-800 text-xs font-bold cursor-pointer">
                 View Flyer
               </button>
             </div>
@@ -1978,7 +1976,7 @@
       <div id="tab-properties" class="hidden space-y-4 text-left">
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="text-lg font-black text-slate-900 dark:text-white font-heading">Property Inventory</h3>
+            <h3 class="text-lg font-black text-slate-900 font-heading">Property Inventory</h3>
             <p class="text-xs text-slate-500">24 total listings · Owner contacts protected</p>
           </div>
           <button onclick="alert('Quick Listing Form: Enter Title, BHK, Price, Locality')" class="px-3.5 py-1.5 rounded-full bg-emerald-700 text-white font-bold text-xs shadow-xs flex items-center gap-1 cursor-pointer">
@@ -1988,18 +1986,18 @@
         </div>
 
         <!-- Property Card 1 -->
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
           <div class="flex items-center justify-between">
             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">Available</span>
-            <span class="text-xs font-black text-emerald-700 dark:text-emerald-400">₹1.25 Cr</span>
+            <span class="text-xs font-black text-emerald-700">₹1.25 Cr</span>
           </div>
           <div>
-            <h4 class="text-sm font-bold text-slate-900 dark:text-white">3 BHK Luxury Builder Floor</h4>
+            <h4 class="text-sm font-bold text-slate-900">3 BHK Luxury Builder Floor</h4>
             <p class="text-xs text-slate-500">Model Town, Panipat · 200 Gaj (1800 Sq.Ft)</p>
           </div>
           <!-- Owner Vault Shield Section -->
-          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs flex items-center justify-between">
-            <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-slate-600">
               <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-600"></i>
               <span>Owner Vault: <strong>Mr. Sharma (9876543210)</strong></span>
             </div>
@@ -2008,17 +2006,17 @@
         </div>
 
         <!-- Property Card 2 -->
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
           <div class="flex items-center justify-between">
             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600">Commercial</span>
-            <span class="text-xs font-black text-emerald-700 dark:text-emerald-400">₹45,000 / mo</span>
+            <span class="text-xs font-black text-emerald-700">₹45,000 / mo</span>
           </div>
           <div>
-            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Sector 12 HUDA Ground Floor Shop</h4>
+            <h4 class="text-sm font-bold text-slate-900">Sector 12 HUDA Ground Floor Shop</h4>
             <p class="text-xs text-slate-500">Sector 12 Market, Panipat · 450 Sq.Ft</p>
           </div>
-          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs flex items-center justify-between">
-            <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-slate-600">
               <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-600"></i>
               <span>Owner Vault: <strong>Gupta Ji (9812345678)</strong></span>
             </div>
@@ -2033,7 +2031,7 @@
       <div id="tab-buyers" class="hidden space-y-4 text-left">
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="text-lg font-black text-slate-900 dark:text-white font-heading">Active Buyers</h3>
+            <h3 class="text-lg font-black text-slate-900 font-heading">Active Buyers</h3>
             <p class="text-xs text-slate-500">18 qualified leads ready for property matching</p>
           </div>
           <button onclick="alert('Quick Buyer Form: Enter Name, Budget, Locality, BHK')" class="px-3.5 py-1.5 rounded-full bg-emerald-700 text-white font-bold text-xs shadow-xs flex items-center gap-1 cursor-pointer">
@@ -2043,26 +2041,26 @@
         </div>
 
         <!-- Buyer 1 -->
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2.5">
+        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-900 dark:text-white">Rajesh Sharma</span>
+            <span class="text-xs font-bold text-slate-900">Rajesh Sharma</span>
             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">High Urgency</span>
           </div>
           <p class="text-xs text-slate-500">Budget: <strong>₹1.20 - 1.35 Cr</strong> · Preference: 3 BHK Builder Floor in Model Town</p>
-          <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
             <span class="text-emerald-700 font-bold">1 Exact Inventory Match</span>
             <button onclick="setTab('dashboard')" class="text-slate-500 hover:text-emerald-700 font-semibold cursor-pointer">View Match</button>
           </div>
         </div>
 
         <!-- Buyer 2 -->
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2.5">
+        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-900 dark:text-white">Vikram Verma</span>
+            <span class="text-xs font-bold text-slate-900">Vikram Verma</span>
             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600">Site Visit</span>
           </div>
           <p class="text-xs text-slate-500">Budget: <strong>₹80 - 90 Lakhs</strong> · Preference: 250 Gaj Plot in Ansals Sushant City</p>
-          <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
             <span class="text-emerald-700 font-bold">2 Plot Matches Available</span>
             <button onclick="setTab('dashboard')" class="text-slate-500 hover:text-emerald-700 font-semibold cursor-pointer">View Match</button>
           </div>
@@ -2074,34 +2072,34 @@
       <!-- ============================================== -->
       <div id="tab-tools" class="hidden space-y-4 text-left">
         <div>
-          <h3 class="text-lg font-black text-slate-900 dark:text-white font-heading">Broker Tools</h3>
+          <h3 class="text-lg font-black text-slate-900 font-heading">Broker Tools</h3>
           <p class="text-xs text-slate-500">Regional area converters and brokerage utilities</p>
         </div>
 
         <!-- Tool 1: Land Area Unit Converter -->
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-3">
           <div class="flex items-center gap-2">
             <i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i>
-            <h4 class="text-xs font-bold text-slate-900 dark:text-white">Area Unit Converter (Haryana / NCR)</h4>
+            <h4 class="text-xs font-bold text-slate-900">Area Unit Converter (Haryana / NCR)</h4>
           </div>
           <div class="grid grid-cols-2 gap-2 text-xs">
             <div>
               <label class="block text-[10px] font-bold text-slate-400 mb-1">Square Gaj</label>
-              <input type="number" id="conv-gaj" value="200" oninput="convertUnits('gaj')" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2">
+              <input type="number" id="conv-gaj" value="200" oninput="convertUnits('gaj')" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-400 mb-1">Square Feet</label>
-              <input type="number" id="conv-sqft" value="1800" oninput="convertUnits('sqft')" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2">
+              <input type="number" id="conv-sqft" value="1800" oninput="convertUnits('sqft')" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2">
             </div>
           </div>
           <p class="text-[10px] text-slate-400">1 Gaj = 9 Sq.Ft (Regional standard in Panipat, Gurugram & NCR).</p>
         </div>
 
         <!-- Tool 2: Commission Splitter -->
-        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
+        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
           <div class="flex items-center gap-2">
             <i data-lucide="percent" class="w-4 h-4 text-amber-600"></i>
-            <h4 class="text-xs font-bold text-slate-900 dark:text-white">Brokerage Splitter</h4>
+            <h4 class="text-xs font-bold text-slate-900">Brokerage Splitter</h4>
           </div>
           <p class="text-xs text-slate-500">Calculate 50/50 co-broker splits and closing commissions instantly.</p>
         </div>
@@ -2113,29 +2111,29 @@
     <!-- MOBILE BOTTOM NAVIGATION (EXACTLY 4 OPTIONS AS ORDERED) -->
     <!-- 1. Dashboard  2. Properties  3. Buyers  4. Tools         -->
     <!-- ======================================================== -->
-    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0B0F17]/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 pb-safe shadow-2xl select-none">
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 pb-safe shadow-2xl select-none">
       <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-around">
         
         <!-- 1. Dashboard -->
-        <button onclick="setTab('dashboard')" id="btn-tab-dashboard" class="flex flex-col items-center flex-1 py-1 text-emerald-700 dark:text-emerald-400 cursor-pointer">
+        <button onclick="setTab('dashboard')" id="btn-tab-dashboard" class="flex flex-col items-center flex-1 py-1 text-emerald-700 cursor-pointer">
           <i data-lucide="layout-dashboard" class="w-5 h-5 mb-0.5"></i>
           <span class="text-[10px] font-bold">Dashboard</span>
         </button>
 
         <!-- 2. Properties -->
-        <button onclick="setTab('properties')" id="btn-tab-properties" class="flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+        <button onclick="setTab('properties')" id="btn-tab-properties" class="flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 cursor-pointer">
           <i data-lucide="building-2" class="w-5 h-5 mb-0.5"></i>
           <span class="text-[10px] font-bold">Properties</span>
         </button>
 
         <!-- 3. Buyers -->
-        <button onclick="setTab('buyers')" id="btn-tab-buyers" class="flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+        <button onclick="setTab('buyers')" id="btn-tab-buyers" class="flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 cursor-pointer">
           <i data-lucide="users" class="w-5 h-5 mb-0.5"></i>
           <span class="text-[10px] font-bold">Buyers</span>
         </button>
 
         <!-- 4. Tools -->
-        <button onclick="setTab('tools')" id="btn-tab-tools" class="flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+        <button onclick="setTab('tools')" id="btn-tab-tools" class="flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 cursor-pointer">
           <i data-lucide="wrench" class="w-5 h-5 mb-0.5"></i>
           <span class="text-[10px] font-bold">Tools</span>
         </button>
@@ -2149,27 +2147,27 @@
   <!-- SETTINGS MODAL / SLIDE-OVER DRAWER (UPPER-RIGHT CORNER)  -->
   <!-- ======================================================== -->
   <div id="settings-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity">
-    <div class="w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 p-5 space-y-4 shadow-2xl text-left max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-        <h3 class="text-base font-black text-slate-900 dark:text-white font-heading">Settings & Agency Menu</h3>
-        <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center hover:text-slate-900 cursor-pointer">
+    <div class="w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl border border-slate-200 p-5 space-y-4 shadow-2xl text-left max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-black text-slate-900 font-heading">Settings & Agency Menu</h3>
+        <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:text-slate-900 cursor-pointer">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
       <!-- Agency Card -->
-      <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-1">
+      <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
         <div class="flex justify-between items-center">
           <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Active Agency</span>
           <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">Verified Broker</span>
         </div>
-        <h4 id="settings-agency-name" class="text-sm font-bold text-slate-900 dark:text-white">Direct Broker Agency</h4>
+        <h4 id="settings-agency-name" class="text-sm font-bold text-slate-900">Direct Broker Agency</h4>
         <p id="settings-user-info" class="text-xs text-slate-500">broker@leadnivash.com · Panipat, NCR</p>
       </div>
 
       <!-- Settings Menu Items -->
       <div class="space-y-1 text-xs font-semibold">
-        <button onclick="alert('Inquiries Inbox: Showing 4 client inquiries received from public flyer links.')" class="w-full p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-300 cursor-pointer">
+        <button onclick="alert('Inquiries Inbox: Showing 4 client inquiries received from public flyer links.')" class="w-full p-3 rounded-xl hover:bg-slate-50 flex items-center justify-between text-slate-700 cursor-pointer">
           <div class="flex items-center gap-2.5">
             <i data-lucide="inbox" class="w-4 h-4 text-emerald-600"></i>
             <span>Inquiries Inbox</span>
@@ -2194,8 +2192,8 @@
         </button>
       </div>
 
-      <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
-        <button onclick="openLanding(); closeSettingsModal()" class="w-full py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 hover:text-rose-600 text-slate-600 dark:text-slate-400 font-bold text-xs transition cursor-pointer">
+      <div class="pt-2 border-t border-slate-100">
+        <button onclick="openLanding(); closeSettingsModal()" class="w-full py-2.5 rounded-full bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 font-bold text-xs transition cursor-pointer">
           Sign Out of Session
         </button>
       </div>
@@ -2252,10 +2250,10 @@
         
         if (t === tabName) {
           viewEl.classList.remove('hidden');
-          btnEl.className = 'flex flex-col items-center flex-1 py-1 text-emerald-700 dark:text-emerald-400 cursor-pointer';
+          btnEl.className = 'flex flex-col items-center flex-1 py-1 text-emerald-700 cursor-pointer';
         } else {
           viewEl.classList.add('hidden');
-          btnEl.className = 'flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer';
+          btnEl.className = 'flex flex-col items-center flex-1 py-1 text-slate-400 hover:text-slate-800 cursor-pointer';
         }
       });
 
@@ -2309,15 +2307,15 @@
       const source = document.getElementById('demo-video-source');
 
       if (mode === 'desktop') {
-        frame.className = 'mx-auto aspect-video w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500';
+        frame.className = 'mx-auto aspect-video w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500';
         if (bDesk) bDesk.className = 'px-3.5 py-1.5 rounded-full bg-emerald-700 text-white flex items-center gap-1.5 transition cursor-pointer';
-        if (bMob) bMob.className = 'px-3.5 py-1.5 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 transition cursor-pointer';
+        if (bMob) bMob.className = 'px-3.5 py-1.5 rounded-full text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer';
         if (video) video.poster = './assets/images/leadnivash-desktop-poster.webp';
         if (source) source.src = './assets/videos/leadnivash-desktop-demo.mp4';
       } else {
-        frame.className = 'mx-auto aspect-[9/16] max-w-[340px] w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500';
+        frame.className = 'mx-auto aspect-[9/16] max-w-[340px] w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-slate-950 text-white shadow-2xl relative overflow-hidden transition-all duration-500';
         if (bMob) bMob.className = 'px-3.5 py-1.5 rounded-full bg-emerald-700 text-white flex items-center gap-1.5 transition cursor-pointer';
-        if (bDesk) bDesk.className = 'px-3.5 py-1.5 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 transition cursor-pointer';
+        if (bDesk) bDesk.className = 'px-3.5 py-1.5 rounded-full text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer';
         if (video) video.poster = './assets/images/leadnivash-mobile-poster.webp';
         if (source) source.src = './assets/videos/leadnivash-mobile-demo.mp4';
       }
@@ -2480,12 +2478,12 @@
         const text = btn.querySelector('span');
         if (bIdx === idx) {
           if (circle) circle.className = 'w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-600/30 scale-110 ring-4 ring-emerald-500/20';
-          if (text) text.className = 'text-[11px] font-bold text-emerald-700 dark:text-emerald-400 font-extrabold hidden sm:inline';
+          if (text) text.className = 'text-[11px] font-bold text-emerald-700 font-extrabold hidden sm:inline';
         } else if (bIdx < idx) {
-          if (circle) circle.className = 'w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-emerald-50 dark:bg-emerald-950/80 border-emerald-600 text-emerald-700 dark:text-emerald-400';
+          if (circle) circle.className = 'w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-emerald-50 border-emerald-600 text-emerald-700';
           if (text) text.className = 'text-[11px] font-bold text-slate-500 hidden sm:inline';
         } else {
-          if (circle) circle.className = 'w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-500';
+          if (circle) circle.className = 'w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 bg-white border-slate-300 text-slate-500';
           if (text) text.className = 'text-[11px] font-bold text-slate-500 hidden sm:inline';
         }
       });
@@ -2494,9 +2492,9 @@
       const cards = document.querySelectorAll('.workflow-overview-card');
       cards.forEach((card, cIdx) => {
         if (cIdx === idx) {
-          card.className = 'workflow-overview-card group p-4 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-500 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20 -translate-y-1 transition-all duration-300 cursor-pointer space-y-2';
+          card.className = 'workflow-overview-card group p-4 rounded-2xl bg-emerald-50/90 border border-emerald-500 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20 -translate-y-1 transition-all duration-300 cursor-pointer space-y-2';
         } else {
-          card.className = 'workflow-overview-card group p-4 rounded-2xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2';
+          card.className = 'workflow-overview-card group p-4 rounded-2xl bg-white/90 border border-slate-200/80 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer space-y-2';
         }
       });
 
@@ -2533,9 +2531,9 @@
         const card = document.getElementById(`feature-card-${i}`);
         if (!card) continue;
         if (selectedFeatureIdx === i) {
-          card.className = 'feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/30 -translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5';
+          card.className = 'feature-card group p-5 sm:p-6 rounded-2xl bg-white border border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/30 -translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5';
         } else {
-          card.className = 'feature-card group p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5';
+          card.className = 'feature-card group p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-5';
         }
       }
     }
@@ -2619,7 +2617,7 @@
 
       [btn45, btn75, btn150].forEach(b => {
         if (!b) return;
-        b.className = 'px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-emerald-500/50 hover:text-slate-900 dark:hover:text-white';
+        b.className = 'px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer bg-slate-50 text-slate-600 border border-slate-200 hover:border-emerald-500/50 hover:text-slate-900';
       });
 
       if (currentDealVal === 4500000 && btn45) {
@@ -2636,15 +2634,15 @@
 
       [btnR1, btnR15, btnR2].forEach(b => {
         if (!b) return;
-        b.className = 'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+        b.className = 'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center text-slate-500 hover:text-slate-900';
       });
 
       if (currentRate === 1.0 && btnR1) {
-        btnR1.className = 'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs ring-1 ring-emerald-500/40';
+        btnR1.className = 'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center bg-white text-emerald-700 shadow-xs ring-1 ring-emerald-500/40';
       } else if (currentRate === 1.5 && btnR15) {
-        btnR15.className = 'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs ring-1 ring-emerald-500/40';
+        btnR15.className = 'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center bg-white text-emerald-700 shadow-xs ring-1 ring-emerald-500/40';
       } else if (currentRate === 2.0 && btnR2) {
-        btnR2.className = 'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs ring-1 ring-emerald-500/40';
+        btnR2.className = 'py-2 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer text-center bg-white text-emerald-700 shadow-xs ring-1 ring-emerald-500/40';
       }
     }
 
@@ -2746,9 +2744,8 @@
       }
     });
 
-    // Pure Apple-Class Light Theme Enforcer
     document.documentElement.classList.remove('dark');
-    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.removeAttribute('data-theme');
   </script>
 </body>
 </html>

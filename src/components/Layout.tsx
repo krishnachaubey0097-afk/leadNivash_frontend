@@ -9,7 +9,7 @@ export const Layout: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-bg dark:bg-[var(--bg)] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-bg flex items-center justify-center p-4">
         <div className="flex flex-col items-center gap-4">
           <img
             src="/logo-icon.png"
@@ -17,7 +17,7 @@ export const Layout: React.FC = () => {
             className="w-12 h-12 object-contain animate-bounce"
           />
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide">
+          <span className="text-xs text-slate-500 font-medium tracking-wide">
             Loading LeadNivash...
           </span>
         </div>
@@ -30,7 +30,7 @@ export const Layout: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg dark:bg-[var(--bg)] text-ink-900 dark:text-slate-100 transition-colors">
+    <div className="min-h-screen flex flex-col bg-bg text-ink-900 transition-colors">
       <TopBar />
       <main className="flex-1 pb-24 max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto w-full px-4 pt-4">
         <Outlet />
