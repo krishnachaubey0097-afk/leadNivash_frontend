@@ -7,6 +7,7 @@ import {
   Sparkles,
   Plus,
   ArrowRight,
+  ArrowUpRight,
   Send,
   AlertCircle,
   RotateCcw,
@@ -212,8 +213,8 @@ export const DashboardPage: React.FC = () => {
       const est = Math.round(activeValue * 0.01);
       if (est > 0) return est;
     }
-    // Default placeholder for fresh broker onboarding
-    return 11250000;
+    // Show ₹0 until the broker adds listings or active pipeline deals
+    return 0;
   }, [activeDeals, properties]);
 
   // Dynamic greeting based on time of day
@@ -400,6 +401,8 @@ export const DashboardPage: React.FC = () => {
 
   const planTier = user?.plan?.tier || 'trial';
   const isPaidPlan = planTier === 'pro' || planTier === 'agency';
+  const isEmptyWorkspace =
+    totalPropertiesCount === 0 && totalBuyersCount === 0 && activeDeals.length === 0;
 
   return (
     <div className="relative space-y-6 pb-12 max-w-[1200px] mx-auto">
@@ -495,7 +498,7 @@ export const DashboardPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             {/* DARK HERO CARD (--ink-black #12140F with 2px lime top border accent) */}
             <div className="lg:col-span-2 rounded-[20px] bg-ink-black text-white border border-white/10 border-t-2 border-t-lime p-6 shadow-sm flex flex-col justify-between transition-all">
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div>
                   <span className="text-sm font-medium text-white/70 block">
                     Pending commission
@@ -503,16 +506,45 @@ export const DashboardPage: React.FC = () => {
                   <span className="text-3xl sm:text-4xl font-bold tabular-nums text-white mt-1 block tracking-tight">
                     {formatRupees(pendingCommissionPaise)}
                   </span>
+                  {isEmptyWorkspace && (
+                    <p className="text-xs text-white/70 mt-1.5">
+                      Add your first property or buyer to calculate pipeline commission and matches.
+                    </p>
+                  )}
                 </div>
 
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setActiveSegment('track-record')}
-                  className="font-medium gap-1 text-xs shrink-0 bg-white text-ink-900 hover:bg-slate-100 border-0"
-                >
-                  <span>View deals</span>
-                </Button>
+                {isEmptyWorkspace ? (
+                  <div className="flex items-center gap-2 flex-wrap shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => navigate('/app/properties/new')}
+                      className="group btn-shine-sweep-light h-10 pl-3.5 pr-1.5 rounded-[11px] bg-white hover:bg-lime-soft text-ink-black text-xs font-bold inline-flex items-center gap-2 transition cursor-pointer shadow-sm whitespace-nowrap"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add property</span>
+                      <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                        <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => navigate('/app/buyers/new')}
+                      className="h-10 px-3.5 rounded-[11px] bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-semibold inline-flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
+                    >
+                      <Plus className="w-3.5 h-3.5 text-lime" />
+                      <span>Add buyer</span>
+                    </button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setActiveSegment('track-record')}
+                    className="font-medium gap-1 text-xs shrink-0 bg-white text-ink-900 hover:bg-slate-100 border-0 self-start"
+                  >
+                    <span>View deals</span>
+                  </Button>
+                )}
               </div>
 
               <div>
