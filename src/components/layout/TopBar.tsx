@@ -21,7 +21,7 @@ export const TopBar: React.FC = () => {
     if (cleanPath.startsWith('/app/tools')) {
       if (cleanPath.includes('/emi')) return { title: 'EMI Calculator', subtitle: 'Home loan & quotation' };
       if (cleanPath.includes('/area')) return { title: 'Area Converter', subtitle: 'Gaj, Marla, Kanal' };
-      if (cleanPath.includes('/registry')) return { title: 'Haryana Registry', subtitle: 'Stamp duty & fees' };
+      if (cleanPath.includes('/registry')) return { title: 'State Registry & Stamp Duty', subtitle: 'All-India stamp duty & fees' };
       if (cleanPath.includes('/commission')) return { title: 'Commission Split', subtitle: 'Brokerage & payouts' };
       if (cleanPath.includes('/templates')) return { title: 'WhatsApp Templates', subtitle: 'Quick deal chips' };
       return { title: 'Tools', subtitle: 'Calculators & toolkit' };

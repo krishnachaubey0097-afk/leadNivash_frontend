@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { apiClient } from '../../lib/api/client';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Lock, CheckCircle2, AlertCircle, Eye, EyeOff, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Lock, CheckCircle2, AlertCircle, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { ApiError } from '../../lib/api/errors';
 
 export const ResetPasswordPage: React.FC = () => {
@@ -186,7 +186,6 @@ export const ResetPasswordPage: React.FC = () => {
                 className="w-full font-bold shadow-md shadow-emerald-700/20"
               >
                 <span>Save New Password & Sign In</span>
-                <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
 
               <div className="text-center pt-2">

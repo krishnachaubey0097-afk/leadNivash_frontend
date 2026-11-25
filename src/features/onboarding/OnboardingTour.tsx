@@ -9,7 +9,6 @@ import {
   Wrench,
   Settings,
   Compass,
-  ArrowRight,
   ArrowLeft,
   X,
   CheckCircle2,
@@ -644,15 +643,12 @@ export const OnboardingTour: React.FC = () => {
                 size="sm"
                 pill
                 onClick={handleNext}
-                className="font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs min-h-[38px] px-5"
+                className="font-bold text-xs min-h-[38px]"
               >
                 {isLastStep ? (
                   <span>Finish Tour ✓</span>
                 ) : (
-                  <span className="flex items-center gap-1">
-                    <span>Next Step</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
+                  <span>Next Step</span>
                 )}
               </Button>
             </div>

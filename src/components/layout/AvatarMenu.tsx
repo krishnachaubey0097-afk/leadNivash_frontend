@@ -11,6 +11,7 @@ import {
   Shield,
 } from 'lucide-react';
 import { startInteractiveTour } from '../../features/onboarding/OnboardingTour';
+import { openVideoGuide } from '../../features/onboarding/GuideVideoModal';
 import { SpecialOfferModal } from '../../features/pricing/SpecialOfferModal';
 
 export interface AvatarMenuProps {
@@ -108,13 +109,21 @@ export const AvatarMenu: React.FC<AvatarMenuProps> = ({ inquiryCount = 0 }) => {
               <span>Plan</span>
             </DropdownMenu.Item>
 
-            {/* 3. Help */}
+            {/* 3. Video Guide & Interactive Help */}
+            <DropdownMenu.Item
+              onClick={() => openVideoGuide()}
+              className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-ink hover:bg-surface-hover rounded-lg cursor-pointer outline-none transition-colors duration-150"
+            >
+              <HelpCircle className="w-4 h-4 text-brand-600" />
+              <span>Video Guide</span>
+            </DropdownMenu.Item>
+
             <DropdownMenu.Item
               onClick={() => startInteractiveTour()}
               className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-ink hover:bg-surface-hover rounded-lg cursor-pointer outline-none transition-colors duration-150"
             >
               <HelpCircle className="w-4 h-4 text-muted" />
-              <span>Help</span>
+              <span>Interactive Tour</span>
             </DropdownMenu.Item>
 
             {/* Admin console link (if admin) */}

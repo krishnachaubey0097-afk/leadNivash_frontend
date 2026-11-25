@@ -35,6 +35,7 @@ import {
   ListRow,
 } from '../../components/ui/Table';
 import { SpecialOfferModal } from '../pricing/SpecialOfferModal';
+import { openVideoGuide } from '../onboarding/GuideVideoModal';
 import { useVoiceDictation } from '../../lib/hooks/useVoiceDictation';
 import { formatRupees } from '../../lib/money';
 import { fetchProperties, type PropertyItem } from '../../lib/api/properties';
@@ -418,7 +419,16 @@ export const DashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 self-start sm:self-auto">
+        <div className="flex items-center gap-2.5 self-start sm:self-auto flex-wrap">
+          <button
+            type="button"
+            onClick={() => openVideoGuide(user?.preferences?.language)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-line text-ink-900 hover:bg-lime-soft hover:border-ink-black/30 transition cursor-pointer shadow-2xs"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-brand-600" />
+            <span>Guide (5 Languages)</span>
+          </button>
+
           {/* Plan Pill Trigger: Pro = ink-black + lime dot, Trial = amber highlighted + shine */}
           <button
             type="button"
@@ -502,7 +512,6 @@ export const DashboardPage: React.FC = () => {
                   className="font-medium gap-1 text-xs shrink-0 bg-white text-ink-900 hover:bg-slate-100 border-0"
                 >
                   <span>View deals</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
                 </Button>
               </div>
 

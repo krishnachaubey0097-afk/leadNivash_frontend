@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { calculateStateRegistry, calculateHaryanaRegistry } from '../lib/calculators';
+import { INDIAN_STATES } from '../lib/indianStates';
 
 export const calculateCommission = (
   dealValueRupees: number,
@@ -73,5 +75,43 @@ describe('Phase 5 Financial Impact Calculator Engine', () => {
     expect(res.monthlyCommission).toBe(1000000);
     expect(res.annualCommission).toBe(12000000);
     expect(formatINR(res.annualCommission)).toBe('₹1,20,00,000');
+  });
+});
+
+describe('Pan-India State Stamp Duty & Registry Calculator Engine', () => {
+  it('covers all 28 Indian States and 8 Union Territories (36 regions)', () => {
+    expect(INDIAN_STATES.length).toBe(36);
+  });
+
+  it('computes Haryana urban female vs male stamp duty + 50k cap slab accurately', () => {
+    const maleUrban = calculateHaryanaRegistry(10000000, 'male', 'urban');
+    expect(maleUrban.stampDutyPercent).toBe(7);
+    expect(maleUrban.stampDutyAmount).toBe(700000);
+    expect(maleUrban.registrationFee).toBe(50000);
+
+    const femaleUrban = calculateStateRegistry(10000000, 'Haryana', 'female', 'urban');
+    expect(femaleUrban.stampDutyPercent).toBe(5);
+    expect(femaleUrban.stampDutyAmount).toBe(500000);
+    expect(femaleUrban.registrationFee).toBe(50000);
+  });
+
+  it('computes Maharashtra metro surcharge & ₹30,000 capped registration fee', () => {
+    const mh = calculateStateRegistry(10000000, 'Maharashtra', 'male', 'urban');
+    expect(mh.stateName).toBe('Maharashtra');
+    expect(mh.stampDutyPercent).toBe(7); // 6% + 1% urban surcharge
+    expect(mh.registrationFee).toBe(30000); // capped at ₹30,000
+  });
+
+  it('computes Gujarat sole female exemption cleanly', () => {
+    const gjFemale = calculateStateRegistry(5000000, 'Gujarat', 'female', 'urban');
+    expect(gjFemale.stampDutyPercent).toBe(4.9);
+    expect(gjFemale.registrationFee).toBe(0);
+  });
+
+  it('computes Tamil Nadu stamp duty + 2% registration charge', () => {
+    const tn = calculateStateRegistry(5000000, 'Tamil Nadu', 'male', 'urban');
+    expect(tn.stampDutyPercent).toBe(7);
+    expect(tn.stampDutyAmount).toBe(350000);
+    expect(tn.registrationFee).toBe(100000);
   });
 });

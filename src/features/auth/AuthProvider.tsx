@@ -26,6 +26,14 @@ export interface UserAgency {
   reraNo?: string;
 }
 
+export interface UserPreferences {
+  language?: 'en' | 'hi' | 'pa' | 'ta' | 'mr';
+  budgetTolerancePct?: number;
+  marlaToGaj?: number;
+  defaultCity?: string;
+  defaultState?: string;
+}
+
 export interface User {
   _id: string;
   name: string;
@@ -33,6 +41,7 @@ export interface User {
   phone: string;
   role: 'broker' | 'agency_admin' | 'admin';
   agency?: UserAgency;
+  preferences?: UserPreferences;
   plan: UserPlan;
   createdAt: string;
 }

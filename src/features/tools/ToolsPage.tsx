@@ -24,13 +24,14 @@ import { useAuth } from '../auth/AuthProvider';
 import { formatRupees, formatAmountInWords } from '../../lib/money';
 import {
   convertAllUnits,
-  calculateHaryanaRegistry,
+  calculateStateRegistry,
   calculateEmi,
   calculateCommissionSplit,
   type AreaUnit,
   type BuyerGender,
   type AreaType,
 } from '../../lib/calculators';
+import { INDIAN_STATES, DEFAULT_STATE_NAME, getStateRule } from '../../lib/indianStates';
 import clsx from 'clsx';
 
 export type ToolId = 'emi' | 'registry' | 'area' | 'commission' | 'templates';
@@ -118,6 +119,19 @@ export const ToolsPage: React.FC = () => {
     navigate('/app/tools');
   };
 
+  // Pan-India Operating State: defaults from Regional Preferences, switchable inside Tools
+  const [selectedState, setSelectedState] = useState<string>(
+    user?.preferences?.defaultState || DEFAULT_STATE_NAME
+  );
+
+  React.useEffect(() => {
+    if (user?.preferences?.defaultState) {
+      setSelectedState(user.preferences.defaultState);
+    }
+  }, [user?.preferences?.defaultState]);
+
+  const activeStateRule = getStateRule(selectedState);
+
   // 5 Core Broker Tools (icon tiles ALWAYS brand-50 + green, at most ONE subtle badge)
   const toolsList: ToolItemDef[] = [
     {
@@ -130,13 +144,13 @@ export const ToolsPage: React.FC = () => {
     {
       id: 'registry',
       label: 'Stamp duty',
-      desc: 'Haryana stamp duty & registry fees',
+      desc: `${activeStateRule.name} stamp duty & registry fees`,
       icon: Building2,
     },
     {
       id: 'area',
       label: 'Area converter',
-      desc: 'Gaj, Sq.Ft, Marla, Kanal & Acre',
+      desc: `${activeStateRule.popularUnitLabel} & regional standards`,
       icon: Maximize2,
     },
     {
@@ -241,13 +255,14 @@ ${loanCalcMode === 'property' ? `• Property Cost: ₹${propertyPriceLakhs} Lak
 ${agencyOrOwnerName}`;
 
   // -------------------------------------------------------------
-  // Tool 2: Haryana Registry & Stamp Duty State
+  // Tool 2: Pan-India Registry & Stamp Duty State Calculator
   // -------------------------------------------------------------
   const [registryPriceLakhs, setRegistryPriceLakhs] = useState<number>(85);
   const [buyerGender, setBuyerGender] = useState<BuyerGender>('male');
   const [areaType, setAreaType] = useState<AreaType>('urban');
-  const registryCalc = calculateHaryanaRegistry(
+  const registryCalc = calculateStateRegistry(
     registryPriceLakhs * 100000,
+    selectedState,
     buyerGender,
     areaType
   );
@@ -256,18 +271,19 @@ ${agencyOrOwnerName}`;
       ? Math.round((registryCalc.stampDutyAmount / registryCalc.totalGovtFees) * 100)
       : 90;
 
-  const registryQuoteText = `*Haryana Registry & Stamp Duty Estimate*
+  const registryQuoteText = `*${registryCalc.stateName} Registry & Stamp Duty Estimate*
 ━━━━━━━━━━━━━━━━━━━━
+• State / UT: ${registryCalc.stateName} (${registryCalc.stateRule.authorityLabel})
 • Property Consideration: ₹${registryPriceLakhs >= 100 ? `${(registryPriceLakhs / 100).toFixed(2)} Cr` : `${registryPriceLakhs} Lakhs`}
 • Ownership Category: ${buyerGender.charAt(0).toUpperCase() + buyerGender.slice(1)} (${registryCalc.stampDutyPercent}% Stamp Duty)
-• Jurisdiction: ${areaType === 'urban' ? 'Urban (MC Area +2% Cess)' : 'Rural (Gram Panchayat)'}
+• Jurisdiction: ${areaType === 'urban' ? 'Urban Municipal Area' : 'Rural / Gram Panchayat'}
 ━━━━━━━━━━━━━━━━━━━━
 *Total Govt Expenses: ₹${registryCalc.totalGovtFees.toLocaleString('en-IN')}*
 • Stamp Duty Amount: ₹${registryCalc.stampDutyAmount.toLocaleString('en-IN')}
 • Registration Fee: ₹${registryCalc.registrationFee.toLocaleString('en-IN')}
 • Net Estimated Cost: ₹${registryCalc.netEstimatedCost.toLocaleString('en-IN')}
 ━━━━━━━━━━━━━━━━━━━━
-*Tehsil Standard Haryana Estimate*
+*${registryCalc.stateName} Stamp Duty Estimate*
 ${agencyOrOwnerName}`;
 
   // -------------------------------------------------------------
@@ -870,12 +886,48 @@ ${agencyOrOwnerName}`;
           )}
 
           {/* ──────────────────────────────────────────────────────── */}
-          {/* TOOL 2: HARYANA REGISTRY & STAMP DUTY CALCULATOR         */}
+          {/* TOOL 2: PAN-INDIA REGISTRY & STAMP DUTY CALCULATOR       */}
           {/* ──────────────────────────────────────────────────────── */}
           {activeTool === 'registry' && (
             <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,480px)_1fr] gap-6 items-start">
               {/* LEFT COLUMN: 2-Column Inputs */}
               <Card className="p-5 space-y-4 rounded-[14px] border-border bg-white">
+                {/* State / Union Territory Selector */}
+                <div className="space-y-1.5 pb-3 border-b border-slate-100">
+                  <div className="flex items-center justify-between gap-2">
+                    <label htmlFor="tool-registry-state" className="text-xs font-semibold text-slate-700 block">
+                      State / Union Territory (India)
+                    </label>
+                    <span className="text-[11px] font-semibold text-brand-700 bg-lime-soft px-2 py-0.5 rounded-full border border-lime">
+                      {activeStateRule.authorityLabel}
+                    </span>
+                  </div>
+                  <select
+                    id="tool-registry-state"
+                    value={selectedState}
+                    onChange={(e) => setSelectedState(e.target.value)}
+                    className="w-full h-11 bg-white border border-border rounded-input px-3 text-sm font-semibold text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
+                  >
+                    <optgroup label="Indian States (28)">
+                      {INDIAN_STATES.filter((s) => s.regionType === 'State').map((s) => (
+                        <option key={s.name} value={s.name}>
+                          {s.name} ({s.stampFemalePct}%–{s.stampMalePct + s.urbanExtraPct}%)
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Union Territories (8)">
+                      {INDIAN_STATES.filter((s) => s.regionType === 'Union Territory').map((s) => (
+                        <option key={s.name} value={s.name}>
+                          {s.name} ({s.stampFemalePct}%–{s.stampMalePct + s.urbanExtraPct}%)
+                        </option>
+                      ))}
+                    </optgroup>
+                  </select>
+                  <p className="text-[11px] text-slate-500 leading-snug">
+                    {activeStateRule.note}
+                  </p>
+                </div>
+
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-slate-700 block">
                     Property consideration / circle value (₹ Lakhs)
@@ -901,9 +953,18 @@ ${agencyOrOwnerName}`;
                     </label>
                     <div className="space-y-1.5">
                       {[
-                        { id: 'female', label: 'Female (5% concession)' },
-                        { id: 'male', label: 'Male (7% standard)' },
-                        { id: 'joint', label: 'Joint (6% blended)' },
+                        {
+                          id: 'female',
+                          label: `Female (${calculateStateRegistry(registryPriceLakhs * 100000, selectedState, 'female', areaType).stampDutyPercent}%)`,
+                        },
+                        {
+                          id: 'male',
+                          label: `Male (${calculateStateRegistry(registryPriceLakhs * 100000, selectedState, 'male', areaType).stampDutyPercent}%)`,
+                        },
+                        {
+                          id: 'joint',
+                          label: `Joint (${calculateStateRegistry(registryPriceLakhs * 100000, selectedState, 'joint', areaType).stampDutyPercent}%)`,
+                        },
                       ].map((g) => (
                         <button
                           key={g.id}
@@ -928,7 +989,13 @@ ${agencyOrOwnerName}`;
                     </label>
                     <div className="space-y-1.5">
                       {[
-                        { id: 'urban', label: 'Urban (MC Area +2% Cess)' },
+                        {
+                          id: 'urban',
+                          label:
+                            activeStateRule.urbanExtraPct > 0
+                              ? `Urban (MC +${activeStateRule.urbanExtraPct}%)`
+                              : 'Urban Municipal Area',
+                        },
                         { id: 'rural', label: 'Rural (Gram Panchayat)' },
                       ].map((a) => (
                         <button

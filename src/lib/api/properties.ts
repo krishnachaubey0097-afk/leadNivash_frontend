@@ -18,6 +18,7 @@ export interface PropertyItem {
   tags?: string[];
   description?: string;
   status: 'available' | 'hold' | 'sold' | 'rented';
+  pitchCount?: number;
   photos?: Array<{
     url: string;
     publicId: string;
@@ -364,4 +365,27 @@ export async function deleteProperty(id: string): Promise<boolean> {
   }
 
   return true;
+}
+
+export async function recordPropertyPitch(id: string): Promise<{ _id: string; pitchCount: number }> {
+  try {
+    const res = await apiClient.post<any, any>(`/properties/${id}/pitch`);
+    const nextCount = typeof res?.pitchCount === 'number' ? res.pitchCount : 1;
+    localPropertiesStore = localPropertiesStore.map((p) =>
+      p._id === id ? { ...p, pitchCount: nextCount } : p
+    );
+    persistLocalProperties(localPropertiesStore);
+    return { _id: id, pitchCount: nextCount };
+  } catch {
+    let fallbackCount = 1;
+    localPropertiesStore = localPropertiesStore.map((p) => {
+      if (p._id === id) {
+        fallbackCount = (p.pitchCount || 0) + 1;
+        return { ...p, pitchCount: fallbackCount };
+      }
+      return p;
+    });
+    persistLocalProperties(localPropertiesStore);
+    return { _id: id, pitchCount: fallbackCount };
+  }
 }

@@ -1,4 +1,6 @@
 // Area Converter
+import { getStateRule, type IndianStateRule } from './indianStates';
+
 export type AreaUnit = 'sqft' | 'gaj' | 'sqmt' | 'marla' | 'bigha' | 'acre';
 
 export const UNIT_LABELS: Record<AreaUnit, string> = {
@@ -47,13 +49,23 @@ export interface RegistryCalculation {
   netEstimatedCost: number;
 }
 
-export const calculateHaryanaRegistry = (
+export interface StateRegistryCalculation extends RegistryCalculation {
+  stateName: string;
+  stateRule: IndianStateRule;
+}
+
+export const calculateStateRegistry = (
   propertyValue: number,
+  stateName: string = 'Haryana',
   gender: BuyerGender = 'male',
   area: AreaType = 'urban'
-): RegistryCalculation => {
+): StateRegistryCalculation => {
+  const rule = getStateRule(stateName);
+
   if (!propertyValue || propertyValue <= 0) {
     return {
+      stateName: rule.name,
+      stateRule: rule,
       propertyValue: 0,
       stampDutyPercent: 0,
       stampDutyAmount: 0,
@@ -63,41 +75,56 @@ export const calculateHaryanaRegistry = (
     };
   }
 
-  // Haryana Stamp Duty Rates:
-  // Urban: Male = 7% (5% Stamp + 2% Municipal), Female = 5% (3% + 2%), Joint = 6% (4% + 2%)
-  // Rural: Male = 5%, Female = 3%, Joint = 4%
-  let stampRate = 0.07;
-  if (area === 'urban') {
-    if (gender === 'female') stampRate = 0.05;
-    else if (gender === 'joint') stampRate = 0.06;
-    else stampRate = 0.07;
-  } else {
-    if (gender === 'female') stampRate = 0.03;
-    else if (gender === 'joint') stampRate = 0.04;
-    else stampRate = 0.05;
+  const basePct =
+    gender === 'female'
+      ? rule.stampFemalePct
+      : gender === 'joint'
+      ? rule.stampJointPct
+      : rule.stampMalePct;
+
+  let stampDutyPercent = basePct;
+  if (rule.name === 'Haryana') {
+    stampDutyPercent = area === 'urban' ? basePct : Math.max(3, basePct - 2);
+  } else if (area === 'urban' && rule.urbanExtraPct > 0) {
+    stampDutyPercent = Number((basePct + rule.urbanExtraPct).toFixed(2));
   }
 
-  const stampDutyAmount = Math.round(propertyValue * stampRate);
+  const stampDutyAmount = Math.round((propertyValue * stampDutyPercent) / 100);
 
-  // Haryana Registration Fee Slab (Capped at ₹50,000 for high values)
-  let registrationFee = 50000;
-  if (propertyValue <= 100000) registrationFee = 1000;
-  else if (propertyValue <= 500000) registrationFee = 5000;
-  else if (propertyValue <= 1000000) registrationFee = 10000;
-  else if (propertyValue <= 2500000) registrationFee = 25000;
-  else registrationFee = 50000;
+  let registrationFee = 0;
+  if (rule.regFeeMode === 'haryana-slab') {
+    if (propertyValue <= 100000) registrationFee = 1000;
+    else if (propertyValue <= 500000) registrationFee = 5000;
+    else if (propertyValue <= 1000000) registrationFee = 10000;
+    else if (propertyValue <= 2500000) registrationFee = 25000;
+    else registrationFee = 50000;
+  } else {
+    const effectiveRegPct = gender === 'female' && rule.femaleRegExempt ? 0 : rule.regFeePct;
+    const rawRegFee = Math.round((propertyValue * effectiveRegPct) / 100);
+    registrationFee = rule.regFeeCap !== null ? Math.min(rawRegFee, rule.regFeeCap) : rawRegFee;
+  }
 
   const totalGovtFees = stampDutyAmount + registrationFee;
   const netEstimatedCost = propertyValue + totalGovtFees;
 
   return {
+    stateName: rule.name,
+    stateRule: rule,
     propertyValue,
-    stampDutyPercent: stampRate * 100,
+    stampDutyPercent,
     stampDutyAmount,
     registrationFee,
     totalGovtFees,
     netEstimatedCost,
   };
+};
+
+export const calculateHaryanaRegistry = (
+  propertyValue: number,
+  gender: BuyerGender = 'male',
+  area: AreaType = 'urban'
+): RegistryCalculation => {
+  return calculateStateRegistry(propertyValue, 'Haryana', gender, area);
 };
 
 // Home Loan / EMI Calculator

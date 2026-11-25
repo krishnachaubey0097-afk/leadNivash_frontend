@@ -5,7 +5,8 @@ import { BottomNav } from './BottomNav';
 import { Sidebar } from './Sidebar';
 import { Banner } from '../ui/Banner';
 import { TopLoadingBar } from '../ui/LoadingBar';
-import { OnboardingTour } from '../../features/onboarding/OnboardingTour';
+import { OnboardingTour, startInteractiveTour } from '../../features/onboarding/OnboardingTour';
+import { GuideVideoModal } from '../../features/onboarding/GuideVideoModal';
 import { SpecialOfferModal } from '../../features/pricing/SpecialOfferModal';
 import { useOnline } from '../../lib/hooks/useOnline';
 import { useAuth } from '../../features/auth/AuthProvider';
@@ -81,6 +82,9 @@ export const AppShell: React.FC = () => {
 
         {/* First-Time User Onboarding Guided Tour */}
         <OnboardingTour />
+
+        {/* Multi-Language Guide Video Modal (5 Core Indian Languages) */}
+        <GuideVideoModal onStartInteractiveTour={startInteractiveTour} />
       </div>
 
       {/* Automatic Trial User Upgrade Popup ("Unlock full LeadNivash Pro") */}

@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   AlertCircle,
   Save,
-  ArrowRight,
   ArrowUpRight,
   ArrowLeft,
   Share2,
@@ -25,6 +24,8 @@ import {
   Maximize2,
   Clock,
   Globe,
+  Crown,
+  Send,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -34,8 +35,8 @@ import { StatusChip } from '../../components/ui/Chip';
 import { useToast } from '../../components/ui/Toast';
 import { parseMessage, commitParsedItem, type ParseResult } from '../../lib/api/parse';
 import { useVoiceDictation } from '../../lib/hooks/useVoiceDictation';
-import { fetchProperties, type PropertyItem } from '../../lib/api/properties';
-import { createBuyer, fetchBuyers } from '../../lib/api/buyers';
+import { fetchProperties, recordPropertyPitch, type PropertyItem } from '../../lib/api/properties';
+import { fetchBuyers } from '../../lib/api/buyers';
 import { createDeal } from '../../lib/api/deals';
 import { formatRupees } from '../../lib/money';
 import { useAuth } from '../auth/AuthProvider';
@@ -102,8 +103,10 @@ export const PastePage: React.FC = () => {
     }
   }, [location.state]);
 
-  // Classification: 'buyer' or 'listing'
-  const [itemType, setItemType] = useState<'buyer' | 'listing'>('buyer');
+  // Mandatory Classification in Step 2: null until user explicitly picks Buyer or Seller
+  const [itemType, setItemType] = useState<'buyer' | 'listing' | null>(null);
+  const [suggestedItemType, setSuggestedItemType] = useState<'buyer' | 'listing' | null>(null);
+  const [savedPropertyPitchCount, setSavedPropertyPitchCount] = useState<number>(0);
 
   // Step 2: Editable Extracted Fields
   const [recordName, setRecordName] = useState('');
@@ -122,6 +125,7 @@ export const PastePage: React.FC = () => {
   // Save states
   const [isSaving, setIsSaving] = useState(false);
   const [savedRecordId, setSavedRecordId] = useState<string | null>(null);
+  const [savedBuyerIds, setSavedBuyerIds] = useState<Set<string>>(new Set());
 
   // Step 3: Real Matching State
   const [isMatching, setIsMatching] = useState(false);
@@ -186,69 +190,119 @@ export const PastePage: React.FC = () => {
   };
 
   // Helper: Populate Step 2 review fields from a ParseResult
-  const applyParseResult = (result: ParseResult, sourceText: string) => {
+  const applyParseResult = (
+    result: ParseResult,
+    sourceText: string,
+    autoSelectRole = false
+  ) => {
     setParseResult(result);
-    setItemType(result.itemType);
+    setSuggestedItemType(result.itemType);
+    setItemType(autoSelectRole ? result.itemType : null);
+    setSavedRecordId(null);
+    setSavedPropertyPitchCount(0);
+    setSavedPropertyIds(new Set());
+    setSavedBuyerIds(new Set());
+
+    const fallbackCity = user?.agency?.city || 'Panipat';
+    const b = result.extracted?.buyer;
+    const p = result.extracted?.property;
 
     if (result.itemType === 'buyer') {
-      const b = result.extracted.buyer;
       setRecordName(b?.name || 'Direct Buyer');
       setRecordPhone(b?.phone || '');
-      setRecordLocality(b?.localities?.[0] || 'Model Town');
+      setRecordLocality(b?.localities?.[0] || fallbackCity);
+      setRecordCity(fallbackCity);
       setRecordType(b?.propertyType ? b.propertyType.replace(/_/g, ' ') : 'Builder Floor');
       setRecordBudgetLakhs(
-        b?.budgetMaxPaise ? Math.round(b.budgetMaxPaise / 10000000) : 120
+        b?.budgetMaxPaise ? Math.max(5, Math.round(b.budgetMaxPaise / 10000000)) : 100
       );
-      setRecordPriceRaw(b?.budgetRaw || (b?.budgetMaxPaise ? formatRupees(b.budgetMaxPaise) : ''));
+      setRecordPriceRaw(b?.budgetRaw || (b?.budgetMaxPaise ? formatRupees(b.budgetMaxPaise) : '₹1.00 Cr'));
       setRecordBedrooms(b?.bhk?.[0] ? `${b.bhk[0]} BHK` : '3 BHK');
+      setRecordArea('200');
+      setRecordUnit('gaj');
       setRecordNotes(sourceText);
     } else {
-      const p = result.extracted.property;
       setRecordName(p?.ownerName || 'Property Owner');
       setRecordPhone(p?.ownerPhone || '');
-      setRecordLocality(p?.locality || 'Model Town');
-      setRecordCity(p?.city || 'Panipat');
+      setRecordLocality(p?.locality || fallbackCity);
+      setRecordCity(p?.city || fallbackCity);
       setRecordType((p as any)?.type || p?.propertyType || 'Builder Floor');
-      setRecordPriceRaw(p?.priceDemandRaw || (p?.priceDemandPaise ? formatRupees(p.priceDemandPaise) : '₹1.25 Cr'));
+      setRecordPriceRaw(p?.priceDemandRaw || (p?.priceDemandPaise ? formatRupees(p.priceDemandPaise) : '₹1.00 Cr'));
+      setRecordBudgetLakhs(
+        p?.priceDemandPaise ? Math.max(5, Math.round(p.priceDemandPaise / 10000000)) : 100
+      );
       setRecordArea(p?.sizeValue ? String(p.sizeValue) : '200');
       setRecordUnit(p?.sizeUnit || 'gaj');
       setRecordFacing((p as any)?.facing || 'North-East');
+      setRecordBedrooms(p?.bhk ? `${p.bhk} BHK` : '3 BHK');
       setRecordNotes(sourceText);
     }
   };
 
-  // STEP 1: Extract details / Analyse Message
+  // STEP 1: Extract details / Analyse Message — ALWAYS proceeds to Step 2 even on unmatched text
   const handleAnalyze = async () => {
-    if (!rawText.trim() || rawText.trim().length < 10) {
-      toast('Please paste a WhatsApp message with at least 10 characters.', 'error');
+    const cleaned = rawText.trim();
+    if (cleaned.length < 2) {
+      toast('Please write or paste a message first.', 'error');
       return;
     }
 
     setIsAnalyzing(true);
     try {
-      const result = await parseMessage(rawText);
-      applyParseResult(result, rawText);
-      setSavedRecordId(null);
+      let result: ParseResult;
+      try {
+        result = await parseMessage(cleaned, Number((user as any)?.preferences?.marlaToGaj) || 30.25);
+      } catch {
+        result = {
+          itemType: 'buyer',
+          extracted: {
+            buyer: {
+              name: 'Client Inquiry',
+              localities: [user?.agency?.city || 'Panipat'],
+            },
+          },
+          confidence: { propertyType: 0.4, price: 0.3, locality: 0.4, overall: 0.35 },
+          warnings: ['Could not auto-detect structure — please choose Buyer or Seller and complete details below.'],
+        };
+      }
 
-      // Push into Recent Extractions (last 5)
+      if (!result || (result.itemType !== 'buyer' && result.itemType !== 'listing')) {
+        result = {
+          itemType: 'buyer',
+          extracted: {
+            buyer: { name: 'Client Inquiry', localities: [user?.agency?.city || 'Panipat'] },
+          },
+          confidence: { propertyType: 0.4, price: 0.3, locality: 0.4, overall: 0.35 },
+          warnings: ['Review details and pick Buyer or Seller to continue.'],
+        };
+      }
+
+      applyParseResult(result, cleaned, false);
+
       const loc =
         result.itemType === 'buyer'
-          ? result.extracted.buyer?.localities?.[0] || 'Panipat'
-          : result.extracted.property?.locality || 'Panipat';
+          ? result.extracted?.buyer?.localities?.[0] || user?.agency?.city || 'Panipat'
+          : result.extracted?.property?.locality || user?.agency?.city || 'Panipat';
       const title =
         result.itemType === 'buyer'
-          ? result.extracted.buyer?.name || 'Buyer Requirement'
-          : result.extracted.property?.title || result.extracted.property?.propertyType?.replace(/_/g, ' ') || 'Property Listing';
+          ? result.extracted?.buyer?.name || 'Buyer Requirement'
+          : result.extracted?.property?.title ||
+            result.extracted?.property?.propertyType?.replace(/_/g, ' ') ||
+            'Property Listing';
       const priceLabel =
         result.itemType === 'buyer'
-          ? result.extracted.buyer?.budgetRaw ||
-            (result.extracted.buyer?.budgetMaxPaise ? formatRupees(result.extracted.buyer.budgetMaxPaise) : 'Flexible')
-          : result.extracted.property?.priceDemandRaw ||
-            (result.extracted.property?.priceDemandPaise ? formatRupees(result.extracted.property.priceDemandPaise) : 'On request');
+          ? result.extracted?.buyer?.budgetRaw ||
+            (result.extracted?.buyer?.budgetMaxPaise
+              ? formatRupees(result.extracted.buyer.budgetMaxPaise)
+              : 'Flexible')
+          : result.extracted?.property?.priceDemandRaw ||
+            (result.extracted?.property?.priceDemandPaise
+              ? formatRupees(result.extracted.property.priceDemandPaise)
+              : 'On request');
 
       const entry: RecentExtractionItem = {
         id: `ext_${Date.now()}`,
-        rawText,
+        rawText: cleaned,
         itemType: result.itemType,
         title,
         locality: loc,
@@ -258,7 +312,7 @@ export const PastePage: React.FC = () => {
       };
 
       setRecentExtractions((prev) => {
-        const updated = [entry, ...prev.filter((item) => item.rawText !== rawText)].slice(0, 5);
+        const updated = [entry, ...prev.filter((item) => item.rawText !== cleaned)].slice(0, 5);
         try {
           localStorage.setItem(RECENT_EXTRACTIONS_KEY, JSON.stringify(updated));
         } catch {
@@ -268,119 +322,217 @@ export const PastePage: React.FC = () => {
       });
 
       setCurrentStep('review');
-      success('Details extracted! Review fields below.');
-    } catch (err: any) {
-      error(err?.message || 'Could not extract details. Please try again.');
+      success('Proceed to Step 2: Select Buyer or Seller & review details.');
     } finally {
       setIsAnalyzing(false);
     }
   };
 
-  // STEP 2: Save Extracted Record (Prevent Duplicate Saves)
-  const handleSaveRecord = async () => {
-    if (isSaving || savedRecordId) return;
+  // Canonical unit conversion to Gaj for accurate ranking across Gaj, Sq.Ft, Marla, Kanal
+  const toCanonicalGaj = (val: number, unit: string): number => {
+    const n = Number(val) || 0;
+    if (n <= 0) return 0;
+    const u = (unit || 'gaj').toLowerCase();
+    if (u === 'sqft' || u === 'sq.ft') return n / 9;
+    if (u === 'marla') return n * (Number((user as any)?.preferences?.marlaToGaj) || 30.25);
+    if (u === 'kanal') return n * 605;
+    if (u === 'acre') return n * 4840;
+    if (u === 'bigha') return n * 1000;
+    return n;
+  };
 
-    if (!recordLocality.trim()) {
-      error('Please specify a locality or sector.');
-      return;
+  const normalizePropertyTypeBucket = (raw: string): string => {
+    const s = (raw || '').toLowerCase();
+    if (s.includes('floor')) return 'floor';
+    if (s.includes('flat') || s.includes('apartment')) return 'flat';
+    if (s.includes('kothi') || s.includes('house') || s.includes('villa')) return 'kothi';
+    if (s.includes('shop') || s.includes('commercial') || s.includes('sco')) return 'shop';
+    if (s.includes('plot') || s.includes('land')) return 'plot';
+    return s.trim();
+  };
+
+  const parseDemandPaiseFromInput = (raw: string, fallbackLakhs: number): number => {
+    const text = (raw || '').toLowerCase();
+    const cr = text.match(/(\d+(?:\.\d+)?)\s*(?:cr|crore)/i);
+    const lac = text.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lacs|lac|l\b)/i);
+    if (cr) return Math.round(parseFloat(cr[1]) * 10000000 * 100);
+    if (lac) return Math.round(parseFloat(lac[1]) * 100000 * 100);
+    const digits = parseFloat(text.replace(/[^0-9.]/g, ''));
+    if (!isNaN(digits) && digits > 0) {
+      return digits < 500 ? Math.round(digits * 100000 * 100) : Math.round(digits * 100);
+    }
+    return Math.max(10000, Math.round(fallbackLakhs * 100000 * 100));
+  };
+
+  // Shared helper: Persists Buyer or Seller Listing in MongoDB (no duplicates)
+  const persistStep2Record = async (silentIfAlreadySaved = false): Promise<string | null> => {
+    if (!itemType) {
+      error('Please select Buyer or Seller before continuing.');
+      return null;
     }
 
+    if (savedRecordId) {
+      if (!silentIfAlreadySaved) {
+        toast('Record already saved.', 'info');
+      }
+      return savedRecordId;
+    }
+
+    const effectiveLocality = recordLocality.trim() || recordCity.trim() || 'Panipat';
     setIsSaving(true);
     try {
       if (itemType === 'buyer') {
-        const budgetMaxPaise = recordBudgetLakhs * 10000000;
-        const budgetMinPaise = Math.round(budgetMaxPaise * 0.85);
+        const budgetMaxPaise = Math.max(100000, Math.round((recordBudgetLakhs || 50) * 100000 * 100));
+        const budgetMinPaise = Math.round(budgetMaxPaise * 0.8);
+        const areaGaj = Math.round(toCanonicalGaj(Number(recordArea) || 200, recordUnit));
 
-        const buyerRecord = await createBuyer({
-          name: recordName || 'Direct Client',
-          phone: recordPhone || user?.phone || '',
-          localities: [recordLocality],
+        const res = await commitParsedItem('buyer', {
+          name: recordName.trim() || 'Direct Client',
+          phone: recordPhone.trim() || user?.phone || '+919999999999',
+          localities: [effectiveLocality],
           types: [recordType],
           budget: {
             minPaise: budgetMinPaise,
             maxPaise: budgetMaxPaise,
           },
-          notes: `${recordBedrooms} · ${recordNotes}`,
+          sizeGaj: areaGaj > 0 ? { min: Math.round(areaGaj * 0.75), max: Math.round(areaGaj * 1.25) } : undefined,
+          notes: `${recordBedrooms} · ${recordNotes}`.trim(),
+          rawText,
         });
 
-        setSavedRecordId(buyerRecord._id);
-        success(`Buyer inquiry for "${recordName}" saved successfully!`);
+        const newId =
+          (res as any)?.item?._id ||
+          (res as any)?.buyer?._id ||
+          (res as any)?._id ||
+          `buyer_${Date.now()}`;
+        setSavedRecordId(newId);
+        window.dispatchEvent(new Event('leadnivash_data_changed'));
+        return newId;
       } else {
+        const pricePaise = parseDemandPaiseFromInput(recordPriceRaw, recordBudgetLakhs);
+        const areaVal = Number(recordArea) > 0 ? Number(recordArea) : 200;
         const payload = {
-          title: `${recordBedrooms ? `${recordBedrooms} ` : ''}${recordType} in ${recordLocality}`,
-          locality: recordLocality,
-          city: recordCity,
+          title: `${recordBedrooms ? `${recordBedrooms} ` : ''}${recordType} in ${effectiveLocality}`,
+          locality: effectiveLocality,
+          city: recordCity.trim() || 'Panipat',
           type: recordType,
+          priceDemandPaise: pricePaise,
           priceDemandRaw: recordPriceRaw,
-          size: { value: Number(recordArea) || 200, unit: recordUnit },
+          size: { value: areaVal, unit: recordUnit },
+          sizeGaj: Math.round(toCanonicalGaj(areaVal, recordUnit)) || 200,
           facing: recordFacing,
-          ownerPhone: recordPhone,
+          ownerName: recordName.trim() || 'Property Owner',
+          ownerPhone: recordPhone.trim(),
           description: recordNotes,
         };
 
         const res = await commitParsedItem('listing', payload);
-        const newId = (res as any)?.property?._id || (res as any)?._id || 'prop_' + Date.now();
+        const newId =
+          (res as any)?.item?._id ||
+          (res as any)?.property?._id ||
+          (res as any)?._id ||
+          `prop_${Date.now()}`;
         setSavedRecordId(newId);
-        success('Property listing saved to inventory!');
+        setSavedPropertyPitchCount((res as any)?.item?.pitchCount || 0);
+        window.dispatchEvent(new Event('leadnivash_data_changed'));
+        return newId;
       }
     } catch (err: any) {
-      error(err?.message || 'Could not save record.');
+      error(err?.message || 'Could not save details. Please try again.');
+      return null;
     } finally {
       setIsSaving(false);
     }
   };
 
-  // STEP 2 -> STEP 3: Find Matches against Real Database
+  // STEP 2 Explicit Save button
+  const handleSaveRecord = async () => {
+    if (isSaving || savedRecordId) return;
+    const savedId = await persistStep2Record(false);
+    if (savedId) {
+      success(
+        itemType === 'buyer'
+          ? `Buyer "${recordName || 'Client'}" saved to your database!`
+          : 'Seller property saved to your inventory!'
+      );
+    }
+  };
+
+  // STEP 2 -> STEP 3: Save record automatically & rank opposite-side matches
   const handleFindMatches = async () => {
-    if (!recordLocality.trim()) {
-      error('Please specify a locality for matching.');
+    if (!itemType) {
+      error('Please select Buyer or Seller first (mandatory).');
       return;
     }
 
     setIsMatching(true);
     try {
+      const savedId = await persistStep2Record(true);
+      if (!savedId) return;
+
+      const effectiveLocality = (recordLocality.trim() || 'Panipat').toLowerCase();
+      const targetBucket = normalizePropertyTypeBucket(recordType);
+      const targetAreaGaj = toCanonicalGaj(Number(recordArea) || 200, recordUnit);
+
       if (itemType === 'buyer') {
-        // Match buyer against broker's real property inventory
         const properties = (await fetchProperties()) || [];
         setTotalDatabaseCount(properties.length);
+        const buyerBudgetPaise = Math.max(100000, Math.round((recordBudgetLakhs || 50) * 100000 * 100));
 
         const scored = properties
           .filter((p) => p.status === 'available' || !p.status)
           .map((p) => {
-            let score = 50;
+            let score = 20;
             const reasons: string[] = [];
             const mismatches: string[] = [];
 
-            // Location
+            // 1. Locality Match (+30)
             const pLoc = (p.locality || '').toLowerCase();
-            const bLoc = recordLocality.toLowerCase();
-            if (pLoc.includes(bLoc) || bLoc.includes(pLoc)) {
+            if (pLoc.includes(effectiveLocality) || effectiveLocality.includes(pLoc)) {
+              score += 30;
+              reasons.push(`Prime Sector Fit: Located in ${p.locality}.`);
+            } else {
+              mismatches.push(`Located in ${p.locality} (requested ${recordLocality || 'Panipat'}).`);
+            }
+
+            // 2. Budget Fit (+25)
+            const askPaise = p.priceDemandPaise || 0;
+            if (askPaise > 0 && askPaise <= buyerBudgetPaise) {
               score += 25;
-              reasons.push(`Target Sector: Situated in "${p.locality}".`);
-            } else {
-              mismatches.push(`Located in "${p.locality}" vs requested "${recordLocality}".`);
+              reasons.push(`Within Budget: Asking ${formatRupees(askPaise)} ≤ ₹${recordBudgetLakhs}L.`);
+            } else if (askPaise > 0 && askPaise <= buyerBudgetPaise * 1.15) {
+              score += 14;
+              reasons.push(`Near Budget (+15% stretch): ${formatRupees(askPaise)}.`);
+            } else if (askPaise > 0) {
+              mismatches.push(`Above budget by ${Math.round(((askPaise - buyerBudgetPaise) / buyerBudgetPaise) * 100)}%.`);
             }
 
-            // Type
-            if ((p.type || '').toLowerCase() === recordType.toLowerCase()) {
-              score += 15;
-              reasons.push(`Property Type: Direct match for "${p.type}".`);
-            } else {
-              mismatches.push(`Type is "${p.type}" vs requested "${recordType}".`);
+            // 3. Size Fit (+15)
+            const propGaj = toCanonicalGaj(p.size?.value || 0, p.size?.unit || 'gaj');
+            if (targetAreaGaj > 0 && propGaj > 0) {
+              const diffRatio = Math.abs(propGaj - targetAreaGaj) / targetAreaGaj;
+              if (diffRatio <= 0.15) {
+                score += 15;
+                reasons.push(`Ideal Area Size: ${p.size.value} ${p.size.unit.toUpperCase()} fits target.`);
+              } else if (diffRatio <= 0.35) {
+                score += 8;
+                reasons.push(`Close Area Size: ${p.size.value} ${p.size.unit.toUpperCase()}.`);
+              } else {
+                mismatches.push(`Area (${p.size.value} ${p.size.unit.toUpperCase()}) differs from ${recordArea} ${recordUnit.toUpperCase()}.`);
+              }
             }
 
-            // Budget
-            const propLakhs = (p.priceDemandPaise || 0) / 10000000;
-            if (propLakhs <= recordBudgetLakhs * 1.1) {
+            // 4. Property Type Match (+10)
+            if (normalizePropertyTypeBucket(p.type || '') === targetBucket) {
               score += 10;
-              reasons.push(`Price: Demanding ₹${propLakhs.toFixed(2)}L within client budget limit.`);
+              reasons.push(`Exact Type Match: ${p.type}.`);
             } else {
-              mismatches.push(`Price ₹${propLakhs.toFixed(2)}L is slightly above ₹${recordBudgetLakhs}L.`);
+              mismatches.push(`Property type is ${p.type}.`);
             }
 
             return {
               property: p,
-              score: Math.min(score, 98),
+              score: Math.min(99, Math.max(25, score)),
               reasons,
               mismatches,
             };
@@ -388,48 +540,70 @@ export const PastePage: React.FC = () => {
           .sort((a, b) => b.score - a.score);
 
         setMatchedProperties(scored);
+        success(`Buyer saved! Ranked ${scored.length} seller properties.`);
       } else {
-        // Match listing against broker's real buyer records
         const buyers = (await fetchBuyers()) || [];
         setTotalDatabaseCount(buyers.length);
+        const sellerAskPaise = parseDemandPaiseFromInput(recordPriceRaw, recordBudgetLakhs);
 
         const scoredBuyers = buyers
           .filter((b) => b.status === 'active' || !b.status)
           .map((b) => {
-            let score = 50;
+            let score = 20;
             const reasons: string[] = [];
             const mismatches: string[] = [];
 
-            // Locality match
+            // 1. Locality Fit (+30)
             const bLocalities = (b.localities || []).map((l) =>
               (typeof l === 'string' ? l : l.display).toLowerCase()
             );
             const matchesLocality =
               b.anyLocality ||
-              bLocalities.some((l) => l.includes(recordLocality.toLowerCase()) || recordLocality.toLowerCase().includes(l));
+              bLocalities.some((l) => l.includes(effectiveLocality) || effectiveLocality.includes(l));
 
             if (matchesLocality) {
-              score += 25;
-              reasons.push(`Client looking for properties in ${recordLocality}.`);
+              score += 30;
+              reasons.push(`Actively seeking ${recordLocality || 'this sector'}.`);
             } else {
-              mismatches.push(`Client prefers ${bLocalities.join(', ') || 'other sectors'}.`);
+              mismatches.push(`Prefers ${bLocalities.join(', ') || 'other sectors'}.`);
             }
 
-            // Property type
-            const bTypes = (b.types || []).map((t) => t.toLowerCase());
-            if (bTypes.some((t) => t.includes(recordType.toLowerCase()) || recordType.toLowerCase().includes(t))) {
-              score += 15;
-              reasons.push(`Looking for ${recordType}.`);
+            // 2. Budget Fit (+25)
+            const maxB = b.budget?.maxPaise || 0;
+            if (maxB >= sellerAskPaise) {
+              score += 25;
+              reasons.push(`Strong Budget: Client capacity up to ${formatRupees(maxB)}.`);
+            } else if (maxB >= sellerAskPaise * 0.85) {
+              score += 14;
+              reasons.push(`Negotiable Budget: Up to ${formatRupees(maxB)}.`);
+            } else if (maxB > 0) {
+              mismatches.push(`Buyer max budget (${formatRupees(maxB)}) is below demand.`);
             }
 
-            // Budget
-            if (b.budget?.maxPaise) {
-              reasons.push(`Buyer budget up to ${formatRupees(b.budget.maxPaise)}.`);
+            // 3. Size Fit (+15)
+            if (b.sizeGaj?.min || b.sizeGaj?.max) {
+              const minG = b.sizeGaj.min || 0;
+              const maxG = b.sizeGaj.max || minG * 1.4;
+              if (targetAreaGaj >= minG * 0.85 && targetAreaGaj <= maxG * 1.15) {
+                score += 15;
+                reasons.push(`Area Match: Looking for ${minG}–${Math.round(maxG)} Gaj.`);
+              }
+            }
+
+            // 4. Property Type & Urgency (+10)
+            const bTypes = (b.types || []).map((t) => normalizePropertyTypeBucket(t));
+            if (bTypes.includes(targetBucket)) {
+              score += 8;
+              reasons.push(`Looking specifically for ${recordType}.`);
+            }
+            if (b.urgency === 'hot') {
+              score += 5;
+              reasons.push('Hot priority buyer.');
             }
 
             return {
               buyer: b,
-              score: Math.min(score, 96),
+              score: Math.min(99, Math.max(25, score)),
               reasons,
               mismatches,
             };
@@ -437,6 +611,7 @@ export const PastePage: React.FC = () => {
           .sort((a, b) => b.score - a.score);
 
         setMatchedBuyers(scoredBuyers);
+        success(`Seller listing saved! Ranked ${scoredBuyers.length} matching buyers.`);
       }
 
       setCurrentStep('matches');
@@ -447,18 +622,82 @@ export const PastePage: React.FC = () => {
     }
   };
 
-  // WhatsApp Share Helper (Preserving Contact Privacy)
+  // Increment sent/pitch count on a property card + persist via MongoDB API
+  const bumpPropertyPitchCount = async (propertyId: string) => {
+    setMatchedProperties((prev) =>
+      prev.map((m) =>
+        m.property._id === propertyId
+          ? { ...m, property: { ...m.property, pitchCount: (m.property.pitchCount || 0) + 1 } }
+          : m
+      )
+    );
+    if (!propertyId.startsWith('prop_seed_') && !propertyId.startsWith('sim_')) {
+      const updated = await recordPropertyPitch(propertyId);
+      setMatchedProperties((prev) =>
+        prev.map((m) =>
+          m.property._id === propertyId
+            ? { ...m, property: { ...m.property, pitchCount: updated.pitchCount } }
+            : m
+        )
+      );
+    }
+  };
+
+  const buildPropertyPitchText = (property: PropertyItem) =>
+    `*Verified Property Recommendation*\n\n*${property.title}*\nLocation: ${property.locality}, ${property.city || 'Panipat'}\nType: ${property.type}\nArea: ${property.size.value} ${property.size.unit.toUpperCase()}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Clear title property ready for visit.'}\n\nMarketed by: ${agencyDisplayName}`;
+
+  // WhatsApp Share Helper (Preserving Contact Privacy + Updating Pitch Count)
   const handleShareBuyerQuote = () => {
-    const text = `*Client Requirement Update*\n\n*Seeking:* ${recordBedrooms} ${recordType}\n*Location:* ${recordLocality}, Panipat\n*Budget:* Up to ₹${recordBudgetLakhs} Lakhs\n*Preferences:* ${recordNotes || 'Ready for site inspection'}\n\nShared via ${agencyDisplayName}`;
+    const text = `*Client Requirement Update*\n\n*Seeking:* ${recordBedrooms} ${recordType}\n*Location:* ${recordLocality}, ${recordCity || 'Panipat'}\n*Budget:* Up to ₹${recordBudgetLakhs} Lakhs\n*Preferences:* ${recordNotes || 'Ready for site inspection'}\n\nShared via ${agencyDisplayName}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const handleSharePropertyFlyer = (property: PropertyItem) => {
-    const text = `*Verified Property Recommendation*\n\n*${property.title}*\nLocation: ${property.locality}, ${property.city || 'Panipat'}\nType: ${property.type}\nArea: ${property.size.value} ${property.size.unit.toUpperCase()}\nDemand: ${formatRupees(property.priceDemandPaise)}\n\nHighlights: ${property.description || 'Clear title property ready for visit.'}\n\nView Flyer: https://leadnivash.com/flyer/${property._id}\n\nMarketed by: ${agencyDisplayName}`;
+    const text = buildPropertyPitchText(property);
+    void bumpPropertyPitchCount(property._id);
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  const isAnalyzeEnabled = rawText.trim().length >= 10 && !isAnalyzing;
+  const copyTextSafely = async (text: string) => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+    } catch {
+      // Fallback below when clipboard permission is denied (e.g. WebViews)
+    }
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch {
+      // ignore fallback error
+    }
+  };
+
+  const handleCopyPropertyFlyer = (property: PropertyItem) => {
+    const text = buildPropertyPitchText(property);
+    void copyTextSafely(text);
+    void bumpPropertyPitchCount(property._id);
+    success(`Property pitch copied! Sent count updated for "${property.title}".`);
+  };
+
+  const bumpSavedSellerPitch = async () => {
+    setSavedPropertyPitchCount((c) => c + 1);
+    if (savedRecordId && !savedRecordId.startsWith('sim_')) {
+      const res = await recordPropertyPitch(savedRecordId);
+      setSavedPropertyPitchCount(res.pitchCount);
+    }
+  };
+
+  const isAnalyzeEnabled = rawText.trim().length >= 2 && !isAnalyzing;
   const hasRecentExtractions = recentExtractions.length > 0;
 
   return (
@@ -681,7 +920,7 @@ export const PastePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Primary Extract Details Button — Always matches Reference #3 primary CTA box color */}
+              {/* Primary Extract Details Button — Low opacity when empty, full opacity + shine once text entered */}
               <div className="pt-1">
                 <button
                   type="button"
@@ -691,7 +930,7 @@ export const PastePage: React.FC = () => {
                     'group btn-cashfree-primary w-full min-h-[48px] pl-6 pr-2 rounded-[14px] font-semibold text-sm text-white flex items-center justify-between gap-2 transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1',
                       isAnalyzeEnabled
                         ? 'btn-shine-sweep cursor-pointer opacity-100'
-                        : 'cursor-not-allowed opacity-90'
+                        : 'cursor-not-allowed opacity-40'
                   )}
                 >
                   {isAnalyzing ? (
@@ -719,48 +958,107 @@ export const PastePage: React.FC = () => {
           )}
 
       {/* ======================================================== */}
-      {/* STEP 2: EDITABLE EXTRACTION DETAILS (Prompt 5 Spec)       */}
+      {/* STEP 2: MANDATORY BUYER / SELLER SELECTION & SAVE        */}
       {/* ======================================================== */}
       {currentStep === 'review' && (
         <Card className="p-4 sm:p-6 space-y-5 rounded-2xl bg-white border border-border shadow-card">
-          {/* Step 2 Header & Classification */}
+          {/* Step 2 Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3.5 border-b border-border">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-ink">
-                Review Extracted Details
+                Step 2: Select Buyer or Seller & Review Details
               </h2>
               <p className="text-xs text-muted">
-                Step 2: Correct any values before saving or searching inventory matches.
+                Choose Buyer or Seller (required), edit details, then click Next to save & rank matches.
               </p>
             </div>
+            {suggestedItemType && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-lime-soft border border-lime text-[11px] font-semibold text-ink-900 self-start sm:self-auto">
+                <Sparkles className="w-3 h-3 text-brand-700" />
+                <span>AI Suggestion: {suggestedItemType === 'buyer' ? 'Buyer' : 'Seller'}</span>
+              </span>
+            )}
+          </div>
 
-            {/* Classification Toggle */}
-            <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-border text-xs self-start sm:self-auto">
+          {/* MANDATORY 2-CARD SELECTION: BUYER OR SELLER */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs font-semibold">
+              <span className="text-ink-900">
+                1. Who is this message for? <span className="text-danger">*</span>
+              </span>
+              {!itemType && (
+                <span className="text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                  Required selection
+                </span>
+              )}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
                 type="button"
+                data-testid="role-select-buyer"
                 onClick={() => setItemType('buyer')}
                 className={clsx(
-                  'px-3 py-1.5 rounded-lg font-semibold transition cursor-pointer flex items-center gap-1',
+                  'p-3.5 rounded-[14px] border text-left transition cursor-pointer flex items-start gap-3',
                   itemType === 'buyer'
-                    ? 'bg-brand-600 text-white shadow-xs'
-                    : 'text-muted hover:text-ink'
+                    ? 'bg-ink-black text-white border-ink-black ring-2 ring-lime shadow-sm'
+                    : 'bg-white border-line text-ink-900 hover:border-ink-black/40 hover:bg-lime-soft/40'
                 )}
               >
-                <Users className="w-3.5 h-3.5" />
-                <span>Buyer Requirement</span>
+                <div
+                  className={clsx(
+                    'w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0',
+                    itemType === 'buyer' ? 'bg-lime text-ink-black' : 'bg-brand-50 text-brand-600'
+                  )}
+                >
+                  <Users className="w-4 h-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-bold">Buyer</span>
+                    {itemType === 'buyer' && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-lime text-ink-black">
+                        Selected ✓
+                      </span>
+                    )}
+                  </div>
+                  <p className={clsx('text-xs mt-0.5', itemType === 'buyer' ? 'text-white/75' : 'text-ink-500')}>
+                    Client looking to buy / rent — rank matching Seller Properties next.
+                  </p>
+                </div>
               </button>
+
               <button
                 type="button"
+                data-testid="role-select-seller"
                 onClick={() => setItemType('listing')}
                 className={clsx(
-                  'px-3 py-1.5 rounded-lg font-semibold transition cursor-pointer flex items-center gap-1',
+                  'p-3.5 rounded-[14px] border text-left transition cursor-pointer flex items-start gap-3',
                   itemType === 'listing'
-                    ? 'bg-brand-600 text-white shadow-xs'
-                    : 'text-muted hover:text-ink'
+                    ? 'bg-ink-black text-white border-ink-black ring-2 ring-lime shadow-sm'
+                    : 'bg-white border-line text-ink-900 hover:border-ink-black/40 hover:bg-lime-soft/40'
                 )}
               >
-                <Building2 className="w-3.5 h-3.5" />
-                <span>Property Listing</span>
+                <div
+                  className={clsx(
+                    'w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0',
+                    itemType === 'listing' ? 'bg-lime text-ink-black' : 'bg-brand-50 text-brand-600'
+                  )}
+                >
+                  <Building2 className="w-4 h-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-bold">Seller</span>
+                    {itemType === 'listing' && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-lime text-ink-black">
+                        Selected ✓
+                      </span>
+                    )}
+                  </div>
+                  <p className={clsx('text-xs mt-0.5', itemType === 'listing' ? 'text-white/75' : 'text-ink-500')}>
+                    Owner offering a property — rank matching Buyers next.
+                  </p>
+                </div>
               </button>
             </div>
           </div>
@@ -785,13 +1083,20 @@ export const PastePage: React.FC = () => {
             <div className="space-y-3 pb-3 border-b border-slate-100">
               <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-brand-600" />
-                <span>1. {itemType === 'buyer' ? 'Client / Buyer Information' : 'Owner / Seller Information'}</span>
+                <span>
+                  1.{' '}
+                  {itemType === 'buyer'
+                    ? 'Client / Buyer Information'
+                    : itemType === 'listing'
+                    ? 'Owner / Seller Information'
+                    : 'Contact Information (Select Buyer or Seller above)'}
+                </span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-ink block">
-                    {itemType === 'buyer' ? 'Buyer Name' : 'Owner Name'}
+                    {itemType === 'buyer' ? 'Buyer Name' : itemType === 'listing' ? 'Owner / Seller Name' : 'Contact Name'}
                   </label>
                   <input
                     type="text"
@@ -975,7 +1280,7 @@ export const PastePage: React.FC = () => {
                 type="button"
                 variant="secondary"
                 size="md"
-                disabled={isSaving || Boolean(savedRecordId)}
+                disabled={!itemType || isSaving || Boolean(savedRecordId)}
                 onClick={handleSaveRecord}
                 className="flex-1 sm:flex-initial min-h-[48px] font-semibold text-xs text-emerald-800 bg-emerald-50 border-emerald-300 hover:bg-emerald-100"
               >
@@ -989,7 +1294,9 @@ export const PastePage: React.FC = () => {
                 ) : (
                   <span className="flex items-center gap-1">
                     <Save className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Save {itemType === 'buyer' ? 'Buyer' : 'Listing'}</span>
+                    <span>
+                      Save {itemType === 'buyer' ? 'Buyer' : itemType === 'listing' ? 'Seller Listing' : 'Record'}
+                    </span>
                   </span>
                 )}
               </Button>
@@ -999,20 +1306,22 @@ export const PastePage: React.FC = () => {
               type="button"
               variant="primary"
               size="md"
-              disabled={isMatching || !recordLocality.trim()}
+              disabled={!itemType || isMatching || isSaving}
               onClick={handleFindMatches}
-              className="w-full sm:w-auto min-h-[48px] font-semibold text-xs gap-1.5 shadow-sm"
+              className={clsx(
+                'w-full sm:w-auto min-h-[48px] font-semibold text-xs gap-1.5 shadow-sm transition-opacity',
+                !itemType && 'opacity-45'
+              )}
             >
-              {isMatching ? (
+              {isMatching || isSaving ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Searching Matches...</span>
+                  <span>Saving & Ranking Matches...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" />
-                  <span>Find Matches & View Results</span>
-                  <ArrowRight className="w-4 h-4 ml-0.5" />
+                  <Sparkles className="w-4 h-4 text-lime" />
+                  <span>Save & Find Matches</span>
                 </>
               )}
             </Button>
@@ -1098,38 +1407,55 @@ export const PastePage: React.FC = () => {
                 </Card>
               ) : (
                 <div className="space-y-3">
-                  {matchedProperties.map(({ property, score, reasons, mismatches }) => {
+                  {matchedProperties.map(({ property, score, reasons, mismatches }, idx) => {
                     const isDealSaved = savedPropertyIds.has(property._id);
+                    const isBestOne = idx === 0;
+                    const pitchCount = property.pitchCount || 0;
 
                     return (
                       <Card
                         key={property._id}
-                        className="p-4 sm:p-5 flex flex-col justify-between rounded-card bg-white border border-border hover:border-brand-600/40 transition shadow-card space-y-3"
+                        className={clsx(
+                          'p-4 sm:p-5 flex flex-col justify-between rounded-card transition shadow-card space-y-3',
+                          isBestOne
+                            ? 'bg-lime-soft/30 border-2 border-ink-black shadow-md'
+                            : 'bg-white border border-border hover:border-brand-600/40'
+                        )}
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-border">
                           <div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {isBestOne && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-lime text-ink-black text-[11px] font-extrabold border border-ink-black/20 shadow-2xs">
+                                  <Crown className="w-3 h-3" />
+                                  <span>#1 Best Match</span>
+                                </span>
+                              )}
                               <h3 className="text-base font-bold text-ink">
                                 {property.title}
                               </h3>
                               <Badge variant={score >= 80 ? 'perfect' : 'good'}>
                                 {score}% Match
                               </Badge>
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 border border-line text-[11px] font-semibold text-ink-700">
+                                <Send className="w-3 h-3 text-brand-600" />
+                                <span>Sent to {pitchCount} {pitchCount === 1 ? 'person' : 'people'}</span>
+                              </span>
                             </div>
-                            <p className="text-xs text-muted mt-0.5">
+                            <p className="text-xs text-muted mt-1">
                               {property.locality}, {property.city || 'Panipat'} · {property.size.value} {property.size.unit.toUpperCase()}
                             </p>
                           </div>
 
-                          <div className="sm:text-right">
+                          <div className="sm:text-right shrink-0">
                             <span className="text-[10px] uppercase font-semibold text-muted block">Asking Price</span>
-                            <span className="text-base font-bold text-ink">
+                            <span className="text-base font-bold text-ink tabular-nums">
                               {formatRupees(property.priceDemandPaise)}
                             </span>
                           </div>
                         </div>
 
-                        {/* Match Explanation (Prompt 5 Spec) */}
+                        {/* Match Explanation */}
                         <div className="space-y-1 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
                           {reasons.map((r, i) => (
                             <div key={i} className="flex items-center gap-1.5 text-emerald-800">
@@ -1145,7 +1471,7 @@ export const PastePage: React.FC = () => {
                           ))}
                         </div>
 
-                        {/* Actions */}
+                        {/* Actions: Inspect + Save + Copy + Send */}
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t border-slate-100">
                           <button
                             type="button"
@@ -1156,13 +1482,13 @@ export const PastePage: React.FC = () => {
                             <span>Inspect Details</span>
                           </button>
 
-                          <div className="flex items-center gap-2 w-full sm:w-auto">
+                          <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
                             <Button
                               variant="secondary"
                               size="sm"
                               disabled={isDealSaved}
                               onClick={async () => {
-                                if (savedRecordId) {
+                                if (savedRecordId && !savedRecordId.startsWith('sim_')) {
                                   try {
                                     await createDeal({
                                       buyerId: savedRecordId,
@@ -1176,28 +1502,38 @@ export const PastePage: React.FC = () => {
                                       stage: 'interested',
                                     });
                                     setSavedPropertyIds((prev) => new Set([...prev, property._id]));
-                                    success('Deal created and saved to pipeline!');
+                                    success('Saved deal to pipeline!');
                                   } catch (err: any) {
                                     error(err?.message || 'Could not save deal.');
                                   }
                                 } else {
                                   setSavedPropertyIds((prev) => new Set([...prev, property._id]));
-                                  success('Property marked as interested!');
+                                  success('Property match saved!');
                                 }
                               }}
                               className="flex-1 sm:flex-initial text-xs font-semibold min-h-[40px]"
                             >
-                              {isDealSaved ? 'Saved ✓' : 'Save Deal'}
+                              {isDealSaved ? 'Saved ✓' : 'Save'}
+                            </Button>
+
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => handleCopyPropertyFlyer(property)}
+                              className="flex-1 sm:flex-initial text-xs font-semibold min-h-[40px] gap-1"
+                            >
+                              <Copy className="w-3.5 h-3.5" />
+                              <span>Copy</span>
                             </Button>
 
                             <button
                               type="button"
                               onClick={() => handleSharePropertyFlyer(property)}
-                              className="group btn-cashfree-primary btn-shine-sweep flex-1 sm:flex-initial min-h-[40px] pl-3.5 pr-1.5 rounded-[11px] text-white font-semibold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+                              className="group btn-cashfree-primary btn-shine-sweep flex-1 sm:flex-initial min-h-[40px] pl-3.5 pr-1.5 rounded-[11px] text-white font-semibold text-xs flex items-center justify-center gap-2 transition cursor-pointer whitespace-nowrap"
                             >
                               <Share2 className="w-3.5 h-3.5 text-lime" />
-                              <span>Share Quote</span>
-                              <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+                              <span>Send</span>
+                              <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                                 <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
                               </span>
                             </button>
@@ -1214,9 +1550,12 @@ export const PastePage: React.FC = () => {
           {/* ── Case B: Extracted Item is a Property Listing ── */}
           {itemType === 'listing' && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs font-semibold text-muted px-1">
-                <span>{matchedBuyers.length} of {totalDatabaseCount} active buyers matched</span>
-                <span>Evaluated against real client leads</span>
+              <div className="flex items-center justify-between text-xs font-semibold text-muted px-1 flex-wrap gap-2">
+                <span>{matchedBuyers.length} of {totalDatabaseCount} active buyers ranked</span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 border border-line text-[11px] font-semibold text-ink-700">
+                  <Send className="w-3 h-3 text-brand-600" />
+                  <span>Property sent to {savedPropertyPitchCount} {savedPropertyPitchCount === 1 ? 'person' : 'people'}</span>
+                </span>
               </div>
 
               {matchedBuyers.length === 0 ? (
@@ -1238,24 +1577,42 @@ export const PastePage: React.FC = () => {
                 </Card>
               ) : (
                 <div className="space-y-3">
-                  {matchedBuyers.map(({ buyer, score, reasons }, idx) => {
-                    const waShareText = `Namaste ${buyer.name} ji,\n\nAapki requirement ke hisaab se ek listing available hai:\n\n*${recordType} in ${recordLocality}*\nDemand: ${recordPriceRaw}\nArea: ${recordArea} ${recordUnit.toUpperCase()}\n\nInspection ke liye connect karein?\n- ${agencyDisplayName}`;
+                  {matchedBuyers.map(({ buyer, score, reasons, mismatches }, idx) => {
+                    const isBestOne = idx === 0;
+                    const buyerId = buyer._id || `buyer_${idx}`;
+                    const isBuyerSaved = savedBuyerIds.has(buyerId);
+                    const waShareText = `Namaste ${buyer.name} ji,\n\nAapki requirement ke hisaab se ek listing available hai:\n\n*${recordType} in ${recordLocality}*\nDemand: ${recordPriceRaw || formatRupees(parseDemandPaiseFromInput(recordPriceRaw, recordBudgetLakhs))}\nArea: ${recordArea} ${recordUnit.toUpperCase()}\n\nInspection ke liye connect karein?\n- ${agencyDisplayName}`;
                     const waUrl = `https://wa.me/${(buyer.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waShareText)}`;
 
                     return (
                       <Card
-                        key={buyer._id || idx}
-                        className="p-4 sm:p-5 flex flex-col justify-between rounded-card bg-white border border-border hover:border-brand-600/40 transition shadow-card space-y-3"
+                        key={buyerId}
+                        className={clsx(
+                          'p-4 sm:p-5 flex flex-col justify-between rounded-card transition shadow-card space-y-3',
+                          isBestOne
+                            ? 'bg-lime-soft/30 border-2 border-ink-black shadow-md'
+                            : 'bg-white border border-border hover:border-brand-600/40'
+                        )}
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-border">
                           <div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {isBestOne && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-lime text-ink-black text-[11px] font-extrabold border border-ink-black/20 shadow-2xs">
+                                  <Crown className="w-3 h-3" />
+                                  <span>#1 Best Match</span>
+                                </span>
+                              )}
                               <h3 className="text-base font-bold text-ink">{buyer.name}</h3>
                               <Badge variant={score >= 80 ? 'perfect' : 'good'}>
                                 {score}% Fit
                               </Badge>
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 border border-line text-[11px] font-semibold text-ink-700">
+                                <Send className="w-3 h-3 text-brand-600" />
+                                <span>Listing sent to {savedPropertyPitchCount} {savedPropertyPitchCount === 1 ? 'person' : 'people'}</span>
+                              </span>
                             </div>
-                            <p className="text-xs text-muted mt-0.5">
+                            <p className="text-xs text-muted mt-1">
                               Budget: <strong className="text-ink">{buyer.budget?.maxPaise ? formatRupees(buyer.budget.maxPaise) : 'Flexible'}</strong>
                             </p>
                           </div>
@@ -1263,7 +1620,7 @@ export const PastePage: React.FC = () => {
                           <div className="sm:text-right">
                             <span className="text-[10px] uppercase font-semibold text-muted block">Phone</span>
                             <span className="text-xs font-semibold text-slate-700">
-                              {buyer.phone || '—'}
+                              {buyer.phone || (buyer as any).phoneE164 || '—'}
                             </span>
                           </div>
                         </div>
@@ -1276,14 +1633,48 @@ export const PastePage: React.FC = () => {
                               <span>{r}</span>
                             </div>
                           ))}
+                          {Array.isArray(mismatches) && mismatches.map((m: string, i: number) => (
+                            <div key={`mm_${i}`} className="flex items-center gap-1.5 text-amber-800">
+                              <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                              <span>{m}</span>
+                            </div>
+                          ))}
                         </div>
 
-                        {/* Actions */}
-                        <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                        {/* Actions: Save + Copy + Send */}
+                        <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 flex-wrap">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            disabled={isBuyerSaved}
+                            onClick={async () => {
+                              if (savedRecordId && !savedRecordId.startsWith('sim_') && buyer._id && !buyer._id.startsWith('buyer_seed_')) {
+                                try {
+                                  await createDeal({
+                                    buyerId: buyer._id,
+                                    propertyId: savedRecordId,
+                                    propertyTitleSnapshot: `${recordType} in ${recordLocality}`,
+                                    valuePaise: parseDemandPaiseFromInput(recordPriceRaw, recordBudgetLakhs),
+                                    commission: { mode: 'percent', bps: 100 },
+                                    stage: 'interested',
+                                  });
+                                } catch {
+                                  // gracefully continue
+                                }
+                              }
+                              setSavedBuyerIds((prev) => new Set([...prev, buyerId]));
+                              success(`Matched deal saved for ${buyer.name}!`);
+                            }}
+                            className="text-xs font-semibold min-h-[40px]"
+                          >
+                            {isBuyerSaved ? 'Saved ✓' : 'Save'}
+                          </Button>
+
                           <button
                             type="button"
                             onClick={() => {
-                              navigator.clipboard.writeText(waShareText);
+                              void copyTextSafely(waShareText);
+                              void bumpSavedSellerPitch();
                               success(`Message copied for ${buyer.name}!`);
                             }}
                             className="min-h-[40px] px-3 py-1.5 rounded-lg border border-border hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
@@ -1296,11 +1687,14 @@ export const PastePage: React.FC = () => {
                             href={waUrl}
                             target="_blank"
                             rel="noreferrer"
+                            onClick={() => {
+                              void bumpSavedSellerPitch();
+                            }}
                             className="group btn-cashfree-primary btn-shine-sweep min-h-[40px] pl-3.5 pr-1.5 rounded-[11px] text-white font-semibold text-xs flex items-center gap-2 transition"
                           >
                             <Share2 className="w-3.5 h-3.5 text-lime" />
-                            <span>Share on WhatsApp</span>
-                            <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+                            <span>Send</span>
+                            <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                               <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
                             </span>
                           </a>

@@ -4,7 +4,6 @@ import {
   Zap,
   Crown,
   Check,
-  ArrowRight,
   ArrowUpRight,
   Sparkles,
   ShieldCheck,
@@ -226,7 +225,6 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   <Link to="/app" className="block">
                     <Button variant="secondary" pill className="w-full text-xs font-bold py-3 min-h-[44px]">
                       <span>Open Broker Dashboard</span>
-                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
                     </Button>
                   </Link>
                   <div className="text-center text-[11px] text-muted">
@@ -242,7 +240,6 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   <Link to="/register" className="block">
                     <Button variant="secondary" pill className="w-full text-xs font-bold py-3 min-h-[44px]">
                       <span>Start 14-Day Free Trial</span>
-                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
                     </Button>
                   </Link>
                   <div className="text-center text-[11px] text-muted">

@@ -31,6 +31,8 @@ import {
 } from 'lucide-react';
 import { SpecialOfferModal } from '../pricing/SpecialOfferModal';
 import { startInteractiveTour } from '../onboarding/OnboardingTour';
+import { openVideoGuide } from '../onboarding/GuideVideoModal';
+import { INDIAN_STATES, DEFAULT_STATE_NAME, getStateRule } from '../../lib/indianStates';
 import clsx from 'clsx';
 
 type SettingsSection =
@@ -77,8 +79,14 @@ export const SettingsPage: React.FC = () => {
   const [agencyName, setAgencyName] = useState(user?.agency?.name || '');
   const [reraNo, setReraNo] = useState(user?.agency?.reraNo || '');
   const [agencyCity, setAgencyCity] = useState(user?.agency?.city || 'Panipat');
+  const [defaultState, setDefaultState] = useState(
+    user?.preferences?.defaultState || DEFAULT_STATE_NAME
+  );
+  const [guideLanguage, setGuideLanguage] = useState<'en' | 'hi' | 'pa' | 'ta' | 'mr'>(
+    user?.preferences?.language || 'en'
+  );
   const [marlaStandard, setMarlaStandard] = useState<'30.25' | '25'>(
-    String((user as any)?.preferences?.marlaToGaj || '25') === '30.25' ? '30.25' : '25'
+    String((user as any)?.preferences?.marlaToGaj || '30.25') === '25' ? '25' : '30.25'
   );
 
   const [baseline, setBaseline] = useState({
@@ -86,7 +94,9 @@ export const SettingsPage: React.FC = () => {
     agencyName: user?.agency?.name || '',
     reraNo: user?.agency?.reraNo || '',
     agencyCity: user?.agency?.city || 'Panipat',
-    marlaStandard: (String((user as any)?.preferences?.marlaToGaj || '25') === '30.25' ? '30.25' : '25') as '30.25' | '25',
+    defaultState: user?.preferences?.defaultState || DEFAULT_STATE_NAME,
+    guideLanguage: (user?.preferences?.language || 'en') as 'en' | 'hi' | 'pa' | 'ta' | 'mr',
+    marlaStandard: (String((user as any)?.preferences?.marlaToGaj || '30.25') === '25' ? '25' : '30.25') as '30.25' | '25',
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -103,19 +113,25 @@ export const SettingsPage: React.FC = () => {
       const nextAgency = user.agency?.name || '';
       const nextRera = user.agency?.reraNo || '';
       const nextCity = user.agency?.city || 'Panipat';
+      const nextState = user.preferences?.defaultState || DEFAULT_STATE_NAME;
+      const nextLang = (user.preferences?.language || 'en') as 'en' | 'hi' | 'pa' | 'ta' | 'mr';
       const nextMarla: '30.25' | '25' =
-        String((user as any)?.preferences?.marlaToGaj || '25') === '30.25' ? '30.25' : '25';
+        String((user as any)?.preferences?.marlaToGaj || '30.25') === '25' ? '25' : '30.25';
 
       setName(nextName);
       setAgencyName(nextAgency);
       setReraNo(nextRera);
       setAgencyCity(nextCity);
+      setDefaultState(nextState);
+      setGuideLanguage(nextLang);
       setMarlaStandard(nextMarla);
       setBaseline({
         name: nextName,
         agencyName: nextAgency,
         reraNo: nextRera,
         agencyCity: nextCity,
+        defaultState: nextState,
+        guideLanguage: nextLang,
         marlaStandard: nextMarla,
       });
     }
@@ -132,19 +148,25 @@ export const SettingsPage: React.FC = () => {
           const nextAgency = u.agency?.name || '';
           const nextRera = u.agency?.reraNo || '';
           const nextCity = u.agency?.city || 'Panipat';
+          const nextState = u.preferences?.defaultState || DEFAULT_STATE_NAME;
+          const nextLang = (u.preferences?.language || 'en') as 'en' | 'hi' | 'pa' | 'ta' | 'mr';
           const nextMarla: '30.25' | '25' =
-            String(u.preferences?.marlaToGaj || '25') === '30.25' ? '30.25' : '25';
+            String(u.preferences?.marlaToGaj || '30.25') === '25' ? '25' : '30.25';
 
           setName(nextName);
           setAgencyName(nextAgency);
           setReraNo(nextRera);
           setAgencyCity(nextCity);
+          setDefaultState(nextState);
+          setGuideLanguage(nextLang);
           setMarlaStandard(nextMarla);
           setBaseline({
             name: nextName,
             agencyName: nextAgency,
             reraNo: nextRera,
             agencyCity: nextCity,
+            defaultState: nextState,
+            guideLanguage: nextLang,
             marlaStandard: nextMarla,
           });
         }
@@ -165,6 +187,8 @@ export const SettingsPage: React.FC = () => {
     agencyName.trim() !== baseline.agencyName.trim() ||
     reraNo.trim() !== baseline.reraNo.trim() ||
     agencyCity.trim() !== baseline.agencyCity.trim() ||
+    defaultState !== baseline.defaultState ||
+    guideLanguage !== baseline.guideLanguage ||
     marlaStandard !== baseline.marlaStandard;
 
   const handleSaveProfile = async (e?: React.FormEvent) => {
@@ -181,6 +205,8 @@ export const SettingsPage: React.FC = () => {
         preferences: {
           marlaToGaj: Number(marlaStandard),
           defaultCity: agencyCity.trim() || undefined,
+          defaultState,
+          language: guideLanguage,
         },
       });
 
@@ -189,6 +215,8 @@ export const SettingsPage: React.FC = () => {
         agencyName: agencyName.trim(),
         reraNo: reraNo.trim(),
         agencyCity: agencyCity.trim(),
+        defaultState,
+        guideLanguage,
         marlaStandard,
       });
 
@@ -558,10 +586,10 @@ export const SettingsPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsSpecialOfferOpen(true)}
-                  className="group btn-shine-sweep inline-flex items-center gap-2.5 h-10 pl-4 pr-1.5 rounded-[12px] bg-white hover:bg-lime-soft text-ink-black text-sm font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer shadow-sm"
+                  className="group btn-shine-sweep-light inline-flex items-center gap-2.5 h-10 pl-4 pr-1.5 rounded-[12px] bg-white hover:bg-lime-soft text-ink-black text-sm font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer shadow-sm"
                 >
-                  <span>{`Upgrade · ${PLAN_PRICING.formattedAnnualOffer}`}</span>
-                  <span className="w-7 h-7 rounded-[8px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                  <span className="relative z-10">{`Upgrade · ${PLAN_PRICING.formattedAnnualOffer}`}</span>
+                  <span className="relative z-10 w-7 h-7 rounded-[8px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                     <ArrowUpRight className="w-4 h-4 stroke-[2.25]" />
                   </span>
                 </button>
@@ -587,11 +615,111 @@ export const SettingsPage: React.FC = () => {
                   Regional preferences
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Configure land measurement units and your default operating city.
+                  Select your Indian state / UT to auto-update Broker Tools stamp duty, registry fees, and units.
                 </p>
               </div>
 
+              {/* Pan-India Operating State / Union Territory Selector */}
               <div className="space-y-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <label htmlFor="regional-state-select" className="text-xs font-semibold text-slate-700 block">
+                    Operating State / Union Territory (All India)
+                  </label>
+                  <span className="text-[11px] font-semibold text-brand-700 bg-lime-soft px-2 py-0.5 rounded-full border border-lime">
+                    Syncs to Stamp Duty Tool
+                  </span>
+                </div>
+                <select
+                  id="regional-state-select"
+                  value={defaultState}
+                  onChange={(e) => {
+                    const nextState = e.target.value;
+                    setDefaultState(nextState);
+                    const rule = getStateRule(nextState);
+                    setMarlaStandard(rule.defaultMarlaToGaj === 25 ? '25' : '30.25');
+                  }}
+                  className="w-full h-11 bg-white border border-border rounded-input px-3.5 text-sm font-semibold text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
+                >
+                  <optgroup label="Indian States (28)">
+                    {INDIAN_STATES.filter((s) => s.regionType === 'State').map((s) => (
+                      <option key={s.name} value={s.name}>
+                        {s.name} — Stamp Duty {s.stampFemalePct}%–{s.stampMalePct + s.urbanExtraPct}%
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Union Territories (8)">
+                    {INDIAN_STATES.filter((s) => s.regionType === 'Union Territory').map((s) => (
+                      <option key={s.name} value={s.name}>
+                        {s.name} — Stamp Duty {s.stampFemalePct}%–{s.stampMalePct + s.urbanExtraPct}%
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+
+                {/* Live State Fee Summary Box */}
+                {(() => {
+                  const selectedRule = getStateRule(defaultState);
+                  return (
+                    <div className="p-3.5 rounded-[12px] bg-lime-soft/60 border border-lime space-y-1.5 text-xs">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="font-bold text-ink-900">
+                          {selectedRule.name} · {selectedRule.authorityLabel}
+                        </span>
+                        <span className="text-[11px] font-semibold text-brand-700">
+                          {selectedRule.popularUnitLabel}
+                        </span>
+                      </div>
+                      <p className="text-ink-700">
+                        Male: <strong>{selectedRule.stampMalePct}%</strong> · Female: <strong>{selectedRule.stampFemalePct}%</strong> · Joint: <strong>{selectedRule.stampJointPct}%</strong>
+                        {selectedRule.regFeeMode === 'haryana-slab'
+                          ? ' · Reg fee slab (max ₹50,000)'
+                          : ` · Reg fee ${selectedRule.regFeePct}%${selectedRule.regFeeCap ? ` (cap ₹${selectedRule.regFeeCap.toLocaleString('en-IN')})` : ''}`}
+                      </p>
+                      <p className="text-[11px] text-ink-500">{selectedRule.note}</p>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Guide & Workspace Language */}
+              <div className="space-y-2.5 pt-2 border-t border-slate-100">
+                <label className="text-xs font-semibold text-slate-700 block">
+                  Preferred guide & regional language (5 core Indian languages)
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                  {(
+                    [
+                      { id: 'en', label: 'English', native: 'English' },
+                      { id: 'hi', label: 'Hindi', native: 'हिंदी' },
+                      { id: 'pa', label: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
+                      { id: 'ta', label: 'Tamil', native: 'தமிழ்' },
+                      { id: 'mr', label: 'Marathi', native: 'मराठी' },
+                    ] as const
+                  ).map((lang) => {
+                    const active = guideLanguage === lang.id;
+                    return (
+                      <button
+                        key={lang.id}
+                        type="button"
+                        onClick={() => setGuideLanguage(lang.id)}
+                        className={clsx(
+                          'px-3 py-2 rounded-[10px] border text-left transition cursor-pointer',
+                          active
+                            ? 'bg-ink-black text-white border-ink-black'
+                            : 'bg-white border-border text-ink-700 hover:bg-slate-50'
+                        )}
+                      >
+                        <span className="text-xs font-bold block">{lang.native}</span>
+                        <span className={clsx('text-[10px] block', active ? 'text-lime' : 'text-ink-500')}>
+                          {lang.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="space-y-2.5 pt-2 border-t border-slate-100">
                 <label className="text-xs font-semibold text-slate-700 block">
                   Regional Marla standard
                 </label>
@@ -651,14 +779,14 @@ export const SettingsPage: React.FC = () => {
                 </span>
                 <div className="p-3.5 rounded-input bg-slate-50 border border-border flex items-center justify-between gap-2">
                   <span className="text-sm font-medium text-slate-900 font-sans">
-                    {agencyCity.trim() || 'Panipat, Haryana'}
+                    {agencyCity.trim() || 'Panipat'}, {defaultState}
                   </span>
                   <button
                     type="button"
                     onClick={handleEditProfileClick}
-                    className="text-xs font-semibold text-brand-700 hover:underline cursor-pointer"
+                    className="text-xs font-semibold text-brand-700 cursor-pointer"
                   >
-                    Change in Account
+                    Change city in Account
                   </button>
                 </div>
               </div>
@@ -732,27 +860,50 @@ export const SettingsPage: React.FC = () => {
                 </p>
               </div>
 
-              <button
-                type="button"
-                onClick={() => startInteractiveTour()}
-                className="w-full p-4 rounded-[12px] bg-white hover:bg-slate-50 border border-border flex items-center justify-between gap-4 transition group cursor-pointer text-left"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-[12px] bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
-                    <HelpCircle className="w-5 h-5" />
+              <div className="space-y-2.5">
+                <button
+                  type="button"
+                  onClick={() => openVideoGuide(guideLanguage)}
+                  className="w-full p-4 rounded-[12px] bg-lime-soft/70 hover:bg-lime-soft border border-lime flex items-center justify-between gap-4 transition group cursor-pointer text-left"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-[12px] bg-ink-black text-lime flex items-center justify-center shrink-0">
+                      <HelpCircle className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-semibold text-slate-900 text-sm block group-hover:text-brand-700 transition">
+                        Video Guide (5 Indian Languages)
+                      </span>
+                      <span className="text-slate-600 text-xs block truncate">
+                        Watch walkthrough in English, हिंदी, ਪੰਜਾਬੀ, தமிழ் & मराठी
+                      </span>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <span className="font-semibold text-slate-900 text-sm block group-hover:text-brand-700 transition">
-                      Interactive product tour
-                    </span>
-                    <span className="text-slate-500 text-xs block truncate">
-                      Replay the guided walkthrough of Dashboard, Properties, Buyers, Quick Chat, and Tools
-                    </span>
-                  </div>
-                </div>
+                  <ChevronRight className="w-4 h-4 text-ink-900 shrink-0" />
+                </button>
 
-                <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => startInteractiveTour()}
+                  className="w-full p-4 rounded-[12px] bg-white hover:bg-slate-50 border border-border flex items-center justify-between gap-4 transition group cursor-pointer text-left"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-[12px] bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                      <HelpCircle className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-semibold text-slate-900 text-sm block group-hover:text-brand-700 transition">
+                        Interactive product tour
+                      </span>
+                      <span className="text-slate-500 text-xs block truncate">
+                        Replay the guided walkthrough of Dashboard, Properties, Buyers, Quick Chat, and Tools
+                      </span>
+                    </div>
+                  </div>
+
+                  <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+                </button>
+              </div>
             </Card>
           )}
 

@@ -188,7 +188,11 @@ export function parseTextLocally(rawText: string): ParseResult {
 export async function parseMessage(rawText: string, marlaToGaj = 30.25): Promise<ParseResult> {
   try {
     const res = await apiClient.post<any, any>('/parse', { rawText, marlaToGaj });
-    return res;
+    const unwrapped = res?.preview || res;
+    if (unwrapped && (unwrapped.itemType === 'buyer' || unwrapped.itemType === 'listing')) {
+      return unwrapped as ParseResult;
+    }
+    return parseTextLocally(rawText);
   } catch (err) {
     console.warn('Backend parse API unavailable or error; using intelligent local fallback:', err);
     return parseTextLocally(rawText);

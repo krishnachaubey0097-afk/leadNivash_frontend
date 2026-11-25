@@ -485,7 +485,9 @@ export const LandingPage: React.FC = () => {
                     className="w-full py-3 px-4 rounded-[16px] bg-ink-black hover:bg-ink-900 text-white font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer shadow-sm min-h-[46px]"
                   >
                     <span>Open Dashboard</span>
-                    <ArrowRight className="w-4 h-4 text-lime" />
+                    <span className="w-7 h-7 rounded-[9px] bg-lime text-ink-black flex items-center justify-center shrink-0">
+                      <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                    </span>
                   </Link>
                 ) : (
                   <>
@@ -609,8 +611,8 @@ export const LandingPage: React.FC = () => {
                     className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-5 pr-2.5 h-[54px] rounded-[18px] bg-white hover:bg-lime-soft active:scale-[0.98] text-ink-900 border border-ink-black/15 hover:border-ink-black/30 font-extrabold text-xs tracking-wider uppercase shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_2px_6px_rgba(18,20,15,0.06)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none whitespace-nowrap"
                   >
                     <span className="whitespace-nowrap">Start 14-Day Free Trial</span>
-                    <span className="w-8 h-8 rounded-[10px] bg-lime-soft text-brand-700 border border-lime flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:scale-105 shrink-0">
-                      <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+                    <span className="w-8 h-8 rounded-[10px] bg-lime text-ink-black flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0">
+                      <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                     </span>
                   </button>
                 </Link>
@@ -2082,8 +2084,8 @@ export const LandingPage: React.FC = () => {
               <Link to="/app/tools" className="inline-block">
                 <span className="group inline-flex items-center gap-3 pl-6 pr-3 py-3 rounded-[18px] bg-ink-black hover:bg-ink-900 text-white font-bold text-xs shadow-md transition-all">
                   <span>Open Broker Calculator Toolkit</span>
-                  <span className="w-6 h-6 rounded-[10px] bg-lime text-ink-black flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
-                    <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span className="w-6 h-6 rounded-[10px] bg-lime text-ink-black flex items-center justify-center group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
+                    <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
                   </span>
                 </span>
               </Link>

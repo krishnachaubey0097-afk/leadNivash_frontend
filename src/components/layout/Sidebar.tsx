@@ -13,9 +13,11 @@ import {
   ArrowUpRight,
   Inbox,
   Settings,
+  PlayCircle,
 } from 'lucide-react';
 import { useAuth } from '../../features/auth/AuthProvider';
 import { SpecialOfferModal } from '../../features/pricing/SpecialOfferModal';
+import { openVideoGuide } from '../../features/onboarding/GuideVideoModal';
 import { BRAND_NAME } from '../../config/constants';
 import clsx from 'clsx';
 
@@ -237,6 +239,29 @@ export const Sidebar: React.FC = () => {
             );
           })}
 
+          {/* 5-Language Video Guide Trigger */}
+          <button
+            type="button"
+            onClick={() => openVideoGuide(user?.preferences?.language)}
+            title={isCollapsed ? 'Video Guide (5 Languages)' : undefined}
+            className={clsx(
+              'w-full flex items-center transition-all duration-150 text-white/80 hover:bg-white/[0.08] hover:text-lime border border-transparent cursor-pointer',
+              isCollapsed
+                ? 'justify-center w-11 h-11 mx-auto rounded-[12px]'
+                : 'gap-3 px-3 py-2 rounded-[12px] text-sm font-medium'
+            )}
+          >
+            <PlayCircle className="w-[18px] h-[18px] shrink-0 text-lime/90" strokeWidth={1.9} />
+            {!isCollapsed && (
+              <>
+                <span className="flex-1 text-left truncate">Guide</span>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-lime/15 text-lime border border-lime/30">
+                  5 Lang
+                </span>
+              </>
+            )}
+          </button>
+
           {/* Admin Console (if user is admin) */}
           {user?.role === 'admin' && (
             <NavLink
@@ -287,10 +312,10 @@ export const Sidebar: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsSpecialOfferOpen(true)}
-              className="group btn-shine-sweep w-full mt-1 h-9 pl-3.5 pr-1.5 rounded-[11px] bg-white hover:bg-lime-soft text-ink-black text-xs font-bold whitespace-nowrap flex items-center justify-between gap-2 transition-all duration-150 cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-lime"
+              className="group btn-shine-sweep-light w-full mt-1 h-9 pl-3.5 pr-1.5 rounded-[11px] bg-white hover:bg-lime-soft text-ink-black text-xs font-bold whitespace-nowrap flex items-center justify-between gap-2 transition-all duration-150 cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-lime"
             >
-              <span>Upgrade to Pro</span>
-              <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <span className="relative z-10">Upgrade to Pro</span>
+              <span className="relative z-10 w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.4]" />
               </span>
             </button>
