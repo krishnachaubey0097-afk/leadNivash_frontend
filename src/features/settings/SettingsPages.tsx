@@ -31,6 +31,7 @@ import {
   AlertTriangle,
   ExternalLink,
   Edit3,
+  ArrowUpRight,
 } from 'lucide-react';
 import { SpecialOfferModal } from '../pricing/SpecialOfferModal';
 import { startInteractiveTour } from '../onboarding/OnboardingTour';
@@ -539,14 +540,15 @@ export const SettingsPage: React.FC = () => {
 
           {/* SECTION: SUBSCRIPTION */}
           {activeSection === 'subscription' && (
-            <GlassCard className="p-6 space-y-5 bg-surface dark:bg-ink-black border border-line">
+            <GlassCard className="p-6 space-y-5 !bg-ink-black text-white border border-white/10 border-t-2 border-t-lime">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div className="space-y-1">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold">
-                    <Crown className="w-3.5 h-3.5 text-brand-600" />
+                  <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/10 text-white text-xs font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />
+                    <Crown className="w-3.5 h-3.5 text-lime" />
                     <span>{planTitle}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-ink-900 dark:text-white pt-1">
+                  <h3 className="text-lg font-bold text-white pt-1">
                     {planTier === 'trial'
                       ? trialDaysLeft !== null
                         ? `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} remaining in your free trial`
@@ -554,30 +556,31 @@ export const SettingsPage: React.FC = () => {
                       : 'Active subscription'}
                   </h3>
                   {planLimits && (
-                    <p className="text-xs text-slate-600 dark:text-slate-300">
+                    <p className="text-xs text-white/70">
                       Plan limits: Up to {planLimits.maxProperties} properties · {planLimits.maxBuyers} buyers ·{' '}
                       {planLimits.maxParsePerMonth} AI parses/month
                     </p>
                   )}
                 </div>
 
-                <Button
+                <button
                   type="button"
-                  variant="primary"
-                  size="md"
                   onClick={() => setIsSpecialOfferOpen(true)}
-                  className="shrink-0 whitespace-nowrap"
+                  className="inline-flex items-center gap-2 h-10 pl-4 pr-1.5 rounded-[12px] bg-white hover:bg-white/95 text-ink-black text-sm font-semibold whitespace-nowrap shrink-0 transition-colors cursor-pointer"
                 >
-                  {`Upgrade · ${PLAN_PRICING.formattedAnnualOffer}`}
-                </Button>
+                  <span>{`Upgrade · ${PLAN_PRICING.formattedAnnualOffer}`}</span>
+                  <span className="w-7 h-7 rounded-[8px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+                    <ArrowUpRight className="w-4 h-4 stroke-[2.25]" />
+                  </span>
+                </button>
               </div>
 
               {/* Single price line sourced from shared plan config */}
-              <div className="pt-4 border-t border-slate-200/70 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm">
-                <span className="text-slate-600 dark:text-slate-300 font-medium">
+              <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm">
+                <span className="text-white/80 font-medium tabular-nums">
                   {PLAN_PRICING.priceLine}
                 </span>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-white/70">
                   7-day unconditional refund guarantee
                 </span>
               </div>
@@ -852,17 +855,17 @@ export const SettingsPage: React.FC = () => {
 
           {/* SECTION: APPEARANCE */}
           {activeSection === 'appearance' && (
-            <Card className="p-5 sm:p-6 space-y-4 rounded-[14px] border border-border bg-white dark:bg-slate-900">
-              <div className="pb-3 border-b border-border">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+            <Card className="p-5 sm:p-6 space-y-4 rounded-[14px] border border-line bg-white dark:bg-slate-900">
+              <div className="pb-3 border-b border-line">
+                <h3 className="text-base font-bold text-ink-900 dark:text-white">
                   Appearance
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-ink-500 mt-0.5">
                   Choose your workspace theme. Applies immediately across {BRAND_NAME}.
                 </p>
               </div>
 
-              <div className="inline-grid grid-cols-3 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-border gap-1 w-full sm:w-auto">
+              <div className="inline-grid grid-cols-3 p-1 bg-[#E9EDF1] dark:bg-slate-800 rounded-xl border border-line gap-1 w-full sm:w-auto">
                 {(
                   [
                     { id: 'light', label: 'Light', icon: Sun },
@@ -878,10 +881,10 @@ export const SettingsPage: React.FC = () => {
                       type="button"
                       onClick={() => setMode(opt.id)}
                       className={clsx(
-                        'px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition cursor-pointer whitespace-nowrap',
+                        'relative px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition duration-200 cursor-pointer whitespace-nowrap',
                         active
-                          ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'
+                          ? 'bg-white dark:bg-slate-900 text-ink-900 dark:text-white border border-line shadow-xs after:content-[""] after:absolute after:bottom-0.5 after:left-2.5 after:right-2.5 after:h-[2px] after:rounded-full after:bg-lime'
+                          : 'text-ink-700 hover:text-ink-900 dark:text-slate-300 border border-transparent'
                       )}
                     >
                       <Icon className="w-4 h-4" />

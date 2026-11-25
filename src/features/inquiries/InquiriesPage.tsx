@@ -240,7 +240,7 @@ export const InquiriesPage: React.FC = () => {
           className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-surface-hover text-ink text-xs font-semibold flex items-center gap-1.5 shadow-2xs transition cursor-pointer shrink-0 min-h-[40px]"
           title="Export records to CSV"
         >
-          <Download className="w-3.5 h-3.5 text-emerald-600" />
+          <Download className="w-3.5 h-3.5 text-ink-500" />
           <span className="hidden sm:inline">Export</span> CSV
         </button>
       </div>
@@ -256,8 +256,8 @@ export const InquiriesPage: React.FC = () => {
           className={clsx(
             'py-2 px-1 sm:px-2 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer min-h-[42px]',
             activeTab === 'property'
-              ? 'bg-emerald-600 text-white shadow-xs'
-              : 'text-muted hover:text-ink'
+              ? 'bg-lime text-ink-900 shadow-xs'
+              : 'text-ink-700 hover:text-ink-900'
           )}
         >
           <Building2 className="w-3.5 h-3.5 shrink-0" />
@@ -266,8 +266,8 @@ export const InquiriesPage: React.FC = () => {
             className={clsx(
               'px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none shrink-0',
               activeTab === 'property'
-                ? 'bg-white/25 text-white'
-                : 'bg-slate-200 dark:bg-slate-700 text-muted'
+                ? 'bg-white/80 text-ink-900'
+                : 'bg-slate-200 dark:bg-slate-700 text-ink-700'
             )}
           >
             {propertyInquiries.length}
@@ -283,8 +283,8 @@ export const InquiriesPage: React.FC = () => {
           className={clsx(
             'py-2 px-1 sm:px-2 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer min-h-[42px]',
             activeTab === 'buyer'
-              ? 'bg-emerald-600 text-white shadow-xs'
-              : 'text-muted hover:text-ink'
+              ? 'bg-lime text-ink-900 shadow-xs'
+              : 'text-ink-700 hover:text-ink-900'
           )}
         >
           <Users className="w-3.5 h-3.5 shrink-0" />
@@ -293,8 +293,8 @@ export const InquiriesPage: React.FC = () => {
             className={clsx(
               'px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none shrink-0',
               activeTab === 'buyer'
-                ? 'bg-white/25 text-white'
-                : 'bg-slate-200 dark:bg-slate-700 text-muted'
+                ? 'bg-white/80 text-ink-900'
+                : 'bg-slate-200 dark:bg-slate-700 text-ink-700'
             )}
           >
             {buyerInquiries.length}
@@ -343,8 +343,8 @@ export const InquiriesPage: React.FC = () => {
               className={clsx(
                 'px-3 py-1.5 rounded-full font-bold whitespace-nowrap transition cursor-pointer border text-xs',
                 statusFilter === chip.id
-                  ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-600'
-                  : 'bg-surface border-border text-muted hover:text-ink'
+                  ? 'bg-lime text-ink-900 border-lime'
+                  : 'bg-surface border-border text-ink-700 hover:text-ink-900'
               )}
             >
               {chip.label}
@@ -430,14 +430,15 @@ export const InquiriesPage: React.FC = () => {
                     <div className="flex items-center gap-1.5 shrink-0">
                       <span
                         className={clsx(
-                          'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
+                          'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
                           inq.status === 'new'
-                            ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border border-rose-200'
+                            ? 'bg-ink-black text-white border border-ink-black'
                             : inq.status === 'contacted'
                             ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200'
                             : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200'
                         )}
                       >
+                        {inq.status === 'new' && <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />}
                         {inq.status}
                       </span>
 

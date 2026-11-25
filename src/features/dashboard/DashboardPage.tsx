@@ -397,10 +397,18 @@ export const DashboardPage: React.FC = () => {
     });
   }, [trackRecordSubTab, activeDeals, wonDeals, lostDeals, sortField, sortDirection, buyersMap]);
 
+  const planTier = user?.plan?.tier || 'trial';
+  const isPaidPlan = planTier === 'pro' || planTier === 'agency';
+
   return (
-    <div className="space-y-6 pb-12 max-w-[1200px] mx-auto">
+    <div className="relative space-y-6 pb-12 max-w-[1200px] mx-auto">
+      {/* Subtle White-to-Green Top Wash behind Dashboard Header & Hero */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -inset-x-6 -top-4 h-72 rounded-b-[28px] bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.95)_0%,_rgba(1,142,69,0.06)_52%,_transparent_80%)] -z-0"
+      />
       {/* ── TOP HEADER / GREETING BAR ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
         <div>
           <h1 className="text-[22px] font-bold text-ink-900 dark:text-white leading-tight">
             Dashboard
@@ -411,16 +419,21 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3 self-start sm:self-auto">
-          {/* Plan Pill Trigger */}
+          {/* Plan Pill Trigger: Pro = ink-black + lime dot, Trial = amber */}
           <button
             type="button"
             onClick={() => setIsUpgradeModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-border text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors shadow-2xs cursor-pointer border ${
+              isPaidPlan
+                ? 'bg-ink-black text-white border-ink-black hover:bg-ink-900'
+                : 'bg-amber-50 border-amber-200 text-amber-900 hover:bg-amber-100/80'
+            }`}
           >
+            {isPaidPlan && <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />}
             <span>
-              {user?.plan?.tier === 'agency' ? 'Agency Plan' : `Trial · ${trialDaysLeft} days`}
+              {planTier === 'agency' ? 'Agency' : planTier === 'pro' ? 'Pro' : `Trial · ${trialDaysLeft} days`}
             </span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronDown className={`w-3.5 h-3.5 ${isPaidPlan ? 'text-white/70' : 'text-amber-700'}`} />
           </button>
 
           {/* Segmented Control: Today | Track Record */}
@@ -470,14 +483,14 @@ export const DashboardPage: React.FC = () => {
         <div className="space-y-6">
           {/* ── HERO ROW: Glass Hero Card (2/3) + WhatsApp Paste Card (1/3) ── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-            {/* DARK HERO CARD (--ink-black #12140F, spans 2/3 width on desktop) */}
-            <div className="lg:col-span-2 rounded-[20px] bg-ink-black text-white border border-white/10 p-6 shadow-sm flex flex-col justify-between transition-all">
+            {/* DARK HERO CARD (--ink-black #12140F with 2px lime top border accent) */}
+            <div className="lg:col-span-2 rounded-[20px] bg-ink-black text-white border border-white/10 border-t-2 border-t-lime p-6 shadow-sm flex flex-col justify-between transition-all">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <span className="text-sm font-medium text-[#C9CCC6] block">
+                  <span className="text-sm font-medium text-white/70 block">
                     Pending commission
                   </span>
-                  <span className="text-3xl sm:text-4xl font-bold text-white mt-1 block tracking-tight">
+                  <span className="text-3xl sm:text-4xl font-bold tabular-nums text-white mt-1 block tracking-tight">
                     {formatRupees(pendingCommissionPaise)}
                   </span>
                 </div>
@@ -495,17 +508,17 @@ export const DashboardPage: React.FC = () => {
 
               <div>
                 <div className="border-t border-white/15 my-4" />
-                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm font-medium text-[#C9CCC6]">
+                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm font-medium text-white/70">
                   <span>
-                    <strong className="text-white font-semibold">{totalPropertiesCount}</strong> Listings
+                    <strong className="text-white font-semibold tabular-nums">{totalPropertiesCount}</strong> Listings
                   </span>
                   <span className="text-white/30">|</span>
                   <span>
-                    <strong className="text-white font-semibold">{totalBuyersCount}</strong> Buyers
+                    <strong className="text-white font-semibold tabular-nums">{totalBuyersCount}</strong> Buyers
                   </span>
                   <span className="text-white/30">|</span>
                   <span>
-                    <strong className="text-lime font-semibold">{matches.length}</strong> Matches today
+                    <strong className="text-white font-semibold tabular-nums">{matches.length}</strong> Matches today
                   </span>
                 </div>
               </div>
@@ -739,17 +752,17 @@ export const DashboardPage: React.FC = () => {
             {/* KPI 1: Active Listings */}
             <div
               onClick={() => navigate('/app/properties?status=available')}
-              className="bg-white border border-border rounded-[14px] p-4 hover:-translate-y-0.5 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+              className="bg-white border border-line lg:hover:border-lime rounded-[14px] p-4 transition-colors duration-150 cursor-pointer flex flex-col justify-between"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">Active listings</span>
-                <Building2 className="w-4 h-4 text-slate-400" />
+                <span className="text-xs font-medium text-ink-500">Active listings</span>
+                <Building2 className="w-4 h-4 text-ink-500" />
               </div>
               <div className="mt-2">
-                <span className="text-2xl font-bold text-slate-900 block leading-tight">
+                <span className="text-2xl font-bold tabular-nums text-ink-900 block leading-tight">
                   {activePropertiesCount}
                 </span>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-ink-500 mt-1">
                   {totalPropertiesCount} total listings
                 </p>
               </div>
@@ -758,17 +771,17 @@ export const DashboardPage: React.FC = () => {
             {/* KPI 2: Open Buyers */}
             <div
               onClick={() => navigate('/app/buyers?status=active')}
-              className="bg-white border border-border rounded-[14px] p-4 hover:-translate-y-0.5 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+              className="bg-white border border-line lg:hover:border-lime rounded-[14px] p-4 transition-colors duration-150 cursor-pointer flex flex-col justify-between"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">Open buyers</span>
-                <Users className="w-4 h-4 text-slate-400" />
+                <span className="text-xs font-medium text-ink-500">Open buyers</span>
+                <Users className="w-4 h-4 text-ink-500" />
               </div>
               <div className="mt-2">
-                <span className="text-2xl font-bold text-slate-900 block leading-tight">
+                <span className="text-2xl font-bold tabular-nums text-ink-900 block leading-tight">
                   {activeBuyersCount}
                 </span>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-ink-500 mt-1">
                   {totalBuyersCount} active leads
                 </p>
               </div>
@@ -777,17 +790,17 @@ export const DashboardPage: React.FC = () => {
             {/* KPI 3: Matches Today */}
             <div
               onClick={() => navigate('/app/properties')}
-              className="bg-white border border-border rounded-[14px] p-4 hover:-translate-y-0.5 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+              className="bg-white border border-line lg:hover:border-lime rounded-[14px] p-4 transition-colors duration-150 cursor-pointer flex flex-col justify-between"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">Matches today</span>
+                <span className="text-xs font-medium text-ink-500">Matches today</span>
                 <Sparkles className="w-4 h-4 text-brand-600" />
               </div>
               <div className="mt-2">
-                <span className="text-2xl font-bold text-brand-600 block leading-tight">
+                <span className="text-2xl font-bold tabular-nums text-ink-900 block leading-tight">
                   {matches.length}
                 </span>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-ink-500 mt-1">
                   {matches.length > 0 ? 'Ready to pitch' : 'No new matches'}
                 </p>
               </div>
@@ -796,17 +809,17 @@ export const DashboardPage: React.FC = () => {
             {/* KPI 4: Pending Commission */}
             <div
               onClick={() => setActiveSegment('track-record')}
-              className="bg-white border border-border rounded-[14px] p-4 hover:-translate-y-0.5 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+              className="bg-white border border-line lg:hover:border-lime rounded-[14px] p-4 transition-colors duration-150 cursor-pointer flex flex-col justify-between"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">Pending commission</span>
-                <Briefcase className="w-4 h-4 text-slate-400" />
+                <span className="text-xs font-medium text-ink-500">Pending commission</span>
+                <Briefcase className="w-4 h-4 text-ink-500" />
               </div>
               <div className="mt-2">
-                <span className="text-2xl font-bold text-slate-900 block leading-tight">
+                <span className="text-2xl font-bold tabular-nums text-ink-900 block leading-tight">
                   {formatRupees(pendingCommissionPaise)}
                 </span>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-ink-500 mt-1">
                   {activeDeals.length} deal{activeDeals.length === 1 ? '' : 's'} in pipeline
                 </p>
               </div>
@@ -1003,17 +1016,22 @@ export const DashboardPage: React.FC = () => {
                       8,
                       Math.round((item.value / last6MonthsData.maxValue) * 100)
                     );
+                    const isCurrentMonth = idx === last6MonthsData.months.length - 1;
                     return (
                       <div key={idx} className="flex flex-col items-center gap-1.5 h-full justify-end">
-                        <span className="text-[10px] font-semibold text-slate-600">
+                        <span className="text-[10px] font-semibold text-ink-700">
                           {item.value > 0 ? `₹${(item.value / 1000).toFixed(0)}k` : '—'}
                         </span>
                         <div
                           style={{ height: `${heightPercent}%` }}
-                          className="w-full max-w-[42px] bg-brand-600 hover:bg-brand-700 rounded-t transition-all"
+                          className={`w-full max-w-[42px] rounded-t transition-all ${
+                            isCurrentMonth
+                              ? 'bg-brand-600 hover:bg-brand-700'
+                              : 'bg-brand-600/40 hover:bg-brand-600/60'
+                          }`}
                           title={`${item.month}: ₹${item.value.toLocaleString('en-IN')} (${item.count} closed deals)`}
                         />
-                        <span className="text-xs font-medium text-slate-500 mt-1">
+                        <span className="text-xs font-medium text-ink-500 mt-1">
                           {item.month}
                         </span>
                       </div>
@@ -1053,8 +1071,8 @@ export const DashboardPage: React.FC = () => {
                 onClick={() => setTrackRecordSubTab(tab.id as any)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                   trackRecordSubTab === tab.id
-                    ? 'bg-slate-900 text-white shadow-2xs'
-                    : 'bg-white border border-border text-slate-600 hover:bg-slate-50'
+                    ? 'bg-lime text-ink-900 border border-lime shadow-2xs'
+                    : 'bg-white border border-border text-ink-700 hover:bg-slate-50'
                 }`}
               >
                 {tab.label}

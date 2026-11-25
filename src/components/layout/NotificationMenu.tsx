@@ -272,8 +272,8 @@ export const NotificationMenu: React.FC = () => {
                   className={clsx(
                     'px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer border',
                     selected
-                      ? 'bg-slate-900 text-white border-slate-900'
-                      : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-border hover:bg-slate-100'
+                      ? 'bg-lime text-ink-900 border-lime font-bold'
+                      : 'bg-white/80 dark:bg-slate-800/80 text-ink-700 dark:text-slate-300 border-border hover:bg-slate-100'
                   )}
                 >
                   {chip.label}
@@ -309,7 +309,7 @@ export const NotificationMenu: React.FC = () => {
                     onClick={() => handleNotificationClick(n)}
                     className={clsx(
                       'p-3.5 flex items-start justify-between gap-3 transition cursor-pointer hover:bg-slate-50/90 dark:hover:bg-slate-800/70',
-                      !n.isRead ? 'bg-white/95 dark:bg-slate-900/90' : 'bg-white/70 dark:bg-slate-900/60'
+                      !n.isRead ? 'bg-lime-soft/60 dark:bg-slate-800/80' : 'bg-white/70 dark:bg-slate-900/60'
                     )}
                   >
                     <div className="flex items-start gap-2.5 flex-1 min-w-0">
@@ -334,7 +334,7 @@ export const NotificationMenu: React.FC = () => {
 
                     <div className="flex items-center gap-1.5 shrink-0 self-start mt-0.5">
                       {!n.isRead && (
-                        <span className="w-2 h-2 rounded-full bg-brand-600 shrink-0" title="Unread" />
+                        <span className="w-2 h-2 rounded-full bg-ink-black shrink-0" title="Unread" />
                       )}
                       <button
                         type="button"

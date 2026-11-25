@@ -394,8 +394,8 @@ export const PropertiesListPage: React.FC = () => {
                   className={clsx(
                     'px-3.5 h-11 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer shrink-0 border inline-flex items-center gap-1.5',
                     isSelected
-                      ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
-                      : 'bg-white text-slate-600 border-border hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-lime text-ink-900 border-lime shadow-2xs font-bold'
+                      : 'bg-white text-ink-700 border-line hover:bg-slate-50 hover:text-ink-900'
                   )}
                 >
                   <span>{f.label}</span>
@@ -403,7 +403,7 @@ export const PropertiesListPage: React.FC = () => {
                     <span
                       className={clsx(
                         'text-[11px] px-1.5 py-0.5 rounded-full leading-none font-bold',
-                        isSelected ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 text-slate-500'
+                        isSelected ? 'bg-white/80 text-ink-900' : 'bg-slate-100 text-ink-500'
                       )}
                     >
                       {f.value === 'sold'
@@ -556,7 +556,7 @@ export const PropertiesListPage: React.FC = () => {
               <div
                 key={prop._id}
                 onClick={() => navigate(`/app/properties/${prop._id}`)}
-                className="rounded-[14px] border border-border bg-white overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-[2px] hover:border-brand-600/30 hover:shadow-md group relative cursor-pointer text-left"
+                className="rounded-[14px] border border-line bg-white overflow-hidden flex flex-col justify-between transition-all duration-150 hover:-translate-y-[1.5px] lg:hover:border-lime hover:shadow-md group relative cursor-pointer text-left"
               >
                 {/* Thumbnail Top (16:10, radius 14 top corners) */}
                 <div className="w-full aspect-[16/10] relative bg-slate-100 overflow-hidden rounded-t-[14px]">
@@ -622,7 +622,7 @@ export const PropertiesListPage: React.FC = () => {
 
                   <div className="pt-2 border-t border-slate-100 flex items-baseline justify-between gap-2 mt-auto">
                     <div>
-                      <span className="text-lg font-bold text-slate-900 leading-tight block">
+                      <span className="text-lg font-bold tabular-nums text-ink-900 leading-tight block">
                         {formatRupees(prop.priceDemandPaise)}
                       </span>
                       <span className="text-[11px] text-slate-400 font-medium">Asking demand</span>

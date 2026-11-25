@@ -729,8 +729,8 @@ export const BuyersListPage: React.FC = () => {
                   className={clsx(
                     'px-3.5 h-11 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer shrink-0 border inline-flex items-center gap-1.5',
                     isSelected
-                      ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
-                      : 'bg-white text-slate-600 border-border hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-lime text-ink-900 border-lime shadow-2xs font-bold'
+                      : 'bg-white text-ink-700 border-line hover:bg-slate-50 hover:text-ink-900'
                   )}
                 >
                   <span>{f.label}</span>
@@ -738,7 +738,7 @@ export const BuyersListPage: React.FC = () => {
                     <span
                       className={clsx(
                         'text-[11px] px-1.5 py-0.5 rounded-full leading-none font-bold',
-                        isSelected ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 text-slate-500'
+                        isSelected ? 'bg-white/80 text-ink-900' : 'bg-slate-100 text-ink-500'
                       )}
                     >
                       {buyers.filter((b) => b.urgency === f.value).length}
@@ -928,16 +928,16 @@ export const BuyersListPage: React.FC = () => {
               <div
                 key={buyer._id}
                 onClick={() => navigate(`/app/buyers/${buyer._id}`)}
-                className="rounded-[14px] border border-border bg-white p-5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-[2px] hover:border-brand-600/30 hover:shadow-md group relative cursor-pointer text-left space-y-4"
+                className="rounded-[14px] border border-line bg-white p-5 flex flex-col justify-between transition-all duration-150 hover:-translate-y-[1.5px] lg:hover:border-lime hover:shadow-md group relative cursor-pointer text-left space-y-4"
               >
                 {/* Top Row: Avatar + Name + Urgency StatusChip */}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-brand-50 border border-brand-200 text-brand-600 font-bold text-xs flex items-center justify-center shrink-0">
                       {initials}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-base font-bold text-slate-900 truncate group-hover:text-brand-700 transition-colors leading-tight">
+                      <h3 className="text-base font-bold text-ink-900 truncate group-hover:text-brand-700 transition-colors leading-tight">
                         {buyer.name}
                       </h3>
                       <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-0.5">
@@ -1180,8 +1180,8 @@ export const BuyersListPage: React.FC = () => {
                       className={clsx(
                         'px-3.5 h-11 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer shrink-0 border inline-flex items-center gap-1.5',
                         isSelected
-                          ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
-                          : 'bg-white text-slate-600 border-border hover:bg-slate-50 hover:text-slate-900'
+                          ? 'bg-lime text-ink-900 border-lime shadow-2xs font-bold'
+                          : 'bg-white text-ink-700 border-line hover:bg-slate-50 hover:text-ink-900'
                       )}
                     >
                       <span>{chip.label}</span>
@@ -1189,7 +1189,7 @@ export const BuyersListPage: React.FC = () => {
                         <span
                           className={clsx(
                             'text-[11px] px-1.5 py-0.5 rounded-full leading-none font-bold',
-                            isSelected ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 text-slate-500'
+                            isSelected ? 'bg-white/80 text-ink-900' : 'bg-slate-100 text-ink-500'
                           )}
                         >
                           {count}
@@ -1387,22 +1387,19 @@ export const BuyersListPage: React.FC = () => {
                           {formatLastUpdated(row.receivedAt)}
                         </TableCell>
                         <TableCell>
-                          <StatusChip
-                            variant={
-                              row.status === 'new'
-                                ? 'available'
-                                : row.status === 'contacted'
-                                ? 'hold'
-                                : 'neutral'
-                            }
-                            dot
-                          >
-                            {row.status === 'new'
-                              ? 'New'
-                              : row.status === 'contacted'
-                              ? 'Contacted'
-                              : 'Closed'}
-                          </StatusChip>
+                          {row.status === 'new' ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-meta font-semibold bg-ink-black text-white">
+                              <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />
+                              New
+                            </span>
+                          ) : (
+                            <StatusChip
+                              variant={row.status === 'contacted' ? 'hold' : 'neutral'}
+                              dot
+                            >
+                              {row.status === 'contacted' ? 'Contacted' : 'Closed'}
+                            </StatusChip>
+                          )}
                         </TableCell>
                         <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                           <DropdownMenu.Root>

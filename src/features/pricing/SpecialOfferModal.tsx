@@ -4,6 +4,7 @@ import {
   Check,
   X,
   Lock,
+  ArrowUpRight,
 } from 'lucide-react';
 import { apiClient } from '../../lib/api/client';
 import { useAuth } from '../auth/AuthProvider';
@@ -170,9 +171,12 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
             type="button"
             disabled={isSubmitting}
             onClick={handleProceedToUpgrade}
-            className="w-full h-11 px-5 rounded-input bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold whitespace-nowrap flex items-center justify-center transition-colors cursor-pointer disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1"
+            className="w-full h-11 pl-5 pr-2 rounded-[12px] bg-white hover:bg-slate-50 border border-ink-black/20 text-ink-black text-sm font-semibold whitespace-nowrap flex items-center justify-between transition-colors cursor-pointer disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1"
           >
-            {isSubmitting ? 'Processing...' : 'Proceed to pay'}
+            <span className="mx-auto pl-5">{isSubmitting ? 'Processing...' : 'Proceed to pay'}</span>
+            <span className="w-7 h-7 rounded-[8px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+              <ArrowUpRight className="w-4 h-4 stroke-[2.25]" />
+            </span>
           </button>
 
           <button
