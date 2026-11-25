@@ -153,20 +153,37 @@ export const LandingPage: React.FC = () => {
   const HERO_LINE_1 = 'Turn Messages into';
   const HERO_LINE_2 = 'Property Deals';
   const HERO_TOTAL_CHARS = HERO_LINE_1.length + HERO_LINE_2.length;
-  const [typedChars, setTypedChars] = useState<number>(() => {
-    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      return HERO_TOTAL_CHARS;
-    }
-    return 0;
-  });
+  const [typedChars, setTypedChars] = useState<number>(0);
+  const [isDeletingHeadline, setIsDeletingHeadline] = useState(false);
 
   useEffect(() => {
-    if (typedChars >= HERO_TOTAL_CHARS) return;
+    let delay = isDeletingHeadline ? 28 : 62;
+    if (!isDeletingHeadline && typedChars === 0) {
+      delay = 350;
+    } else if (!isDeletingHeadline && typedChars >= HERO_TOTAL_CHARS) {
+      delay = 2800;
+    } else if (isDeletingHeadline && typedChars === 0) {
+      delay = 350;
+    }
+
     const timer = window.setTimeout(() => {
-      setTypedChars((prev) => Math.min(HERO_TOTAL_CHARS, prev + 1));
-    }, 36);
+      if (!isDeletingHeadline) {
+        if (typedChars >= HERO_TOTAL_CHARS) {
+          setIsDeletingHeadline(true);
+        } else {
+          setTypedChars((prev) => Math.min(HERO_TOTAL_CHARS, prev + 1));
+        }
+      } else {
+        if (typedChars <= 0) {
+          setIsDeletingHeadline(false);
+        } else {
+          setTypedChars((prev) => Math.max(0, prev - 1));
+        }
+      }
+    }, delay);
+
     return () => window.clearTimeout(timer);
-  }, [typedChars, HERO_TOTAL_CHARS]);
+  }, [typedChars, isDeletingHeadline, HERO_TOTAL_CHARS]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -450,44 +467,44 @@ export const LandingPage: React.FC = () => {
       </header>
 
       <main>
-      {/* ========================================================= */}
-      {/* SECTION 1 — HERO (Phase 1 Light Showcase)                 */}
-      {/* ========================================================= */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50/75 via-white to-slate-50/85 text-slate-900 pt-16 sm:pt-24 pb-20 px-4 sm:px-6 w-full border-b border-slate-200/80">
-        {/* Dynamic Video Background (bg1.mp4) with Crisp Gradient Wash */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster="/hero-bg.jpg"
-            className="w-full h-full object-cover object-center opacity-15 animate-hero-bg scale-100 filter brightness-105 contrast-95"
-          >
-            <source src="/bg1.mp4" type="video/mp4" />
-            <img
-              src="/hero-bg.jpg"
-              alt="Indian Urban Real Estate Architecture"
-              className="w-full h-full object-cover object-center"
-            />
-          </video>
+        {/* ========================================================= */}
+        {/* SECTION 1 — HERO (Phase 1 Light Showcase)                 */}
+        {/* ========================================================= */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50/75 via-white to-slate-50/85 text-slate-900 pt-16 sm:pt-24 pb-20 px-4 sm:px-6 w-full border-b border-slate-200/80">
+          {/* Dynamic Video Background (bg1.mp4) with Crisp Gradient Wash */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="/hero-bg.jpg"
+              className="w-full h-full object-cover object-center opacity-15 animate-hero-bg scale-100 filter brightness-105 contrast-95"
+            >
+              <source src="/bg1.mp4" type="video/mp4" />
+              <img
+                src="/hero-bg.jpg"
+                alt="Indian Urban Real Estate Architecture"
+                className="w-full h-full object-cover object-center"
+              />
+            </video>
 
-          {/* Subtle Professional Light Gradient Wash */}
-          <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/65 via-white/80 to-slate-50/90" />
-        </div>
+            {/* Subtle Professional Light Gradient Wash */}
+            <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/65 via-white/80 to-slate-50/90" />
+          </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto w-full">
-          {/* Main Hero Header Stack */}
-          <div className="text-center max-w-3xl mx-auto space-y-6">
-            {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-white via-emerald-50/50 to-white border border-emerald-200/80 shadow-xs mx-auto animate-hero-up cursor-default">
-              <span className="w-4 h-4 rounded-full bg-emerald-700 text-white flex items-center justify-center text-[10px] font-bold shadow-2xs">
-                ✓
-              </span>
-              <span className="text-xs font-bold text-slate-800 tracking-tight">
-                India's #1 Real Estate Broker Operating System
-              </span>
-            </div>
+          <div className="relative z-10 max-w-6xl mx-auto w-full">
+            {/* Main Hero Header Stack */}
+            <div className="text-center max-w-3xl mx-auto space-y-6">
+              {/* Pill Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-white via-emerald-50/50 to-white border border-emerald-200/80 shadow-xs mx-auto animate-hero-up cursor-default">
+                <span className="w-4 h-4 rounded-full bg-emerald-700 text-white flex items-center justify-center text-[10px] font-bold shadow-2xs">
+                  ✓
+                </span>
+                <span className="text-xs font-bold text-slate-800 tracking-tight">
+                  India's #1 Real Estate Broker Operating System
+                </span>
+              </div>
 
             {/* Hero Headline with Text Writing Animation & Zero CLS */}
             <h1
@@ -509,10 +526,7 @@ export const LandingPage: React.FC = () => {
                   </>
                 ) : null}
                 <span
-                  className={clsx(
-                    'inline-block w-[3px] sm:w-[4px] h-[0.82em] align-middle ml-1.5 rounded-full bg-emerald-700 transition-opacity duration-500',
-                    typedChars < HERO_TOTAL_CHARS ? 'opacity-100' : 'opacity-0'
-                  )}
+                  className="inline-block w-[3px] sm:w-[4px] h-[0.82em] align-middle ml-1.5 rounded-full bg-emerald-700 animate-pulse"
                 />
               </span>
             </h1>
