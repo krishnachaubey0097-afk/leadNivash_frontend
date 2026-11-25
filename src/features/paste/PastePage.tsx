@@ -287,18 +287,18 @@ export const PastePage: React.FC = () => {
         result.itemType === 'buyer'
           ? result.extracted?.buyer?.name || 'Buyer Requirement'
           : result.extracted?.property?.title ||
-            result.extracted?.property?.propertyType?.replace(/_/g, ' ') ||
-            'Property Listing';
+          result.extracted?.property?.propertyType?.replace(/_/g, ' ') ||
+          'Property Listing';
       const priceLabel =
         result.itemType === 'buyer'
           ? result.extracted?.buyer?.budgetRaw ||
-            (result.extracted?.buyer?.budgetMaxPaise
-              ? formatRupees(result.extracted.buyer.budgetMaxPaise)
-              : 'Flexible')
+          (result.extracted?.buyer?.budgetMaxPaise
+            ? formatRupees(result.extracted.buyer.budgetMaxPaise)
+            : 'Flexible')
           : result.extracted?.property?.priceDemandRaw ||
-            (result.extracted?.property?.priceDemandPaise
-              ? formatRupees(result.extracted.property.priceDemandPaise)
-              : 'On request');
+          (result.extracted?.property?.priceDemandPaise
+            ? formatRupees(result.extracted.property.priceDemandPaise)
+            : 'On request');
 
       const entry: RecentExtractionItem = {
         id: `ext_${Date.now()}`,
@@ -754,8 +754,8 @@ export const PastePage: React.FC = () => {
                       isCurrent
                         ? 'bg-ink-black border border-ink-black text-white font-bold shadow-2xs cursor-pointer'
                         : !step.disabled
-                        ? 'text-ink-700 hover:text-ink-900 hover:bg-lime-soft/50 cursor-pointer'
-                        : 'text-ink-500 cursor-not-allowed'
+                          ? 'text-ink-700 hover:text-ink-900 hover:bg-lime-soft/50 cursor-pointer'
+                          : 'text-ink-500 cursor-not-allowed'
                     )}
                   >
                     <span
@@ -764,8 +764,8 @@ export const PastePage: React.FC = () => {
                         step.done
                           ? 'bg-brand-600 text-white'
                           : isCurrent
-                          ? 'bg-lime text-ink-black'
-                          : 'border border-line bg-slate-100 text-ink-500'
+                            ? 'bg-lime text-ink-black'
+                            : 'border border-line bg-slate-100 text-ink-500'
                       )}
                     >
                       {step.done ? (
@@ -928,9 +928,9 @@ export const PastePage: React.FC = () => {
                   disabled={!isAnalyzeEnabled}
                   className={clsx(
                     'group btn-cashfree-primary w-full min-h-[48px] pl-6 pr-2 rounded-[14px] font-semibold text-sm text-white flex items-center justify-between gap-2 transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1',
-                      isAnalyzeEnabled
-                        ? 'btn-shine-sweep mobile-shine-primary cursor-pointer opacity-100'
-                        : 'cursor-not-allowed opacity-40'
+                    isAnalyzeEnabled
+                      ? 'btn-shine-sweep mobile-shine-primary cursor-pointer opacity-100'
+                      : 'cursor-not-allowed opacity-40'
                   )}
                 >
                   {isAnalyzing ? (
@@ -957,894 +957,900 @@ export const PastePage: React.FC = () => {
             </Card>
           )}
 
-      {/* ======================================================== */}
-      {/* STEP 2: MANDATORY BUYER / SELLER SELECTION & SAVE        */}
-      {/* ======================================================== */}
-      {currentStep === 'review' && (
-        <Card className="p-4 sm:p-6 space-y-5 rounded-2xl bg-white border border-border shadow-card">
-          {/* Step 2 Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3.5 border-b border-border">
-            <div>
-              <h2 className="text-base sm:text-lg font-bold text-ink">
-                Step 2: Select Buyer or Seller & Review Details
-              </h2>
-              <p className="text-xs text-muted">
-                Choose Buyer or Seller (required), edit details, then click Next to save & rank matches.
-              </p>
-            </div>
-            {suggestedItemType && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-lime-soft border border-lime text-[11px] font-semibold text-ink-900 self-start sm:self-auto">
-                <Sparkles className="w-3 h-3 text-brand-700" />
-                <span>AI Suggestion: {suggestedItemType === 'buyer' ? 'Buyer' : 'Seller'}</span>
-              </span>
-            )}
-          </div>
-
-          {/* MANDATORY 2-CARD SELECTION: BUYER OR SELLER */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs font-semibold">
-              <span className="text-ink-900">
-                1. Who is this message for? <span className="text-danger">*</span>
-              </span>
-              {!itemType && (
-                <span className="text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-                  Required selection
-                </span>
-              )}
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button
-                type="button"
-                data-testid="role-select-buyer"
-                onClick={() => setItemType('buyer')}
-                className={clsx(
-                  'p-3.5 rounded-[14px] border text-left transition cursor-pointer flex items-start gap-3',
-                  itemType === 'buyer'
-                    ? 'bg-ink-black text-white border-ink-black ring-2 ring-lime shadow-sm'
-                    : 'bg-white border-line text-ink-900 hover:border-ink-black/40 hover:bg-lime-soft/40'
-                )}
-              >
-                <div
-                  className={clsx(
-                    'w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0',
-                    itemType === 'buyer' ? 'bg-lime text-ink-black' : 'bg-brand-50 text-brand-600'
-                  )}
-                >
-                  <Users className="w-4 h-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-bold">Buyer</span>
-                    {itemType === 'buyer' && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-lime text-ink-black">
-                        Selected ✓
-                      </span>
-                    )}
-                  </div>
-                  <p className={clsx('text-xs mt-0.5', itemType === 'buyer' ? 'text-white/75' : 'text-ink-500')}>
-                    Client looking to buy / rent — rank matching Seller Properties next.
+          {/* ======================================================== */}
+          {/* STEP 2: MANDATORY BUYER / SELLER SELECTION & SAVE        */}
+          {/* ======================================================== */}
+          {currentStep === 'review' && (
+            <Card className="p-4 sm:p-6 space-y-5 rounded-2xl bg-white border border-border shadow-card">
+              {/* Step 2 Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3.5 border-b border-border">
+                <div>
+                  <h2 className="text-base sm:text-lg font-bold text-ink">
+                    Step 2: Select Buyer or Seller & Review Details
+                  </h2>
+                  <p className="text-xs text-muted">
+                    Choose Buyer or Seller (required), edit details, then click Next to save & rank matches.
                   </p>
                 </div>
-              </button>
-
-              <button
-                type="button"
-                data-testid="role-select-seller"
-                onClick={() => setItemType('listing')}
-                className={clsx(
-                  'p-3.5 rounded-[14px] border text-left transition cursor-pointer flex items-start gap-3',
-                  itemType === 'listing'
-                    ? 'bg-ink-black text-white border-ink-black ring-2 ring-lime shadow-sm'
-                    : 'bg-white border-line text-ink-900 hover:border-ink-black/40 hover:bg-lime-soft/40'
+                {suggestedItemType && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-lime-soft border border-lime text-[11px] font-semibold text-ink-900 self-start sm:self-auto">
+                    <Sparkles className="w-3 h-3 text-brand-700" />
+                    <span>AI Suggestion: {suggestedItemType === 'buyer' ? 'Buyer' : 'Seller'}</span>
+                  </span>
                 )}
-              >
-                <div
-                  className={clsx(
-                    'w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0',
-                    itemType === 'listing' ? 'bg-lime text-ink-black' : 'bg-brand-50 text-brand-600'
-                  )}
-                >
-                  <Building2 className="w-4 h-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-bold">Seller</span>
-                    {itemType === 'listing' && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-lime text-ink-black">
-                        Selected ✓
-                      </span>
-                    )}
-                  </div>
-                  <p className={clsx('text-xs mt-0.5', itemType === 'listing' ? 'text-white/75' : 'text-ink-500')}>
-                    Owner offering a property — rank matching Buyers next.
-                  </p>
-                </div>
-              </button>
-            </div>
-          </div>
+              </div>
 
-          {/* Missing or Uncertain Values Banner */}
-          {(!recordPhone || !recordLocality) && (
-            <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-              <span>
-                {!recordPhone && !recordLocality
-                  ? 'Client contact number and target sector were not detected. Please enter them below.'
-                  : !recordPhone
-                  ? 'Contact phone number was missing from the message. Please fill in client contact.'
-                  : 'Target locality was not detected clearly. Please review location.'}
-              </span>
-            </div>
-          )}
-
-          {/* Editable Groups */}
-          <div className="space-y-4 text-xs">
-            {/* Group 1: Identity & Contact */}
-            <div className="space-y-3 pb-3 border-b border-slate-100">
-              <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-brand-600" />
-                <span>
-                  1.{' '}
-                  {itemType === 'buyer'
-                    ? 'Client / Buyer Information'
-                    : itemType === 'listing'
-                    ? 'Owner / Seller Information'
-                    : 'Contact Information (Select Buyer or Seller above)'}
-                </span>
-              </h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-ink block">
-                    {itemType === 'buyer' ? 'Buyer Name' : itemType === 'listing' ? 'Owner / Seller Name' : 'Contact Name'}
-                  </label>
-                  <input
-                    type="text"
-                    value={recordName}
-                    onChange={(e) => setRecordName(e.target.value)}
-                    placeholder="e.g. Rajesh Sharma"
-                    className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-ink flex items-center justify-between">
-                    <span>WhatsApp Contact Number</span>
-                    <span className="text-[11px] font-normal text-muted flex items-center gap-1">
-                      <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                      Vault Protected
+              {/* MANDATORY 2-CARD SELECTION: BUYER OR SELLER */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-semibold">
+                  <span className="text-ink-900">
+                    1. Who is this message for? <span className="text-danger">*</span>
+                  </span>
+                  {!itemType && (
+                    <span className="text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                      Required selection
                     </span>
-                  </label>
-                  <input
-                    type="tel"
-                    value={recordPhone}
-                    onChange={(e) => setRecordPhone(e.target.value)}
-                    placeholder="+91 98765 43210"
-                    className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
-                  />
+                  )}
                 </div>
-              </div>
-            </div>
-
-            {/* Group 2: Property Type & Location */}
-            <div className="space-y-3 pb-3 border-b border-slate-100">
-              <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                <Building2 className="w-3.5 h-3.5 text-brand-600" />
-                <span>2. Property Type & Locality</span>
-              </h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-ink block">
-                    Property Type
-                  </label>
-                  <select
-                    value={recordType}
-                    onChange={(e) => setRecordType(e.target.value)}
-                    className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    data-testid="role-select-buyer"
+                    onClick={() => setItemType('buyer')}
+                    className={clsx(
+                      'p-3.5 rounded-[14px] border text-left transition cursor-pointer flex items-start gap-3',
+                      itemType === 'buyer'
+                        ? 'bg-ink-black text-white border-ink-black ring-2 ring-lime shadow-sm'
+                        : 'bg-white border-line text-ink-900 hover:border-ink-black/40 hover:bg-lime-soft/40'
+                    )}
                   >
-                    <option value="Builder Floor">Builder Floor</option>
-                    <option value="Residential Plot">Residential Plot</option>
-                    <option value="Independent Kothi">Independent Kothi</option>
-                    <option value="Apartment / Flat">Apartment / Flat</option>
-                    <option value="Commercial Shop">Commercial Shop</option>
-                    <option value="Commercial Space">Commercial Space</option>
-                  </select>
-                </div>
+                    <div
+                      className={clsx(
+                        'w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0',
+                        itemType === 'buyer' ? 'bg-lime text-ink-black' : 'bg-brand-50 text-brand-600'
+                      )}
+                    >
+                      <Users className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-bold">Buyer</span>
+                        {itemType === 'buyer' && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-lime text-ink-black">
+                            Selected ✓
+                          </span>
+                        )}
+                      </div>
+                      <p className={clsx('text-xs mt-0.5', itemType === 'buyer' ? 'text-white/75' : 'text-ink-500')}>
+                        Client looking to buy / rent — rank matching Seller Properties next.
+                      </p>
+                    </div>
+                  </button>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-ink block">
-                    Locality / Sector
-                  </label>
-                  <input
-                    type="text"
-                    value={recordLocality}
-                    onChange={(e) => setRecordLocality(e.target.value)}
-                    placeholder="e.g. Model Town, Sector 18"
-                    className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-ink block">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    value={recordCity}
-                    onChange={(e) => setRecordCity(e.target.value)}
-                    placeholder="e.g. Panipat"
-                    className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
-                  />
+                  <button
+                    type="button"
+                    data-testid="role-select-seller"
+                    onClick={() => setItemType('listing')}
+                    className={clsx(
+                      'p-3.5 rounded-[14px] border text-left transition cursor-pointer flex items-start gap-3',
+                      itemType === 'listing'
+                        ? 'bg-ink-black text-white border-ink-black ring-2 ring-lime shadow-sm'
+                        : 'bg-white border-line text-ink-900 hover:border-ink-black/40 hover:bg-lime-soft/40'
+                    )}
+                  >
+                    <div
+                      className={clsx(
+                        'w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0',
+                        itemType === 'listing' ? 'bg-lime text-ink-black' : 'bg-brand-50 text-brand-600'
+                      )}
+                    >
+                      <Building2 className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-bold">Seller</span>
+                        {itemType === 'listing' && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-lime text-ink-black">
+                            Selected ✓
+                          </span>
+                        )}
+                      </div>
+                      <p className={clsx('text-xs mt-0.5', itemType === 'listing' ? 'text-white/75' : 'text-ink-500')}>
+                        Owner offering a property — rank matching Buyers next.
+                      </p>
+                    </div>
+                  </button>
                 </div>
               </div>
-            </div>
 
-            {/* Group 3: Budget or Asking Price */}
-            <div className="space-y-3 pb-3 border-b border-slate-100">
-              <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                <Maximize2 className="w-3.5 h-3.5 text-brand-600" />
-                <span>3. {itemType === 'buyer' ? 'Target Budget' : 'Asking Price / Demand'}</span>
-              </h3>
+              {/* Missing or Uncertain Values Banner */}
+              {(!recordPhone || !recordLocality) && (
+                <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <span>
+                    {!recordPhone && !recordLocality
+                      ? 'Client contact number and target sector were not detected. Please enter them below.'
+                      : !recordPhone
+                        ? 'Contact phone number was missing from the message. Please fill in client contact.'
+                        : 'Target locality was not detected clearly. Please review location.'}
+                  </span>
+                </div>
+              )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {itemType === 'buyer' ? (
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-ink block">
-                      Maximum Budget (in Lakhs)
-                    </label>
-                    <div className="flex items-center gap-2">
+              {/* Editable Groups */}
+              <div className="space-y-4 text-xs">
+                {/* Group 1: Identity & Contact */}
+                <div className="space-y-3 pb-3 border-b border-slate-100">
+                  <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                    <Users className="w-3.5 h-3.5 text-brand-600" />
+                    <span>
+                      1.{' '}
+                      {itemType === 'buyer'
+                        ? 'Client / Buyer Information'
+                        : itemType === 'listing'
+                          ? 'Owner / Seller Information'
+                          : 'Contact Information (Select Buyer or Seller above)'}
+                    </span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-ink block">
+                        {itemType === 'buyer' ? 'Buyer Name' : itemType === 'listing' ? 'Owner / Seller Name' : 'Contact Name'}
+                      </label>
                       <input
-                        type="number"
-                        min="1"
-                        value={recordBudgetLakhs}
-                        onChange={(e) => setRecordBudgetLakhs(Number(e.target.value))}
-                        className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+                        type="text"
+                        value={recordName}
+                        onChange={(e) => setRecordName(e.target.value)}
+                        placeholder="e.g. Rajesh Sharma"
+                        className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
                       />
-                      <span className="text-xs font-bold text-brand-700 shrink-0">
-                        = {formatRupees(recordBudgetLakhs * 10000000)}
-                      </span>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-ink flex items-center justify-between">
+                        <span>WhatsApp Contact Number</span>
+                        <span className="text-[11px] font-normal text-muted flex items-center gap-1">
+                          <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                          Vault Protected
+                        </span>
+                      </label>
+                      <input
+                        type="tel"
+                        value={recordPhone}
+                        onChange={(e) => setRecordPhone(e.target.value)}
+                        placeholder="+91 98765 43210"
+                        className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
+                      />
                     </div>
                   </div>
-                ) : (
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-ink block">
-                      Asking Price / Demand
-                    </label>
-                    <input
-                      type="text"
-                      value={recordPriceRaw}
-                      onChange={(e) => setRecordPriceRaw(e.target.value)}
-                      placeholder="e.g. ₹1.25 Cr"
-                      className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
-                    />
-                  </div>
-                )}
+                </div>
 
-                <div className="space-y-1">
+                {/* Group 2: Property Type & Location */}
+                <div className="space-y-3 pb-3 border-b border-slate-100">
+                  <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-brand-600" />
+                    <span>2. Property Type & Locality</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-ink block">
+                        Property Type
+                      </label>
+                      <select
+                        value={recordType}
+                        onChange={(e) => setRecordType(e.target.value)}
+                        className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
+                      >
+                        <option value="Builder Floor">Builder Floor</option>
+                        <option value="Residential Plot">Residential Plot</option>
+                        <option value="Independent Kothi">Independent Kothi</option>
+                        <option value="Apartment / Flat">Apartment / Flat</option>
+                        <option value="Commercial Shop">Commercial Shop</option>
+                        <option value="Commercial Space">Commercial Space</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-ink block">
+                        Locality / Sector
+                      </label>
+                      <input
+                        type="text"
+                        value={recordLocality}
+                        onChange={(e) => setRecordLocality(e.target.value)}
+                        placeholder="e.g. Model Town, Sector 18"
+                        className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-ink block">
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        value={recordCity}
+                        onChange={(e) => setRecordCity(e.target.value)}
+                        placeholder="e.g. Panipat"
+                        className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Group 3: Budget or Asking Price */}
+                <div className="space-y-3 pb-3 border-b border-slate-100">
+                  <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
+                    <Maximize2 className="w-3.5 h-3.5 text-brand-600" />
+                    <span>3. {itemType === 'buyer' ? 'Target Budget' : 'Asking Price / Demand'}</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {itemType === 'buyer' ? (
+                      <div className="space-y-1">
+                        <label className="text-xs font-semibold text-ink block">
+                          Maximum Budget (in Lakhs)
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min="1"
+                            value={recordBudgetLakhs}
+                            onChange={(e) => setRecordBudgetLakhs(Number(e.target.value))}
+                            className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+                          />
+                          <span className="text-xs font-bold text-brand-700 shrink-0">
+                            = {formatRupees(recordBudgetLakhs * 10000000)}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <label className="text-xs font-semibold text-ink block">
+                          Asking Price / Demand
+                        </label>
+                        <input
+                          type="text"
+                          value={recordPriceRaw}
+                          onChange={(e) => setRecordPriceRaw(e.target.value)}
+                          placeholder="e.g. ₹1.25 Cr"
+                          className="w-full min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+                        />
+                      </div>
+                    )}
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-ink block">
+                        Area Size & Local Unit
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="number"
+                          value={recordArea}
+                          onChange={(e) => setRecordArea(e.target.value)}
+                          placeholder="e.g. 250"
+                          className="w-2/3 min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
+                        />
+                        <select
+                          value={recordUnit}
+                          onChange={(e) => setRecordUnit(e.target.value)}
+                          className="w-1/3 min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
+                        >
+                          <option value="gaj">Gaj</option>
+                          <option value="sqft">Sq. Ft.</option>
+                          <option value="marla">Marla</option>
+                          <option value="kanal">Kanal</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Group 4: Notes */}
+                <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-ink block">
-                    Area Size & Local Unit
+                    Additional Notes / Extracted Preferences
                   </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      value={recordArea}
-                      onChange={(e) => setRecordArea(e.target.value)}
-                      placeholder="e.g. 250"
-                      className="w-2/3 min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-sm text-ink font-bold focus:outline-none focus:ring-2 focus:ring-brand-600"
-                    />
-                    <select
-                      value={recordUnit}
-                      onChange={(e) => setRecordUnit(e.target.value)}
-                      className="w-1/3 min-h-[48px] bg-white border border-border rounded-input px-3 py-2 text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
-                    >
-                      <option value="gaj">Gaj</option>
-                      <option value="sqft">Sq. Ft.</option>
-                      <option value="marla">Marla</option>
-                      <option value="kanal">Kanal</option>
-                    </select>
-                  </div>
+                  <textarea
+                    rows={2}
+                    value={recordNotes}
+                    onChange={(e) => setRecordNotes(e.target.value)}
+                    className="w-full min-h-[60px] bg-white border border-border rounded-input p-3 text-xs text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
+                  />
                 </div>
               </div>
-            </div>
 
-            {/* Group 4: Notes */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-ink block">
-                Additional Notes / Extracted Preferences
-              </label>
-              <textarea
-                rows={2}
-                value={recordNotes}
-                onChange={(e) => setRecordNotes(e.target.value)}
-                className="w-full min-h-[60px] bg-white border border-border rounded-input p-3 text-xs text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
-              />
-            </div>
-          </div>
+              {/* Step 2 Actions Bar */}
+              <div className="pt-3 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="md"
+                    onClick={() => setCurrentStep('paste')}
+                    className="flex-1 sm:flex-initial min-h-[48px] font-semibold text-xs"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5 mr-1" />
+                    <span>Back</span>
+                  </Button>
 
-          {/* Step 2 Actions Bar */}
-          <div className="pt-3 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-2.5">
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <Button
-                type="button"
-                variant="secondary"
-                size="md"
-                onClick={() => setCurrentStep('paste')}
-                className="flex-1 sm:flex-initial min-h-[48px] font-semibold text-xs"
-              >
-                <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-                <span>Back</span>
-              </Button>
-
-              <Button
-                type="button"
-                variant="secondary"
-                size="md"
-                disabled={!itemType || isSaving || Boolean(savedRecordId)}
-                onClick={handleSaveRecord}
-                className="flex-1 sm:flex-initial min-h-[48px] font-semibold text-xs text-emerald-800 bg-emerald-50 border-emerald-300 hover:bg-emerald-100"
-              >
-                {savedRecordId ? (
-                  <span className="flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Saved ✓</span>
-                  </span>
-                ) : isSaving ? (
-                  <span>Saving...</span>
-                ) : (
-                  <span className="flex items-center gap-1">
-                    <Save className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>
-                      Save {itemType === 'buyer' ? 'Buyer' : itemType === 'listing' ? 'Seller Listing' : 'Record'}
-                    </span>
-                  </span>
-                )}
-              </Button>
-            </div>
-
-            <Button
-              type="button"
-              variant="primary"
-              size="md"
-              disabled={!itemType || isMatching || isSaving}
-              onClick={handleFindMatches}
-              className={clsx(
-                'w-full sm:w-auto min-h-[48px] font-semibold text-xs gap-1.5 shadow-sm transition-opacity',
-                itemType ? 'mobile-shine-primary' : 'opacity-45'
-              )}
-            >
-              {isMatching || isSaving ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Saving & Ranking Matches...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4 text-lime" />
-                  <span>Save & Find Matches</span>
-                </>
-              )}
-            </Button>
-          </div>
-        </Card>
-      )}
-
-      {/* ======================================================== */}
-      {/* STEP 3: REAL MATCHES & ACTIONS (Prompt 5 Spec)          */}
-      {/* ======================================================== */}
-      {currentStep === 'matches' && (
-        <div className="space-y-4">
-          {/* Header Summary Card */}
-          <Card className="p-4 sm:p-5 rounded-2xl bg-emerald-50 border border-emerald-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <span className="text-[11px] font-bold text-brand-700 uppercase tracking-wider block">
-                {itemType === 'buyer' ? 'Buyer Requirement Matches' : 'Matching Buyer Inquiries'}
-              </span>
-              <h2 className="text-base sm:text-lg font-bold text-ink">
-                {recordName} · {itemType === 'buyer' ? `Budget ₹${recordBudgetLakhs}L` : recordPriceRaw}
-              </h2>
-              <p className="text-xs text-muted">
-                Target: {recordLocality} ({recordType})
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 flex-wrap">
-              <button
-                type="button"
-                onClick={() => setCurrentStep('review')}
-                className="px-3 py-1.5 rounded-lg bg-white border border-border text-xs font-semibold text-slate-700 hover:text-ink transition cursor-pointer"
-              >
-                Edit Details
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setRawText('');
-                  setParseResult(null);
-                  setSavedRecordId(null);
-                  setCurrentStep('paste');
-                }}
-                className="px-3 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-semibold hover:bg-brand-700 transition cursor-pointer shadow-xs"
-              >
-                + Paste Another
-              </button>
-            </div>
-          </Card>
-
-          {/* ── Case A: Extracted Item is a Buyer Requirement ── */}
-          {itemType === 'buyer' && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs font-semibold text-muted px-1">
-                <span>{matchedProperties.length} of {totalDatabaseCount} properties matched</span>
-                <span>Evaluated against real inventory</span>
-              </div>
-
-              {matchedProperties.length === 0 ? (
-                <Card className="p-8 text-center space-y-3 rounded-2xl bg-white border border-border shadow-card">
-                  <Building2 className="w-8 h-8 text-muted mx-auto" />
-                  <h3 className="text-sm font-bold text-ink">
-                    No matching properties in your inventory
-                  </h3>
-                  <p className="text-xs text-secondary text-muted max-w-sm mx-auto">
-                    None of your current listings match "{recordLocality}" ({recordType}) within ₹{recordBudgetLakhs}L. Add listings or share the requirement with your network.
-                  </p>
-                  <div className="flex items-center justify-center gap-2 pt-2">
-                    <Link to="/app/properties/new">
-                      <Button size="sm" variant="primary" className="text-xs font-semibold">
-                        + Add Property
-                      </Button>
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={handleShareBuyerQuote}
-                      className="px-3.5 py-1.5 rounded-lg border border-border bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 flex items-center gap-1.5 transition cursor-pointer"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                      <span>Share on WhatsApp</span>
-                    </button>
-                  </div>
-                </Card>
-              ) : (
-                <div className="space-y-3">
-                  {matchedProperties.map(({ property, score, reasons, mismatches }, idx) => {
-                    const isDealSaved = savedPropertyIds.has(property._id);
-                    const isBestOne = idx === 0;
-                    const pitchCount = property.pitchCount || 0;
-
-                    return (
-                      <Card
-                        key={property._id}
-                        className={clsx(
-                          'p-4 sm:p-5 flex flex-col justify-between rounded-card transition shadow-card space-y-3',
-                          isBestOne
-                            ? 'bg-lime-soft/30 border-2 border-ink-black shadow-md'
-                            : 'bg-white border border-border hover:border-brand-600/40'
-                        )}
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-border">
-                          <div>
-                            <div className="flex items-center gap-2 flex-wrap">
-                              {isBestOne && (
-                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-lime text-ink-black text-[11px] font-extrabold border border-ink-black/20 shadow-2xs">
-                                  <Crown className="w-3 h-3" />
-                                  <span>#1 Best Match</span>
-                                </span>
-                              )}
-                              <h3 className="text-base font-bold text-ink">
-                                {property.title}
-                              </h3>
-                              <Badge variant={score >= 80 ? 'perfect' : 'good'}>
-                                {score}% Match
-                              </Badge>
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 border border-line text-[11px] font-semibold text-ink-700">
-                                <Send className="w-3 h-3 text-brand-600" />
-                                <span>Sent to {pitchCount} {pitchCount === 1 ? 'person' : 'people'}</span>
-                              </span>
-                            </div>
-                            <p className="text-xs text-muted mt-1">
-                              {property.locality}, {property.city || 'Panipat'} · {property.size.value} {property.size.unit.toUpperCase()}
-                            </p>
-                          </div>
-
-                          <div className="sm:text-right shrink-0">
-                            <span className="text-[10px] uppercase font-semibold text-muted block">Asking Price</span>
-                            <span className="text-base font-bold text-ink tabular-nums">
-                              {formatRupees(property.priceDemandPaise)}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Match Explanation */}
-                        <div className="space-y-1 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-                          {reasons.map((r, i) => (
-                            <div key={i} className="flex items-center gap-1.5 text-emerald-800">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                              <span>{r}</span>
-                            </div>
-                          ))}
-                          {mismatches.map((m, i) => (
-                            <div key={i} className="flex items-center gap-1.5 text-amber-800">
-                              <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                              <span>{m}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Actions: Inspect + Save + Copy + Send */}
-                        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t border-slate-100">
-                          <button
-                            type="button"
-                            onClick={() => setInspectingProperty(property)}
-                            className="text-xs font-semibold text-slate-600 hover:text-ink flex items-center gap-1 cursor-pointer self-start sm:self-auto"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                            <span>Inspect Details</span>
-                          </button>
-
-                          <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              disabled={isDealSaved}
-                              onClick={async () => {
-                                if (savedRecordId && !savedRecordId.startsWith('sim_')) {
-                                  try {
-                                    await createDeal({
-                                      buyerId: savedRecordId,
-                                      propertyId: property._id,
-                                      propertyTitleSnapshot: property.title,
-                                      valuePaise: property.priceDemandPaise,
-                                      commission: {
-                                        mode: 'percent',
-                                        bps: 100,
-                                      },
-                                      stage: 'interested',
-                                    });
-                                    setSavedPropertyIds((prev) => new Set([...prev, property._id]));
-                                    success('Saved deal to pipeline!');
-                                  } catch (err: any) {
-                                    error(err?.message || 'Could not save deal.');
-                                  }
-                                } else {
-                                  setSavedPropertyIds((prev) => new Set([...prev, property._id]));
-                                  success('Property match saved!');
-                                }
-                              }}
-                              className="flex-1 sm:flex-initial text-xs font-semibold min-h-[40px]"
-                            >
-                              {isDealSaved ? 'Saved ✓' : 'Save'}
-                            </Button>
-
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              onClick={() => handleCopyPropertyFlyer(property)}
-                              className="flex-1 sm:flex-initial text-xs font-semibold min-h-[40px] gap-1"
-                            >
-                              <Copy className="w-3.5 h-3.5" />
-                              <span>Copy</span>
-                            </Button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleSharePropertyFlyer(property)}
-                              className="group btn-cashfree-primary btn-shine-sweep flex-1 sm:flex-initial min-h-[40px] pl-3.5 pr-1.5 rounded-[11px] text-white font-semibold text-xs flex items-center justify-center gap-2 transition cursor-pointer whitespace-nowrap"
-                            >
-                              <Share2 className="w-3.5 h-3.5 text-lime" />
-                              <span>Send</span>
-                              <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
-                              </span>
-                            </button>
-                          </div>
-                        </div>
-                      </Card>
-                    );
-                  })}
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="md"
+                    disabled={!itemType || isSaving || Boolean(savedRecordId)}
+                    onClick={handleSaveRecord}
+                    className="flex-1 sm:flex-initial min-h-[48px] font-semibold text-xs text-emerald-800 bg-emerald-50 border-emerald-300 hover:bg-emerald-100"
+                  >
+                    {savedRecordId ? (
+                      <span className="flex items-center gap-1">
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Saved ✓</span>
+                      </span>
+                    ) : isSaving ? (
+                      <span>Saving...</span>
+                    ) : (
+                      <span className="flex items-center gap-1">
+                        <Save className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>
+                          Save {itemType === 'buyer' ? 'Buyer' : itemType === 'listing' ? 'Seller Listing' : 'Record'}
+                        </span>
+                      </span>
+                    )}
+                  </Button>
                 </div>
-              )}
-            </div>
-          )}
 
-          {/* ── Case B: Extracted Item is a Property Listing ── */}
-          {itemType === 'listing' && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs font-semibold text-muted px-1 flex-wrap gap-2">
-                <span>{matchedBuyers.length} of {totalDatabaseCount} active buyers ranked</span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 border border-line text-[11px] font-semibold text-ink-700">
-                  <Send className="w-3 h-3 text-brand-600" />
-                  <span>Property sent to {savedPropertyPitchCount} {savedPropertyPitchCount === 1 ? 'person' : 'people'}</span>
-                </span>
-              </div>
-
-              {matchedBuyers.length === 0 ? (
-                <Card className="p-8 text-center space-y-3 rounded-2xl bg-white border border-border shadow-card">
-                  <Users className="w-8 h-8 text-muted mx-auto" />
-                  <h3 className="text-sm font-bold text-ink">
-                    No matching buyers found in your records
-                  </h3>
-                  <p className="text-xs text-secondary text-muted max-w-sm mx-auto">
-                    None of your active buyers are currently looking for "{recordLocality}" ({recordType}) in this price range.
-                  </p>
-                  <div className="flex items-center justify-center gap-2 pt-2">
-                    <Link to="/app/buyers/new">
-                      <Button size="sm" variant="primary" className="text-xs font-semibold">
-                        + Add Buyer Inquiry
-                      </Button>
-                    </Link>
-                  </div>
-                </Card>
-              ) : (
-                <div className="space-y-3">
-                  {matchedBuyers.map(({ buyer, score, reasons, mismatches }, idx) => {
-                    const isBestOne = idx === 0;
-                    const buyerId = buyer._id || `buyer_${idx}`;
-                    const isBuyerSaved = savedBuyerIds.has(buyerId);
-                    const waShareText = `Namaste ${buyer.name} ji,\n\nAapki requirement ke hisaab se ek listing available hai:\n\n*${recordType} in ${recordLocality}*\nDemand: ${recordPriceRaw || formatRupees(parseDemandPaiseFromInput(recordPriceRaw, recordBudgetLakhs))}\nArea: ${recordArea} ${recordUnit.toUpperCase()}\n\nInspection ke liye connect karein?\n- ${agencyDisplayName}`;
-                    const waUrl = `https://wa.me/${(buyer.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waShareText)}`;
-
-                    return (
-                      <Card
-                        key={buyerId}
-                        className={clsx(
-                          'p-4 sm:p-5 flex flex-col justify-between rounded-card transition shadow-card space-y-3',
-                          isBestOne
-                            ? 'bg-lime-soft/30 border-2 border-ink-black shadow-md'
-                            : 'bg-white border border-border hover:border-brand-600/40'
-                        )}
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-border">
-                          <div>
-                            <div className="flex items-center gap-2 flex-wrap">
-                              {isBestOne && (
-                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-lime text-ink-black text-[11px] font-extrabold border border-ink-black/20 shadow-2xs">
-                                  <Crown className="w-3 h-3" />
-                                  <span>#1 Best Match</span>
-                                </span>
-                              )}
-                              <h3 className="text-base font-bold text-ink">{buyer.name}</h3>
-                              <Badge variant={score >= 80 ? 'perfect' : 'good'}>
-                                {score}% Fit
-                              </Badge>
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 border border-line text-[11px] font-semibold text-ink-700">
-                                <Send className="w-3 h-3 text-brand-600" />
-                                <span>Listing sent to {savedPropertyPitchCount} {savedPropertyPitchCount === 1 ? 'person' : 'people'}</span>
-                              </span>
-                            </div>
-                            <p className="text-xs text-muted mt-1">
-                              Budget: <strong className="text-ink">{buyer.budget?.maxPaise ? formatRupees(buyer.budget.maxPaise) : 'Flexible'}</strong>
-                            </p>
-                          </div>
-
-                          <div className="sm:text-right">
-                            <span className="text-[10px] uppercase font-semibold text-muted block">Phone</span>
-                            <span className="text-xs font-semibold text-slate-700">
-                              {buyer.phone || (buyer as any).phoneE164 || '—'}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Match Reasons */}
-                        <div className="space-y-1 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-                          {reasons.map((r: string, i: number) => (
-                            <div key={i} className="flex items-center gap-1.5 text-emerald-800">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                              <span>{r}</span>
-                            </div>
-                          ))}
-                          {Array.isArray(mismatches) && mismatches.map((m: string, i: number) => (
-                            <div key={`mm_${i}`} className="flex items-center gap-1.5 text-amber-800">
-                              <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                              <span>{m}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Actions: Save + Copy + Send */}
-                        <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 flex-wrap">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            disabled={isBuyerSaved}
-                            onClick={async () => {
-                              if (savedRecordId && !savedRecordId.startsWith('sim_') && buyer._id && !buyer._id.startsWith('buyer_seed_')) {
-                                try {
-                                  await createDeal({
-                                    buyerId: buyer._id,
-                                    propertyId: savedRecordId,
-                                    propertyTitleSnapshot: `${recordType} in ${recordLocality}`,
-                                    valuePaise: parseDemandPaiseFromInput(recordPriceRaw, recordBudgetLakhs),
-                                    commission: { mode: 'percent', bps: 100 },
-                                    stage: 'interested',
-                                  });
-                                } catch {
-                                  // gracefully continue
-                                }
-                              }
-                              setSavedBuyerIds((prev) => new Set([...prev, buyerId]));
-                              success(`Matched deal saved for ${buyer.name}!`);
-                            }}
-                            className="text-xs font-semibold min-h-[40px]"
-                          >
-                            {isBuyerSaved ? 'Saved ✓' : 'Save'}
-                          </Button>
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              void copyTextSafely(waShareText);
-                              void bumpSavedSellerPitch();
-                              success(`Message copied for ${buyer.name}!`);
-                            }}
-                            className="min-h-[40px] px-3 py-1.5 rounded-lg border border-border hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
-                          >
-                            <Copy className="w-3.5 h-3.5" />
-                            <span>Copy</span>
-                          </button>
-
-                          <a
-                            href={waUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={() => {
-                              void bumpSavedSellerPitch();
-                            }}
-                            className="group btn-cashfree-primary btn-shine-sweep min-h-[40px] pl-3.5 pr-1.5 rounded-[11px] text-white font-semibold text-xs flex items-center gap-2 transition"
-                          >
-                            <Share2 className="w-3.5 h-3.5 text-lime" />
-                            <span>Send</span>
-                            <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                              <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
-                            </span>
-                          </a>
-                        </div>
-                      </Card>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-        </div>
-
-        {/* RIGHT COLUMN (>=1280px): Live-Updating Recent Extractions (last 5) */}
-        {hasRecentExtractions && (
-          <Card className="p-4 sm:p-5 space-y-3.5 rounded-[14px] bg-white border border-border">
-            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-border">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-[10px] bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
-                  <Clock className="w-4 h-4" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-bold text-slate-900">
-                    Recent extractions
-                  </h2>
-                  <p className="text-xs text-slate-500">
-                    Last {recentExtractions.length} parsed messages
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setRecentExtractions([]);
-                  try {
-                    localStorage.removeItem(RECENT_EXTRACTIONS_KEY);
-                  } catch {
-                    // ignore
-                  }
-                }}
-                className="text-xs font-semibold text-slate-500 hover:text-slate-900 cursor-pointer"
-              >
-                Clear
-              </button>
-            </div>
-
-            <div className="space-y-2">
-              {recentExtractions.map((item) => (
-                <button
-                  key={item.id}
+                <Button
                   type="button"
-                  onClick={() => {
-                    setRawText(item.rawText);
-                    applyParseResult(item.result, item.rawText);
-                    setSavedRecordId(null);
-                    setCurrentStep('review');
-                  }}
-                  className="w-full text-left p-3 rounded-[12px] border border-line bg-white hover:bg-slate-50 lg:hover:border-lime transition-all cursor-pointer space-y-1.5"
+                  variant="primary"
+                  size="md"
+                  disabled={!itemType || isMatching || isSaving}
+                  onClick={handleFindMatches}
+                  className={clsx(
+                    'w-full sm:w-auto min-h-[48px] font-semibold text-xs gap-1.5 shadow-sm transition-opacity',
+                    itemType ? 'mobile-shine-primary' : 'opacity-45'
+                  )}
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-slate-900 truncate">
-                      {item.title}
-                    </span>
-                    <StatusChip
-                      variant={item.itemType === 'buyer' ? 'brand' : 'neutral'}
-                      className="shrink-0"
-                    >
-                      {item.itemType === 'buyer' ? 'Buyer' : 'Listing'}
-                    </StatusChip>
-                  </div>
-                  <div className="flex items-center justify-between gap-2 text-xs text-slate-500">
-                    <span className="truncate">{item.locality}</span>
-                    <span className="font-semibold text-slate-800 tabular-nums shrink-0">
-                      {item.priceLabel}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-400 line-clamp-1">
-                    {item.rawText}
-                  </p>
-                </button>
-              ))}
-            </div>
-          </Card>
-        )}
-      </div>
+                  {isMatching || isSaving ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Saving & Ranking Matches...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 text-lime" />
+                      <span>Save & Find Matches</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </Card>
+          )}
 
-      {/* Inspect Property Modal */}
-      <Modal
-        open={Boolean(inspectingProperty)}
-        onOpenChange={(open) => {
-          if (!open) setInspectingProperty(null);
-        }}
-        title={inspectingProperty?.title || 'Property details'}
-        footerActions={
-          inspectingProperty && (
-            <>
-              <Button size="sm" variant="secondary" onClick={() => setInspectingProperty(null)}>
-                Close
-              </Button>
-              <Button
-                size="sm"
-                variant="primary"
-                onClick={() => {
-                  handleSharePropertyFlyer(inspectingProperty);
-                  setInspectingProperty(null);
-                }}
-                className="gap-1.5"
+          {/* ======================================================== */}
+          {/* STEP 3: REAL MATCHES & ACTIONS (Prompt 5 Spec)          */}
+          {/* ======================================================== */}
+          {currentStep === 'matches' && (
+            <div className="space-y-4">
+              {/* Header Summary Card */}
+              <Card className="p-4 sm:p-5 rounded-2xl bg-emerald-50 border border-emerald-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <span className="text-[11px] font-bold text-brand-700 uppercase tracking-wider block">
+                    {itemType === 'buyer' ? 'Buyer Requirement Matches' : 'Matching Buyer Inquiries'}
+                  </span>
+                  <h2 className="text-base sm:text-lg font-bold text-ink">
+                    {recordName} · {itemType === 'buyer' ? `Budget ₹${recordBudgetLakhs}L` : recordPriceRaw}
+                  </h2>
+                  <p className="text-xs text-muted">
+                    Target: {recordLocality} ({recordType})
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep('review')}
+                    className="px-3 py-1.5 rounded-lg bg-white border border-border text-xs font-semibold text-slate-700 hover:text-ink transition cursor-pointer"
+                  >
+                    Edit Details
+                  </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setRawText('');
+            setParseResult(null);
+            setSavedRecordId(null);
+            setCurrentStep('paste');
+          }}
+          className="px-3 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-semibold hover:bg-brand-700 transition cursor-pointer shadow-xs"
+        >
+          + Paste Another
+        </button>
+      </div>
+    </Card>
+
+              {/* ── Case A: Extracted Item is a Buyer Requirement ── */ }
+  {
+    itemType === 'buyer' && (
+      <div className="space-y-3">
+        <div className="flex items-center justify-between text-xs font-semibold text-muted px-1">
+          <span>{matchedProperties.length} of {totalDatabaseCount} properties matched</span>
+          <span>Evaluated against real inventory</span>
+        </div>
+
+        {matchedProperties.length === 0 ? (
+          <Card className="p-8 text-center space-y-3 rounded-2xl bg-white border border-border shadow-card">
+            <Building2 className="w-8 h-8 text-muted mx-auto" />
+            <h3 className="text-sm font-bold text-ink">
+              No matching properties in your inventory
+            </h3>
+            <p className="text-xs text-secondary text-muted max-w-sm mx-auto">
+              None of your current listings match "{recordLocality}" ({recordType}) within ₹{recordBudgetLakhs}L. Add listings or share the requirement with your network.
+            </p>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <Link to="/app/properties/new">
+                <Button size="sm" variant="primary" className="text-xs font-semibold">
+                  + Add Property
+                </Button>
+              </Link>
+              <button
+                type="button"
+                onClick={handleShareBuyerQuote}
+                className="px-3.5 py-1.5 rounded-lg border border-border bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 flex items-center gap-1.5 transition cursor-pointer"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 <span>Share on WhatsApp</span>
-              </Button>
-            </>
-          )
-        }
-      >
-        {inspectingProperty && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              <div>
-                <span className="text-slate-500 block font-medium">Locality</span>
-                <span className="font-semibold text-slate-900">{inspectingProperty.locality}</span>
-              </div>
-              <div>
-                <span className="text-slate-500 block font-medium">Asking price</span>
-                <span className="font-bold text-slate-900 text-sm tabular-nums">
-                  {formatRupees(inspectingProperty.priceDemandPaise)}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-500 block font-medium">Area</span>
-                <span className="font-semibold text-slate-900">
-                  {inspectingProperty.size.value} {inspectingProperty.size.unit.toUpperCase()}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-500 block font-medium">Facing</span>
-                <span className="font-semibold text-slate-900">{inspectingProperty.facing || 'Open'}</span>
-              </div>
+              </button>
             </div>
+          </Card>
+        ) : (
+          <div className="space-y-3">
+            {matchedProperties.map(({ property, score, reasons, mismatches }, idx) => {
+              const isDealSaved = savedPropertyIds.has(property._id);
+              const isBestOne = idx === 0;
+              const pitchCount = property.pitchCount || 0;
 
-            {inspectingProperty.description && (
-              <p className="text-xs text-slate-700 p-3 rounded-xl bg-slate-50 border border-slate-200">
-                {inspectingProperty.description}
-              </p>
-            )}
+              return (
+                <Card
+                  key={property._id}
+                  className={clsx(
+                    'p-4 sm:p-5 flex flex-col justify-between rounded-card transition shadow-card space-y-3',
+                    isBestOne
+                      ? 'bg-lime-soft/30 border-2 border-ink-black shadow-md'
+                      : 'bg-white border border-border hover:border-brand-600/40'
+                  )}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-border">
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {isBestOne && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-lime text-ink-black text-[11px] font-extrabold border border-ink-black/20 shadow-2xs">
+                            <Crown className="w-3 h-3" />
+                            <span>#1 Best Match</span>
+                          </span>
+                        )}
+                        <h3 className="text-base font-bold text-ink">
+                          {property.title}
+                        </h3>
+                        <Badge variant={score >= 80 ? 'perfect' : 'good'}>
+                          {score}% Match
+                        </Badge>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 border border-line text-[11px] font-semibold text-ink-700">
+                          <Send className="w-3 h-3 text-brand-600" />
+                          <span>Sent to {pitchCount} {pitchCount === 1 ? 'person' : 'people'}</span>
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted mt-1">
+                        {property.locality}, {property.city || 'Panipat'} · {property.size.value} {property.size.unit.toUpperCase()}
+                      </p>
+                    </div>
+
+                    <div className="sm:text-right shrink-0">
+                      <span className="text-[10px] uppercase font-semibold text-muted block">Asking Price</span>
+                      <span className="text-base font-bold text-ink tabular-nums">
+                        {formatRupees(property.priceDemandPaise)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Match Explanation */}
+                  <div className="space-y-1 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
+                    {reasons.map((r, i) => (
+                      <div key={i} className="flex items-center gap-1.5 text-emerald-800">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>{r}</span>
+                      </div>
+                    ))}
+                    {mismatches.map((m, i) => (
+                      <div key={i} className="flex items-center gap-1.5 text-amber-800">
+                        <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        <span>{m}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Actions: Inspect + Save + Copy + Send */}
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                    <button
+                      type="button"
+                      onClick={() => setInspectingProperty(property)}
+                      className="text-xs font-semibold text-slate-600 hover:text-ink flex items-center gap-1 cursor-pointer self-start sm:self-auto"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>Inspect Details</span>
+                    </button>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        disabled={isDealSaved}
+                        onClick={async () => {
+                          if (savedRecordId && !savedRecordId.startsWith('sim_')) {
+                            try {
+                              await createDeal({
+                                buyerId: savedRecordId,
+                                propertyId: property._id,
+                                propertyTitleSnapshot: property.title,
+                                valuePaise: property.priceDemandPaise,
+                                commission: {
+                                  mode: 'percent',
+                                  bps: 100,
+                                },
+                                stage: 'interested',
+                              });
+                              setSavedPropertyIds((prev) => new Set([...prev, property._id]));
+                              success('Saved deal to pipeline!');
+                            } catch (err: any) {
+                              error(err?.message || 'Could not save deal.');
+                            }
+                          } else {
+                            setSavedPropertyIds((prev) => new Set([...prev, property._id]));
+                            success('Property match saved!');
+                          }
+                        }}
+                        className="flex-1 sm:flex-initial text-xs font-semibold min-h-[40px]"
+                      >
+                        {isDealSaved ? 'Saved ✓' : 'Save'}
+                      </Button>
+
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleCopyPropertyFlyer(property)}
+                        className="flex-1 sm:flex-initial text-xs font-semibold min-h-[40px] gap-1"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy</span>
+                      </Button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleSharePropertyFlyer(property)}
+                        className="group btn-cashfree-primary btn-shine-sweep flex-1 sm:flex-initial min-h-[40px] pl-3.5 pr-1.5 rounded-[11px] text-white font-semibold text-xs flex items-center justify-center gap-2 transition cursor-pointer whitespace-nowrap"
+                      >
+                        <Share2 className="w-3.5 h-3.5 text-lime" />
+                        <span>Send</span>
+                        <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                          <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         )}
-      </Modal>
+      </div>
+    )
+  }
+
+  {/* ── Case B: Extracted Item is a Property Listing ── */ }
+  {
+    itemType === 'listing' && (
+      <div className="space-y-3">
+        <div className="flex items-center justify-between text-xs font-semibold text-muted px-1 flex-wrap gap-2">
+          <span>{matchedBuyers.length} of {totalDatabaseCount} active buyers ranked</span>
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 border border-line text-[11px] font-semibold text-ink-700">
+            <Send className="w-3 h-3 text-brand-600" />
+            <span>Property sent to {savedPropertyPitchCount} {savedPropertyPitchCount === 1 ? 'person' : 'people'}</span>
+          </span>
+        </div>
+
+        {matchedBuyers.length === 0 ? (
+          <Card className="p-8 text-center space-y-3 rounded-2xl bg-white border border-border shadow-card">
+            <Users className="w-8 h-8 text-muted mx-auto" />
+            <h3 className="text-sm font-bold text-ink">
+              No matching buyers found in your records
+            </h3>
+            <p className="text-xs text-secondary text-muted max-w-sm mx-auto">
+              None of your active buyers are currently looking for "{recordLocality}" ({recordType}) in this price range.
+            </p>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <Link to="/app/buyers/new">
+                <Button size="sm" variant="primary" className="text-xs font-semibold">
+                  + Add Buyer Inquiry
+                </Button>
+              </Link>
+            </div>
+          </Card>
+        ) : (
+          <div className="space-y-3">
+            {matchedBuyers.map(({ buyer, score, reasons, mismatches }, idx) => {
+              const isBestOne = idx === 0;
+              const buyerId = buyer._id || `buyer_${idx}`;
+              const isBuyerSaved = savedBuyerIds.has(buyerId);
+              const waShareText = `Namaste ${buyer.name} ji,\n\nAapki requirement ke hisaab se ek listing available hai:\n\n*${recordType} in ${recordLocality}*\nDemand: ${recordPriceRaw || formatRupees(parseDemandPaiseFromInput(recordPriceRaw, recordBudgetLakhs))}\nArea: ${recordArea} ${recordUnit.toUpperCase()}\n\nInspection ke liye connect karein?\n- ${agencyDisplayName}`;
+              const waUrl = `https://wa.me/${(buyer.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waShareText)}`;
+
+              return (
+                <Card
+                  key={buyerId}
+                  className={clsx(
+                    'p-4 sm:p-5 flex flex-col justify-between rounded-card transition shadow-card space-y-3',
+                    isBestOne
+                      ? 'bg-lime-soft/30 border-2 border-ink-black shadow-md'
+                      : 'bg-white border border-border hover:border-brand-600/40'
+                  )}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-border">
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {isBestOne && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-lime text-ink-black text-[11px] font-extrabold border border-ink-black/20 shadow-2xs">
+                            <Crown className="w-3 h-3" />
+                            <span>#1 Best Match</span>
+                          </span>
+                        )}
+                        <h3 className="text-base font-bold text-ink">{buyer.name}</h3>
+                        <Badge variant={score >= 80 ? 'perfect' : 'good'}>
+                          {score}% Fit
+                        </Badge>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 border border-line text-[11px] font-semibold text-ink-700">
+                          <Send className="w-3 h-3 text-brand-600" />
+                          <span>Listing sent to {savedPropertyPitchCount} {savedPropertyPitchCount === 1 ? 'person' : 'people'}</span>
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted mt-1">
+                        Budget: <strong className="text-ink">{buyer.budget?.maxPaise ? formatRupees(buyer.budget.maxPaise) : 'Flexible'}</strong>
+                      </p>
+                    </div>
+
+                    <div className="sm:text-right">
+                      <span className="text-[10px] uppercase font-semibold text-muted block">Phone</span>
+                      <span className="text-xs font-semibold text-slate-700">
+                        {buyer.phone || (buyer as any).phoneE164 || '—'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Match Reasons */}
+                  <div className="space-y-1 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
+                    {reasons.map((r: string, i: number) => (
+                      <div key={i} className="flex items-center gap-1.5 text-emerald-800">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>{r}</span>
+                      </div>
+                    ))}
+                    {Array.isArray(mismatches) && mismatches.map((m: string, i: number) => (
+                      <div key={`mm_${i}`} className="flex items-center gap-1.5 text-amber-800">
+                        <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        <span>{m}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Actions: Save + Copy + Send */}
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 flex-wrap">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      disabled={isBuyerSaved}
+                      onClick={async () => {
+                        if (savedRecordId && !savedRecordId.startsWith('sim_') && buyer._id && !buyer._id.startsWith('buyer_seed_')) {
+                          try {
+                            await createDeal({
+                              buyerId: buyer._id,
+                              propertyId: savedRecordId,
+                              propertyTitleSnapshot: `${recordType} in ${recordLocality}`,
+                              valuePaise: parseDemandPaiseFromInput(recordPriceRaw, recordBudgetLakhs),
+                              commission: { mode: 'percent', bps: 100 },
+                              stage: 'interested',
+                            });
+                          } catch {
+                            // gracefully continue
+                          }
+                        }
+                        setSavedBuyerIds((prev) => new Set([...prev, buyerId]));
+                        success(`Matched deal saved for ${buyer.name}!`);
+                      }}
+                      className="text-xs font-semibold min-h-[40px]"
+                    >
+                      {isBuyerSaved ? 'Saved ✓' : 'Save'}
+                    </Button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void copyTextSafely(waShareText);
+                        void bumpSavedSellerPitch();
+                        success(`Message copied for ${buyer.name}!`);
+                      }}
+                      className="min-h-[40px] px-3 py-1.5 rounded-lg border border-border hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>Copy</span>
+                    </button>
+
+                    <a
+                      href={waUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => {
+                        void bumpSavedSellerPitch();
+                      }}
+                      className="group btn-cashfree-primary btn-shine-sweep min-h-[40px] pl-3.5 pr-1.5 rounded-[11px] text-white font-semibold text-xs flex items-center gap-2 transition"
+                    >
+                      <Share2 className="w-3.5 h-3.5 text-lime" />
+                      <span>Send</span>
+                      <span className="w-6 h-6 rounded-[7px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                        <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.3]" />
+                      </span>
+                    </a>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    )
+  }
+            </div >
+          )}
+        </div >
+
+  {/* RIGHT COLUMN (>=1280px): Live-Updating Recent Extractions (last 5) */ }
+{
+  hasRecentExtractions && (
+    <Card className="p-4 sm:p-5 space-y-3.5 rounded-[14px] bg-white border border-border">
+      <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-border">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-[10px] bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+            <Clock className="w-4 h-4" />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-slate-900">
+              Recent extractions
+            </h2>
+            <p className="text-xs text-slate-500">
+              Last {recentExtractions.length} parsed messages
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setRecentExtractions([]);
+            try {
+              localStorage.removeItem(RECENT_EXTRACTIONS_KEY);
+            } catch {
+              // ignore
+            }
+          }}
+          className="text-xs font-semibold text-slate-500 hover:text-slate-900 cursor-pointer"
+        >
+          Clear
+        </button>
+      </div>
+
+      <div className="space-y-2">
+        {recentExtractions.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => {
+              setRawText(item.rawText);
+              applyParseResult(item.result, item.rawText);
+              setSavedRecordId(null);
+              setCurrentStep('review');
+            }}
+            className="w-full text-left p-3 rounded-[12px] border border-line bg-white hover:bg-slate-50 lg:hover:border-lime transition-all cursor-pointer space-y-1.5"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-semibold text-slate-900 truncate">
+                {item.title}
+              </span>
+              <StatusChip
+                variant={item.itemType === 'buyer' ? 'brand' : 'neutral'}
+                className="shrink-0"
+              >
+                {item.itemType === 'buyer' ? 'Buyer' : 'Listing'}
+              </StatusChip>
+            </div>
+            <div className="flex items-center justify-between gap-2 text-xs text-slate-500">
+              <span className="truncate">{item.locality}</span>
+              <span className="font-semibold text-slate-800 tabular-nums shrink-0">
+                {item.priceLabel}
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 line-clamp-1">
+              {item.rawText}
+            </p>
+          </button>
+        ))}
+      </div>
+    </Card>
+  )
+}
+      </div >
+
+  {/* Inspect Property Modal */ }
+  < Modal
+open = { Boolean(inspectingProperty) }
+onOpenChange = {(open) => {
+  if (!open) setInspectingProperty(null);
+}}
+title = { inspectingProperty?.title || 'Property details'}
+footerActions = {
+  inspectingProperty && (
+    <>
+      <Button size="sm" variant="secondary" onClick={() => setInspectingProperty(null)}>
+        Close
+      </Button>
+      <Button
+        size="sm"
+        variant="primary"
+        onClick={() => {
+          handleSharePropertyFlyer(inspectingProperty);
+          setInspectingProperty(null);
+        }}
+        className="gap-1.5"
+      >
+        <Share2 className="w-3.5 h-3.5" />
+        <span>Share on WhatsApp</span>
+      </Button>
+    </>
+  )
+        }
+      >
+  { inspectingProperty && (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3 text-xs">
+        <div>
+          <span className="text-slate-500 block font-medium">Locality</span>
+          <span className="font-semibold text-slate-900">{inspectingProperty.locality}</span>
+        </div>
+        <div>
+          <span className="text-slate-500 block font-medium">Asking price</span>
+          <span className="font-bold text-slate-900 text-sm tabular-nums">
+            {formatRupees(inspectingProperty.priceDemandPaise)}
+          </span>
+        </div>
+        <div>
+          <span className="text-slate-500 block font-medium">Area</span>
+          <span className="font-semibold text-slate-900">
+            {inspectingProperty.size.value} {inspectingProperty.size.unit.toUpperCase()}
+          </span>
+        </div>
+        <div>
+          <span className="text-slate-500 block font-medium">Facing</span>
+          <span className="font-semibold text-slate-900">{inspectingProperty.facing || 'Open'}</span>
+        </div>
+      </div>
+
+      {inspectingProperty.description && (
+        <p className="text-xs text-slate-700 p-3 rounded-xl bg-slate-50 border border-slate-200">
+          {inspectingProperty.description}
+        </p>
+      )}
     </div>
+  )}
+      </Modal >
+    </div >
   );
 };

@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Lock, CheckCircle2, AlertCircle, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { ApiError } from '../../lib/api/errors';
+import { SEO } from '../../components/SEO';
 
 export const ResetPasswordPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -72,7 +73,13 @@ export const ResetPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 text-slate-900 flex flex-col justify-center items-center px-4 py-8">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 text-slate-900 flex flex-col justify-center items-center px-4 py-8">
+      <SEO
+        noindex
+        title="Choose a New Password"
+        description="Set a new password for your LeadNivash broker workspace."
+        canonicalPath="/reset-password"
+      />
       <div className="w-full max-w-md">
         {/* Brand Logo & Header */}
         <div className="flex flex-col items-center mb-6 text-center">
@@ -203,6 +210,6 @@ export const ResetPasswordPage: React.FC = () => {
           <span>Encrypted Vault • Bcrypt Salted Password Hashing</span>
         </div>
       </div>
-    </div>
+    </main>
   );
 };

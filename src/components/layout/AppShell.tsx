@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { TopBar } from './TopBar';
 import { BottomNav } from './BottomNav';
 import { Sidebar } from './Sidebar';
+import { SEO } from '../SEO';
 import { Banner } from '../ui/Banner';
 import { TopLoadingBar } from '../ui/LoadingBar';
 import { OnboardingTour, startInteractiveTour } from '../../features/onboarding/OnboardingTour';
@@ -14,9 +15,23 @@ import { useAuth } from '../../features/auth/AuthProvider';
 const TRIAL_POPUP_SESSION_KEY = 'leadnivash_trial_offer_shown';
 
 export const AppShell: React.FC = () => {
+  const location = useLocation();
   const isOnline = useOnline();
   const { user, isServerWaking } = useAuth();
   const [isTrialOfferOpen, setIsTrialOfferOpen] = useState(false);
+
+  const appRouteTitle = (() => {
+    const p = location.pathname;
+    if (p === '/app' || p === '/app/') return 'Broker Dashboard';
+    if (p.startsWith('/app/track-record')) return 'Track Record';
+    if (p.startsWith('/app/properties')) return 'Property Inventory';
+    if (p.startsWith('/app/paste')) return 'Quick Chat AI Parser';
+    if (p.startsWith('/app/buyers')) return 'Buyers & Matches';
+    if (p.startsWith('/app/tools')) return 'Broker Tools';
+    if (p.startsWith('/app/settings')) return 'Workspace Settings';
+    if (p.startsWith('/app/admin')) return 'Admin Console';
+    return 'Broker Workspace';
+  })();
 
   // Calculate days left in trial if applicable
   const trialDaysRemaining = (() => {
@@ -48,6 +63,12 @@ export const AppShell: React.FC = () => {
 
   return (
     <div className="h-screen w-full overflow-hidden bg-bg text-text flex">
+      <SEO
+        noindex
+        title={appRouteTitle}
+        description="LeadNivash broker workspace for property inventory, client matching, and deal closing."
+        canonicalPath={location.pathname}
+      />
       {/* Global Top Loading Progress Bar */}
       <TopLoadingBar />
 

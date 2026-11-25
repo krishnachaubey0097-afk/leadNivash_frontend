@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { Home, LayoutDashboard, HelpCircle } from 'lucide-react';
+import { SEO } from '../SEO';
 
 export const NotFoundPage: React.FC = () => {
-  useEffect(() => {
-    document.title = '404 - Page Not Found | LeadNivash';
-  }, []);
-
   return (
-    <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-4 sm:p-6 text-center">
+    <main className="min-h-screen bg-bg flex flex-col items-center justify-center p-4 sm:p-6 text-center">
+      <SEO
+        noindex
+        title="404 - Page Not Found"
+        description="The requested LeadNivash page could not be found."
+      />
       <div className="relative max-w-md w-full bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl shadow-xl space-y-5 text-center">
         {/* Logo */}
         <Link to="/" className="inline-flex items-center gap-2 mb-2 group">
@@ -58,6 +60,6 @@ export const NotFoundPage: React.FC = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 };

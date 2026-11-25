@@ -5,29 +5,64 @@
     <link rel="icon" type="image/png" href="/logo-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#018E45" />
-    <meta name="description" content="LeadNivash — Fast property listings, buyer matching, and deal closing engine for real estate brokers." />
-    <meta name="keywords" content="real estate broker CRM, property matching software, Haryana circle rates, Panipat real estate, broker operating system" />
-    <link rel="canonical" href="https://leadnivash.com/" />
+    <meta name="robots" content="index, follow" data-static-seo="true" />
+    <meta
+      name="description"
+      content="AI-powered WhatsApp real estate broker OS for property listings, buyer matching, Pan-India stamp duty calculators, and deal closing across India."
+      data-static-seo="true"
+    />
+    <meta
+      name="keywords"
+      content="real estate broker CRM, property matching software, Pan-India stamp duty calculator, WhatsApp property parser, LeadNivash, broker operating system"
+      data-static-seo="true"
+    />
+    <link rel="canonical" href="https://lead-nivash-frontend.vercel.app/" data-static-seo="true" />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://leadnivash.com/" />
-    <meta property="og:title" content="LeadNivash | Turn Messages into Property Deals" />
-    <meta property="og:description" content="Fast property listings, instant buyer matching, Haryana land calculators, and deal pipeline for real estate brokers." />
-    <meta property="og:image" content="/logo-icon.png" />
+    <!--
+      SPA SEO NOTE:
+      LeadNivash is a React + Vite client-side SPA. Per-route <title>, meta description,
+      canonical links, and JSON-LD structured data are injected dynamically via react-helmet-async.
+      Non-JS social crawlers (WhatsApp, LinkedIn, Twitter/X, Facebook) read the static fallback
+      Open Graph & Twitter Card tags below unless SSR or edge pre-rendering is enabled later.
+    -->
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website" data-static-seo="true" />
+    <meta property="og:locale" content="en_IN" data-static-seo="true" />
+    <meta property="og:site_name" content="LeadNivash" data-static-seo="true" />
+    <meta property="og:url" content="https://lead-nivash-frontend.vercel.app/" data-static-seo="true" />
+    <meta property="og:title" content="LeadNivash | Turn Messages into Property Deals" data-static-seo="true" />
+    <meta
+      property="og:description"
+      content="AI-powered WhatsApp real estate broker OS for property listings, buyer matching, Pan-India stamp duty calculators, and deal closing across India."
+      data-static-seo="true"
+    />
+    <meta property="og:image" content="https://lead-nivash-frontend.vercel.app/hero-bg.jpg" data-static-seo="true" />
+    <meta property="og:image:width" content="1200" data-static-seo="true" />
+    <meta property="og:image:height" content="630" data-static-seo="true" />
+    <meta property="og:image:alt" content="LeadNivash | Turn Messages into Property Deals" data-static-seo="true" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="LeadNivash | Broker Operating System" />
-    <meta name="twitter:description" content="Turn client requirements into closed property deals with AI-powered matching and branded flyers." />
-    <meta name="twitter:image" content="/logo-icon.png" />
+    <meta name="twitter:card" content="summary_large_image" data-static-seo="true" />
+    <meta name="twitter:url" content="https://lead-nivash-frontend.vercel.app/" data-static-seo="true" />
+    <meta name="twitter:title" content="LeadNivash | Turn Messages into Property Deals" data-static-seo="true" />
+    <meta
+      name="twitter:description"
+      content="AI-powered WhatsApp real estate broker OS for property listings, buyer matching, Pan-India stamp duty calculators, and deal closing across India."
+      data-static-seo="true"
+    />
+    <meta name="twitter:image" content="https://lead-nivash-frontend.vercel.app/hero-bg.jpg" data-static-seo="true" />
 
-    <title>LeadNivash | Turn Messages into Property Deals</title>
+    <title data-static-seo="true">LeadNivash | Turn Messages into Property Deals</title>
 
     <!-- Google Fonts: Plus Jakarta Sans & Inter with font-display: swap -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Zero-FOUC external script (no inline code for strict CSP) -->
     <script src="/theme-init.js"></script>

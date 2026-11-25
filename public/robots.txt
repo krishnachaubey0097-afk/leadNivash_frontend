@@ -1,0 +1,11 @@
+# Robots rules for LeadNivash (https://lead-nivash-frontend.vercel.app)
+User-agent: *
+Allow: /
+
+# Block private workspace & backend API paths from search indexing
+Disallow: /api/
+Disallow: /app/
+Disallow: /reset-password
+Disallow: /forgot-password
+
+Sitemap: https://lead-nivash-frontend.vercel.app/sitemap.xml

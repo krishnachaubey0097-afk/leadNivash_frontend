@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -18,17 +18,69 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { PricingSection } from '../pricing/PricingSection';
+import { SEO, SITE_URL, DEFAULT_OG_IMAGE } from '../../components/SEO';
+import { PLAN_PRICING } from '../../config/constants';
 
 /* =========================================================================
    1. PRICING PAGE
    ========================================================================= */
 export const PricingPage: React.FC = () => {
-  useEffect(() => {
-    document.title = 'Pricing Plans & High-ROI Subscriptions | LeadNivash';
-  }, []);
+  const pricingJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'LeadNivash Broker OS Pro',
+    description:
+      'Real estate broker CRM, WhatsApp AI listing extractor, instant buyer matching engine, and Pan-India stamp duty calculators.',
+    image: DEFAULT_OG_IMAGE,
+    brand: {
+      '@type': 'Brand',
+      name: 'LeadNivash',
+    },
+    offers: [
+      {
+        '@type': 'Offer',
+        name: '14-Day Free Trial',
+        price: '0',
+        priceCurrency: 'INR',
+        availability: 'https://schema.org/InStock',
+        url: `${SITE_URL}/register`,
+      },
+      {
+        '@type': 'Offer',
+        name: 'Monthly Plan',
+        price: String(PLAN_PRICING.monthlyRupees),
+        priceCurrency: 'INR',
+        availability: 'https://schema.org/InStock',
+        url: `${SITE_URL}/pricing`,
+      },
+      {
+        '@type': 'Offer',
+        name: 'Yearly Plan (Trial Upgrade Offer)',
+        price: String(PLAN_PRICING.annualTrialOfferRupees),
+        priceCurrency: 'INR',
+        availability: 'https://schema.org/InStock',
+        url: `${SITE_URL}/pricing`,
+      },
+      {
+        '@type': 'Offer',
+        name: 'Yearly Plan (Standard)',
+        price: String(PLAN_PRICING.annualStandardRupees),
+        priceCurrency: 'INR',
+        availability: 'https://schema.org/InStock',
+        url: `${SITE_URL}/pricing`,
+      },
+    ],
+  };
 
   return (
-    <div className="min-h-screen bg-cream text-ink-700 p-4 sm:p-6 max-w-5xl mx-auto space-y-6 text-left">
+    <main className="min-h-screen bg-cream text-ink-700 p-4 sm:p-6 max-w-5xl mx-auto space-y-6 text-left">
+      <SEO
+        title="Pricing Plans & High-ROI Subscriptions"
+        description="Start your 14-day free LeadNivash trial. Transparent pricing at ₹399/month or ₹3,299/year for Indian real estate brokers and property agencies."
+        canonicalPath="/pricing"
+        ogType="product"
+        jsonLd={pricingJsonLd}
+      />
       <Link
         to="/"
         className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:underline"
@@ -36,8 +88,8 @@ export const PricingPage: React.FC = () => {
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
 
-      <PricingSection showTitle={true} />
-    </div>
+      <PricingSection showTitle={true} headingAs="h1" />
+    </main>
   );
 };
 
@@ -45,12 +97,13 @@ export const PricingPage: React.FC = () => {
    2. PRIVACY POLICY PAGE (DPDPA 2023 & IT ACT COMPLIANT)
    ========================================================================= */
 export const PrivacyPage: React.FC = () => {
-  useEffect(() => {
-    document.title = 'Privacy Policy & Owner Vault Isolation | LeadNivash';
-  }, []);
-
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+    <main className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+      <SEO
+        title="Privacy Policy & Owner Vault Isolation"
+        description="Read how LeadNivash protects private owner phone numbers, broker client leads, and encrypted data under India DPDPA 2023 guidelines."
+        canonicalPath="/privacy"
+      />
       <Link
         to="/"
         className="inline-flex items-center gap-1.5 font-bold text-emerald-700 hover:underline mb-2"
@@ -185,7 +238,7 @@ export const PrivacyPage: React.FC = () => {
           </div>
         </section>
       </div>
-    </div>
+    </main>
   );
 };
 
@@ -193,12 +246,13 @@ export const PrivacyPage: React.FC = () => {
    3. TERMS OF SERVICE PAGE
    ========================================================================= */
 export const TermsPage: React.FC = () => {
-  useEffect(() => {
-    document.title = 'Terms of Service | LeadNivash';
-  }, []);
-
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+    <main className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+      <SEO
+        title="Terms of Service"
+        description="Commercial broker agreement, acceptable use terms, and workspace rules for using LeadNivash real estate SaaS in India."
+        canonicalPath="/terms"
+      />
       <Link
         to="/"
         className="inline-flex items-center gap-1.5 font-bold text-emerald-700 hover:underline mb-2"
@@ -286,7 +340,7 @@ export const TermsPage: React.FC = () => {
           </p>
         </section>
       </div>
-    </div>
+    </main>
   );
 };
 
@@ -294,12 +348,13 @@ export const TermsPage: React.FC = () => {
    4. REFUND & CANCELLATION POLICY PAGE
    ========================================================================= */
 export const RefundPolicyPage: React.FC = () => {
-  useEffect(() => {
-    document.title = 'Refund & Cancellation Policy | LeadNivash';
-  }, []);
-
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+    <main className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+      <SEO
+        title="Refund & Cancellation Policy"
+        description="Learn about LeadNivash 7-day money-back guarantee, free trial expiration rules, and subscription cancellation process."
+        canonicalPath="/refund"
+      />
       <Link
         to="/"
         className="inline-flex items-center gap-1.5 font-bold text-emerald-700 hover:underline mb-2"
@@ -362,7 +417,7 @@ export const RefundPolicyPage: React.FC = () => {
           </p>
         </section>
       </div>
-    </div>
+    </main>
   );
 };
 
@@ -370,12 +425,13 @@ export const RefundPolicyPage: React.FC = () => {
    5. COOKIE & TRACKING POLICY PAGE
    ========================================================================= */
 export const CookiePolicyPage: React.FC = () => {
-  useEffect(() => {
-    document.title = 'Cookie Policy & Web Storage | LeadNivash';
-  }, []);
-
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+    <main className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-xs leading-relaxed text-left">
+      <SEO
+        title="Cookie Policy & Web Storage"
+        description="Details on strictly necessary session cookies and local preferences used by LeadNivash with zero third-party ad tracking."
+        canonicalPath="/cookies"
+      />
       <Link
         to="/"
         className="inline-flex items-center gap-1.5 font-bold text-emerald-700 hover:underline mb-2"
@@ -452,7 +508,7 @@ export const CookiePolicyPage: React.FC = () => {
           </p>
         </section>
       </div>
-    </div>
+    </main>
   );
 };
 
@@ -470,10 +526,6 @@ export const ContactPage: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  useEffect(() => {
-    document.title = 'Contact Support & Helpdesk | LeadNivash';
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -509,7 +561,12 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-xl mx-auto space-y-6 text-left">
+    <main className="min-h-screen bg-bg text-text p-4 sm:p-6 max-w-xl mx-auto space-y-6 text-left">
+      <SEO
+        title="Contact Support & Helpdesk"
+        description="Connect with the LeadNivash onboarding and support team via WhatsApp, phone, or email for real estate broker workspace setup."
+        canonicalPath="/contact"
+      />
       <Link
         to="/"
         className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:underline"
@@ -579,7 +636,7 @@ export const ContactPage: React.FC = () => {
       {submitted ? (
         <div className="p-6 bg-emerald-50 border border-emerald-500/30 rounded-3xl space-y-2 text-center text-xs">
           <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto mb-2" />
-          <h3 className="text-base font-black text-ink font-heading">Message Received</h3>
+          <h2 className="text-base font-black text-ink font-heading">Message Received</h2>
           <p className="text-muted max-w-sm mx-auto">
             Thank you for reaching out! A LeadNivash specialist will connect with you on WhatsApp within 1 business hour.
           </p>
@@ -670,6 +727,6 @@ export const ContactPage: React.FC = () => {
           </Button>
         </form>
       )}
-    </div>
+    </main>
   );
 };

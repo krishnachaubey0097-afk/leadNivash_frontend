@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { ApiError } from '../../lib/api/errors';
 import { normalizeToE164 } from '../../lib/phone';
+import { SEO } from '../../components/SEO';
 import clsx from 'clsx';
 
 export const RegisterPage: React.FC = () => {
@@ -200,7 +201,12 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 text-slate-900 flex flex-col justify-center items-center px-4 py-8">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 text-slate-900 flex flex-col justify-center items-center px-4 py-8">
+      <SEO
+        title="Start Your 14-Day Free Broker Trial"
+        description="Create your LeadNivash broker account for AI WhatsApp listing extraction, instant buyer matching, and branded flyers."
+        canonicalPath="/register"
+      />
       <div className="w-full max-w-lg">
         {/* Brand Header */}
         <div className="flex flex-col items-center mb-6 text-center">
@@ -571,6 +577,6 @@ export const RegisterPage: React.FC = () => {
           <span>Encrypted Owner Vault • 100% Client Contact Privacy</span>
         </div>
       </div>
-    </div>
+    </main>
   );
 };

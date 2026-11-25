@@ -21,6 +21,7 @@ import { TopLoadingBar } from '../../components/ui/LoadingBar';
 import { formatRupees } from '../../lib/money';
 import { fetchPropertyById, type PropertyItem } from '../../lib/api/properties';
 import { apiClient } from '../../lib/api/client';
+import { SEO } from '../../components/SEO';
 import clsx from 'clsx';
 
 export const PublicFlyerPage: React.FC = () => {
@@ -63,19 +64,31 @@ export const PublicFlyerPage: React.FC = () => {
 
   if (loading) {
     return (
-      <>
+      <main>
+        <SEO
+          noindex
+          title="Loading Property Flyer"
+          description="Loading verified property brochure on LeadNivash."
+          canonicalPath={`/flyer/${id || ''}`}
+        />
         <TopLoadingBar />
         <FlyerSkeleton />
-      </>
+      </main>
     );
   }
 
   if (!property) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <SEO
+          noindex
+          title="Property Flyer Not Available"
+          description="This LeadNivash property flyer link has expired or is no longer active."
+          canonicalPath={`/flyer/${id || ''}`}
+        />
         <Card className="max-w-md p-6 text-center space-y-4 bg-white border-slate-200 shadow-xl">
           <Building2 className="w-10 h-10 text-slate-400 mx-auto" />
-          <h2 className="text-lg font-bold text-slate-900 font-heading">Property Flyer Not Available</h2>
+          <h1 className="text-lg font-bold text-slate-900 font-heading">Property Flyer Not Available</h1>
           <p className="text-xs text-slate-500">
             This property flyer link may have expired or is no longer listed.
           </p>
@@ -85,7 +98,7 @@ export const PublicFlyerPage: React.FC = () => {
             </Button>
           </Link>
         </Card>
-      </div>
+      </main>
     );
   }
 
@@ -137,6 +150,16 @@ export const PublicFlyerPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50/80 text-slate-900 antialiased py-6 px-4 sm:px-6">
+      <SEO
+        title={`${property.title} — ${property.locality}`}
+        description={
+          property.description
+            ? property.description.slice(0, 155)
+            : `${property.title} (${property.size.value} ${property.size.unit.toUpperCase()}) in ${property.locality}, ${property.city || 'Panipat'} at ${formatRupees(property.priceDemandPaise)}.`
+        }
+        canonicalPath={`/flyer/${id || ''}`}
+        ogImage={property.photos?.[0]?.url}
+      />
       {/* Top Navbar Brand Bar */}
       <header className="max-w-3xl mx-auto mb-6 flex items-center justify-between bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 shadow-xs">
         <Link to="/" className="flex items-center gap-2.5">
@@ -171,9 +194,9 @@ export const PublicFlyerPage: React.FC = () => {
                 {((property as any)?.agency?.name || (property as any)?.brokerAgencyName || 'LN').slice(0, 2).toUpperCase()}
               </div>
               <div>
-                <h4 className="font-bold text-sm leading-tight text-white">
+                <p className="font-bold text-sm leading-tight text-white">
                   {(property as any)?.agency?.name || (property as any)?.brokerAgencyName || 'Verified Real Estate Partner'}
-                </h4>
+                </p>
                 <span className="text-[11px] text-emerald-300 font-medium">
                   {(property as any)?.agency?.city || property.city || 'Panipat Central & NCR'} · Verified Broker
                 </span>
@@ -233,7 +256,13 @@ export const PublicFlyerPage: React.FC = () => {
                           : 'border-slate-200 opacity-70 hover:opacity-100'
                       )}
                     >
-                      <img src={photo.url} alt="" className="w-full h-full object-cover" />
+                      <img
+                        src={photo.url}
+                        alt={`${property.title} photo ${idx + 1}`}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover"
+                      />
                     </button>
                   ))}
 
@@ -356,9 +385,9 @@ export const PublicFlyerPage: React.FC = () => {
           <div className="pt-6 border-t border-slate-200/90 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-black text-slate-900 font-heading">
+                <h2 className="text-base font-black text-slate-900 font-heading">
                   Request Inspection / Site Visit
-                </h3>
+                </h2>
                 <p className="text-xs text-slate-500">
                   Leave your contact details and the verified broker will call you back shortly.
                 </p>
@@ -368,9 +397,9 @@ export const PublicFlyerPage: React.FC = () => {
             {inquirySubmitted ? (
               <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
                 <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
-                <h4 className="text-sm font-bold text-emerald-900">
+                <h3 className="text-sm font-bold text-emerald-900">
                   Inquiry Sent Successfully!
-                </h4>
+                </h3>
                 <p className="text-xs text-emerald-700">
                   Thank you, {buyerName}! The listing partner has received your request and will contact you on {buyerPhone}.
                 </p>

@@ -36,6 +36,7 @@ import { apiClient } from '../../lib/api/client';
 import { useAuth } from '../auth/AuthProvider';
 import { PricingSection } from '../pricing/PricingSection';
 import { SpecialOfferModal } from '../pricing/SpecialOfferModal';
+import { SEO, SITE_URL, DEFAULT_OG_IMAGE, DEFAULT_DESCRIPTION } from '../../components/SEO';
 
 export const LandingPage: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -236,7 +237,7 @@ export const LandingPage: React.FC = () => {
     const timer = window.setTimeout(() => {
       try {
         sessionStorage.setItem('leadnivash_trial_offer_shown', '1');
-      } catch {}
+      } catch { }
       setIsTrialOfferOpen(true);
     }, 2600);
     return () => window.clearTimeout(timer);
@@ -285,8 +286,40 @@ export const LandingPage: React.FC = () => {
     }
   };
 
+  const landingJsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'LeadNivash',
+      url: `${SITE_URL}/`,
+      description: DEFAULT_DESCRIPTION,
+      inLanguage: 'en-IN',
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'LeadNivash',
+      url: `${SITE_URL}/`,
+      logo: `${SITE_URL}/logo-icon.png`,
+      image: DEFAULT_OG_IMAGE,
+      email: 'contact@leadnivash.com',
+      telephone: '+919876543210',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Panipat',
+        addressRegion: 'Haryana',
+        addressCountry: 'IN',
+      },
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-cream text-ink-700 flex flex-col selection:bg-lime-soft selection:text-ink-900">
+      <SEO
+        canonicalPath="/"
+        keywords="real estate broker CRM India, WhatsApp property parser, buyer property matching, stamp duty calculator India, LeadNivash"
+        jsonLd={landingJsonLd}
+      />
       {/* ========================================================= */}
       {/* FLOATING CAPSULE NAVIGATION (Upper Header Bar)            */}
       {/* ========================================================= */}
@@ -559,30 +592,30 @@ export const LandingPage: React.FC = () => {
                 </span>
               </div>
 
-            {/* Hero Headline with Text Writing Animation & Zero CLS */}
-            <h1
-              aria-label="Turn Messages into Property Deals"
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-heading leading-[1.12] sm:leading-[1.08] tracking-tight text-ink-900 grid place-items-center"
-            >
-              <span aria-hidden="true" className="col-start-1 row-start-1 invisible select-none pointer-events-none">
-                {HERO_LINE_1} <br className="hidden sm:inline" />
-                {HERO_LINE_2}
-              </span>
-              <span aria-hidden="true" className="col-start-1 row-start-1 w-full">
-                <span>{HERO_LINE_1.slice(0, Math.min(typedChars, HERO_LINE_1.length))}</span>
-                {typedChars > HERO_LINE_1.length ? (
-                  <>
-                    <br className="hidden sm:inline" />{' '}
-                    <span className="bg-gradient-to-r from-ink-900 via-brand-700 to-brand-600 bg-clip-text text-transparent">
-                      {HERO_LINE_2.slice(0, typedChars - HERO_LINE_1.length)}
-                    </span>
-                  </>
-                ) : null}
-                <span
-                  className="inline-block w-[3px] sm:w-[4px] h-[0.82em] align-middle ml-1.5 rounded-full bg-brand-600 animate-pulse"
-                />
-              </span>
-            </h1>
+              {/* Hero Headline with Text Writing Animation & Zero CLS */}
+              <h1
+                aria-label="Turn Messages into Property Deals"
+                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-heading leading-[1.12] sm:leading-[1.08] tracking-tight text-ink-900 grid place-items-center"
+              >
+                <span aria-hidden="true" className="col-start-1 row-start-1 invisible select-none pointer-events-none">
+                  {HERO_LINE_1} <br className="hidden sm:inline" />
+                  {HERO_LINE_2}
+                </span>
+                <span aria-hidden="true" className="col-start-1 row-start-1 w-full">
+                  <span>{HERO_LINE_1.slice(0, Math.min(typedChars, HERO_LINE_1.length))}</span>
+                  {typedChars > HERO_LINE_1.length ? (
+                    <>
+                      <br className="hidden sm:inline" />{' '}
+                      <span className="bg-gradient-to-r from-ink-900 via-brand-700 to-brand-600 bg-clip-text text-transparent">
+                        {HERO_LINE_2.slice(0, typedChars - HERO_LINE_1.length)}
+                      </span>
+                    </>
+                  ) : null}
+                  <span
+                    className="inline-block w-[3px] sm:w-[4px] h-[0.82em] align-middle ml-1.5 rounded-full bg-brand-600 animate-pulse"
+                  />
+                </span>
+              </h1>
 
               {/* 4. Supporting Text */}
               <p className="text-base md:text-lg text-ink-700 max-w-2xl mx-auto leading-relaxed font-normal px-2 sm:px-0">
@@ -894,6 +927,8 @@ export const LandingPage: React.FC = () => {
                             : '/assets/images/leadnivash-mobile-poster.webp'
                         }
                         alt="LeadNivash Workflow Demo"
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover object-center"
                         onError={(e) => {
                           // Fallback to high-res property preview if webp not available
@@ -2230,7 +2265,9 @@ export const LandingPage: React.FC = () => {
                     <div className="w-12 h-12 rounded-[10px] bg-surface border border-line overflow-hidden shrink-0 shadow-2xs">
                       <img
                         src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=140&auto=format&fit=crop&q=80"
-                        alt="Floor"
+                        alt="Builder floor property listing card preview"
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                     </div>

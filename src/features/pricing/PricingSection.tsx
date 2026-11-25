@@ -16,11 +16,13 @@ import clsx from 'clsx';
 
 interface PricingSectionProps {
   showTitle?: boolean;
+  headingAs?: 'h1' | 'h2';
   className?: string;
 }
 
 export const PricingSection: React.FC<PricingSectionProps> = ({
   showTitle = true,
+  headingAs = 'h2',
   className = '',
 }) => {
   const { user } = useAuth();
@@ -38,6 +40,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
     }.`
   )}`;
 
+  const HeadingTag = headingAs;
+
   return (
     <div className={clsx('space-y-8 sm:space-y-10 text-left', className)}>
       {/* 1. Header with clear SaaS positioning */}
@@ -46,12 +50,12 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           <span className="inline-block text-[11px] font-black uppercase tracking-widest text-brand-700 bg-brand-50 px-3 py-1 rounded-full border border-emerald-500/20">
             TRANSPARENT BROKER INVESTMENT
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-ink font-heading tracking-tight leading-tight">
+          <HeadingTag className="text-3xl sm:text-4xl md:text-5xl font-black text-ink font-heading tracking-tight leading-tight">
             Simple,{' '}
             <span className="bg-gradient-to-r from-brand-600 via-brand-700 to-teal-600 bg-clip-text text-transparent">
               High-ROI Pricing.
             </span>
-          </h2>
+          </HeadingTag>
           <p className="text-sm sm:text-base text-muted max-w-xl mx-auto leading-relaxed">
             Start with our 14-Day Free Trial. Upgrade anytime to scale your listings, buyer matching, and deal closings.
           </p>

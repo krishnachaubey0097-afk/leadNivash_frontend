@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { ApiError } from '../../lib/api/errors';
 import { apiClient } from '../../lib/api/client';
+import { SEO } from '../../components/SEO';
 import clsx from 'clsx';
 
 export const LoginPage: React.FC = () => {
@@ -220,7 +221,12 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 text-slate-900 flex flex-col justify-center items-center px-4 py-8">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 text-slate-900 flex flex-col justify-center items-center px-4 py-8">
+      <SEO
+        title="Broker Workspace Login"
+        description="Sign in to your LeadNivash broker workspace to manage property listings, buyer requirements, and instant matching."
+        canonicalPath="/login"
+      />
       <div className="w-full max-w-md">
         {/* Logo and Tagline */}
         <div className="flex flex-col items-center mb-6 text-center">
@@ -305,7 +311,7 @@ export const LoginPage: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900">Sign in with Google Account</h3>
+                <h2 className="text-sm font-bold text-slate-900">Sign in with Google Account</h2>
                 <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
                   Google Single Sign-On (SSO) Integration
                 </p>
@@ -718,6 +724,6 @@ export const LoginPage: React.FC = () => {
           <span>Encrypted Owner Vault • ISO-Aligned Client Confidentiality</span>
         </div>
       </div>
-    </div>
+    </main>
   );
 };

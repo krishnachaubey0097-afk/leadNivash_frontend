@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Mail, CheckCircle2, ArrowLeft, AlertCircle, ShieldCheck } from 'lucide-react';
 import { ApiError } from '../../lib/api/errors';
+import { SEO } from '../../components/SEO';
 
 export const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -38,7 +39,13 @@ export const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 text-slate-900 flex flex-col justify-center items-center px-4 py-8">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 text-slate-900 flex flex-col justify-center items-center px-4 py-8">
+      <SEO
+        noindex
+        title="Reset Your Password"
+        description="Request a password reset link for your LeadNivash broker workspace."
+        canonicalPath="/forgot-password"
+      />
       <div className="w-full max-w-md">
         {/* Brand Logo & Header */}
         <div className="flex flex-col items-center mb-6 text-center">
@@ -148,6 +155,6 @@ export const ForgotPasswordPage: React.FC = () => {
           <span>Encrypted Owner Vault • Single-Use 30-Minute Reset Token</span>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
