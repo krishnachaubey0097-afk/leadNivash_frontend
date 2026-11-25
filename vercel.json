@@ -35,7 +35,7 @@
       "destination": "https://leadnivash.onrender.com/health"
     },
     {
-      "source": "/((?!api|p|health).*)",
+      "source": "/((?!api/|p/|health(?:$|/)).*)",
       "destination": "/index.html"
     }
   ],
