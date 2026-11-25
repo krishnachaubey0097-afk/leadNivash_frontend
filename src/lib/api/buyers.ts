@@ -19,6 +19,7 @@ export interface BuyerItem {
   };
   urgency: 'hot' | 'warm' | 'cold';
   status: 'active' | 'paused' | 'closed';
+  source?: 'manual' | 'paste';
   notes?: string;
   createdAt?: string;
   updatedAt?: string;

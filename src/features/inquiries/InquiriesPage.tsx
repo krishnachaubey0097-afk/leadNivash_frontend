@@ -13,9 +13,7 @@ import {
   Trash2,
   Sparkles,
   MapPin,
-  Clock,
   Plus,
-  Inbox,
   Download,
   Search,
   Share2,
@@ -53,24 +51,13 @@ interface BuyerInquiry {
   status: 'active' | 'contacted' | 'closed';
 }
 
-interface ContactLeadItem {
-  _id: string;
-  name: string;
-  phone: string;
-  phoneE164: string;
-  agencyName?: string;
-  city?: string;
-  message: string;
-  createdAt: string;
-}
-
 export const InquiriesPage: React.FC = () => {
   const { user } = useAuth();
   const { success, toast } = useToast();
   const agencyDisplayName = user?.agency?.name?.trim() || user?.name?.trim() || 'Verified Broker';
 
-  // 3-tab segmented control: Flyer Inquiries | Buyer Requirements | Landing Leads
-  const [activeTab, setActiveTab] = useState<'property' | 'buyer' | 'contact'>('property');
+  // 2-tab segmented control: Flyer Inquiries | Buyer Requirements (Landing Page Leads live in Admin Console only)
+  const [activeTab, setActiveTab] = useState<'property' | 'buyer'>('property');
 
   // Search & Status Filter
   const [searchQuery, setSearchQuery] = useState('');
@@ -78,24 +65,6 @@ export const InquiriesPage: React.FC = () => {
 
   const [selectedPropertyInquiry, setSelectedPropertyInquiry] = useState<PropertyInquiry | null>(null);
   const [selectedBuyerInquiry, setSelectedBuyerInquiry] = useState<BuyerInquiry | null>(null);
-
-  // Live Contact Leads from Landing Page
-  const [contactLeads, setContactLeads] = useState<ContactLeadItem[]>([]);
-  const [isLoadingContacts, setIsLoadingContacts] = useState(false);
-
-  useEffect(() => {
-    setIsLoadingContacts(true);
-    apiClient
-      .get<any, any>('/public/contact')
-      .then((res) => {
-        const list = res?.items || res?.data?.items || (Array.isArray(res) ? res : []);
-        if (Array.isArray(list)) {
-          setContactLeads(list);
-        }
-      })
-      .catch((err) => console.warn('Could not load landing page leads:', err))
-      .finally(() => setIsLoadingContacts(false));
-  }, []);
 
   // Property Inquiries (Inbound flyer leads fetched live from API)
   const [propertyInquiries, setPropertyInquiries] = useState<PropertyInquiry[]>([]);
@@ -186,18 +155,6 @@ export const InquiriesPage: React.FC = () => {
     });
   }, [buyerInquiries, searchQuery, statusFilter]);
 
-  const filteredContactLeads = useMemo(() => {
-    return contactLeads.filter((lead) => {
-      const q = searchQuery.toLowerCase();
-      return (
-        lead.name.toLowerCase().includes(q) ||
-        lead.phone.includes(q) ||
-        (lead.agencyName && lead.agencyName.toLowerCase().includes(q)) ||
-        (lead.city && lead.city.toLowerCase().includes(q))
-      );
-    });
-  }, [contactLeads, searchQuery]);
-
   const handleExportCsv = () => {
     let rows: any[] = [];
     let filename = 'inquiries_export.csv';
@@ -215,7 +172,7 @@ export const InquiriesPage: React.FC = () => {
         Date: p.date,
       }));
       filename = 'property_inquiries.csv';
-    } else if (activeTab === 'buyer') {
+    } else {
       rows = buyerInquiries.map((b) => ({
         Type: 'Buyer Inquiry',
         ClientName: b.clientName,
@@ -229,17 +186,6 @@ export const InquiriesPage: React.FC = () => {
         Date: b.date,
       }));
       filename = 'buyer_inquiries.csv';
-    } else {
-      rows = contactLeads.map((c) => ({
-        Type: 'Landing Page Lead',
-        Name: c.name,
-        Phone: c.phone,
-        Agency: c.agencyName || '',
-        City: c.city || '',
-        Message: c.message,
-        Date: c.createdAt,
-      }));
-      filename = 'landing_page_leads.csv';
     }
 
     if (!rows.length) {
@@ -299,8 +245,8 @@ export const InquiriesPage: React.FC = () => {
         </button>
       </div>
 
-      {/* ── 2. CLEAN 3-TAB SEGMENTED CONTROL (NO GIANT CAPSULE) ── */}
-      <div className="grid grid-cols-3 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-border/70 text-xs">
+      {/* ── 2. CLEAN 2-TAB SEGMENTED CONTROL ── */}
+      <div className="grid grid-cols-2 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-border/70 text-xs">
         <button
           type="button"
           onClick={() => {
@@ -354,33 +300,6 @@ export const InquiriesPage: React.FC = () => {
             {buyerInquiries.length}
           </span>
         </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            setActiveTab('contact');
-            setStatusFilter('all');
-          }}
-          className={clsx(
-            'py-2 px-1 sm:px-2 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer min-h-[42px]',
-            activeTab === 'contact'
-              ? 'bg-emerald-600 text-white shadow-xs'
-              : 'text-muted hover:text-ink'
-          )}
-        >
-          <Inbox className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">Landing</span>
-          <span
-            className={clsx(
-              'px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none shrink-0',
-              activeTab === 'contact'
-                ? 'bg-white/25 text-white'
-                : 'bg-slate-200 dark:bg-slate-700 text-muted'
-            )}
-          >
-            {contactLeads.length}
-          </span>
-        </button>
       </div>
 
       {/* ── 3. FULL-WIDTH SEARCH BAR ── */}
@@ -393,9 +312,7 @@ export const InquiriesPage: React.FC = () => {
           placeholder={
             activeTab === 'property'
               ? 'Search by client, property, or locality...'
-              : activeTab === 'buyer'
-              ? 'Search by buyer name, locality, or requirement...'
-              : 'Search landing page leads...'
+              : 'Search by buyer name, locality, or requirement...'
           }
           className="w-full bg-surface border border-border rounded-xl pl-9 pr-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand-600 font-sans"
         />
@@ -766,107 +683,6 @@ export const InquiriesPage: React.FC = () => {
                       <Sparkles className="w-3.5 h-3.5" />
                       <span>Check Matches</span>
                     </Link>
-                  </div>
-                </Card>
-              );
-            })
-          )}
-        </div>
-      )}
-
-      {/* TAB 3: LANDING PAGE INBOUND LEADS */}
-      {activeTab === 'contact' && (
-        <div className="space-y-3">
-          {isLoadingContacts ? (
-            <div className="space-y-3">
-              <InquiryCardSkeleton />
-              <InquiryCardSkeleton />
-            </div>
-          ) : filteredContactLeads.length === 0 ? (
-            /* POLISHED EMPTY STATE */
-            <Card className="p-8 sm:p-10 text-center space-y-3 rounded-2xl border-border bg-white dark:bg-slate-900 shadow-xs">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-500/20 flex items-center justify-center mx-auto shadow-2xs">
-                <Inbox className="w-6 h-6 stroke-[2]" />
-              </div>
-              <h3 className="text-base font-bold text-ink font-heading">
-                {searchQuery ? 'No matching landing leads' : 'No landing page leads yet'}
-              </h3>
-              <p className="text-xs text-muted max-w-sm mx-auto leading-relaxed">
-                When prospective brokers submit the demo request form on your marketing landing page, their leads appear here.
-              </p>
-            </Card>
-          ) : (
-            filteredContactLeads.map((lead) => {
-              const whatsappUrl = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                `Namaste ${lead.name} ji, thank you for reaching out to leadNivash regarding ${lead.agencyName || 'your brokerage'}. We would love to give you a live walkthrough. When is a good time to connect?`
-              )}`;
-
-              const formattedDate = lead.createdAt
-                ? new Date(lead.createdAt).toLocaleDateString('en-IN', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })
-                : 'Recent';
-
-              return (
-                <Card
-                  key={lead._id}
-                  className="p-4 sm:p-5 space-y-3 border-border bg-white dark:bg-slate-900 shadow-xs rounded-2xl hover:border-emerald-600/30 transition text-left"
-                >
-                  <div className="flex items-start justify-between gap-2.5 pb-2.5 border-b border-border">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 font-bold text-sm flex items-center justify-center shrink-0 border border-emerald-500/20">
-                        {lead.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-sm sm:text-base font-bold text-ink font-heading truncate">
-                            {lead.name}
-                          </h3>
-                          {lead.agencyName && (
-                            <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold truncate">
-                              {lead.agencyName}
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-xs text-muted font-sans font-medium block">
-                          {lead.phone}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 shrink-0 text-[11px] text-muted">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" />
-                      <span>{formattedDate}</span>
-                    </div>
-                  </div>
-
-                  {lead.message && (
-                    <div className="text-xs text-slate-700 dark:text-slate-300 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-border leading-relaxed flex items-start gap-2">
-                      <MessageSquare className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>"{lead.message}"</span>
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-2 pt-1">
-                    <a
-                      href={whatsappUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition min-h-[40px]"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      <span>WhatsApp</span>
-                    </a>
-
-                    <a
-                      href={`tel:${lead.phone}`}
-                      className="px-3 py-2 rounded-xl bg-surface border border-border hover:bg-slate-100 dark:hover:bg-slate-800 text-ink text-xs font-bold flex items-center gap-1.5 transition min-h-[40px]"
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      <span>Call</span>
-                    </a>
                   </div>
                 </Card>
               );

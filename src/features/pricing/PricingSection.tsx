@@ -34,7 +34,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
   };
 
   const whatsappMonthlyUrl = `https://wa.me/918570089497?text=${encodeURIComponent(
-    `Hello LeadNivesh, I want to subscribe to the Monthly Plan (₹399/month). My registered account is: ${
+    `Hello LeadNivash, I want to subscribe to the Monthly Plan (₹399/month). My registered account is: ${
       user?.phone || user?.email || 'New Broker'
     }.`
   )}`;
@@ -91,7 +91,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <button
               type="button"
               onClick={handleOpenSpecialOffer}
-              className="px-6 py-3.5 rounded-2xl text-white font-black text-xs uppercase tracking-wider shadow-lg animate-trial-glow flex items-center justify-center gap-2 cursor-pointer transition min-h-[46px]"
+              className="px-6 py-3.5 rounded-input bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-sm flex items-center justify-center gap-2 cursor-pointer transition min-h-[46px] whitespace-nowrap"
               title="Claim Free Trial Special Offer"
             >
               <Crown className="w-4 h-4" />
@@ -361,7 +361,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     </span>
                   </div>
                 </div>
-                <span className="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-2xs">
+                <span className="px-2.5 py-1 rounded-full bg-emerald-700 text-white text-[10px] font-black uppercase tracking-wider shadow-2xs">
                   MOST POPULAR
                 </span>
               </div>
@@ -423,20 +423,20 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               </div>
             </div>
 
-            {/* CTA Button with Glowing Effect */}
+            {/* CTA Button (solid crisp emerald, no glow) */}
             <div className="pt-6 space-y-2">
               <button
                 type="button"
                 onClick={handleOpenSpecialOffer}
-                className="w-full py-3.5 rounded-2xl text-white font-black text-xs uppercase tracking-wider shadow-lg animate-trial-glow flex items-center justify-center gap-2 cursor-pointer transition min-h-[46px]"
+                className="w-full py-3.5 px-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs tracking-wide shadow-sm flex items-center justify-center gap-2 cursor-pointer transition min-h-[46px] whitespace-nowrap"
               >
-                <Crown className="w-4 h-4" />
+                <Crown className="w-4 h-4 shrink-0" />
                 <span>
                   {isTrialOfferActive
                     ? 'Claim Trial Offer — ₹3,299/yr'
                     : 'Upgrade to Yearly Pass — ₹3,999'}
                 </span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 shrink-0" />
               </button>
               <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted text-center">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
@@ -462,7 +462,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           </span>
         </div>
         <a
-          href="https://wa.me/918570089497?text=Hi%20LeadNivesh%2C%20I%20have%20questions%20about%20subscription%20plans"
+          href="https://wa.me/918570089497?text=Hi%20LeadNivash%2C%20I%20have%20questions%20about%20subscription%20plans"
           target="_blank"
           rel="noopener noreferrer"
           className="text-emerald-700 dark:text-emerald-400 font-bold hover:underline shrink-0 flex items-center gap-1 cursor-pointer"

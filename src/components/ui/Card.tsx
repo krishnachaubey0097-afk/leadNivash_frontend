@@ -12,8 +12,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={clsx(
-          'rounded-card border transition-all duration-150',
-          // Variants — clean, no decorative gradients
+          'rounded-[14px] border transition-all duration-150',
+          // Variants — flat, 1px border, clean
           variant === 'default' &&
             'bg-white border-border shadow-card',
           variant === 'raised' &&
@@ -24,9 +24,9 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
             'bg-brand-50 border-brand-600/20',
           variant === 'dark' &&
             'bg-white border-brand-600/20 shadow-card',
-          // Interactive Hover
+          // Interactive Hover: hover lift only where the card is clickable
           interactive &&
-            'hover:shadow-card-hover hover:border-brand-600/30 cursor-pointer active:scale-[0.995]',
+            'hover:-translate-y-0.5 hover:shadow-card-hover hover:border-brand-600/30 cursor-pointer active:scale-[0.995]',
           className
         )}
         {...props}

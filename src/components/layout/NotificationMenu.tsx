@@ -42,6 +42,7 @@ function formatRelativeTime(dateString: string): string {
 export const NotificationMenu: React.FC = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'inquiry' | 'match' | 'deal'>('all');
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
@@ -131,7 +132,7 @@ export const NotificationMenu: React.FC = () => {
     if (n.data?.propertyId) {
       navigate(`/app/properties/${n.data.propertyId}`);
     } else if (n.data?.inquiryId || n.type === 'inquiry') {
-      navigate('/app/inquiries');
+      navigate('/app/buyers?tab=inquiries');
     } else if (n.data?.buyerId) {
       navigate(`/app/buyers/${n.data.buyerId}`);
     } else if (n.data?.dealId || n.type === 'deal') {
@@ -141,39 +142,35 @@ export const NotificationMenu: React.FC = () => {
     }
   };
 
-  // Restrained status colors as specified in Prompt 7:
-  // Emerald for positive activity, amber for warnings/inquiries, red for urgent events
-  const getIconConfig = (type: NotificationItem['type'], data?: Record<string, any>) => {
-    if (data?.urgent || data?.priority === 'high') {
-      return {
-        icon: Bell,
-        bg: 'bg-rose-50 text-rose-700 border-rose-200/80',
-      };
-    }
-
+  const getIconConfig = (type: NotificationItem['type']) => {
     switch (type) {
       case 'deal':
         return {
           icon: Trophy,
-          bg: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
+          bg: 'bg-brand-50 text-brand-600 border-brand-200/60',
         };
       case 'match':
         return {
           icon: Sparkles,
-          bg: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
+          bg: 'bg-brand-50 text-brand-600 border-brand-200/60',
         };
       case 'inquiry':
         return {
           icon: Inbox,
-          bg: 'bg-amber-50 text-amber-700 border-amber-200/80',
+          bg: 'bg-brand-50 text-brand-600 border-brand-200/60',
         };
       default:
         return {
           icon: Info,
-          bg: 'bg-slate-100 text-slate-700 border-slate-200/80',
+          bg: 'bg-brand-50 text-brand-600 border-brand-200/60',
         };
     }
   };
+
+  const filteredNotifications =
+    activeFilter === 'all'
+      ? notifications
+      : notifications.filter((n) => n.type === activeFilter);
 
   return (
     <DropdownMenu.Root
@@ -186,7 +183,7 @@ export const NotificationMenu: React.FC = () => {
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          className="relative w-10 h-10 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 transition-colors duration-150 cursor-pointer focus:outline-none"
+          className="relative w-10 h-10 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-slate-100 transition-colors duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-600"
           aria-label="Notifications"
           title={unreadCount > 0 ? `${unreadCount} unread notifications` : 'Notifications'}
         >
@@ -204,66 +201,94 @@ export const NotificationMenu: React.FC = () => {
           sideOffset={8}
           collisionPadding={12}
           align="end"
-          className="z-50 w-[calc(100vw-24px)] sm:w-[380px] max-w-[380px] bg-surface border border-border p-0 rounded-2xl shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200 text-left overflow-hidden"
+          className="z-50 w-[calc(100vw-24px)] sm:w-[380px] lg:w-[380px] max-w-[400px] bg-surface lg:bg-white/85 lg:dark:bg-slate-900/85 lg:backdrop-blur-md border border-border p-0 rounded-2xl lg:rounded-[20px] shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200 text-left overflow-hidden"
         >
           {/* Header */}
-          <div className="p-3.5 border-b border-border flex items-center justify-between bg-surface-hover">
-            <div className="flex items-center gap-2">
+          <div className="p-3.5 border-b border-border flex items-center justify-between gap-2 bg-white/60 dark:bg-slate-900/60">
+            <div className="flex items-center gap-2 min-w-0">
               <h3 className="text-sm font-bold text-ink">
                 Notifications
               </h3>
               {unreadCount > 0 && (
-                <span className="bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                <span className="bg-brand-50 text-brand-700 border border-brand-200/70 text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
                   {unreadCount} new
                 </span>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              {unreadCount > 0 && (
-                <button
-                  type="button"
-                  onClick={handleMarkAllRead}
-                  className="text-[11px] text-brand-700 dark:text-brand-400 font-semibold hover:text-brand-800 flex items-center gap-1 cursor-pointer transition"
-                  title="Mark all as read"
-                >
-                  <CheckCheck className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Mark all read</span>
-                </button>
-              )}
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                disabled={unreadCount === 0}
+                onClick={handleMarkAllRead}
+                className="text-xs text-brand-700 dark:text-brand-400 font-semibold hover:text-brand-800 flex items-center gap-1 cursor-pointer transition disabled:opacity-40 disabled:text-slate-400 disabled:cursor-not-allowed whitespace-nowrap"
+                title={unreadCount === 0 ? 'No unread notifications' : 'Mark all as read'}
+              >
+                <CheckCheck className="w-3.5 h-3.5" />
+                <span>Mark all read</span>
+              </button>
 
               {notifications.length > 0 && (
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="text-[11px] text-muted hover:text-rose-600 dark:hover:text-rose-400 font-semibold flex items-center gap-1 cursor-pointer transition"
+                  className="text-xs text-muted hover:text-rose-600 dark:hover:text-rose-400 font-semibold flex items-center gap-1 cursor-pointer transition"
                   title="Clear all"
+                  aria-label="Clear all notifications"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Clear</span>
                 </button>
               )}
 
-              {/* Explicit Mobile/Desktop Close Button */}
+              {/* Explicit Close Button */}
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="w-7 h-7 rounded-lg text-muted hover:text-ink hover:bg-surface-hover flex items-center justify-center transition cursor-pointer"
+                className="w-7 h-7 rounded-lg text-muted hover:text-ink hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition cursor-pointer"
                 title="Close"
-                aria-label="Close"
+                aria-label="Close notifications"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          {/* Notification List with Safe Internal Scrolling */}
+          {/* Filter Chips: All / Inquiries / Matches / Deals */}
+          <div className="px-3.5 py-2 border-b border-border/70 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            {(
+              [
+                { id: 'all', label: 'All' },
+                { id: 'inquiry', label: 'Inquiries' },
+                { id: 'match', label: 'Matches' },
+                { id: 'deal', label: 'Deals' },
+              ] as const
+            ).map((chip) => {
+              const selected = activeFilter === chip.id;
+              return (
+                <button
+                  key={chip.id}
+                  type="button"
+                  onClick={() => setActiveFilter(chip.id)}
+                  className={clsx(
+                    'px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer border',
+                    selected
+                      ? 'bg-slate-900 text-white border-slate-900'
+                      : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-border hover:bg-slate-100'
+                  )}
+                >
+                  {chip.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Notification List with Safe Internal Scrolling (~480px max height) */}
           <div className="max-h-[min(480px,70vh)] overflow-y-auto divide-y divide-border overscroll-contain">
-            {notifications.length === 0 ? (
-              /* Prompt 7 Empty State Specification */
+            {filteredNotifications.length === 0 ? (
+              /* Empty State */
               <div className="p-8 text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 flex items-center justify-center mx-auto shadow-2xs">
-                  <Bell className="w-6 h-6 stroke-[2]" />
+                <div className="w-12 h-12 rounded-[14px] bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center mx-auto">
+                  <Bell className="w-6 h-6 stroke-[1.8]" />
                 </div>
                 <div className="space-y-1">
                   <h4 className="text-sm font-bold text-ink">
@@ -275,20 +300,20 @@ export const NotificationMenu: React.FC = () => {
                 </div>
               </div>
             ) : (
-              notifications.map((n) => {
-                const { icon: Icon, bg } = getIconConfig(n.type, n.data);
+              filteredNotifications.map((n) => {
+                const { icon: Icon, bg } = getIconConfig(n.type);
 
                 return (
                   <div
                     key={n.id}
                     onClick={() => handleNotificationClick(n)}
                     className={clsx(
-                      'p-3.5 flex items-start justify-between gap-3 transition cursor-pointer hover:bg-surface-hover',
-                      !n.isRead ? 'bg-emerald-50/30 dark:bg-emerald-950/20' : 'bg-surface'
+                      'p-3.5 flex items-start justify-between gap-3 transition cursor-pointer hover:bg-slate-50/90 dark:hover:bg-slate-800/70',
+                      !n.isRead ? 'bg-white/95 dark:bg-slate-900/90' : 'bg-white/70 dark:bg-slate-900/60'
                     )}
                   >
                     <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                      <div className={clsx('w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border mt-0.5', bg)}>
+                      <div className={clsx('w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0 border mt-0.5', bg)}>
                         <Icon className="w-4 h-4" />
                       </div>
 

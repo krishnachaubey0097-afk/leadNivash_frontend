@@ -22,9 +22,11 @@ export function useVoiceDictation({
 
   const recognitionRef = useRef<any>(null);
   const userWantsListeningRef = useRef(false);
+  const isStartingOrRunningRef = useRef(false);
   const restartTimeoutRef = useRef<any>(null);
   const currentInterimRef = useRef<string>('');
-  const lastFinalIndexRef = useRef<number>(-1);
+  const committedIndicesRef = useRef<Set<number>>(new Set());
+  const lastCommittedSegmentRef = useRef<{ text: string; at: number }>({ text: '', at: 0 });
 
   // Store callbacks in refs to avoid rebuilding SpeechRecognition on every render
   const onFinalTranscriptRef = useRef(onFinalTranscript);
@@ -32,25 +34,43 @@ export function useVoiceDictation({
   const onTranscriptRef = useRef(onTranscript);
   onTranscriptRef.current = onTranscript;
 
+  const commitFinalText = useCallback((normalized: string) => {
+    const clean = normalized.trim();
+    if (!clean) return;
+
+    const now = Date.now();
+    // Deduplicate back-to-back identical final chunks triggered by browser restart races
+    if (
+      lastCommittedSegmentRef.current.text === clean &&
+      now - lastCommittedSegmentRef.current.at < 1200
+    ) {
+      return;
+    }
+
+    lastCommittedSegmentRef.current = { text: clean, at: now };
+    setFinalTranscript((prev) => (prev ? `${prev} ${clean}` : clean));
+    if (onFinalTranscriptRef.current) {
+      onFinalTranscriptRef.current(clean);
+    }
+    if (onTranscriptRef.current) {
+      onTranscriptRef.current(clean, true);
+    }
+  }, []);
+
   const flushInterim = useCallback(() => {
     const raw = currentInterimRef.current.trim();
+    currentInterimRef.current = '';
+    setInterimTranscript('');
+
     if (raw) {
       const normalized = normalizeRealEstateVoiceTranscript(raw);
       if (normalized) {
-        setFinalTranscript((prev) => (prev ? `${prev} ${normalized}` : normalized));
-        if (onFinalTranscriptRef.current) {
-          onFinalTranscriptRef.current(normalized);
-        }
-        if (onTranscriptRef.current) {
-          onTranscriptRef.current(normalized, true);
-        }
+        commitFinalText(normalized);
       }
     }
-    currentInterimRef.current = '';
-    setInterimTranscript('');
-  }, []);
+  }, [commitFinalText]);
 
-  // Initialize SpeechRecognition
+  // Initialize SpeechRecognition (detach old listeners cleanly to prevent duplicate commits)
   useEffect(() => {
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -60,7 +80,9 @@ export function useVoiceDictation({
       return;
     }
 
+    let cancelled = false;
     setIsSupported(true);
+
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -68,6 +90,7 @@ export function useVoiceDictation({
     recognition.lang = lang;
 
     recognition.onresult = (event: any) => {
+      if (cancelled) return;
       let activeInterim = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -76,21 +99,15 @@ export function useVoiceDictation({
         const text = normalizeRealEstateVoiceTranscript(rawText);
 
         if (item.isFinal) {
-          // Guard: Only process each final segment once
-          if (i > lastFinalIndexRef.current) {
-            lastFinalIndexRef.current = i;
+          // Guard: Commit each finalized segment index strictly once
+          if (!committedIndicesRef.current.has(i)) {
+            committedIndicesRef.current.add(i);
             if (text) {
-              setFinalTranscript((prev) => (prev ? `${prev} ${text}` : text));
-              if (onFinalTranscriptRef.current) {
-                onFinalTranscriptRef.current(text);
-              }
-              if (onTranscriptRef.current) {
-                onTranscriptRef.current(text, true);
-              }
+              commitFinalText(text);
             }
           }
-        } else {
-          // Accumulate interim results
+        } else if (!committedIndicesRef.current.has(i)) {
+          // Keep interim text strictly separate until finalized
           activeInterim += (activeInterim ? ' ' : '') + text;
         }
       }
@@ -103,14 +120,16 @@ export function useVoiceDictation({
     };
 
     recognition.onerror = (event: any) => {
+      if (cancelled) return;
       console.warn('Speech recognition warning/event:', event.error);
       // 'no-speech' happens on natural conversational pauses. DO NOT terminate listening.
-      if (event.error === 'no-speech') {
+      if (event.error === 'no-speech' || event.error === 'aborted') {
         return;
       }
 
       if (event.error === 'not-allowed' || event.error === 'audio-capture') {
         userWantsListeningRef.current = false;
+        isStartingOrRunningRef.current = false;
         setError(
           event.error === 'not-allowed'
             ? 'Microphone permission was denied. Please allow microphone access in your browser.'
@@ -121,77 +140,106 @@ export function useVoiceDictation({
     };
 
     recognition.onend = () => {
-      // If user still wants listening, continuously resume without stopping
-      if (userWantsListeningRef.current) {
-        // Flush any interim speech that browser did not mark isFinal before ending the chunk
-        flushInterim();
-        lastFinalIndexRef.current = -1;
+      isStartingOrRunningRef.current = false;
+      if (cancelled) return;
 
+      // Flush any leftover interim segment from the ended recognition chunk
+      flushInterim();
+      committedIndicesRef.current.clear();
+
+      // If user still wants listening, resume this active instance cleanly
+      if (userWantsListeningRef.current) {
         if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
         restartTimeoutRef.current = setTimeout(() => {
-          if (userWantsListeningRef.current && recognitionRef.current) {
+          if (
+            !cancelled &&
+            userWantsListeningRef.current &&
+            recognitionRef.current === recognition &&
+            !isStartingOrRunningRef.current
+          ) {
             try {
-              recognitionRef.current.start();
+              isStartingOrRunningRef.current = true;
+              recognition.start();
               setIsListening(true);
             } catch (err: any) {
-              // Recognition might already be running or transitioning
+              isStartingOrRunningRef.current = false;
               console.warn('SpeechRecognition auto-restart transition:', err?.message || err);
             }
           }
-        }, 60);
+        }, 80);
         return;
       }
 
       setIsListening(false);
-      currentInterimRef.current = '';
-      setInterimTranscript('');
     };
 
     recognitionRef.current = recognition;
 
-    // If user was listening and lang changed, restart recognition with new language
-    if (userWantsListeningRef.current) {
+    // If user was actively listening when language switched, start the new instance once
+    if (userWantsListeningRef.current && !isStartingOrRunningRef.current) {
+      committedIndicesRef.current.clear();
       try {
+        isStartingOrRunningRef.current = true;
         recognition.start();
+        setIsListening(true);
       } catch {
-        // ignore
+        isStartingOrRunningRef.current = false;
       }
     }
 
     return () => {
-      if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.abort();
-        } catch {
-          // ignore
-        }
+      cancelled = true;
+      isStartingOrRunningRef.current = false;
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
+        restartTimeoutRef.current = null;
+      }
+      // Detach all listeners BEFORE aborting so stale onresult/onend never fire
+      recognition.onresult = null;
+      recognition.onerror = null;
+      recognition.onend = null;
+      try {
+        recognition.abort();
+      } catch {
+        // ignore
+      }
+      if (recognitionRef.current === recognition) {
+        recognitionRef.current = null;
       }
     };
-  }, [lang, flushInterim]);
+  }, [lang, commitFinalText, flushInterim]);
 
   const startListening = useCallback(() => {
     setError(null);
     setInterimTranscript('');
     currentInterimRef.current = '';
-    lastFinalIndexRef.current = -1;
+    committedIndicesRef.current.clear();
+    lastCommittedSegmentRef.current = { text: '', at: 0 };
     userWantsListeningRef.current = true;
 
-    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
+    if (restartTimeoutRef.current) {
+      clearTimeout(restartTimeoutRef.current);
+      restartTimeoutRef.current = null;
+    }
 
-    if (!recognitionRef.current) return;
+    if (!recognitionRef.current || isStartingOrRunningRef.current) return;
     try {
+      isStartingOrRunningRef.current = true;
       recognitionRef.current.start();
       setIsListening(true);
     } catch (err: any) {
+      isStartingOrRunningRef.current = false;
       console.warn('Could not start speech recognition:', err);
-      setIsListening(true);
     }
   }, []);
 
   const stopListening = useCallback(() => {
     userWantsListeningRef.current = false;
-    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
+    isStartingOrRunningRef.current = false;
+    if (restartTimeoutRef.current) {
+      clearTimeout(restartTimeoutRef.current);
+      restartTimeoutRef.current = null;
+    }
 
     // Flush any uncommitted interim speech so user never loses their last spoken words
     flushInterim();

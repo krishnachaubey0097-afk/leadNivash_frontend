@@ -229,12 +229,12 @@ export const LoginPage: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 p-1.5 shadow-sm">
               <img
                 src="/logo-icon.png"
-                alt="leadNivash"
+                alt="LeadNivash"
                 className="w-full h-full object-contain"
               />
             </div>
             <span className="text-2xl font-black tracking-tight text-slate-900 font-heading">
-              lead<span className="text-emerald-700">Nivash</span>
+              Lead<span className="text-emerald-700">Nivash</span>
             </span>
           </Link>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 font-heading">
@@ -286,7 +286,7 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Login Card */}
-        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
           {errorMsg && (
             <div className="mb-4 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-2.5 text-rose-800 text-xs font-medium">
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
@@ -403,7 +403,7 @@ export const LoginPage: React.FC = () => {
                     setResetErrorMsg(null);
                   }}
                   className={clsx(
-                    'flex-1 py-1 px-2.5 rounded-full text-[11px] font-bold transition cursor-pointer text-center',
+                    'flex-1 py-1 px-1.5 sm:px-2.5 rounded-full text-[11px] font-bold transition cursor-pointer text-center whitespace-nowrap',
                     loginMode === 'password'
                       ? 'bg-white text-emerald-800 shadow-xs'
                       : 'text-slate-500 hover:text-slate-900'
@@ -420,7 +420,7 @@ export const LoginPage: React.FC = () => {
                     setResetErrorMsg(null);
                   }}
                   className={clsx(
-                    'flex-1 py-1 px-2.5 rounded-full text-[11px] font-bold transition cursor-pointer text-center',
+                    'flex-1 py-1 px-1.5 sm:px-2.5 rounded-full text-[11px] font-bold transition cursor-pointer text-center whitespace-nowrap',
                     loginMode === 'email-otp'
                       ? 'bg-white text-emerald-800 shadow-xs'
                       : 'text-slate-500 hover:text-slate-900'
@@ -438,7 +438,7 @@ export const LoginPage: React.FC = () => {
                     setResetErrorMsg(null);
                   }}
                   className={clsx(
-                    'flex-1 py-1 px-2.5 rounded-full text-[11px] font-bold transition cursor-pointer text-center',
+                    'flex-1 py-1 px-1.5 sm:px-2.5 rounded-full text-[11px] font-bold transition cursor-pointer text-center whitespace-nowrap',
                     loginMode === 'forgot'
                       ? 'bg-white text-emerald-800 shadow-xs'
                       : 'text-slate-500 hover:text-slate-900'
@@ -708,7 +708,7 @@ export const LoginPage: React.FC = () => {
           {/* Create Account Link */}
           <div className="mt-6 pt-4 border-t border-slate-100 text-center">
             <p className="text-xs text-slate-600">
-              New to leadNivash?{' '}
+              New to LeadNivash?{' '}
               <Link to="/register" className="font-bold text-emerald-700 hover:underline">
                 Create Account (14-Day Free Trial)
               </Link>

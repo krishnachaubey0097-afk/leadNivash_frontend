@@ -48,8 +48,8 @@ export const AppShell: React.FC = () => {
         {/* Top Header */}
         <TopBar />
 
-        {/* Body content — 16px horizontal padding, bottom padding for nav */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 lg:pb-8 max-w-5xl mx-auto w-full px-4 pt-4">
+        {/* Body content — max-width 1200px centered, responsive padding */}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 lg:pb-8 max-w-[1200px] mx-auto w-full px-4 sm:px-6 pt-4">
           <Outlet />
         </main>
 

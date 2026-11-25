@@ -46,12 +46,12 @@ export const ForgotPasswordPage: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 p-1.5 shadow-sm">
               <img
                 src="/logo-icon.png"
-                alt="leadNivash"
+                alt="LeadNivash"
                 className="w-full h-full object-contain"
               />
             </div>
             <span className="text-2xl font-black tracking-tight text-slate-900 font-heading">
-              lead<span className="text-emerald-700">Nivash</span>
+              Lead<span className="text-emerald-700">Nivash</span>
             </span>
           </Link>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 font-heading">
@@ -63,7 +63,7 @@ export const ForgotPasswordPage: React.FC = () => {
         </div>
 
         {/* Card */}
-        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
           <div className="mb-4">
             <Link
               to="/login"

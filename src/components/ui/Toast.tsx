@@ -47,16 +47,16 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <ToastContext.Provider value={{ toast, success, error }}>
       {children}
-      {/* Toast Overlay */}
+      {/* Toast Overlay: Top-Right on desktop, bottom above nav on mobile */}
       <div
         aria-live="polite"
-        className="fixed bottom-20 left-1/2 -translate-x-1/2 sm:bottom-6 sm:right-6 sm:left-auto sm:translate-x-0 z-50 flex flex-col gap-2 max-w-sm w-full px-4 pointer-events-none"
+        className="fixed bottom-20 left-1/2 -translate-x-1/2 lg:bottom-auto lg:left-auto lg:top-6 lg:right-6 sm:bottom-6 sm:right-6 sm:left-auto sm:translate-x-0 z-50 flex flex-col gap-2 max-w-sm w-full px-4 pointer-events-none"
       >
         {toasts.map((t) => (
           <div
             key={t.id}
             className={clsx(
-              'pointer-events-auto flex items-center justify-between gap-3 p-3.5 rounded-card shadow-lg border backdrop-blur-sm transition-all duration-200 animate-in fade-in slide-in-from-bottom-2',
+              'pointer-events-auto flex items-center justify-between gap-3 p-3.5 rounded-card shadow-lg border transition-all duration-200 animate-in fade-in slide-in-from-bottom-2',
               t.type === 'success' && 'bg-white border-brand-600/20 text-ink',
               t.type === 'error' && 'bg-white border-danger/30 text-ink',
               t.type === 'info' && 'bg-white border-border text-ink'

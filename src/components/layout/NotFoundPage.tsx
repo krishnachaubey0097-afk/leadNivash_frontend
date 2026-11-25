@@ -5,22 +5,19 @@ import { Home, LayoutDashboard, HelpCircle } from 'lucide-react';
 
 export const NotFoundPage: React.FC = () => {
   useEffect(() => {
-    document.title = '404 - Page Not Found | leadNivash';
+    document.title = '404 - Page Not Found | LeadNivash';
   }, []);
 
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-4 sm:p-6 text-center">
-      {/* Ambient background glow */}
-      <div className="pointer-events-none fixed inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent blur-3xl" />
-
-      <div className="relative max-w-md w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-emerald-500/20 p-6 sm:p-8 rounded-3xl shadow-xl space-y-5 text-center">
+      <div className="relative max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200 p-6 sm:p-8 rounded-3xl shadow-xl space-y-5 text-center">
         {/* Logo */}
         <Link to="/" className="inline-flex items-center gap-2 mb-2 group">
           <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 p-1.5 shadow-2xs group-hover:border-emerald-600/40 transition flex items-center justify-center">
-            <img src="/logo-icon.png" alt="leadNivash" className="w-full h-full object-contain" />
+            <img src="/logo-icon.png" alt="LeadNivash" className="w-full h-full object-contain" />
           </div>
           <span className="text-lg font-black tracking-tight text-ink font-heading">
-            lead<span className="text-emerald-700">Nivash</span>
+            Lead<span className="text-emerald-700">Nivash</span>
           </span>
         </Link>
 

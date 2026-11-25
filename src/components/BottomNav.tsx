@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 export const BottomNav: React.FC = () => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0E1522]/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 pb-safe shadow-lg">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[#0E1522] border-t border-slate-200 dark:border-slate-800 pb-safe shadow-lg">
       <div className="max-w-md mx-auto px-3 h-16 flex items-center justify-between relative">
         {/* Today */}
         <NavLink

@@ -81,7 +81,7 @@ export const PublicFlyerPage: React.FC = () => {
           </p>
           <Link to="/">
             <Button size="sm" pill className="font-bold text-xs mt-2">
-              Visit leadNivash Home
+              Visit LeadNivash Home
             </Button>
           </Link>
         </Card>
@@ -138,14 +138,14 @@ export const PublicFlyerPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50/80 text-slate-900 antialiased py-6 px-4 sm:px-6">
       {/* Top Navbar Brand Bar */}
-      <header className="max-w-3xl mx-auto mb-6 flex items-center justify-between bg-white/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 shadow-xs">
+      <header className="max-w-3xl mx-auto mb-6 flex items-center justify-between bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 shadow-xs">
         <Link to="/" className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-sm shadow-xs">
             LN
           </div>
           <div>
             <span className="text-base font-black tracking-tight text-slate-900 font-heading">
-              lead<span className="text-emerald-700">Nivash</span>
+              Lead<span className="text-emerald-700">Nivash</span>
             </span>
             <span className="text-[9px] text-slate-500 font-bold block uppercase tracking-wider">
               Verified Property Flyer
@@ -208,7 +208,7 @@ export const PublicFlyerPage: React.FC = () => {
                     className="w-full h-full object-contain bg-black"
                   />
                 )}
-                <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-slate-950/70 backdrop-blur-xs text-white text-[10px] font-bold">
+                <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-slate-950/85 text-white text-[10px] font-bold">
                   {activeMediaType === 'photo'
                     ? `Photo ${activeMediaIndex + 1} of ${property.photos?.length || 0}`
                     : 'HD Video Walkthrough'}
@@ -448,7 +448,7 @@ export const PublicFlyerPage: React.FC = () => {
         <footer className="text-center text-xs text-slate-400 space-y-1 pb-10">
           <p className="flex items-center justify-center gap-1.5 font-medium">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Marketed exclusively via leadNivash Broker OS · Direct Broker Contact Guaranteed</span>
+            <span>Marketed exclusively via LeadNivash Broker OS · Direct Broker Contact Guaranteed</span>
           </p>
         </footer>
       </main>

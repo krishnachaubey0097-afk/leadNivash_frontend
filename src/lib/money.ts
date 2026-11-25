@@ -76,3 +76,54 @@ export const formatShortPrice = (paise?: number | null): string => {
   }
   return `₹${rupees.toLocaleString('en-IN')}`;
 };
+
+const ONES = [
+  '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+  'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen',
+  'Seventeen', 'Eighteen', 'Nineteen',
+];
+const TENS = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+function twoDigitsToWords(n: number): string {
+  if (n === 0) return '';
+  if (n < 20) return ONES[n];
+  const t = Math.floor(n / 10);
+  const o = n % 10;
+  return o ? `${TENS[t]} ${ONES[o]}` : TENS[t];
+}
+
+function threeDigitsToWords(n: number): string {
+  const h = Math.floor(n / 100);
+  const rem = n % 100;
+  if (h && rem) return `${ONES[h]} Hundred ${twoDigitsToWords(rem)}`;
+  if (h) return `${ONES[h]} Hundred`;
+  return twoDigitsToWords(rem);
+}
+
+/**
+ * Converts a rupee amount into Indian numbering words (Crores, Lakhs, Thousands).
+ * Example: 6000000 -> "Sixty Lakhs", 12500000 -> "One Crore Twenty-Five Lakhs"
+ */
+export const formatAmountInWords = (rupees?: number | null): string => {
+  if (rupees == null || isNaN(rupees) || rupees <= 0) return 'Zero Rupees';
+  const whole = Math.round(rupees);
+  const crores = Math.floor(whole / 10000000);
+  const lakhs = Math.floor((whole % 10000000) / 100000);
+  const thousands = Math.floor((whole % 100000) / 1000);
+  const rest = whole % 1000;
+
+  const parts: string[] = [];
+  if (crores > 0) {
+    parts.push(`${threeDigitsToWords(crores)} ${crores === 1 ? 'Crore' : 'Crores'}`);
+  }
+  if (lakhs > 0) {
+    parts.push(`${twoDigitsToWords(lakhs)} ${lakhs === 1 ? 'Lakh' : 'Lakhs'}`);
+  }
+  if (thousands > 0) {
+    parts.push(`${twoDigitsToWords(thousands)} Thousand`);
+  }
+  if (rest > 0) {
+    parts.push(threeDigitsToWords(rest));
+  }
+  return `${parts.join(' ')} Rupees`;
+};

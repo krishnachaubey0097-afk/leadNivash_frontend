@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import {
   Sparkles,
   Mic,
@@ -19,11 +20,16 @@ import {
   Clipboard,
   X,
   ChevronRight,
+  ChevronDown,
   Maximize2,
+  Clock,
+  Globe,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
+import { Modal } from '../../components/ui/Modal';
+import { StatusChip } from '../../components/ui/Chip';
 import { useToast } from '../../components/ui/Toast';
 import { parseMessage, commitParsedItem, type ParseResult } from '../../lib/api/parse';
 import { useVoiceDictation } from '../../lib/hooks/useVoiceDictation';
@@ -34,19 +40,66 @@ import { formatRupees } from '../../lib/money';
 import { useAuth } from '../auth/AuthProvider';
 import clsx from 'clsx';
 
+type LanguageChipOption = 'english' | 'hinglish' | 'hindi';
+
+interface RecentExtractionItem {
+  id: string;
+  rawText: string;
+  itemType: 'buyer' | 'listing';
+  title: string;
+  locality: string;
+  priceLabel: string;
+  extractedAt: string;
+  result: ParseResult;
+}
+
+const RECENT_EXTRACTIONS_KEY = 'leadnivash_recent_extractions_v1';
+
 export const PastePage: React.FC = () => {
   const { user } = useAuth();
   const { success, error, toast } = useToast();
+  const location = useLocation();
 
   const agencyDisplayName = user?.agency?.name || user?.name || 'Verified Broker';
 
   // Workflow Steps: 'paste' (Step 1) | 'review' (Step 2) | 'matches' (Step 3)
   const [currentStep, setCurrentStep] = useState<'paste' | 'review' | 'matches'>('paste');
 
-  const [rawText, setRawText] = useState('');
+  const [rawText, setRawText] = useState(() => {
+    const state = location.state as { prefill?: string } | null;
+    return state?.prefill?.trim() || '';
+  });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [parseResult, setParseResult] = useState<ParseResult | null>(null);
-  const [dictationLang, setDictationLang] = useState<'en-IN' | 'hi-IN'>('en-IN');
+  const [languageOption, setLanguageOption] = useState<LanguageChipOption>('hinglish');
+  const dictationLang: 'en-IN' | 'hi-IN' = languageOption === 'hindi' ? 'hi-IN' : 'en-IN';
+
+  const languageLabels: Record<LanguageChipOption, string> = {
+    english: 'English',
+    hinglish: 'Hinglish',
+    hindi: 'हिंदी',
+  };
+
+  // Live-updating Recent Extractions (last 5) persisted for session continuity
+  const [recentExtractions, setRecentExtractions] = useState<RecentExtractionItem[]>(() => {
+    try {
+      const saved = localStorage.getItem(RECENT_EXTRACTIONS_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) ? parsed.slice(0, 5) : [];
+      }
+    } catch {
+      // ignore storage errors
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    const state = location.state as { prefill?: string } | null;
+    if (state?.prefill?.trim()) {
+      setRawText(state.prefill.trim());
+    }
+  }, [location.state]);
 
   // Classification: 'buyer' or 'listing'
   const [itemType, setItemType] = useState<'buyer' | 'listing'>('buyer');
@@ -92,14 +145,14 @@ export const PastePage: React.FC = () => {
     },
   });
 
-  // Selectable examples clearly labeled as examples
+  // Selectable examples clearly labeled as examples (compact labels to fit single row cleanly)
   const exampleMessages = [
     {
       label: 'Buyer: 3 BHK Model Town',
       text: 'Urgent buyer requirement: Need 3 BHK luxury builder floor in Model Town or Sector 11 Panipat. Budget 1.10 to 1.35 Cr with lift & car parking. Client: Rajesh Sharma 9876543210.',
     },
     {
-      label: 'Listing: 250 Gaj Sushant City',
+      label: 'Listing: 250 Gaj Plot',
       text: 'Available for Sale: Residential plot 250 gaj in Ansals Sushant City Sector 18 Panipat. North facing, 40 ft road, demand 85 Lakhs negotiable. Owner: 9812044321.',
     },
     {
@@ -107,7 +160,7 @@ export const PastePage: React.FC = () => {
       text: 'Client looking for commercial shop on GT Road or Chandni Bagh Panipat. Budget 70 to 90 Lakhs for rental return. Contact: Vikram Verma 9876500002.',
     },
     {
-      label: 'Listing: 3 BHK Builder Floor',
+      label: 'Listing: Sector 18 Floor',
       text: 'Direct listing: Newly built 3 BHK builder floor in Sector 18 Panipat. Ready to move, lift, stilt parking, asking 1.25 Cr. Contact: 9876543210.',
     },
   ];
@@ -131,49 +184,92 @@ export const PastePage: React.FC = () => {
     }
   };
 
-  // STEP 1: Analyse Message
+  // Helper: Populate Step 2 review fields from a ParseResult
+  const applyParseResult = (result: ParseResult, sourceText: string) => {
+    setParseResult(result);
+    setItemType(result.itemType);
+
+    if (result.itemType === 'buyer') {
+      const b = result.extracted.buyer;
+      setRecordName(b?.name || 'Direct Buyer');
+      setRecordPhone(b?.phone || '');
+      setRecordLocality(b?.localities?.[0] || 'Model Town');
+      setRecordType(b?.propertyType ? b.propertyType.replace(/_/g, ' ') : 'Builder Floor');
+      setRecordBudgetLakhs(
+        b?.budgetMaxPaise ? Math.round(b.budgetMaxPaise / 10000000) : 120
+      );
+      setRecordPriceRaw(b?.budgetRaw || (b?.budgetMaxPaise ? formatRupees(b.budgetMaxPaise) : ''));
+      setRecordBedrooms(b?.bhk?.[0] ? `${b.bhk[0]} BHK` : '3 BHK');
+      setRecordNotes(sourceText);
+    } else {
+      const p = result.extracted.property;
+      setRecordName(p?.ownerName || 'Property Owner');
+      setRecordPhone(p?.ownerPhone || '');
+      setRecordLocality(p?.locality || 'Model Town');
+      setRecordCity(p?.city || 'Panipat');
+      setRecordType((p as any)?.type || p?.propertyType || 'Builder Floor');
+      setRecordPriceRaw(p?.priceDemandRaw || (p?.priceDemandPaise ? formatRupees(p.priceDemandPaise) : '₹1.25 Cr'));
+      setRecordArea(p?.sizeValue ? String(p.sizeValue) : '200');
+      setRecordUnit(p?.sizeUnit || 'gaj');
+      setRecordFacing((p as any)?.facing || 'North-East');
+      setRecordNotes(sourceText);
+    }
+  };
+
+  // STEP 1: Extract details / Analyse Message
   const handleAnalyze = async () => {
-    if (!rawText.trim() || rawText.trim().length < 5) {
-      toast('Please paste a WhatsApp message with at least 5 characters.', 'error');
+    if (!rawText.trim() || rawText.trim().length < 10) {
+      toast('Please paste a WhatsApp message with at least 10 characters.', 'error');
       return;
     }
 
     setIsAnalyzing(true);
     try {
       const result = await parseMessage(rawText);
-      setParseResult(result);
-      setItemType(result.itemType);
+      applyParseResult(result, rawText);
+      setSavedRecordId(null);
 
-      if (result.itemType === 'buyer') {
-        const b = result.extracted.buyer;
-        setRecordName(b?.name || 'Direct Buyer');
-        setRecordPhone(b?.phone || '');
-        setRecordLocality(b?.localities?.[0] || 'Model Town');
-        setRecordType(b?.propertyType ? b.propertyType.replace(/_/g, ' ') : 'Builder Floor');
-        setRecordBudgetLakhs(
-          b?.budgetMaxPaise ? Math.round(b.budgetMaxPaise / 10000000) : 120
-        );
-        setRecordPriceRaw(b?.budgetRaw || (b?.budgetMaxPaise ? formatRupees(b.budgetMaxPaise) : ''));
-        setRecordBedrooms(b?.bhk?.[0] ? `${b.bhk[0]} BHK` : '3 BHK');
-        setRecordNotes(rawText);
-      } else {
-        const p = result.extracted.property;
-        setRecordName(p?.ownerName || 'Property Owner');
-        setRecordPhone(p?.ownerPhone || '');
-        setRecordLocality(p?.locality || 'Model Town');
-        setRecordCity(p?.city || 'Panipat');
-        setRecordType((p as any)?.type || p?.propertyType || 'Builder Floor');
-        setRecordPriceRaw(p?.priceDemandRaw || (p?.priceDemandPaise ? formatRupees(p.priceDemandPaise) : '₹1.25 Cr'));
-        setRecordArea(p?.sizeValue ? String(p.sizeValue) : '200');
-        setRecordUnit(p?.sizeUnit || 'gaj');
-        setRecordFacing((p as any)?.facing || 'North-East');
-        setRecordNotes(rawText);
-      }
+      // Push into Recent Extractions (last 5)
+      const loc =
+        result.itemType === 'buyer'
+          ? result.extracted.buyer?.localities?.[0] || 'Panipat'
+          : result.extracted.property?.locality || 'Panipat';
+      const title =
+        result.itemType === 'buyer'
+          ? result.extracted.buyer?.name || 'Buyer Requirement'
+          : result.extracted.property?.title || result.extracted.property?.propertyType?.replace(/_/g, ' ') || 'Property Listing';
+      const priceLabel =
+        result.itemType === 'buyer'
+          ? result.extracted.buyer?.budgetRaw ||
+            (result.extracted.buyer?.budgetMaxPaise ? formatRupees(result.extracted.buyer.budgetMaxPaise) : 'Flexible')
+          : result.extracted.property?.priceDemandRaw ||
+            (result.extracted.property?.priceDemandPaise ? formatRupees(result.extracted.property.priceDemandPaise) : 'On request');
+
+      const entry: RecentExtractionItem = {
+        id: `ext_${Date.now()}`,
+        rawText,
+        itemType: result.itemType,
+        title,
+        locality: loc,
+        priceLabel,
+        extractedAt: new Date().toISOString(),
+        result,
+      };
+
+      setRecentExtractions((prev) => {
+        const updated = [entry, ...prev.filter((item) => item.rawText !== rawText)].slice(0, 5);
+        try {
+          localStorage.setItem(RECENT_EXTRACTIONS_KEY, JSON.stringify(updated));
+        } catch {
+          // ignore storage quota errors
+        }
+        return updated;
+      });
 
       setCurrentStep('review');
-      success('Message analysed! Review extracted details below.');
+      success('Details extracted! Review fields below.');
     } catch (err: any) {
-      error(err?.message || 'Could not analyse message. Please try again.');
+      error(err?.message || 'Could not extract details. Please try again.');
     } finally {
       setIsAnalyzing(false);
     }
@@ -361,246 +457,278 @@ export const PastePage: React.FC = () => {
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
+  const isAnalyzeEnabled = rawText.trim().length >= 10 && !isAnalyzing;
+  const hasRecentExtractions = recentExtractions.length > 0;
+
   return (
-    <div className="space-y-4 max-w-3xl mx-auto pb-16 text-left">
-      {/* ── 1. HEADER (Prompt 5 Spec) ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-ink leading-tight">
-            Quick Chat
-          </h1>
-          <p className="text-xs sm:text-sm text-secondary text-muted mt-0.5">
-            Paste a client message to find relevant properties.
-          </p>
-        </div>
-
-        {/* Dictation Language Switcher */}
-        {isSupported && currentStep === 'paste' && (
-          <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-full border border-border text-xs self-start sm:self-auto">
-            <button
-              type="button"
-              onClick={() => setDictationLang('en-IN')}
-              className={clsx(
-                'px-3 py-1 rounded-full font-semibold transition cursor-pointer',
-                dictationLang === 'en-IN'
-                  ? 'bg-brand-600 text-white shadow-xs'
-                  : 'text-muted hover:text-ink'
-              )}
-            >
-              Hinglish / English
-            </button>
-            <button
-              type="button"
-              onClick={() => setDictationLang('hi-IN')}
-              className={clsx(
-                'px-3 py-1 rounded-full font-semibold transition cursor-pointer',
-                dictationLang === 'hi-IN'
-                  ? 'bg-brand-600 text-white shadow-xs'
-                  : 'text-muted hover:text-ink'
-              )}
-            >
-              हिंदी
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* ── 2. THREE-STEP WORKFLOW BAR (Prompt 5 Spec) ── */}
-      <div className="flex items-center gap-1.5 p-1 bg-white border border-border rounded-xl shadow-xs text-xs font-semibold">
-        <button
-          type="button"
-          onClick={() => setCurrentStep('paste')}
-          className={clsx(
-            'flex-1 py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1',
-            currentStep === 'paste'
-              ? 'bg-brand-600 text-white font-bold shadow-xs'
-              : 'text-muted hover:text-ink'
-          )}
-        >
-          <span className="w-4 h-4 rounded-full bg-black/10 inline-flex items-center justify-center text-[10px]">
-            1
-          </span>
-          <span>Paste message</span>
-        </button>
-
-        <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-
-        <button
-          type="button"
-          disabled={!parseResult}
-          onClick={() => parseResult && setCurrentStep('review')}
-          className={clsx(
-            'flex-1 py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1',
-            currentStep === 'review'
-              ? 'bg-brand-600 text-white font-bold shadow-xs'
-              : parseResult
-              ? 'text-muted hover:text-ink cursor-pointer'
-              : 'text-slate-300 cursor-not-allowed'
-          )}
-        >
-          <span className="w-4 h-4 rounded-full bg-black/10 inline-flex items-center justify-center text-[10px]">
-            2
-          </span>
-          <span>Review details</span>
-        </button>
-
-        <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-
-        <button
-          type="button"
-          disabled={!parseResult}
-          onClick={() => parseResult && setCurrentStep('matches')}
-          className={clsx(
-            'flex-1 py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1',
-            currentStep === 'matches'
-              ? 'bg-brand-600 text-white font-bold shadow-xs'
-              : parseResult
-              ? 'text-muted hover:text-ink cursor-pointer'
-              : 'text-slate-300 cursor-not-allowed'
-          )}
-        >
-          <span className="w-4 h-4 rounded-full bg-black/10 inline-flex items-center justify-center text-[10px]">
-            3
-          </span>
-          <span>View matches</span>
-        </button>
-      </div>
-
-      {/* ======================================================== */}
-      {/* STEP 1: MESSAGE INPUT, EXAMPLES & ANALYSE ACTION         */}
-      {/* ======================================================== */}
-      {currentStep === 'paste' && (
-        <Card className="p-4 sm:p-5 space-y-4 rounded-2xl bg-white border border-border shadow-card">
-          {/* Multiline Message Input */}
-          <div className="relative">
-            <textarea
-              rows={5}
-              value={rawText}
-              onChange={(e) => setRawText(e.target.value)}
-              placeholder="Paste a buyer requirement or property listing from WhatsApp..."
-              className="w-full bg-white border border-border rounded-xl p-3.5 pr-14 text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600 transition shadow-xs leading-relaxed"
-            />
-
-            {/* Quick Actions in Textarea */}
-            <div className="absolute right-2.5 bottom-2.5 flex items-center gap-1.5">
-              {rawText && (
-                <button
-                  type="button"
-                  onClick={() => setRawText('')}
-                  className="p-2 rounded-full text-muted hover:text-ink transition cursor-pointer"
-                  title="Clear text"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-
-              {isSupported && (
-                <button
-                  type="button"
-                  onClick={toggleListening}
-                  className={clsx(
-                    'w-9 h-9 rounded-full flex items-center justify-center transition shadow-xs cursor-pointer',
-                    isListening
-                      ? 'bg-rose-600 text-white animate-pulse ring-4 ring-rose-200'
-                      : 'bg-brand-600 text-white hover:bg-brand-700'
-                  )}
-                  title={isListening ? 'Stop Voice Input' : 'Speak Message (Voice Input)'}
-                >
-                  {isListening ? <Square className="w-3.5 h-3.5 fill-current" /> : <Mic className="w-4 h-4" />}
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Voice Input Live Interim Feedback */}
-          {isListening && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
-                <span className="font-semibold text-rose-800">
-                  Listening ({dictationLang === 'hi-IN' ? 'Hindi' : 'Hinglish'})...
-                </span>
-                {interimTranscript && (
-                  <span className="text-slate-700 italic truncate max-w-xs">
-                    "{interimTranscript}"
-                  </span>
-                )}
-              </div>
-              <button
-                type="button"
-                onClick={toggleListening}
-                className="px-2.5 py-1 rounded bg-rose-600 text-white font-semibold text-[11px] cursor-pointer"
-              >
-                Done
-              </button>
-            </div>
-          )}
-
-          {/* Input Support Actions (Paste from clipboard & Clear) */}
-          <div className="flex items-center justify-between gap-2 pt-1">
-            <button
-              type="button"
-              onClick={handleClipboardPaste}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition cursor-pointer"
-            >
-              <Clipboard className="w-3.5 h-3.5 text-brand-600" />
-              <span>Paste from clipboard</span>
-            </button>
-
-            {rawText && (
-              <button
-                type="button"
-                onClick={() => setRawText('')}
-                className="text-xs font-semibold text-muted hover:text-ink cursor-pointer"
-              >
-                Clear input
-              </button>
-            )}
-          </div>
-
-          {/* Selectable Examples (Prompt 5 Spec) */}
-          <div className="space-y-1.5 pt-2 border-t border-slate-100">
-            <span className="text-[11px] font-semibold text-muted block">
-              Select an example to try:
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {exampleMessages.map((ex, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setRawText(ex.text)}
-                  className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-emerald-50 hover:text-brand-700 border border-slate-200/80 text-[11px] font-medium transition cursor-pointer"
-                >
-                  {ex.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Full-Width Emerald Analyse Button (Prompt 5 Spec) */}
-          <div className="pt-2">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={handleAnalyze}
-              disabled={isAnalyzing || !rawText.trim() || rawText.trim().length < 5}
-              className="w-full min-h-[48px] font-semibold text-sm shadow-sm gap-2"
-            >
-              {isAnalyzing ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Analysing Message...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4" />
-                  <span>Analyse Message</span>
-                </>
-              )}
-            </Button>
-          </div>
-        </Card>
+    <div
+      className={clsx(
+        'space-y-5 pb-16 mx-auto text-left',
+        hasRecentExtractions ? 'max-w-[1200px]' : 'max-w-[720px]'
       )}
+    >
+      {/* ── 1. HEADER (No duplicate top-right language switcher) ── */}
+      <div>
+        <h1 className="text-xl sm:text-2xl font-bold text-ink leading-tight">
+          Quick Chat
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+          Paste a client message to find relevant properties.
+        </p>
+      </div>
+
+      {/* Responsive Desktop Layout: 2 cols (>=1280px) with 560px workflow left + Recent extractions right when data exists, otherwise centered <=720px */}
+      <div
+        className={clsx(
+          hasRecentExtractions
+            ? 'space-y-6 xl:space-y-0 xl:grid xl:grid-cols-[560px_1fr] xl:gap-6 xl:items-start'
+            : 'w-full'
+        )}
+      >
+        <div className="space-y-4 min-w-0">
+          {/* ── 2. THREE-STEP STEPPER (Paste · Review · Matches) with roomier spacing ── */}
+          <div className="flex items-center gap-2 p-1.5 bg-white border border-border rounded-xl shadow-2xs text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => setCurrentStep('paste')}
+              className={clsx(
+                'flex-1 py-2 px-3 rounded-lg text-center transition flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer',
+                currentStep === 'paste'
+                  ? 'bg-brand-600 text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              )}
+            >
+              <span
+                className={clsx(
+                  'w-4 h-4 rounded-full inline-flex items-center justify-center text-[10px] font-bold',
+                  currentStep === 'paste' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                )}
+              >
+                1
+              </span>
+              <span>Paste</span>
+            </button>
+
+            <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+
+            <button
+              type="button"
+              disabled={!parseResult}
+              onClick={() => parseResult && setCurrentStep('review')}
+              className={clsx(
+                'flex-1 py-2 px-3 rounded-lg text-center transition flex items-center justify-center gap-1.5 whitespace-nowrap',
+                currentStep === 'review'
+                  ? 'bg-brand-600 text-white font-bold shadow-xs'
+                  : parseResult
+                  ? 'text-slate-600 hover:text-slate-900 cursor-pointer'
+                  : 'text-slate-300 cursor-not-allowed'
+              )}
+            >
+              <span
+                className={clsx(
+                  'w-4 h-4 rounded-full inline-flex items-center justify-center text-[10px] font-bold',
+                  currentStep === 'review' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-400'
+                )}
+              >
+                2
+              </span>
+              <span>Review</span>
+            </button>
+
+            <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+
+            <button
+              type="button"
+              disabled={!parseResult}
+              onClick={() => parseResult && setCurrentStep('matches')}
+              className={clsx(
+                'flex-1 py-2 px-3 rounded-lg text-center transition flex items-center justify-center gap-1.5 whitespace-nowrap',
+                currentStep === 'matches'
+                  ? 'bg-brand-600 text-white font-bold shadow-xs'
+                  : parseResult
+                  ? 'text-slate-600 hover:text-slate-900 cursor-pointer'
+                  : 'text-slate-300 cursor-not-allowed'
+              )}
+            >
+              <span
+                className={clsx(
+                  'w-4 h-4 rounded-full inline-flex items-center justify-center text-[10px] font-bold',
+                  currentStep === 'matches' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-400'
+                )}
+              >
+                3
+              </span>
+              <span>Matches</span>
+            </button>
+          </div>
+
+          {/* ======================================================== */}
+          {/* STEP 1: MESSAGE INPUT, EXAMPLES & EXTRACT ACTION         */}
+          {/* ======================================================== */}
+          {currentStep === 'paste' && (
+            <Card className="p-4 sm:p-5 space-y-4 rounded-[14px] bg-white border border-border">
+              {/* Textarea + Unified Footer inside Box */}
+              <div className="rounded-xl border border-border bg-white focus-within:ring-2 focus-within:ring-brand-600 focus-within:border-transparent transition-all overflow-hidden">
+                <textarea
+                  rows={5}
+                  value={rawText}
+                  onChange={(e) => setRawText(e.target.value)}
+                  placeholder="Paste a buyer requirement or property listing from WhatsApp..."
+                  className="w-full bg-transparent p-3.5 text-sm text-ink placeholder-slate-400 focus:outline-none leading-relaxed resize-none"
+                />
+
+                {/* Interim Speech Preview — visually separate (italic, ink-400) until finalized */}
+                {isListening && interimTranscript && (
+                  <div className="px-3.5 pb-2 text-sm italic text-slate-400 leading-relaxed border-t border-slate-100 pt-1.5 bg-slate-50/40">
+                    {interimTranscript}
+                  </div>
+                )}
+
+                {/* Unified Textarea Footer: Single Language Chip ("Hinglish ▾") + Paste/Clear + Mic */}
+                <div className="px-3 py-2 bg-slate-50/70 border-t border-border/70 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    {/* ONE Language Chip ("Hinglish ▾": English, Hinglish, हिंदी) */}
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild>
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-border text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer whitespace-nowrap"
+                        >
+                          <Globe className="w-3.5 h-3.5 text-brand-600" />
+                          <span>{languageLabels[languageOption]}</span>
+                          <ChevronDown className="w-3 h-3 text-slate-400" />
+                        </button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Portal>
+                        <DropdownMenu.Content
+                          className="z-50 min-w-[140px] bg-white border border-border p-1 rounded-[14px] shadow-xl animate-in fade-in zoom-in-95 duration-150"
+                          sideOffset={6}
+                          align="start"
+                        >
+                          {(['english', 'hinglish', 'hindi'] as LanguageChipOption[]).map((opt) => (
+                            <DropdownMenu.Item
+                              key={opt}
+                              onClick={() => setLanguageOption(opt)}
+                              className={clsx(
+                                'flex items-center justify-between px-3 py-1.5 text-xs font-semibold rounded-lg cursor-pointer outline-none transition-colors',
+                                languageOption === opt
+                                  ? 'bg-brand-50 text-brand-700'
+                                  : 'text-slate-700 hover:bg-slate-100'
+                              )}
+                            >
+                              <span>{languageLabels[opt]}</span>
+                              {languageOption === opt && <Check className="w-3.5 h-3.5 text-brand-600" />}
+                            </DropdownMenu.Item>
+                          ))}
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
+
+                    <button
+                      type="button"
+                      onClick={handleClipboardPaste}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-border bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition cursor-pointer whitespace-nowrap"
+                    >
+                      <Clipboard className="w-3.5 h-3.5 text-brand-600" />
+                      <span>Paste</span>
+                    </button>
+
+                    {rawText && (
+                      <button
+                        type="button"
+                        onClick={() => setRawText('')}
+                        className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition cursor-pointer"
+                        title="Clear text"
+                        aria-label="Clear message"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Mic Button with Waveform Feedback */}
+                  {isSupported && (
+                    <div className="flex items-center gap-2">
+                      {isListening && (
+                        <div className="flex items-center gap-0.5 h-4 px-1" aria-label="Voice waveform active">
+                          <span className="w-0.5 h-2 bg-rose-500 rounded-full animate-pulse" />
+                          <span className="w-0.5 h-4 bg-rose-600 rounded-full animate-pulse" style={{ animationDelay: '100ms' }} />
+                          <span className="w-0.5 h-3 bg-rose-500 rounded-full animate-pulse" style={{ animationDelay: '200ms' }} />
+                          <span className="w-0.5 h-3.5 bg-rose-600 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        onClick={toggleListening}
+                        className={clsx(
+                          'w-9 h-9 rounded-full flex items-center justify-center transition shadow-xs cursor-pointer',
+                          isListening
+                            ? 'bg-rose-600 text-white'
+                            : 'bg-brand-600 text-white hover:bg-brand-700'
+                        )}
+                        title={isListening ? 'Stop voice input' : 'Speak message (voice input)'}
+                        aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
+                      >
+                        {isListening ? <Square className="w-3.5 h-3.5 fill-current" /> : <Mic className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Privacy Note */}
+              <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                <ShieldCheck className="w-4 h-4 text-brand-600 shrink-0" />
+                <span>Phone numbers are hidden before AI reads your message</span>
+              </div>
+
+              {/* "Try an example" — Single Row of Chips */}
+              <div className="space-y-1.5 pt-2 border-t border-slate-100">
+                <span className="text-xs font-semibold text-slate-500 block">
+                  Try an example
+                </span>
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+                  {exampleMessages.map((ex, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setRawText(ex.text)}
+                      className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-brand-50 hover:text-brand-700 border border-slate-200/80 text-xs font-medium transition cursor-pointer whitespace-nowrap shrink-0"
+                    >
+                      {ex.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Primary Extract Details Button — full brand-600 opacity when enabled, muted slate surface (text ink-400) before 10 chars */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={handleAnalyze}
+                  disabled={!isAnalyzeEnabled}
+                  className={clsx(
+                    'w-full min-h-[48px] px-6 rounded-input font-semibold text-sm flex items-center justify-center gap-2 transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1',
+                    isAnalyzeEnabled
+                      ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-sm cursor-pointer opacity-100'
+                      : 'bg-slate-100 border border-border text-slate-400 shadow-none cursor-not-allowed opacity-100'
+                  )}
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Extracting details...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      <span>Extract details</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </Card>
+          )}
 
       {/* ======================================================== */}
       {/* STEP 2: EDITABLE EXTRACTION DETAILS (Prompt 5 Spec)       */}
@@ -667,7 +795,7 @@ export const PastePage: React.FC = () => {
           <div className="space-y-4 text-xs">
             {/* Group 1: Identity & Contact */}
             <div className="space-y-3 pb-3 border-b border-slate-100">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+              <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-brand-600" />
                 <span>1. {itemType === 'buyer' ? 'Client / Buyer Information' : 'Owner / Seller Information'}</span>
               </h3>
@@ -707,7 +835,7 @@ export const PastePage: React.FC = () => {
 
             {/* Group 2: Property Type & Location */}
             <div className="space-y-3 pb-3 border-b border-slate-100">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+              <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5 text-brand-600" />
                 <span>2. Property Type & Locality</span>
               </h3>
@@ -761,7 +889,7 @@ export const PastePage: React.FC = () => {
 
             {/* Group 3: Budget or Asking Price */}
             <div className="space-y-3 pb-3 border-b border-slate-100">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+              <h3 className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
                 <Maximize2 className="w-3.5 h-3.5 text-brand-600" />
                 <span>3. {itemType === 'buyer' ? 'Target Budget' : 'Asking Price / Demand'}</span>
               </h3>
@@ -1192,42 +1320,132 @@ export const PastePage: React.FC = () => {
           )}
         </div>
       )}
+        </div>
 
-      {/* Inspect Property Modal */}
-      {inspectingProperty && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <Card className="w-full max-w-lg p-5 space-y-4 bg-white border border-border rounded-2xl shadow-xl">
-            <div className="flex items-center justify-between pb-2 border-b border-border">
-              <h3 className="text-base font-bold text-ink">{inspectingProperty.title}</h3>
+        {/* RIGHT COLUMN (>=1280px): Live-Updating Recent Extractions (last 5) */}
+        {hasRecentExtractions && (
+          <Card className="p-4 sm:p-5 space-y-3.5 rounded-[14px] bg-white border border-border">
+            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-border">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-[10px] bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-bold text-slate-900">
+                    Recent extractions
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Last {recentExtractions.length} parsed messages
+                  </p>
+                </div>
+              </div>
               <button
                 type="button"
-                onClick={() => setInspectingProperty(null)}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-muted hover:text-ink cursor-pointer"
+                onClick={() => {
+                  setRecentExtractions([]);
+                  try {
+                    localStorage.removeItem(RECENT_EXTRACTIONS_KEY);
+                  } catch {
+                    // ignore
+                  }
+                }}
+                className="text-xs font-semibold text-slate-500 hover:text-slate-900 cursor-pointer"
               >
-                ✕
+                Clear
               </button>
             </div>
 
+            <div className="space-y-2">
+              {recentExtractions.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setRawText(item.rawText);
+                    applyParseResult(item.result, item.rawText);
+                    setSavedRecordId(null);
+                    setCurrentStep('review');
+                  }}
+                  className="w-full text-left p-3 rounded-[12px] border border-border bg-white hover:bg-slate-50 hover:border-brand-600/30 transition-all cursor-pointer space-y-1.5"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-slate-900 truncate">
+                      {item.title}
+                    </span>
+                    <StatusChip
+                      variant={item.itemType === 'buyer' ? 'brand' : 'neutral'}
+                      className="shrink-0"
+                    >
+                      {item.itemType === 'buyer' ? 'Buyer' : 'Listing'}
+                    </StatusChip>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 text-xs text-slate-500">
+                    <span className="truncate">{item.locality}</span>
+                    <span className="font-semibold text-slate-800 tabular-nums shrink-0">
+                      {item.priceLabel}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 line-clamp-1">
+                    {item.rawText}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </Card>
+        )}
+      </div>
+
+      {/* Inspect Property Modal */}
+      <Modal
+        open={Boolean(inspectingProperty)}
+        onOpenChange={(open) => {
+          if (!open) setInspectingProperty(null);
+        }}
+        title={inspectingProperty?.title || 'Property details'}
+        footerActions={
+          inspectingProperty && (
+            <>
+              <Button size="sm" variant="secondary" onClick={() => setInspectingProperty(null)}>
+                Close
+              </Button>
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={() => {
+                  handleSharePropertyFlyer(inspectingProperty);
+                  setInspectingProperty(null);
+                }}
+                className="gap-1.5"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>Share on WhatsApp</span>
+              </Button>
+            </>
+          )
+        }
+      >
+        {inspectingProperty && (
+          <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
-                <span className="text-muted block text-[10px] font-semibold uppercase">Locality</span>
-                <span className="font-semibold text-ink">{inspectingProperty.locality}</span>
+                <span className="text-slate-500 block font-medium">Locality</span>
+                <span className="font-semibold text-slate-900">{inspectingProperty.locality}</span>
               </div>
               <div>
-                <span className="text-muted block text-[10px] font-semibold uppercase">Asking Price</span>
-                <span className="font-bold text-ink text-sm">
+                <span className="text-slate-500 block font-medium">Asking price</span>
+                <span className="font-bold text-slate-900 text-sm tabular-nums">
                   {formatRupees(inspectingProperty.priceDemandPaise)}
                 </span>
               </div>
               <div>
-                <span className="text-muted block text-[10px] font-semibold uppercase">Area</span>
-                <span className="font-semibold text-ink">
+                <span className="text-slate-500 block font-medium">Area</span>
+                <span className="font-semibold text-slate-900">
                   {inspectingProperty.size.value} {inspectingProperty.size.unit.toUpperCase()}
                 </span>
               </div>
               <div>
-                <span className="text-muted block text-[10px] font-semibold uppercase">Facing</span>
-                <span className="font-semibold text-ink">{inspectingProperty.facing || 'Open'}</span>
+                <span className="text-slate-500 block font-medium">Facing</span>
+                <span className="font-semibold text-slate-900">{inspectingProperty.facing || 'Open'}</span>
               </div>
             </div>
 
@@ -1236,26 +1454,9 @@ export const PastePage: React.FC = () => {
                 {inspectingProperty.description}
               </p>
             )}
-
-            <div className="flex justify-end gap-2 pt-2 border-t border-border">
-              <Button size="sm" variant="secondary" onClick={() => setInspectingProperty(null)}>
-                Close
-              </Button>
-              <button
-                type="button"
-                onClick={() => {
-                  handleSharePropertyFlyer(inspectingProperty);
-                  setInspectingProperty(null);
-                }}
-                className="py-1.5 px-3.5 rounded-lg bg-emerald-600 text-white font-semibold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                <span>Share on WhatsApp</span>
-              </button>
-            </div>
-          </Card>
-        </div>
-      )}
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };

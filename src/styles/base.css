@@ -134,32 +134,26 @@
   animation: heroSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Special Free Trial Upgrade Button (restrained brand animation) */
-@keyframes trialGlowPulse {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+/* Card grid desktop layout: 1 col on mobile, 2 col 640-1439px, 3 col >=1440px */
+.card-grid-desktop {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .card-grid-desktop {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-
-.animate-trial-glow {
-  background: linear-gradient(135deg, #018E45 0%, #017A3C 50%, #018E45 100%);
-  background-size: 200% 200%;
-  animation: trialGlowPulse 4s ease-in-out infinite;
-  transition: transform 0.2s ease, filter 0.2s ease;
+@media (min-width: 1024px) {
+  .card-grid-desktop {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-
-.animate-trial-glow:hover {
-  filter: brightness(1.05);
-}
-
-.animate-trial-glow:active {
-  transform: scale(0.98);
+@media (min-width: 1440px) {
+  .card-grid-desktop {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 /* ========================================================= */
@@ -408,7 +402,6 @@
   .animate-sun-rays,
   .animate-float,
   .btn-shine-border,
-  .animate-trial-glow,
   .animate-liquid-orb {
     animation: none !important;
     transform: none !important;

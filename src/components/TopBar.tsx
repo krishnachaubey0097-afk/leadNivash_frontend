@@ -14,7 +14,7 @@ export const TopBar: React.FC = () => {
         <Link to="/app/today" className="flex items-center gap-2.5 group">
           <img
             src="/logo-icon.png"
-            alt="leadNivash Logo"
+            alt="LeadNivash Logo"
             className="w-8 h-8 object-contain transition-transform group-hover:scale-105"
           />
           <div className="flex flex-col">

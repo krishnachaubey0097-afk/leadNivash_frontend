@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { RequireAuth, RequireAdmin } from './features/auth/Guards';
 import { AppShell } from './components/layout/AppShell';
 
@@ -35,7 +35,6 @@ import {
 } from './features/buyers/BuyersPages';
 import { PastePage } from './features/paste/PastePage';
 import { ToolsPage } from './features/tools/ToolsPage';
-import { InquiriesPage } from './features/inquiries/InquiriesPage';
 import { SettingsPage } from './features/settings/SettingsPages';
 import { AdminPage } from './features/admin/AdminPage';
 import { PublicFlyerPage } from './features/flyer/PublicFlyerPage';
@@ -83,7 +82,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="buyers/:id/edit" element={<BuyerEditPage />} />
         <Route path="tools" element={<ToolsPage />} />
         <Route path="tools/:toolId" element={<ToolsPage />} />
-        <Route path="inquiries" element={<InquiriesPage />} />
+        <Route path="inquiries" element={<Navigate to="/app/buyers?tab=inquiries" replace />} />
         <Route path="settings" element={<SettingsPage />} />
 
         {/* Admin Route (Guarded by RequireAdmin) */}

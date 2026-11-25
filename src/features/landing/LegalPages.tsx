@@ -24,7 +24,7 @@ import { PricingSection } from '../pricing/PricingSection';
    ========================================================================= */
 export const PricingPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Pricing Plans & High-ROI Subscriptions | leadNivash';
+    document.title = 'Pricing Plans & High-ROI Subscriptions | LeadNivash';
   }, []);
 
   return (
@@ -46,7 +46,7 @@ export const PricingPage: React.FC = () => {
    ========================================================================= */
 export const PrivacyPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Privacy Policy & Owner Vault Isolation | leadNivash';
+    document.title = 'Privacy Policy & Owner Vault Isolation | LeadNivash';
   }, []);
 
   return (
@@ -76,7 +76,7 @@ export const PrivacyPage: React.FC = () => {
           <h2 className="text-sm font-bold text-ink">The Owner Vault Isolation Guarantee</h2>
         </div>
         <p className="text-muted text-[11px] leading-relaxed">
-          At leadNivash, we recognize that your property listings, owner contact numbers, commission agreements, and buyer requirements are the lifeblood of your brokerage business. Under our <strong>Owner Vault Data Isolation architecture</strong>, all private owner details and internal notes are encrypted at rest and logically separated by tenant account boundaries. They are <strong>never indexed publicly, never accessible to other brokers, and never shared or sold to third parties</strong>.
+          At LeadNivash, we recognize that your property listings, owner contact numbers, commission agreements, and buyer requirements are the lifeblood of your brokerage business. Under our <strong>Owner Vault Data Isolation architecture</strong>, all private owner details and internal notes are encrypted at rest and logically separated by tenant account boundaries. They are <strong>never indexed publicly, never accessible to other brokers, and never shared or sold to third parties</strong>.
         </p>
       </div>
 
@@ -111,7 +111,7 @@ export const PrivacyPage: React.FC = () => {
           </p>
           <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
             <li><strong>Contractual Performance:</strong> Providing Quick Chat requirement matching, deal pipeline tracking, and masked flyer creation.</li>
-            <li><strong>Broker-Directed Disclosures:</strong> When you generate a shareable property flyer, leadNivash generates a masked marketing card that hides the owner’s private phone number and address, displaying only your agency’s contact details.</li>
+            <li><strong>Broker-Directed Disclosures:</strong> When you generate a shareable property flyer, LeadNivash generates a masked marketing card that hides the owner’s private phone number and address, displaying only your agency’s contact details.</li>
             <li><strong>Consent:</strong> Sending onboarding walk-throughs and customer support communications over WhatsApp.</li>
           </ul>
         </section>
@@ -164,7 +164,7 @@ export const PrivacyPage: React.FC = () => {
             Protection of Minors
           </h2>
           <p className="text-muted">
-            leadNivash is a B2B platform exclusively designed for practicing adult real estate brokers and agency owners aged 18 and older. We do not knowingly solicit or collect personal information from individuals under the age of 18. If we discover that personal data of a minor has been collected, it is immediately deleted.
+            LeadNivash is a B2B platform exclusively designed for practicing adult real estate brokers and agency owners aged 18 and older. We do not knowingly solicit or collect personal information from individuals under the age of 18. If we discover that personal data of a minor has been collected, it is immediately deleted.
           </p>
         </section>
 
@@ -178,7 +178,7 @@ export const PrivacyPage: React.FC = () => {
             For any inquiries, privacy concerns, or data erasure requests, please contact our Data Protection Officer:
           </p>
           <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1 text-[11px]">
-            <p><strong>Grievance & Privacy Officer:</strong> leadNivash Legal & Compliance Team</p>
+            <p><strong>Grievance & Privacy Officer:</strong> LeadNivash Legal & Compliance Team</p>
             <p><strong>Email:</strong> <a href="mailto:privacy@leadnivash.com" className="underline font-bold text-emerald-700 dark:text-emerald-400">privacy@leadnivash.com</a></p>
             <p><strong>Support Telephone:</strong> <a href="tel:+919876543210" className="underline font-bold text-emerald-700 dark:text-emerald-400">+91 98765 43210</a></p>
             <p><strong>Operating Territory:</strong> Panipat & Gurugram, Haryana, India</p>
@@ -194,7 +194,7 @@ export const PrivacyPage: React.FC = () => {
    ========================================================================= */
 export const TermsPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Terms of Service | leadNivash';
+    document.title = 'Terms of Service | LeadNivash';
   }, []);
 
   return (
@@ -222,7 +222,7 @@ export const TermsPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">1. Acceptance of Terms & Eligibility</h2>
           <p className="text-muted">
-            By creating an account, accessing, or using the leadNivash platform, you acknowledge that you have read, understood, and agreed to be bound by these Terms of Service. This platform is strictly intended for licensed real estate brokers, property dealers, consultants, and real estate agencies aged 18 years or older.
+            By creating an account, accessing, or using the LeadNivash platform, you acknowledge that you have read, understood, and agreed to be bound by these Terms of Service. This platform is strictly intended for licensed real estate brokers, property dealers, consultants, and real estate agencies aged 18 years or older.
           </p>
         </section>
 
@@ -235,7 +235,7 @@ export const TermsPage: React.FC = () => {
               <span>Important Regulatory Disclaimer</span>
             </div>
             <p className="text-[11px] text-amber-800 dark:text-amber-300 leading-relaxed">
-              The Circle Rate, Tehsil Stamp Duty, Loan EMI, and Land Unit Conversion (Gaj, Marla, Kanal, Bigha) tools provided on leadNivash are automated calculation engines based on published municipal notifications and general sub-registrar guidelines. Because circle rates and registration charges may vary based on colony classifications, collector rate updates, and sub-registrar discretionary verification, <strong>all calculations must be verified with the competent Tehsil or Sub-Registrar office prior to deed execution</strong>. leadNivash shall not be held liable for any registry discrepancy or financial loss arising from reliance on automated estimates.
+              The Circle Rate, Tehsil Stamp Duty, Loan EMI, and Land Unit Conversion (Gaj, Marla, Kanal, Bigha) tools provided on LeadNivash are automated calculation engines based on published municipal notifications and general sub-registrar guidelines. Because circle rates and registration charges may vary based on colony classifications, collector rate updates, and sub-registrar discretionary verification, <strong>all calculations must be verified with the competent Tehsil or Sub-Registrar office prior to deed execution</strong>. LeadNivash shall not be held liable for any registry discrepancy or financial loss arising from reliance on automated estimates.
             </p>
           </div>
         </section>
@@ -244,7 +244,7 @@ export const TermsPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">3. Data Ownership & Marketing Flyers</h2>
           <p className="text-muted">
-            You retain 100% intellectual property ownership of all property listings, photos, client contact lists, and notes entered into your account. By uploading property details, you grant leadNivash a non-exclusive, limited license solely to host, process, and generate masked flyers and AI matches on your behalf. leadNivash does not sell, share, or broker your listings to other platform users.
+            You retain 100% intellectual property ownership of all property listings, photos, client contact lists, and notes entered into your account. By uploading property details, you grant LeadNivash a non-exclusive, limited license solely to host, process, and generate masked flyers and AI matches on your behalf. LeadNivash does not sell, share, or broker your listings to other platform users.
           </p>
         </section>
 
@@ -252,7 +252,7 @@ export const TermsPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">4. Subscription Billing, Free Trial & Cancellations</h2>
           <p className="text-muted">
-            leadNivash provides a 14-day free trial on initial registration without requiring payment information. Subscriptions are offered as a Monthly Plan (₹399/month) or a Yearly Plan (₹3,999/year, with an exclusive special offer of ₹3,299/year available during your active 14-day free trial). Subscriptions grant unrestricted access to multi-device sync, cloud storage, and priority support. Subscriptions may be cancelled anytime from your Settings. For refund guidelines, please review our <Link to="/refund" className="underline font-bold text-emerald-700 dark:text-emerald-400">Refund Policy</Link>.
+            LeadNivash provides a 14-day free trial on initial registration without requiring payment information. Subscriptions are offered as a Monthly Plan (₹399/month) or a Yearly Plan (₹3,999/year, with an exclusive special offer of ₹3,299/year available during your active 14-day free trial). Subscriptions grant unrestricted access to multi-device sync, cloud storage, and priority support. Subscriptions may be cancelled anytime from your Settings. For refund guidelines, please review our <Link to="/refund" className="underline font-bold text-emerald-700 dark:text-emerald-400">Refund Policy</Link>.
           </p>
         </section>
 
@@ -260,7 +260,7 @@ export const TermsPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">5. Acceptable Use Policy</h2>
           <p className="text-muted">
-            You agree not to use leadNivash to:
+            You agree not to use LeadNivash to:
           </p>
           <ul className="list-disc pl-5 space-y-1 text-slate-700 dark:text-slate-300">
             <li>Post fraudulent, deceptive, or non-existent property listings.</li>
@@ -274,7 +274,7 @@ export const TermsPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">6. Limitation of Liability</h2>
           <p className="text-muted">
-            To the maximum extent permitted under applicable law, leadNivash and its operators shall not be liable for any indirect, incidental, punitive, or consequential damages, including loss of profits, deal commissions, or business goodwill, arising from platform downtime, network latency, or third-party service interruptions.
+            To the maximum extent permitted under applicable law, LeadNivash and its operators shall not be liable for any indirect, incidental, punitive, or consequential damages, including loss of profits, deal commissions, or business goodwill, arising from platform downtime, network latency, or third-party service interruptions.
           </p>
         </section>
 
@@ -295,7 +295,7 @@ export const TermsPage: React.FC = () => {
    ========================================================================= */
 export const RefundPolicyPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Refund & Cancellation Policy | leadNivash';
+    document.title = 'Refund & Cancellation Policy | LeadNivash';
   }, []);
 
   return (
@@ -322,7 +322,7 @@ export const RefundPolicyPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">1. 14-Day Free Pilot (No Payment Needed)</h2>
           <p className="text-muted">
-            Every new broker is entitled to a 14-day zero-risk trial of leadNivash. No credit card or upfront deposit is required to start your pilot. You can explore all premium features, test Quick Chat voice matching, and evaluate the platform before making any financial commitment.
+            Every new broker is entitled to a 14-day zero-risk trial of LeadNivash. No credit card or upfront deposit is required to start your pilot. You can explore all premium features, test Quick Chat voice matching, and evaluate the platform before making any financial commitment.
           </p>
         </section>
 
@@ -371,7 +371,7 @@ export const RefundPolicyPage: React.FC = () => {
    ========================================================================= */
 export const CookiePolicyPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Cookie Policy & Web Storage | leadNivash';
+    document.title = 'Cookie Policy & Web Storage | LeadNivash';
   }, []);
 
   return (
@@ -398,7 +398,7 @@ export const CookiePolicyPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">1. What Are Cookies and Local Storage?</h2>
           <p className="text-muted">
-            Cookies and web storage tokens are small text records stored on your browser or device when you navigate a website. leadNivash utilizes essential session storage to authenticate brokers, maintain state across page transitions, and store user preferences.
+            Cookies and web storage tokens are small text records stored on your browser or device when you navigate a website. LeadNivash utilizes essential session storage to authenticate brokers, maintain state across page transitions, and store user preferences.
           </p>
         </section>
 
@@ -441,7 +441,7 @@ export const CookiePolicyPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">3. Zero Advertising or Cross-Site Tracking</h2>
           <p className="text-muted">
-            leadNivash <strong>never uses third-party advertising tracking cookies, retargeting pixels, or behavioral marketing beacons</strong>. Your activity on our platform is never sold or made available to commercial data brokers.
+            LeadNivash <strong>never uses third-party advertising tracking cookies, retargeting pixels, or behavioral marketing beacons</strong>. Your activity on our platform is never sold or made available to commercial data brokers.
           </p>
         </section>
 
@@ -472,7 +472,7 @@ export const ContactPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = 'Contact Support & Helpdesk | leadNivash';
+    document.title = 'Contact Support & Helpdesk | LeadNivash';
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -581,7 +581,7 @@ export const ContactPage: React.FC = () => {
           <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto mb-2" />
           <h3 className="text-base font-black text-ink font-heading">Message Received</h3>
           <p className="text-muted max-w-sm mx-auto">
-            Thank you for reaching out! A leadNivash specialist will connect with you on WhatsApp within 1 business hour.
+            Thank you for reaching out! A LeadNivash specialist will connect with you on WhatsApp within 1 business hour.
           </p>
         </div>
       ) : (

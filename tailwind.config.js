@@ -52,8 +52,12 @@ export default {
           bg: 'var(--danger-bg)',
         },
       },
+      screens: {
+        '2xl': '1440px',
+      },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        jakarta: ["'Plus Jakarta Sans'", 'Inter', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'page-title': ['22px', { lineHeight: '1.25', fontWeight: '600' }],

@@ -121,9 +121,9 @@ export const LinearProgressBar: React.FC<LinearProgressBarProps> = ({
   }[height];
 
   const variantGradients = {
-    emerald: 'bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600',
-    brand: 'bg-gradient-to-r from-teal-600 via-emerald-600 to-emerald-700',
-    amber: 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600',
+    emerald: 'bg-emerald-600',
+    brand: 'bg-brand-600',
+    amber: 'bg-amber-500',
   }[variant];
 
   return (

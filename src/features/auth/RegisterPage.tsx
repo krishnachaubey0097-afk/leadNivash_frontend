@@ -209,12 +209,12 @@ export const RegisterPage: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 p-1.5 shadow-sm">
               <img
                 src="/logo-icon.png"
-                alt="leadNivash"
+                alt="LeadNivash"
                 className="w-full h-full object-contain"
               />
             </div>
             <span className="text-2xl font-black tracking-tight text-slate-900 font-heading">
-              lead<span className="text-emerald-700">Nivash</span>
+              Lead<span className="text-emerald-700">Nivash</span>
             </span>
           </Link>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 font-heading">
@@ -266,7 +266,7 @@ export const RegisterPage: React.FC = () => {
         </div>
 
         {/* Main Card */}
-        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
           {errorMsg && (
             <div className="mb-4 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-2.5 text-rose-800 text-xs font-medium">
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
@@ -560,7 +560,7 @@ export const RegisterPage: React.FC = () => {
           {/* Bottom Login Link */}
           <div className="mt-6 pt-5 border-t border-slate-100 text-center">
             <p className="text-xs text-slate-600">
-              Already registered with leadNivash?{' '}
+              Already registered with LeadNivash?{' '}
               <Link to="/login" className="font-bold text-emerald-700 hover:underline">
                 Sign In to Workspace
               </Link>

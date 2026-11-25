@@ -13,7 +13,7 @@ const navItems = [
 
 export const BottomNav: React.FC = () => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[var(--surface)]/95 backdrop-blur-sm border-t border-border pb-safe lg:hidden select-none">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[var(--surface)] border-t border-border pb-safe lg:hidden select-none">
       <div className="max-w-md mx-auto px-2 h-16 flex items-stretch justify-around">
         {navItems.map((item) => {
           const Icon = item.icon;

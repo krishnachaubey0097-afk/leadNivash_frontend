@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  Sparkles,
   Check,
-  ShieldCheck,
-  ArrowRight,
   X,
-  Clock,
-  Crown,
   Lock,
 } from 'lucide-react';
 import { apiClient } from '../../lib/api/client';
 import { useAuth } from '../auth/AuthProvider';
 import { useToast } from '../../components/ui/Toast';
+import { BRAND_NAME, PLAN_PRICING } from '../../config/constants';
 
 interface SpecialOfferModalProps {
   isOpen: boolean;
@@ -31,46 +27,61 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Lock body scroll smoothly without layout shift / jitter
+  // Lock body scroll cleanly while modal is open
   useEffect(() => {
-    if (isOpen) {
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      const originalOverflow = document.body.style.overflow;
-      const originalPaddingRight = document.body.style.paddingRight;
+    if (!isOpen) return;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
 
-      document.body.style.overflow = 'hidden';
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-      }
-
-      return () => {
-        document.body.style.overflow = originalOverflow;
-        document.body.style.paddingRight = originalPaddingRight;
-      };
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   const handleProceedToUpgrade = async () => {
     setIsSubmitting(true);
     try {
-      // 1. Record upgrade intent so team and backend log the trial conversion
-      await apiClient.post('/public/contact', {
-        name: user?.name || 'Verified Free Trial Broker',
-        phone: user?.phone || '+919999999999',
-        agencyName: user?.agency?.name || 'LeadNivesh Broker Agency',
-        city: user?.agency?.city || 'Panipat',
-        message: `[Special Trial Upgrade Intent] User: ${user?.phone || user?.email || 'Trial User'} clicked Proceed to Pay for Yearly Plan @ ₹3,299 (₹700 discount applied).`,
-      }).catch(() => {});
+      await apiClient
+        .post('/public/contact', {
+          name: user?.name || 'Verified Free Trial Broker',
+          phone: user?.phone || '+919999999999',
+          agencyName: user?.agency?.name || `${BRAND_NAME} Broker Agency`,
+          city: user?.agency?.city || 'Panipat',
+          message: `[Special Trial Upgrade Intent] User: ${user?.phone || user?.email || 'Trial User'} clicked Proceed to pay for Yearly Plan @ ${PLAN_PRICING.formattedAnnualOffer}.`,
+        })
+        .catch(() => {});
 
-      // 2. Trigger Razorpay checkout handler callback if provided
       if (onPay) {
-        onPay({ plan: 'yearly_special', amount: 3299, currency: 'INR' });
+        onPay({
+          plan: 'yearly_special',
+          amount: PLAN_PRICING.annualTrialOfferRupees,
+          currency: 'INR',
+        });
       } else if (typeof (window as any).Razorpay !== 'undefined') {
         toast('Opening Razorpay Checkout...', 'info');
       } else {
-        toast('Proceeding to Razorpay payment gateway for ₹3,299...', 'success');
+        toast(
+          `Proceeding to Razorpay payment gateway for ${PLAN_PRICING.formattedAnnualOffer}...`,
+          'success'
+        );
       }
 
       if (onClaim) onClaim();
@@ -84,150 +95,98 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-5 bg-slate-950/85 backdrop-blur-xl animate-in fade-in duration-200"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/45 backdrop-blur-sm animate-in fade-in duration-150"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="upgrade-modal-title"
     >
       <div
-        className="relative w-full max-w-lg max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-emerald-500/30 shadow-2xl overflow-hidden text-left my-auto animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-[480px] bg-white dark:bg-slate-900 rounded-[20px] border border-border shadow-2xl p-6 text-left space-y-5 animate-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Decorative Emerald Accent Bar */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-[#018E45] via-teal-500 to-[#017A3C] shrink-0" />
-
-        {/* Close Button with generous click target & elegant circle */}
-        <button
-          onClick={onClose}
-          className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition cursor-pointer z-20 shadow-2xs"
-          aria-label="Close modal"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        {/* Pinned Header with Brand Identity */}
-        <div className="px-5 pt-4 pb-2 sm:px-6 sm:pt-5 shrink-0 pr-12 space-y-1.5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-[11px] font-bold">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>Free Trial Exclusive Privilege</span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-black text-ink font-heading tracking-tight leading-snug">
-            Upgrade to the Yearly Plan for{' '}
-            <span className="text-emerald-700 dark:text-emerald-400">₹3,299</span>{' '}
-            <span className="line-through text-muted text-base font-normal">₹3,999</span>
-          </h2>
-          <p className="text-xs text-muted leading-relaxed">
-            As an active Free Trial broker, you are eligible for an exclusive{' '}
-            <strong className="text-emerald-700 dark:text-emerald-400 font-semibold">₹700 instant discount</strong> on our
-            full Lifetime Yearly Plan.
-          </p>
-        </div>
-
-        {/* Smooth, Clean Content Body (scrollbar hidden for sleek aesthetic) */}
-        <div className="flex-1 overflow-y-auto px-5 py-2.5 sm:px-6 space-y-3.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-          {/* Pricing Details Box */}
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-br from-emerald-50/50 via-white to-teal-50/30 dark:from-slate-800/80 dark:via-slate-800 dark:to-slate-800/60 border border-emerald-500/25 space-y-2.5">
-            <div className="flex items-center justify-between border-b border-[#E5E9EE] dark:border-slate-700/80 pb-2">
-              <span className="text-[11px] font-bold text-muted uppercase tracking-wider">Plan Details</span>
-              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-600 text-white shadow-2xs">
-                Save ₹700 Instantly
-              </span>
-            </div>
-
-            <div className="space-y-1.5 text-xs">
-              <div className="flex items-center justify-between text-muted">
-                <span>Standard Yearly Plan Rate:</span>
-                <span className="line-through font-mono font-medium">₹3,999 / year</span>
-              </div>
-              <div className="flex items-center justify-between text-emerald-700 dark:text-emerald-400 font-bold">
-                <span>Free Trial Broker Discount:</span>
-                <span>- ₹700 One-Time Grant</span>
-              </div>
-              <div className="pt-2 border-t border-[#E5E9EE] dark:border-slate-700/80 flex items-center justify-between text-sm sm:text-base font-black text-ink">
-                <span>Your Net Upgrade Price:</span>
-                <span className="text-emerald-700 dark:text-emerald-400 font-extrabold">
-                  ₹3,299 <span className="text-xs font-normal text-muted">/ year (₹275/mo)</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Special Urgency Note for Brokers */}
-          <div className="p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-300/60 dark:border-amber-800/60 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
-            <Clock className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <div className="space-y-0.5">
-              <p className="font-bold text-[11px] text-amber-950 dark:text-amber-100">
-                Special Pricing Granted Only During Active Trial Window
-              </p>
-              <p className="text-[10px] text-amber-900/90 dark:text-amber-300/90 leading-relaxed">
-                Lock in ₹3,299 renewal price for life. Once your trial ends, renewal defaults to regular ₹3,999/yr.
-              </p>
-            </div>
-          </div>
-
-          {/* Key Value Checklist */}
-          <div className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-            <span className="text-[10px] font-black uppercase tracking-wider text-muted block">
-              Everything Unlocked In Your Annual Pass:
+        {/* Header + Top-Right Close Button */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-1">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold">
+              Annual Pro upgrade
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px]">
-              <div className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Unlimited Property Listings</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Unlimited Buyer Inquiries</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Multi-Image & Video Flyers</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Custom Agency Logo & Watermark</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>RERA Verified Broker Badge</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Priority VIP Support</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Money Back Guarantee Banner */}
-          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-center gap-2 text-[11px] text-muted">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Includes 7-Day 100% Unconditional Money-Back Guarantee. Zero risk.</span>
-          </div>
-        </div>
-
-        {/* Pinned Bottom Actions & Razorpay CTA - Always visible without scroll clipping */}
-        <div className="shrink-0 p-4 sm:px-6 sm:pb-5 pt-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs border-t border-slate-100 dark:border-slate-800 space-y-2">
-          <button
-            type="button"
-            disabled={isSubmitting}
-            onClick={handleProceedToUpgrade}
-            className="w-full py-3.5 px-4 rounded-2xl text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow-md animate-trial-glow flex items-center justify-center gap-2 cursor-pointer transition min-h-[46px]"
-          >
-            <Crown className="w-4 h-4 shrink-0" />
-            <span>Proceed to Pay ₹3,299</span>
-            <ArrowRight className="w-4 h-4 shrink-0" />
-          </button>
-
-          <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted">
-            <Lock className="w-3 h-3 text-emerald-600 shrink-0" />
-            <span>100% Secure Checkout via Razorpay · Instant Activation</span>
+            <h2
+              id="upgrade-modal-title"
+              className="text-xl font-bold text-slate-900 dark:text-white leading-snug"
+            >
+              Unlock full {BRAND_NAME} Pro
+            </h2>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="w-full text-center text-xs text-muted hover:text-ink font-medium py-0.5 transition cursor-pointer"
+            className="w-9 h-9 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            aria-label="Close upgrade modal"
           >
-            Continue with my 14-Day Free Trial
+            <X className="w-4 h-4" />
           </button>
+        </div>
+
+        {/* Pricing Summary: Struck-through original price + discounted price on one line each (no wrapping) */}
+        <div className="p-4 rounded-[14px] bg-slate-50 dark:bg-slate-800/70 border border-border space-y-2">
+          <div className="flex items-center justify-between gap-3 text-sm whitespace-nowrap">
+            <span className="text-slate-500">Standard yearly price</span>
+            <span className="line-through text-slate-400 font-medium tabular-nums">
+              {PLAN_PRICING.formattedAnnualStandard}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-3 whitespace-nowrap pt-1 border-t border-border/70">
+            <span className="text-sm font-semibold text-slate-900 dark:text-white">
+              Trial offer price
+            </span>
+            <span className="text-lg font-bold text-brand-700 tabular-nums">
+              {PLAN_PRICING.formattedAnnualOffer}
+            </span>
+          </div>
+        </div>
+
+        {/* Short Benefit Bullets */}
+        <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+          {[
+            'Unlimited property listings and buyer requirements',
+            'Instant WhatsApp AI parser and client match engine',
+            'Owner Vault privacy isolation and watermarked flyers',
+            '7-day unconditional refund guarantee',
+          ].map((item) => (
+            <li key={item} className="flex items-center gap-2.5">
+              <span className="w-5 h-5 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                <Check className="w-3.5 h-3.5" />
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        {/* Actions: One-line Primary CTA + Secondary Link + Razorpay Lock */}
+        <div className="space-y-2.5 pt-1">
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={handleProceedToUpgrade}
+            className="w-full h-11 px-5 rounded-input bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold whitespace-nowrap flex items-center justify-center transition-colors cursor-pointer disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1"
+          >
+            {isSubmitting ? 'Processing...' : 'Proceed to pay'}
+          </button>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full py-1.5 text-center text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+          >
+            Continue with free trial
+          </button>
+
+          <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-0.5">
+            <Lock className="w-3 h-3 text-brand-600 shrink-0" />
+            <span>Secured by Razorpay</span>
+          </div>
         </div>
       </div>
     </div>,

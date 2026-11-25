@@ -380,35 +380,35 @@ export const AdminPage: React.FC = () => {
         <div className="space-y-6">
           {/* Top Operational Status Banner */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            <Card className="p-4 bg-gradient-to-br from-white via-white to-emerald-50/40 border-emerald-500/20">
-              <div className="flex items-center gap-2 text-muted text-[11px] font-bold uppercase tracking-wider">
+            <Card className="p-4 bg-white dark:bg-slate-900 border-border">
+              <div className="flex items-center gap-2 text-muted text-xs font-semibold">
                 <Database className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Database Cluster</span>
               </div>
-              <div className="mt-2 text-lg font-black text-ink font-heading flex items-center gap-1.5">
+              <div className="mt-2 text-lg font-bold text-ink font-heading flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>MongoDB Atlas</span>
               </div>
               <span className="text-[10px] text-muted">Primary Replica Set Connected</span>
             </Card>
 
-            <Card className="p-4 bg-gradient-to-br from-white via-white to-blue-50/40 border-blue-500/20">
-              <div className="flex items-center gap-2 text-muted text-[11px] font-bold uppercase tracking-wider">
+            <Card className="p-4 bg-white dark:bg-slate-900 border-border">
+              <div className="flex items-center gap-2 text-muted text-xs font-semibold">
                 <Clock className="w-3.5 h-3.5 text-blue-600" />
                 <span>Service Uptime</span>
               </div>
-              <div className="mt-2 text-lg font-black text-blue-700 font-heading">
+              <div className="mt-2 text-lg font-bold text-blue-700 font-heading">
                 {formatUptime(usage?.systemHealth?.uptimeSeconds)}
               </div>
               <span className="text-[10px] text-muted">Node.js Server Process</span>
             </Card>
 
-            <Card className="p-4 bg-gradient-to-br from-white via-white to-purple-50/40 border-purple-500/20">
-              <div className="flex items-center gap-2 text-muted text-[11px] font-bold uppercase tracking-wider">
+            <Card className="p-4 bg-white dark:bg-slate-900 border-border">
+              <div className="flex items-center gap-2 text-muted text-xs font-semibold">
                 <HardDrive className="w-3.5 h-3.5 text-purple-600" />
                 <span>Memory (Heap Used)</span>
               </div>
-              <div className="mt-2 text-lg font-black text-purple-700 font-heading">
+              <div className="mt-2 text-lg font-bold text-purple-700 font-heading">
                 {usage?.systemHealth?.memoryUsageMb?.heapUsed || 0} MB
               </div>
               <span className="text-[10px] text-muted">
@@ -416,12 +416,12 @@ export const AdminPage: React.FC = () => {
               </span>
             </Card>
 
-            <Card className="p-4 bg-gradient-to-br from-white via-white to-slate-50/60 border-slate-300/40">
-              <div className="flex items-center gap-2 text-muted text-[11px] font-bold uppercase tracking-wider">
+            <Card className="p-4 bg-white dark:bg-slate-900 border-border">
+              <div className="flex items-center gap-2 text-muted text-xs font-semibold">
                 <Server className="w-3.5 h-3.5 text-slate-600" />
                 <span>Environment</span>
               </div>
-              <div className="mt-2 text-lg font-black text-slate-800 dark:text-slate-100 font-heading uppercase">
+              <div className="mt-2 text-lg font-bold text-slate-800 dark:text-slate-100 font-heading capitalize">
                 {usage?.systemHealth?.environment || 'production'}
               </div>
               <span className="text-[10px] text-muted">RSS: {usage?.systemHealth?.memoryUsageMb?.rss || 0} MB</span>
@@ -445,7 +445,7 @@ export const AdminPage: React.FC = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               <Card className="p-4 border-emerald-500/30 bg-emerald-50/20">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+                  <span className="text-xs font-semibold text-emerald-800 dark:text-emerald-300">
                     Online Right Now
                   </span>
                   <span className="relative flex h-2.5 w-2.5">
@@ -463,7 +463,7 @@ export const AdminPage: React.FC = () => {
               </Card>
 
               <Card className="p-4 border-border">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
+                <span className="text-xs font-semibold text-muted">
                   Active (Last 24 Hours)
                 </span>
                 <div className="mt-2 flex items-baseline gap-2">
@@ -476,7 +476,7 @@ export const AdminPage: React.FC = () => {
               </Card>
 
               <Card className="p-4 border-border">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
+                <span className="text-xs font-semibold text-muted">
                   Active (Last 7 Days)
                 </span>
                 <div className="mt-2 flex items-baseline gap-2">
@@ -489,7 +489,7 @@ export const AdminPage: React.FC = () => {
               </Card>
 
               <Card className="p-4 border-border">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
+                <span className="text-xs font-semibold text-muted">
                   Active (Last 30 Days)
                 </span>
                 <div className="mt-2 flex items-baseline gap-2">

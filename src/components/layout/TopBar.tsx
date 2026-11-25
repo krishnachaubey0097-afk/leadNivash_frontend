@@ -2,14 +2,16 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AvatarMenu } from './AvatarMenu';
 import { NotificationMenu } from './NotificationMenu';
-import { Settings, Plus } from 'lucide-react';
+import { Tooltip } from '../ui/Tooltip';
+import { Plus } from 'lucide-react';
+import { BRAND_NAME } from '../../config/constants';
 
 export const TopBar: React.FC = () => {
   const location = useLocation();
 
   const getPageTitle = (pathname: string): { title: string; subtitle?: string } => {
     const cleanPath = pathname.replace(/\/+$/, '') || '/';
-    if (cleanPath === '/app' || cleanPath === '') return { title: 'Dashboard', subtitle: 'Broker overview' };
+    if (cleanPath === '/app' || cleanPath === '') return { title: BRAND_NAME, subtitle: 'Broker overview' };
     if (cleanPath.startsWith('/app/track-record')) return { title: 'Track Record', subtitle: 'Pipeline & deals' };
     if (cleanPath === '/app/properties/new') return { title: 'New Listing', subtitle: 'Add property' };
     if (cleanPath.startsWith('/app/properties')) return { title: 'Properties', subtitle: 'Property listings' };
@@ -27,57 +29,66 @@ export const TopBar: React.FC = () => {
     if (cleanPath.startsWith('/app/inquiries')) return { title: 'Inquiries', subtitle: 'Lead inbox' };
     if (cleanPath.startsWith('/app/settings')) return { title: 'Settings', subtitle: 'Agency & profile' };
     if (cleanPath.startsWith('/app/admin')) return { title: 'Admin Console', subtitle: 'System control' };
-    return { title: 'Dashboard', subtitle: 'Broker overview' };
+    return { title: BRAND_NAME, subtitle: 'Broker overview' };
   };
 
-  const { title } = getPageTitle(location.pathname);
+  const { title, subtitle } = getPageTitle(location.pathname);
   const isDashboard = location.pathname.replace(/\/+$/, '') === '/app' || location.pathname === '/app/';
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-surface border-b border-border transition-colors duration-150">
-      <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-        {/* Left side: Brand Logo & leadNivash Name */}
-        <div className="flex items-center gap-2.5 min-w-0">
-          <Link to="/app" className="flex items-center gap-2 shrink-0 group" aria-label="leadNivash Home">
-            <div className="w-8 h-8 rounded-lg bg-surface border border-border p-1 flex items-center justify-center">
-              <img src="/logo-icon.png" alt="leadNivash" className="w-full h-full object-contain" />
-            </div>
-            <span className="text-base font-bold text-ink leading-none">
-              lead<span className="text-brand-600">Nivash</span>
-            </span>
-          </Link>
+    <header className="sticky top-0 z-30 w-full h-14 sm:h-16 bg-white/80 dark:bg-[#0B0F17]/80 backdrop-blur-md border-b border-border transition-colors duration-150">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
+        {/* LEFT = Desktop: page title only (Jakarta 22/700 navy) + optional one-line subtitle (13 ink-500)
+                 Mobile: brand logo + title */}
+        <div className="min-w-0 flex items-center">
+          {/* Desktop Left: Page Title & Subtitle */}
+          <div className="hidden lg:flex flex-col justify-center">
+            <h1 className="font-jakarta font-bold text-[22px] text-navy dark:text-white leading-tight truncate">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="text-[13px] text-slate-500 dark:text-slate-400 font-normal truncate mt-0.5">
+                {subtitle}
+              </p>
+            )}
+          </div>
 
-          {!isDashboard && (
-            <div className="hidden sm:flex items-center gap-2 pl-2.5 border-l border-border text-sm font-medium text-muted">
-              <span>{title}</span>
-            </div>
-          )}
+          {/* Mobile Left: Brand Logo & Title */}
+          <div className="flex lg:hidden items-center gap-2.5 min-w-0">
+            <Link to="/app" className="flex items-center gap-2 shrink-0 group" aria-label={`${BRAND_NAME} Home`}>
+              <div className="w-8 h-8 rounded-lg bg-surface border border-border p-1 flex items-center justify-center">
+                <img src="/logo-icon.png" alt={BRAND_NAME} className="w-full h-full object-contain" />
+              </div>
+              <span className="text-base font-bold text-navy dark:text-white leading-none">
+                {BRAND_NAME}
+              </span>
+            </Link>
+
+            {!isDashboard && (
+              <div className="flex items-center gap-2 pl-2.5 border-l border-border text-sm font-medium text-muted truncate">
+                <span className="truncate">{title}</span>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Right side: Quick Action, Notifications, Settings, Avatar */}
+        {/* RIGHT = Global Shortcut icon button (40px) + Bell + Avatar (32 circle) */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-          {/* Quick Paste button on desktop */}
-          <Link
-            to="/app/paste"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-input bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white text-xs font-semibold shadow-xs transition-colors duration-150"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Paste Message</span>
-          </Link>
+          {/* Desktop Single 40px icon button shortcut with tooltip (replaces floating pill) */}
+          <Tooltip content="Paste a message">
+            <Link
+              to="/app/paste"
+              className="w-10 h-10 rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-surface-hover active:scale-95 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand-600"
+              aria-label="Paste a message"
+            >
+              <Plus className="w-4 h-4 text-brand-600" />
+            </Link>
+          </Tooltip>
 
-          {/* Notifications */}
+          {/* Notifications Bell with Badge Count */}
           <NotificationMenu />
 
-          {/* Mobile Settings button */}
-          <Link
-            to="/app/settings"
-            className="w-10 h-10 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-surface-hover transition-colors duration-150"
-            aria-label="Settings"
-          >
-            <Settings className="w-5 h-5" />
-          </Link>
-
-          {/* User Avatar Menu */}
+          {/* User Avatar Menu (32 circle) */}
           <AvatarMenu />
         </div>
       </div>

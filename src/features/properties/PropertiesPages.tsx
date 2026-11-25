@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import {
   Building2,
   Plus,
@@ -15,7 +16,7 @@ import {
   EyeOff,
   Copy,
   Check,
-  ChevronRight,
+  ChevronDown,
   Upload,
   Image as ImageIcon,
   Video as VideoIcon,
@@ -28,9 +29,14 @@ import {
   Trash2,
   Edit2,
   RotateCcw,
+  SlidersHorizontal,
+  MoreHorizontal,
+  Sparkles,
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { StatusChip } from '../../components/ui/Chip';
+import { Modal } from '../../components/ui/Modal';
 import { useToast } from '../../components/ui/Toast';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { PropertyCardSkeleton, PropertyDetailSkeleton } from '../../components/ui/Skeleton';
@@ -45,19 +51,47 @@ import {
   type PropertyItem,
   type CreatePropertyDto,
 } from '../../lib/api/properties';
+import { fetchBuyers, type BuyerItem } from '../../lib/api/buyers';
 import { formatRupees } from '../../lib/money';
 import clsx from 'clsx';
 
 // =========================================================================
 // 1. PROPERTY LIST & INVENTORY OVERVIEW PAGE
 // =========================================================================
+type SortOption = 'newest' | 'price_asc' | 'price_desc' | 'size_desc' | 'size_asc';
+
 export const PropertiesListPage: React.FC = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+
   const [properties, setProperties] = useState<PropertyItem[]>([]);
+  const [buyers, setBuyers] = useState<BuyerItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
+
+  // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'available' | 'hold' | 'sold'>('all');
+  const [sortOption, setSortOption] = useState<SortOption>('newest');
+
+  // Filter Modal state
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState<string>('all');
+  const [minPrice, setMinPrice] = useState<string>('');
+  const [maxPrice, setMaxPrice] = useState<string>('');
+  const [minSize, setMinSize] = useState<string>('');
+  const [maxSize, setMaxSize] = useState<string>('');
+  const [selectedLocality, setSelectedLocality] = useState<string>('');
+
+  // Draft Filter state for Modal
+  const [draftType, setDraftType] = useState<string>('all');
+  const [draftMinPrice, setDraftMinPrice] = useState<string>('');
+  const [draftMaxPrice, setDraftMaxPrice] = useState<string>('');
+  const [draftMinSize, setDraftMinSize] = useState<string>('');
+  const [draftMaxSize, setDraftMaxSize] = useState<string>('');
+  const [draftLocality, setDraftLocality] = useState<string>('');
+
+  // Delete Dialog state
   const [propertyToDelete, setPropertyToDelete] = useState<{ id: string; title: string } | null>(null);
   const [isDeletingProperty, setIsDeletingProperty] = useState(false);
 
@@ -76,12 +110,16 @@ export const PropertiesListPage: React.FC = () => {
     }
   };
 
-  const loadProperties = async (silent = false) => {
+  const loadData = async (silent = false) => {
     if (!silent) setIsLoading(true);
     setFetchError(null);
     try {
-      const data = await fetchProperties();
-      setProperties(Array.isArray(data) ? data : []);
+      const [propsData, buyersData] = await Promise.all([
+        fetchProperties(),
+        fetchBuyers().catch(() => []),
+      ]);
+      setProperties(Array.isArray(propsData) ? propsData : []);
+      setBuyers(Array.isArray(buyersData) ? buyersData : []);
     } catch (err: any) {
       if (!silent) {
         console.warn('Failed to fetch properties:', err);
@@ -93,9 +131,9 @@ export const PropertiesListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    loadProperties();
+    loadData();
 
-    const handleSync = () => loadProperties(true);
+    const handleSync = () => loadData(true);
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') handleSync();
     };
@@ -118,17 +156,89 @@ export const PropertiesListPage: React.FC = () => {
     };
   }, []);
 
-  // Filter chips definition per Prompt 2
+  // Compute buyer matches count for a given property
+  const getPropertyMatchCount = (prop: PropertyItem) => {
+    if (buyers.length === 0) return 0;
+    const pLoc = (prop.locality || '').toLowerCase();
+    const pType = (prop.type || '').toLowerCase();
+
+    return buyers.filter((b) => {
+      if (b.status !== 'active') return false;
+      const hasLocMatch = b.localities?.some((loc) => {
+        const l = typeof loc === 'string' ? loc.toLowerCase() : loc.display.toLowerCase();
+        return pLoc.includes(l) || l.includes(pLoc);
+      });
+      const hasTypeMatch = b.types?.some((t) => t.toLowerCase() === pType);
+      return hasLocMatch || hasTypeMatch;
+    }).length;
+  };
+
+  // Filter chips definition per Prompt specification
   const statusFilters: Array<{ label: string; value: 'all' | 'available' | 'hold' | 'sold' }> = [
     { label: 'All', value: 'all' },
     { label: 'Available', value: 'available' },
-    { label: 'On Hold', value: 'hold' },
-    { label: 'Sold / Closed', value: 'sold' },
+    { label: 'On hold', value: 'hold' },
+    { label: 'Sold', value: 'sold' },
   ];
+
+  const sortLabels: Record<SortOption, string> = {
+    newest: 'Newest ▾',
+    price_asc: 'Price: Low to High ▾',
+    price_desc: 'Price: High to Low ▾',
+    size_desc: 'Size: Large to Small ▾',
+    size_asc: 'Size: Small to Large ▾',
+  };
+
+  // Active advanced filters counter
+  const activeAdvancedFiltersCount = useMemo(() => {
+    let count = 0;
+    if (selectedType !== 'all') count++;
+    if (minPrice || maxPrice) count++;
+    if (minSize || maxSize) count++;
+    if (selectedLocality) count++;
+    return count;
+  }, [selectedType, minPrice, maxPrice, minSize, maxSize, selectedLocality]);
+
+  // Open modal & sync draft state
+  const handleOpenFilterModal = () => {
+    setDraftType(selectedType);
+    setDraftMinPrice(minPrice);
+    setDraftMaxPrice(maxPrice);
+    setDraftMinSize(minSize);
+    setDraftMaxSize(maxSize);
+    setDraftLocality(selectedLocality);
+    setIsFilterModalOpen(true);
+  };
+
+  const handleApplyFilters = () => {
+    setSelectedType(draftType);
+    setMinPrice(draftMinPrice);
+    setMaxPrice(draftMaxPrice);
+    setMinSize(draftMinSize);
+    setMaxSize(draftMaxSize);
+    setSelectedLocality(draftLocality);
+    setIsFilterModalOpen(false);
+  };
+
+  const handleResetFilters = () => {
+    setDraftType('all');
+    setDraftMinPrice('');
+    setDraftMaxPrice('');
+    setDraftMinSize('');
+    setDraftMaxSize('');
+    setDraftLocality('');
+    setSelectedType('all');
+    setMinPrice('');
+    setMaxPrice('');
+    setMinSize('');
+    setMaxSize('');
+    setSelectedLocality('');
+    setIsFilterModalOpen(false);
+  };
 
   // Client-side instant filter & search logic
   const filteredProperties = useMemo(() => {
-    return properties.filter((p) => {
+    const list = properties.filter((p) => {
       // 1. Status Filter
       if (filterStatus === 'available' && p.status !== 'available') return false;
       if (filterStatus === 'hold' && p.status !== 'hold') return false;
@@ -149,32 +259,79 @@ export const PropertiesListPage: React.FC = () => {
         }
       }
 
+      // 3. Advanced Modal Filters: Type
+      if (selectedType !== 'all') {
+        const pType = (p.type || '').toLowerCase();
+        const pCat = (p.category || '').toLowerCase();
+        if (!pType.includes(selectedType) && !pCat.includes(selectedType)) {
+          return false;
+        }
+      }
+
+      // 4. Advanced Modal Filters: Price Range (in Rupees)
+      if (minPrice) {
+        const minPaise = parseFloat(minPrice) * 100000 * 100; // in Lakhs
+        if (p.priceDemandPaise < minPaise) return false;
+      }
+      if (maxPrice) {
+        const maxPaise = parseFloat(maxPrice) * 100000 * 100; // in Lakhs
+        if (p.priceDemandPaise > maxPaise) return false;
+      }
+
+      // 5. Advanced Modal Filters: Size Range
+      if (minSize && p.size?.value && p.size.value < parseFloat(minSize)) return false;
+      if (maxSize && p.size?.value && p.size.value > parseFloat(maxSize)) return false;
+
+      // 6. Advanced Modal Filters: Locality
+      if (selectedLocality.trim()) {
+        const loc = selectedLocality.toLowerCase().trim();
+        const pLoc = `${p.locality || ''} ${p.city || ''}`.toLowerCase();
+        if (!pLoc.includes(loc)) return false;
+      }
+
       return true;
     });
-  }, [properties, filterStatus, searchQuery]);
 
-  // Format relative or readable update date
-  const formatLastUpdated = (dateString?: string) => {
-    if (!dateString) return null;
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return null;
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    if (diffDays <= 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
-  };
+    // Sort order
+    return list.sort((a, b) => {
+      switch (sortOption) {
+        case 'price_asc':
+          return (a.priceDemandPaise || 0) - (b.priceDemandPaise || 0);
+        case 'price_desc':
+          return (b.priceDemandPaise || 0) - (a.priceDemandPaise || 0);
+        case 'size_desc':
+          return (b.size?.value || 0) - (a.size?.value || 0);
+        case 'size_asc':
+          return (a.size?.value || 0) - (b.size?.value || 0);
+        case 'newest':
+        default:
+          return (
+            new Date(b.createdAt || b.updatedAt || 0).getTime() -
+            new Date(a.createdAt || a.updatedAt || 0).getTime()
+          );
+      }
+    });
+  }, [
+    properties,
+    filterStatus,
+    searchQuery,
+    selectedType,
+    minPrice,
+    maxPrice,
+    minSize,
+    maxSize,
+    selectedLocality,
+    sortOption,
+  ]);
 
   return (
-    <div className="space-y-4 pb-12 max-w-5xl mx-auto text-left">
-      {/* ── 1. TOP SECTION ── */}
-      <div className="flex items-center justify-between gap-3">
+    <div className="space-y-5 pb-12 max-w-[1200px] mx-auto text-left">
+      {/* ── 1. TOP HEADER SECTION ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold text-ink leading-tight">
-              My Properties
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
+              Properties
             </h1>
             {!isLoading && (
               <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold text-brand-700 bg-brand-50 border border-brand-200/60">
@@ -182,84 +339,147 @@ export const PropertiesListPage: React.FC = () => {
               </span>
             )}
           </div>
-          <p className="text-xs sm:text-sm text-secondary text-muted mt-0.5 truncate">
-            Manage your listings and availability.
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5 truncate">
+            Manage your listings and availability
           </p>
         </div>
 
-        <Link to="/app/properties/new" className="shrink-0">
+        <Link to="/app/properties/new" className="shrink-0 self-start sm:self-auto">
           <Button
             variant="primary"
             size="md"
-            className="gap-1.5 shadow-sm font-semibold"
+            className="gap-1.5 shadow-sm font-semibold text-xs sm:text-sm"
           >
             <Plus className="w-4 h-4" />
-            <span>Add Property</span>
+            <span>+ Add property</span>
           </Button>
         </Link>
       </div>
 
-      {/* ── 2. FULL-WIDTH SEARCH FIELD ── */}
-      <div className="relative w-full">
-        <Search className="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by locality, property type or ID"
-          className="w-full pl-10 pr-9 min-h-[48px] bg-white border border-border rounded-input text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent transition-all shadow-card"
-        />
-        {searchQuery && (
-          <button
-            type="button"
-            onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted hover:text-ink transition cursor-pointer"
-            title="Clear search"
+      {/* ── 2. CONTROLS ROW: Search Bar (~360px) + Filter Chips + Filters Button + Sort Dropdown ── */}
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+        {/* Left / Center Section: Search + Status Chips + Filters Modal Button */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1 min-w-0 flex-wrap">
+          {/* Search bar (~360px) */}
+          <div className="relative w-full sm:w-[360px] shrink-0">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by locality, property type or ID"
+              className="w-full pl-10 pr-9 h-11 bg-white border border-border rounded-input text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent transition-all shadow-2xs"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-700 transition cursor-pointer"
+                title="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Filter Chips: All, Available, On hold, Sold */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
+            {statusFilters.map((f) => {
+              const isSelected = filterStatus === f.value;
+              return (
+                <button
+                  key={f.value}
+                  type="button"
+                  onClick={() => setFilterStatus(f.value)}
+                  className={clsx(
+                    'px-3.5 h-11 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer shrink-0 border inline-flex items-center gap-1.5',
+                    isSelected
+                      ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                      : 'bg-white text-slate-600 border-border hover:bg-slate-50 hover:text-slate-900'
+                  )}
+                >
+                  <span>{f.label}</span>
+                  {f.value !== 'all' && (
+                    <span
+                      className={clsx(
+                        'text-[11px] px-1.5 py-0.5 rounded-full leading-none font-bold',
+                        isSelected ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 text-slate-500'
+                      )}
+                    >
+                      {f.value === 'sold'
+                        ? properties.filter((p) => p.status === 'sold' || p.status === 'rented').length
+                        : properties.filter((p) => p.status === f.value).length}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Filters Modal Button */}
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={handleOpenFilterModal}
+            className="gap-1.5 h-11 text-xs sm:text-sm font-semibold shrink-0"
           >
-            <X className="w-4 h-4" />
-          </button>
-        )}
-      </div>
+            <SlidersHorizontal className="w-4 h-4 text-slate-500" />
+            <span>Filters</span>
+            {activeAdvancedFiltersCount > 0 && (
+              <span className="w-5 h-5 rounded-full bg-brand-50 text-brand-700 font-bold text-xs flex items-center justify-center">
+                {activeAdvancedFiltersCount}
+              </span>
+            )}
+          </Button>
+        </div>
 
-      {/* ── 3. HORIZONTALLY SCROLLABLE FILTER CHIPS ── */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none touch-pan-x">
-        {statusFilters.map((f) => {
-          const isSelected = filterStatus === f.value;
-          return (
+        {/* Right Section: Sort Dropdown ("Newest ▾") */}
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
             <button
-              key={f.value}
               type="button"
-              onClick={() => setFilterStatus(f.value)}
-              className={clsx(
-                'px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer shrink-0 border',
-                isSelected
-                  ? 'bg-brand-600 text-white border-brand-600 shadow-xs'
-                  : 'bg-white text-muted border-border hover:text-ink hover:border-slate-300'
-              )}
+              className="inline-flex items-center justify-between gap-2 px-3.5 h-11 rounded-input border border-border bg-white text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer shadow-2xs shrink-0 self-start lg:self-auto"
             >
-              {f.label}
-              {f.value !== 'all' && (
-                <span className="ml-1.5 opacity-80 text-[11px]">
-                  {f.value === 'sold'
-                    ? properties.filter((p) => p.status === 'sold' || p.status === 'rented').length
-                    : properties.filter((p) => p.status === f.value).length}
-                </span>
-              )}
+              <span>{sortLabels[sortOption]}</span>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
             </button>
-          );
-        })}
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="z-50 min-w-[190px] bg-white border border-border p-1 rounded-[14px] shadow-xl animate-in fade-in zoom-in-95 duration-150"
+              sideOffset={6}
+              align="end"
+            >
+              {(Object.keys(sortLabels) as SortOption[]).map((key) => (
+                <DropdownMenu.Item
+                  key={key}
+                  onClick={() => setSortOption(key)}
+                  className={clsx(
+                    'flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-lg cursor-pointer outline-none transition-colors',
+                    sortOption === key
+                      ? 'bg-brand-50 text-brand-700'
+                      : 'text-slate-700 hover:bg-slate-100'
+                  )}
+                >
+                  <span>{sortLabels[key].replace(' ▾', '')}</span>
+                  {sortOption === key && <Check className="w-3.5 h-3.5 text-brand-600" />}
+                </DropdownMenu.Item>
+              ))}
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       </div>
 
-      {/* ── 4. LOADING SKELETONS & ERROR STATES ── */}
+      {/* ── 3. LOADING SKELETONS & ERROR STATES ── */}
       {fetchError ? (
-        <div className="p-4 bg-danger-bg border border-danger/20 rounded-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-secondary text-danger">
+        <div className="p-4 bg-red-50 border border-red-200 rounded-[14px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm text-red-700">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+            <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
             <span>{fetchError}</span>
           </div>
           <button
             type="button"
-            onClick={() => loadProperties(false)}
+            onClick={() => loadData(false)}
             className="flex items-center gap-1 text-xs font-semibold hover:underline shrink-0 cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -267,22 +487,22 @@ export const PropertiesListPage: React.FC = () => {
           </button>
         </div>
       ) : isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <div className="card-grid-desktop gap-5">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <PropertyCardSkeleton key={i} />
           ))}
         </div>
       ) : properties.length === 0 ? (
-        /* ── 5. EMPTY STATE: NO PROPERTIES IN INVENTORY ── */
+        /* ── 4. EMPTY STATE: NO PROPERTIES IN INVENTORY (Same copy as mobile) ── */
         <Card className="p-8 sm:p-12 text-center space-y-4">
-          <div className="w-12 h-12 rounded-card bg-brand-50 text-brand-600 flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-[14px] bg-brand-50 text-brand-600 flex items-center justify-center mx-auto">
             <Building2 className="w-6 h-6" />
           </div>
           <div className="space-y-1 max-w-sm mx-auto">
-            <h3 className="text-card-title font-semibold text-ink">
+            <h3 className="text-base font-bold text-slate-900">
               No properties yet
             </h3>
-            <p className="text-secondary text-muted leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
               Add your first property to start managing your inventory and finding buyer matches.
             </p>
           </div>
@@ -296,16 +516,16 @@ export const PropertiesListPage: React.FC = () => {
           </div>
         </Card>
       ) : filteredProperties.length === 0 ? (
-        /* ── 5B. EMPTY STATE: NO SEARCH MATCHES ── */
+        /* ── 4B. EMPTY STATE: NO SEARCH MATCHES (Same copy as mobile) ── */
         <Card className="p-8 text-center space-y-3">
-          <div className="w-11 h-11 rounded-card bg-surface-hover text-muted flex items-center justify-center mx-auto">
+          <div className="w-11 h-11 rounded-[14px] bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
             <Search className="w-5 h-5" />
           </div>
           <div className="space-y-1 max-w-sm mx-auto">
-            <h3 className="text-card-title font-semibold text-ink">
+            <h3 className="text-base font-bold text-slate-900">
               No matching properties
             </h3>
-            <p className="text-secondary text-muted leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
               {searchQuery
                 ? `No properties match "${searchQuery}". Try adjusting your search term or filters.`
                 : 'No properties found for the selected filter.'}
@@ -318,6 +538,7 @@ export const PropertiesListPage: React.FC = () => {
               onClick={() => {
                 setSearchQuery('');
                 setFilterStatus('all');
+                handleResetFilters();
               }}
             >
               <span>Clear Filters</span>
@@ -325,191 +546,302 @@ export const PropertiesListPage: React.FC = () => {
           </div>
         </Card>
       ) : (
-        /* ── 6. COMPACT INFORMATION-RICH PROPERTY CARDS ── */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        /* ── 5. RESPONSIVE PROPERTY CARDS GRID (2 or 3 columns) ── */
+        <div className="card-grid-desktop gap-5">
           {filteredProperties.map((prop) => {
             const hasPhotos = prop.photos && prop.photos.length > 0;
-            const hasVideo = !!(prop.videoUrl || prop.video?.url);
-            const lastUpdated = formatLastUpdated(prop.updatedAt || prop.createdAt);
+            const matchCount = getPropertyMatchCount(prop);
 
             return (
-              <Card
+              <div
                 key={prop._id}
-                className="p-4 flex flex-col justify-between hover:border-brand-600/30 transition-all shadow-card group text-left relative overflow-hidden"
+                onClick={() => navigate(`/app/properties/${prop._id}`)}
+                className="rounded-[14px] border border-border bg-white overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-[2px] hover:border-brand-600/30 hover:shadow-md group relative cursor-pointer text-left"
               >
-                <div>
-                  {/* Photo / Media Preview Header if media exists */}
+                {/* Thumbnail Top (16:10, radius 14 top corners) */}
+                <div className="w-full aspect-[16/10] relative bg-slate-100 overflow-hidden rounded-t-[14px]">
                   {hasPhotos ? (
-                    <div className="w-full h-36 sm:h-40 rounded-card overflow-hidden relative mb-3 bg-slate-100">
-                      <img
-                        src={prop.photos![0].url}
-                        alt={prop.title}
-                        className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-200"
-                        loading="lazy"
-                      />
-                      {/* Availability status badge overlay */}
-                      <div className="absolute top-2.5 left-2.5">
-                        <span
-                          className={clsx(
-                            'px-2.5 py-0.5 rounded-full text-xs font-semibold shadow-xs',
-                            prop.status === 'available'
-                              ? 'bg-brand-50 text-brand-700 border border-brand-200/80'
-                              : prop.status === 'hold'
-                                ? 'bg-amber-50 text-amber-700 border border-amber-200/80'
-                                : 'bg-slate-100 text-slate-700 border border-slate-200'
-                          )}
-                        >
-                          {prop.status === 'available'
-                            ? 'Available'
-                            : prop.status === 'hold'
-                              ? 'On Hold'
-                              : 'Sold'}
-                        </span>
-                      </div>
-
-                      {/* Photo & Video counter overlay */}
-                      <div className="absolute bottom-2.5 right-2.5 flex items-center gap-1.5">
-                        {prop.photos!.length > 1 && (
-                          <span className="px-2 py-0.5 rounded-full bg-slate-900/75 backdrop-blur-xs text-white text-meta font-medium flex items-center gap-1">
-                            <ImageIcon className="w-3 h-3" />
-                            <span>{prop.photos!.length}</span>
-                          </span>
-                        )}
-                        {hasVideo && (
-                          <span className="px-2 py-0.5 rounded-full bg-slate-900/75 backdrop-blur-xs text-white text-meta font-medium flex items-center gap-1">
-                            <Play className="w-3 h-3 fill-current text-brand-400" />
-                            <span>Video</span>
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                    <img
+                      src={prop.photos![0].url}
+                      alt={prop.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-102"
+                      loading="lazy"
+                    />
                   ) : (
-                    /* If no photos, show a clean header row without wasting vertical space */
-                    <div className="flex items-center justify-between mb-2">
-                      <span
-                        className={clsx(
-                          'px-2.5 py-0.5 rounded-full text-xs font-semibold',
-                          prop.status === 'available'
-                            ? 'bg-brand-50 text-brand-700 border border-brand-200/80'
-                            : prop.status === 'hold'
-                              ? 'bg-amber-50 text-amber-700 border border-amber-200/80'
-                              : 'bg-slate-100 text-slate-700 border border-slate-200'
-                        )}
-                      >
-                        {prop.status === 'available'
-                          ? 'Available'
-                          : prop.status === 'hold'
-                            ? 'On Hold'
-                            : 'Sold'}
-                      </span>
-                      <span className="text-meta text-muted font-medium">
-                        {prop.category} · {prop.type}
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 text-slate-400 p-4">
+                      <Building2 className="w-10 h-10 text-slate-300 mb-1 stroke-[1.5]" />
+                      <span className="text-xs font-semibold text-slate-400">
+                        {prop.type || prop.category || 'Property'}
                       </span>
                     </div>
                   )}
 
-                  {/* Title & Locality */}
+                  {/* StatusChip top-right over the thumbnail (never truncates "Sold / Closed" mid-word) */}
+                  <div className="absolute top-3 right-3 z-10">
+                    <StatusChip
+                      variant={
+                        prop.status === 'available'
+                          ? 'available'
+                          : prop.status === 'hold'
+                          ? 'hold'
+                          : 'sold'
+                      }
+                      dot
+                      className="shadow-xs whitespace-nowrap"
+                    >
+                      {prop.status === 'available'
+                        ? 'Available'
+                        : prop.status === 'hold'
+                        ? 'On hold'
+                        : 'Sold / Closed'}
+                    </StatusChip>
+                  </div>
+
+                  {/* Photo count overlay */}
+                  {hasPhotos && prop.photos!.length > 1 && (
+                    <div className="absolute bottom-2.5 left-2.5 z-10 px-2 py-0.5 rounded-full bg-slate-900/85 text-white text-[11px] font-medium flex items-center gap-1">
+                      <ImageIcon className="w-3 h-3" />
+                      <span>{prop.photos!.length} Photos</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Content Body: Title / Locality / Price stacked */}
+                <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
                   <div className="space-y-1">
-                    <h3 className="text-card-title font-semibold text-ink line-clamp-1 group-hover:text-brand-700 transition-colors">
+                    <h3 className="text-base font-bold text-slate-900 line-clamp-1 group-hover:text-brand-700 transition-colors leading-snug">
                       {prop.title}
                     </h3>
-                    <div className="flex items-center gap-1 text-secondary text-muted text-xs">
-                      <MapPin className="w-3.5 h-3.5 text-muted shrink-0" />
+                    <div className="flex items-center gap-1 text-xs text-slate-500 truncate">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       <span className="truncate">
                         {prop.locality}{prop.city ? `, ${prop.city}` : ''}
                       </span>
                     </div>
                   </div>
 
-                  {/* Prominent Price & Area Unit */}
-                  <div className="mt-2.5 pt-2 border-t border-border flex items-baseline justify-between gap-2">
+                  <div className="pt-2 border-t border-slate-100 flex items-baseline justify-between gap-2 mt-auto">
                     <div>
-                      <span className="text-lg sm:text-xl font-bold text-ink leading-tight block">
+                      <span className="text-lg font-bold text-slate-900 leading-tight block">
                         {formatRupees(prop.priceDemandPaise)}
                       </span>
-                      <span className="text-[11px] text-muted">Asking Demand</span>
+                      <span className="text-[11px] text-slate-400 font-medium">Asking demand</span>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs font-semibold text-slate-700 bg-surface px-2 py-0.5 rounded border border-border inline-block">
+                      <span className="text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded inline-block">
                         {prop.size.value} {prop.size.unit.toUpperCase()}
                       </span>
                       {prop.facing && (
-                        <span className="text-[11px] text-muted block mt-0.5">
+                        <span className="text-[11px] text-slate-500 block mt-0.5">
                           {prop.facing} Facing
                         </span>
                       )}
                     </div>
                   </div>
+                </div>
 
-                  {/* Metadata: Updated timestamp & tags */}
-                  <div className="mt-2 pt-2 border-t border-border flex items-center justify-between text-meta text-muted">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      <span>{lastUpdated ? `Updated ${lastUpdated}` : `ID: ${prop._id.slice(-6)}`}</span>
-                    </span>
-                    <span className="text-[11px] text-muted">
-                      {prop.category} · {prop.type}
+                {/* Footer Row: Match Count Left + WhatsApp & ⋯ Right below 1px divider */}
+                <div className="border-t border-border px-4 py-3 flex items-center justify-between gap-2 bg-white">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-brand-700">
+                    <Sparkles className="w-3.5 h-3.5 text-brand-600 shrink-0" />
+                    <span>
+                      {matchCount > 0 ? `${matchCount} buyer match${matchCount === 1 ? '' : 'es'}` : '0 matches'}
                     </span>
                   </div>
-                </div>
 
-                {/* Card Action Row: Clear View Details + Actions */}
-                <div className="mt-3.5 pt-3 border-t border-border flex items-center gap-2">
-                  <Link to={`/app/properties/${prop._id}`} className="flex-1">
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      className="w-full justify-center text-xs font-semibold"
+                  <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                    {/* WhatsApp-share icon button */}
+                    <a
+                      href={`https://wa.me/?text=${encodeURIComponent(
+                        `*${prop.title}*\nLocation: ${prop.locality}, ${prop.city}\nSize: ${prop.size.value} ${prop.size.unit.toUpperCase()}\nPrice: ${formatRupees(
+                          prop.priceDemandPaise
+                        )}\n\nVerified Flyer & Photos: https://leadnivash.com/flyer/${prop._id}`
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-1.5 rounded-lg border border-border text-slate-600 hover:text-brand-700 hover:bg-brand-50 transition-colors"
+                      title="Share on WhatsApp"
                     >
-                      <span>View Details</span>
-                      <ChevronRight className="w-3.5 h-3.5 ml-1" />
-                    </Button>
-                  </Link>
+                      <Send className="w-4 h-4" />
+                    </a>
 
-                  <Link
-                    to={`/app/properties/${prop._id}/share`}
-                    className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-input border border-border text-muted hover:text-ink hover:bg-surface-hover transition cursor-pointer"
-                    title="Share Flyer"
-                  >
-                    <Share2 className="w-3.5 h-3.5" />
-                  </Link>
-
-                  <a
-                    href={`https://wa.me/?text=${encodeURIComponent(
-                      `*${prop.title}*\nLocation: ${prop.locality}, ${prop.city}\nSize: ${prop.size.value} ${prop.size.unit.toUpperCase()}\nPrice: ${formatRupees(
-                        prop.priceDemandPaise
-                      )}\n\nVerified Flyer & Photos: https://leadnivash.com/flyer/${prop._id}`
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-input border border-border text-brand-700 hover:bg-brand-50 transition cursor-pointer"
-                    title="WhatsApp Pitch"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                  </a>
-
-                  <Link
-                    to={`/app/properties/${prop._id}/edit`}
-                    className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-input border border-border text-muted hover:text-ink hover:bg-surface-hover transition cursor-pointer"
-                    title="Edit Listing"
-                  >
-                    <Edit2 className="w-3.5 h-3.5" />
-                  </Link>
-
-                  <button
-                    type="button"
-                    onClick={() => setPropertyToDelete({ id: prop._id, title: prop.title })}
-                    className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-input border border-border text-muted hover:text-danger hover:bg-danger-bg transition cursor-pointer"
-                    title="Delete Listing"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                    {/* ⋯ More icon button */}
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild>
+                        <button
+                          type="button"
+                          className="p-1.5 rounded-lg border border-border text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
+                          title="More actions"
+                        >
+                          <MoreHorizontal className="w-4 h-4" />
+                        </button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Portal>
+                        <DropdownMenu.Content
+                          className="z-50 min-w-[170px] bg-white border border-border p-1.5 rounded-[14px] shadow-xl animate-in fade-in zoom-in-95 duration-150"
+                          sideOffset={5}
+                          align="end"
+                        >
+                          <DropdownMenu.Item
+                            onClick={() => navigate(`/app/properties/${prop._id}`)}
+                            className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 rounded-lg hover:bg-slate-100 cursor-pointer outline-none"
+                          >
+                            <Eye className="w-3.5 h-3.5 text-slate-400" />
+                            <span>View details</span>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            onClick={() => navigate(`/app/properties/${prop._id}/share`)}
+                            className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 rounded-lg hover:bg-slate-100 cursor-pointer outline-none"
+                          >
+                            <Share2 className="w-3.5 h-3.5 text-slate-400" />
+                            <span>Share flyer</span>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            onClick={() => navigate(`/app/properties/${prop._id}/edit`)}
+                            className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 rounded-lg hover:bg-slate-100 cursor-pointer outline-none"
+                          >
+                            <Edit2 className="w-3.5 h-3.5 text-slate-400" />
+                            <span>Edit listing</span>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Separator className="h-px bg-border my-1" />
+                          <DropdownMenu.Item
+                            onClick={() => setPropertyToDelete({ id: prop._id, title: prop.title })}
+                            className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-red-600 rounded-lg hover:bg-red-50 cursor-pointer outline-none"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                            <span>Delete property</span>
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
+                  </div>
                 </div>
-              </Card>
+              </div>
             );
           })}
         </div>
       )}
+
+      {/* ── 6. ADVANCED FILTERS MODAL (Type, Budget Range, Size, Locality) ── */}
+      <Modal
+        open={isFilterModalOpen}
+        onOpenChange={setIsFilterModalOpen}
+        title="Filter Properties"
+        description="Narrow down inventory by type, budget, size, or locality"
+        footerActions={
+          <>
+            <Button
+              variant="ghost"
+              size="md"
+              onClick={handleResetFilters}
+              className="text-xs font-semibold"
+            >
+              Reset
+            </Button>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={handleApplyFilters}
+              className="text-xs font-semibold"
+            >
+              Apply Filters
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4 pt-1 text-left">
+          {/* Property Type */}
+          <div>
+            <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+              Property Type
+            </label>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {[
+                { label: 'All Types', value: 'all' },
+                { label: 'Floor', value: 'floor' },
+                { label: 'Plot', value: 'plot' },
+                { label: 'Villa', value: 'villa' },
+                { label: 'Apartment', value: 'apartment' },
+                { label: 'Commercial', value: 'commercial' },
+              ].map((t) => (
+                <button
+                  key={t.value}
+                  type="button"
+                  onClick={() => setDraftType(t.value)}
+                  className={clsx(
+                    'px-3 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer border',
+                    draftType === t.value
+                      ? 'bg-brand-50 text-brand-700 border-brand-200'
+                      : 'bg-white text-slate-600 border-border hover:bg-slate-50'
+                  )}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Budget Range (in Lakhs) */}
+          <div>
+            <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+              Budget Range (in ₹ Lakhs)
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                value={draftMinPrice}
+                onChange={(e) => setDraftMinPrice(e.target.value)}
+                placeholder="Min Lakhs (e.g. 50)"
+                className="h-10 px-3 bg-white border border-border rounded-input text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+              <input
+                type="number"
+                value={draftMaxPrice}
+                onChange={(e) => setDraftMaxPrice(e.target.value)}
+                placeholder="Max Lakhs (e.g. 150)"
+                className="h-10 px-3 bg-white border border-border rounded-input text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+            </div>
+          </div>
+
+          {/* Size Range (in Sq.Yd / Gaj) */}
+          <div>
+            <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+              Size Range (in Sq.Yd / Gaj)
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                value={draftMinSize}
+                onChange={(e) => setDraftMinSize(e.target.value)}
+                placeholder="Min Sq.Yd (e.g. 100)"
+                className="h-10 px-3 bg-white border border-border rounded-input text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+              <input
+                type="number"
+                value={draftMaxSize}
+                onChange={(e) => setDraftMaxSize(e.target.value)}
+                placeholder="Max Sq.Yd (e.g. 350)"
+                className="h-10 px-3 bg-white border border-border rounded-input text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
+              />
+            </div>
+          </div>
+
+          {/* Locality */}
+          <div>
+            <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+              Locality / Sector
+            </label>
+            <input
+              type="text"
+              value={draftLocality}
+              onChange={(e) => setDraftLocality(e.target.value)}
+              placeholder="e.g. Sector 12, Model Town, Ansals"
+              className="w-full h-10 px-3 bg-white border border-border rounded-input text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
+            />
+          </div>
+        </div>
+      </Modal>
 
       {/* Confirmation Dialog before deleting property */}
       <ConfirmDialog
@@ -1088,10 +1420,10 @@ export const PropertyNewPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => videoInputRef.current?.click()}
-                  className="w-full min-h-[48px] px-4 rounded-input border border-dashed border-border hover:border-brand-600 bg-white flex items-center justify-center gap-2 text-xs font-semibold text-muted hover:text-brand-700 transition cursor-pointer"
+                  className="w-full min-h-[48px] px-4 rounded-input border border-dashed border-border hover:border-brand-600 bg-white flex items-center justify-center gap-2 text-xs font-semibold text-muted hover:text-brand-700 transition cursor-pointer whitespace-nowrap"
                 >
-                  <VideoIcon className="w-4 h-4 text-brand-600" />
-                  <span>Attach Property Video Walkthrough (MP4, Max 30 MB)</span>
+                  <VideoIcon className="w-4 h-4 text-brand-600 shrink-0" />
+                  <span>Attach Video (MP4, Max 30 MB)</span>
                 </button>
               )}
             </div>
@@ -1241,7 +1573,7 @@ export const PropertyDetailPage: React.FC = () => {
   if (isNotFound) {
     return (
       <div className="p-8 text-center max-w-md mx-auto space-y-4 my-12 bg-white border border-border rounded-card shadow-card">
-        <div className="w-12 h-12 rounded-card bg-amber-50 text-amber-600 flex items-center justify-center mx-auto text-xl">
+        <div className="w-12 h-12 rounded-card bg-brand-50 text-brand-700 flex items-center justify-center mx-auto text-xl">
           ⚠️
         </div>
         <h2 className="text-card-title font-semibold text-ink">Property Listing Removed</h2>
@@ -1526,7 +1858,7 @@ export const PropertyDetailPage: React.FC = () => {
 
             <div>
               <span className="text-meta text-muted block font-medium">Phone Number</span>
-              <span className="font-semibold text-ink font-mono">
+              <span className="font-semibold text-ink">
                 {isOwnerRevealed ? property.owner?.phone || '+91 98120 44321' : '+91 ••••• ••••• (Shielded)'}
               </span>
             </div>
