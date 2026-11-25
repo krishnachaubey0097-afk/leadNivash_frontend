@@ -262,15 +262,15 @@ export const SettingsPage: React.FC = () => {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
   }> = [
-    { id: 'account', label: 'Account', icon: UserIcon },
-    { id: 'subscription', label: 'Subscription', icon: Crown },
-    { id: 'regional', label: 'Regional preferences', icon: MapPin },
-    { id: 'inboxes', label: 'Inboxes', icon: Inbox },
-    { id: 'help', label: 'Help', icon: HelpCircle },
-    { id: 'privacy', label: 'Privacy & data', icon: Lock },
-    { id: 'legal', label: 'Legal', icon: FileText },
-    { id: 'appearance', label: 'Appearance', icon: Sun },
-  ];
+      { id: 'account', label: 'Account', icon: UserIcon },
+      { id: 'subscription', label: 'Subscription', icon: Crown },
+      { id: 'regional', label: 'Regional preferences', icon: MapPin },
+      { id: 'inboxes', label: 'Inboxes', icon: Inbox },
+      { id: 'help', label: 'Help', icon: HelpCircle },
+      { id: 'privacy', label: 'Privacy & data', icon: Lock },
+      { id: 'legal', label: 'Legal', icon: FileText },
+      { id: 'appearance', label: 'Appearance', icon: Sun },
+    ];
 
   const handleEditProfileClick = () => {
     setActiveSection('account');
@@ -539,7 +539,7 @@ export const SettingsPage: React.FC = () => {
 
           {/* SECTION: SUBSCRIPTION (GLASS HERO CARD — second and last glass hero moment on desktop) */}
           {activeSection === 'subscription' && (
-            <GlassCard className="p-6 space-y-5">
+            <GlassCard className="p-6 space-y-5 bg-gradient-to-br from-white/85 via-emerald-50/35 to-slate-100/60 dark:from-slate-900/75 dark:to-emerald-950/25">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold">

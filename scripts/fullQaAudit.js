@@ -266,8 +266,9 @@ async function run() {
                 effectivePath.startsWith('/app/settings') &&
                 el.innerText?.includes('Free Trial Plan') &&
                 el.innerText?.includes('Upgrade');
+              const isLandingBottomBlur = effectivePath === '/' && el.getAttribute('data-bottom-blur') === 'true';
               const inMobileBottomNav = isMobile && Boolean(el.closest('nav.fixed'));
-              if (!inSidebar && !inAppHeader && !isDashHero && !isSettingsSub && !inMobileBottomNav) {
+              if (!inSidebar && !inAppHeader && !isDashHero && !isSettingsSub && !isLandingBottomBlur && !inMobileBottomNav) {
                 res.glass.push(
                   `${el.tagName.toLowerCase()}.${(el.className || '').toString().slice(0, 60)}`
                 );

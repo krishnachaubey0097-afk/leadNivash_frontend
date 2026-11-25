@@ -471,7 +471,7 @@ export const DashboardPage: React.FC = () => {
           {/* ── HERO ROW: Glass Hero Card (2/3) + WhatsApp Paste Card (1/3) ── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             {/* HERO GLASS CARD (spans 2/3 width on desktop) */}
-            <div className="lg:col-span-2 rounded-[20px] bg-[rgba(14,34,53,0.04)] backdrop-blur-md border border-[rgba(14,34,53,0.08)] p-6 shadow-sm flex flex-col justify-between transition-all">
+            <div className="lg:col-span-2 rounded-[20px] bg-gradient-to-br from-[rgba(14,34,53,0.05)] via-[rgba(1,122,60,0.04)] to-[rgba(14,34,53,0.08)] backdrop-blur-md border border-[rgba(14,34,53,0.10)] p-6 shadow-sm flex flex-col justify-between transition-all">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <span className="text-sm font-medium text-slate-700 block">
