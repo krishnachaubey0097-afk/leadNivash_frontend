@@ -351,7 +351,7 @@ export const PropertiesListPage: React.FC = () => {
             className="gap-1.5 shadow-sm font-semibold text-xs sm:text-sm"
           >
             <Plus className="w-4 h-4" />
-            <span>+ Add property</span>
+            <span>Add property</span>
           </Button>
         </Link>
       </div>

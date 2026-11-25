@@ -10,7 +10,6 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  ArrowRight,
   LogIn,
   KeyRound,
   CheckCircle2,
@@ -381,10 +380,9 @@ export const LoginPage: React.FC = () => {
               <Button
                 type="submit"
                 isLoading={isGoogleLoading}
-                className="w-full font-bold shadow-md shadow-emerald-700/20"
+                className="w-full font-bold justify-between"
               >
                 <span>Complete Verification & Enter</span>
-                <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </form>
           )}
@@ -544,10 +542,9 @@ export const LoginPage: React.FC = () => {
                       <Button
                         type="submit"
                         isLoading={isSendingOtp}
-                        className="w-full font-bold shadow-md shadow-emerald-700/20"
+                        className="w-full font-bold justify-between"
                       >
                         <span>Send Login Code</span>
-                        <ArrowRight className="w-4 h-4 ml-1.5" />
                       </Button>
                     </form>
                   ) : (
@@ -679,10 +676,9 @@ export const LoginPage: React.FC = () => {
                       <Button
                         type="submit"
                         isLoading={isSendingReset}
-                        className="w-full font-bold shadow-md shadow-emerald-700/20"
+                        className="w-full font-bold justify-between"
                       >
                         <span>Send Password Reset Link</span>
-                        <ArrowRight className="w-4 h-4 ml-1.5" />
                       </Button>
 
                       <div className="text-center pt-1">

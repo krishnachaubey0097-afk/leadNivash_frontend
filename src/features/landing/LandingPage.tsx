@@ -35,9 +35,11 @@ import {
 import { apiClient } from '../../lib/api/client';
 import { useAuth } from '../auth/AuthProvider';
 import { PricingSection } from '../pricing/PricingSection';
+import { SpecialOfferModal } from '../pricing/SpecialOfferModal';
 
 export const LandingPage: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const [isTrialOfferOpen, setIsTrialOfferOpen] = useState(false);
   // Mobile Navigation Drawer State
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
@@ -223,6 +225,23 @@ export const LandingPage: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Show "Unlock full LeadNivash Pro" popup once per session when a trial user visits the site
+  useEffect(() => {
+    if (!isAuthenticated || user?.plan?.tier !== 'trial') return;
+    try {
+      if (sessionStorage.getItem('leadnivash_trial_offer_shown')) return;
+    } catch {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      try {
+        sessionStorage.setItem('leadnivash_trial_offer_shown', '1');
+      } catch {}
+      setIsTrialOfferOpen(true);
+    }, 2600);
+    return () => window.clearTimeout(timer);
+  }, [isAuthenticated, user]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -341,10 +360,10 @@ export const LandingPage: React.FC = () => {
 
             <button
               onClick={scrollToInquiry}
-              className="group relative inline-flex items-center gap-1.5 sm:gap-2.5 pl-2.5 sm:pl-4 pr-1 sm:pr-1.5 h-9 sm:h-10 rounded-[10px] bg-ink-black hover:bg-ink-900 active:scale-[0.98] text-white font-extrabold text-[10px] sm:text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all cursor-pointer whitespace-nowrap leading-none min-h-[36px] sm:min-h-[40px]"
+              className="group btn-cashfree-primary btn-shine-sweep relative inline-flex items-center gap-1.5 sm:gap-2.5 pl-2.5 sm:pl-4 pr-1 sm:pr-1.5 h-9 sm:h-10 rounded-[10px] active:scale-[0.98] text-white font-extrabold text-[10px] sm:text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap leading-none min-h-[36px] sm:min-h-[40px]"
             >
-              <span>Get Free Demo</span>
-              <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-[7px] bg-lime text-ink-black flex items-center justify-center font-bold text-xs shadow-2xs group-hover:translate-x-0.5 transition-transform shrink-0">
+              <span className="relative z-10">Get Free Demo</span>
+              <span className="relative z-10 w-6 h-6 sm:w-7 sm:h-7 rounded-[7px] bg-lime text-ink-black flex items-center justify-center font-bold text-xs shadow-2xs group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0">
                 <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
               </span>
             </button>
@@ -451,11 +470,11 @@ export const LandingPage: React.FC = () => {
                     setMobileMenuOpen(false);
                     scrollToInquiry();
                   }}
-                  className="w-full py-3 px-4 rounded-[16px] bg-ink-black hover:bg-ink-900 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider transition shadow-lg flex items-center justify-between cursor-pointer min-h-[46px]"
+                  className="group btn-cashfree-primary btn-shine-sweep w-full py-2.5 pl-4 pr-2 rounded-[14px] active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider transition flex items-center justify-between cursor-pointer min-h-[46px]"
                 >
                   <span>Get Free Demo</span>
-                  <span className="w-6 h-6 rounded-[10px] bg-lime text-ink-black flex items-center justify-center">
-                    <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span className="w-7 h-7 rounded-[9px] bg-lime text-ink-black flex items-center justify-center">
+                    <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                   </span>
                 </button>
 
@@ -574,12 +593,12 @@ export const LandingPage: React.FC = () => {
                   <div className="btn-shine-border" />
                   <button
                     onClick={scrollToInquiry}
-                    className="relative z-10 w-full group inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-3 h-[54px] rounded-[18px] bg-ink-black hover:bg-ink-900 active:scale-[0.98] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 shadow-lg cursor-pointer focus:outline-none whitespace-nowrap"
+                    className="relative z-10 w-full group btn-cashfree-primary btn-shine-sweep inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 h-[54px] rounded-[18px] active:scale-[0.98] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 cursor-pointer focus:outline-none whitespace-nowrap"
                   >
                     <span className="flex items-center gap-2 whitespace-nowrap">
                       <span>Get Free Demo</span>
                     </span>
-                    <span className="w-7 h-7 rounded-[10px] bg-lime text-ink-black flex items-center justify-center transition-transform duration-300 group-hover:rotate-45 group-hover:scale-105 shadow-xs shrink-0">
+                    <span className="w-8 h-8 rounded-[10px] bg-lime text-ink-black flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shadow-xs shrink-0">
                       <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                     </span>
                   </button>
@@ -587,10 +606,10 @@ export const LandingPage: React.FC = () => {
 
                 <Link to="/register" className="w-full sm:w-auto flex-1 block">
                   <button
-                    className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-5 pr-3 h-[54px] rounded-[18px] bg-surface hover:bg-lime-soft active:scale-[0.98] text-ink-900 border-2 border-line hover:border-ink-900/20 font-extrabold text-xs tracking-wider uppercase shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none whitespace-nowrap"
+                    className="group w-full inline-flex items-center justify-between sm:justify-center gap-3 pl-5 pr-2.5 h-[54px] rounded-[18px] bg-white hover:bg-lime-soft active:scale-[0.98] text-ink-900 border border-ink-black/15 hover:border-ink-black/30 font-extrabold text-xs tracking-wider uppercase shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_2px_6px_rgba(18,20,15,0.06)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer focus:outline-none whitespace-nowrap"
                   >
                     <span className="whitespace-nowrap">Start 14-Day Free Trial</span>
-                    <span className="w-7 h-7 rounded-[10px] bg-lime-soft text-brand-700 border border-line flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:scale-105 shrink-0">
+                    <span className="w-8 h-8 rounded-[10px] bg-lime-soft text-brand-700 border border-lime flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:scale-105 shrink-0">
                       <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                     </span>
                   </button>
@@ -2564,11 +2583,11 @@ export const LandingPage: React.FC = () => {
                   <button
                     type="submit"
                     disabled={formSubmitting}
-                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 pl-6 pr-3 py-3 min-h-[50px] rounded-[16px] bg-ink-black hover:bg-ink-900 disabled:opacity-60 text-white font-bold text-xs shadow-md transition-all cursor-pointer active:scale-[0.98]"
+                    className="group btn-cashfree-primary btn-shine-sweep w-full sm:w-auto inline-flex items-center justify-center gap-3 pl-6 pr-2.5 py-2.5 min-h-[50px] rounded-[16px] disabled:opacity-60 text-white font-bold text-xs transition-all cursor-pointer active:scale-[0.98]"
                   >
                     <span>{formSubmitting ? 'Submitting...' : 'Request My Free Demo'}</span>
-                    <span className="w-6 h-6 rounded-[10px] bg-lime text-ink-black flex items-center justify-center shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
-                      <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <span className="w-7 h-7 rounded-[9px] bg-lime text-ink-black flex items-center justify-center shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
+                      <ArrowUpRight className="w-4 h-4 stroke-[2.4]" />
                     </span>
                   </button>
 
@@ -2730,6 +2749,12 @@ export const LandingPage: React.FC = () => {
         <span className="w-2 h-2 rounded-full bg-lime animate-pulse" />
         <span>Chat on WhatsApp</span>
       </a>
+
+      {/* Automatic Trial User Upgrade Popup ("Unlock full LeadNivash Pro") */}
+      <SpecialOfferModal
+        isOpen={isTrialOfferOpen}
+        onClose={() => setIsTrialOfferOpen(false)}
+      />
     </div>
   );
 };

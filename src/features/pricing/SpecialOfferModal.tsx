@@ -133,13 +133,13 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
         {/* Pricing Summary: Struck-through original price + discounted price on one line each (no wrapping) */}
         <div className="p-4 rounded-[14px] bg-slate-50 border border-border space-y-2">
           <div className="flex items-center justify-between gap-3 text-sm whitespace-nowrap">
-            <span className="text-slate-500">Standard yearly price</span>
-            <span className="line-through text-slate-400 font-medium tabular-nums">
+            <span className="text-ink-700">Standard yearly price</span>
+            <span className="line-through text-ink-700/80 font-medium tabular-nums">
               {PLAN_PRICING.formattedAnnualStandard}
             </span>
           </div>
           <div className="flex items-center justify-between gap-3 whitespace-nowrap pt-1 border-t border-border/70">
-            <span className="text-sm font-semibold text-slate-900">
+            <span className="text-sm font-semibold text-ink-900">
               Trial offer price
             </span>
             <span className="text-lg font-bold text-brand-700 tabular-nums">
@@ -171,23 +171,23 @@ export const SpecialOfferModal: React.FC<SpecialOfferModalProps> = ({
             type="button"
             disabled={isSubmitting}
             onClick={handleProceedToUpgrade}
-            className="w-full h-11 pl-5 pr-2 rounded-[12px] bg-white hover:bg-slate-50 border border-ink-black/20 text-ink-black text-sm font-semibold whitespace-nowrap flex items-center justify-between transition-colors cursor-pointer disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1"
+            className="group btn-cashfree-primary btn-shine-sweep w-full h-12 pl-5 pr-2 rounded-[14px] text-white text-sm font-semibold whitespace-nowrap flex items-center justify-between transition-all cursor-pointer disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1"
           >
-            <span className="mx-auto pl-5">{isSubmitting ? 'Processing...' : 'Proceed to pay'}</span>
-            <span className="w-7 h-7 rounded-[8px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
-              <ArrowUpRight className="w-4 h-4 stroke-[2.25]" />
+            <span className="mx-auto pl-6">{isSubmitting ? 'Processing...' : 'Proceed to pay'}</span>
+            <span className="w-8 h-8 rounded-[9px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <ArrowUpRight className="w-4 h-4 stroke-[2.3]" />
             </span>
           </button>
 
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-1.5 text-center text-xs font-medium text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
+            className="w-full py-1.5 text-center text-xs font-medium text-ink-700 hover:text-ink-900 transition-colors cursor-pointer"
           >
             Continue with free trial
           </button>
 
-          <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-0.5">
+          <div className="flex items-center justify-center gap-1.5 text-[11px] text-ink-700 pt-0.5">
             <Lock className="w-3 h-3 text-brand-600 shrink-0" />
             <span>Secured by Razorpay</span>
           </div>

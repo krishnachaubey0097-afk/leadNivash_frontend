@@ -558,10 +558,10 @@ export const SettingsPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsSpecialOfferOpen(true)}
-                  className="inline-flex items-center gap-2 h-10 pl-4 pr-1.5 rounded-[12px] bg-white hover:bg-white/95 text-ink-black text-sm font-semibold whitespace-nowrap shrink-0 transition-colors cursor-pointer"
+                  className="group btn-shine-sweep inline-flex items-center gap-2.5 h-10 pl-4 pr-1.5 rounded-[12px] bg-white hover:bg-lime-soft text-ink-black text-sm font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer shadow-sm"
                 >
                   <span>{`Upgrade · ${PLAN_PRICING.formattedAnnualOffer}`}</span>
-                  <span className="w-7 h-7 rounded-[8px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0">
+                  <span className="w-7 h-7 rounded-[8px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                     <ArrowUpRight className="w-4 h-4 stroke-[2.25]" />
                   </span>
                 </button>

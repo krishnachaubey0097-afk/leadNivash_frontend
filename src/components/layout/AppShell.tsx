@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { TopBar } from './TopBar';
 import { BottomNav } from './BottomNav';
@@ -6,12 +6,16 @@ import { Sidebar } from './Sidebar';
 import { Banner } from '../ui/Banner';
 import { TopLoadingBar } from '../ui/LoadingBar';
 import { OnboardingTour } from '../../features/onboarding/OnboardingTour';
+import { SpecialOfferModal } from '../../features/pricing/SpecialOfferModal';
 import { useOnline } from '../../lib/hooks/useOnline';
 import { useAuth } from '../../features/auth/AuthProvider';
+
+const TRIAL_POPUP_SESSION_KEY = 'leadnivash_trial_offer_shown';
 
 export const AppShell: React.FC = () => {
   const isOnline = useOnline();
   const { user, isServerWaking } = useAuth();
+  const [isTrialOfferOpen, setIsTrialOfferOpen] = useState(false);
 
   // Calculate days left in trial if applicable
   const trialDaysRemaining = (() => {
@@ -21,6 +25,25 @@ export const AppShell: React.FC = () => {
     }
     return null;
   })();
+
+  // Show "Unlock full LeadNivash Pro" popup once per session whenever a trial user lands in the app
+  useEffect(() => {
+    if (!user || user.plan?.tier !== 'trial') return;
+    try {
+      if (sessionStorage.getItem(TRIAL_POPUP_SESSION_KEY)) return;
+    } catch {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      try {
+        sessionStorage.setItem(TRIAL_POPUP_SESSION_KEY, '1');
+      } catch {}
+      setIsTrialOfferOpen(true);
+    }, 550);
+
+    return () => window.clearTimeout(timer);
+  }, [user]);
 
   return (
     <div className="h-screen w-full overflow-hidden bg-bg text-text flex">
@@ -59,6 +82,12 @@ export const AppShell: React.FC = () => {
         {/* First-Time User Onboarding Guided Tour */}
         <OnboardingTour />
       </div>
+
+      {/* Automatic Trial User Upgrade Popup ("Unlock full LeadNivash Pro") */}
+      <SpecialOfferModal
+        isOpen={isTrialOfferOpen}
+        onClose={() => setIsTrialOfferOpen(false)}
+      />
     </div>
   );
 };

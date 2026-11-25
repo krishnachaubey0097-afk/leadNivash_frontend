@@ -13,7 +13,6 @@ import {
   Phone,
   Eye,
   EyeOff,
-  ArrowRight,
   ShieldCheck,
 } from 'lucide-react';
 import { ApiError } from '../../lib/api/errors';
@@ -397,10 +396,9 @@ export const RegisterPage: React.FC = () => {
                   <Button
                     type="submit"
                     isLoading={isGoogleLoading}
-                    className="w-full font-bold shadow-md shadow-emerald-700/20"
+                    className="w-full font-bold justify-between"
                   >
                     <span>Complete Registration & Enter Workspace</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
                   </Button>
                 </form>
               )}
@@ -549,10 +547,9 @@ export const RegisterPage: React.FC = () => {
               <Button
                 type="submit"
                 isLoading={loading}
-                className="w-full font-bold shadow-md shadow-emerald-700/20"
+                className="w-full font-bold justify-between"
               >
                 <span>Create Broker Account</span>
-                <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </form>
           )}

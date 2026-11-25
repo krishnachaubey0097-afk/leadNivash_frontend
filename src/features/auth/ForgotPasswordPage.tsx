@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { apiClient } from '../../lib/api/client';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Mail, CheckCircle2, ArrowLeft, ArrowRight, AlertCircle, ShieldCheck } from 'lucide-react';
+import { Mail, CheckCircle2, ArrowLeft, AlertCircle, ShieldCheck } from 'lucide-react';
 import { ApiError } from '../../lib/api/errors';
 
 export const ForgotPasswordPage: React.FC = () => {
@@ -124,10 +124,9 @@ export const ForgotPasswordPage: React.FC = () => {
               <Button
                 type="submit"
                 isLoading={loading}
-                className="w-full font-bold shadow-md shadow-emerald-700/20"
+                className="w-full font-bold justify-between"
               >
                 <span>Send Password Reset Link</span>
-                <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </form>
           )}

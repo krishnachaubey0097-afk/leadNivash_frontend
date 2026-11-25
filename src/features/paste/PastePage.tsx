@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Save,
   ArrowRight,
+  ArrowUpRight,
   ArrowLeft,
   Share2,
   Eye,
@@ -676,28 +677,41 @@ export const PastePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Primary Extract Details Button — full brand-600 opacity when enabled, muted slate surface (text ink-400) before 10 chars */}
+              {/* Primary Extract Details Button — Cashfree Ink-Black + Shine + Lime Chip when enabled */}
               <div className="pt-1">
                 <button
                   type="button"
                   onClick={handleAnalyze}
                   disabled={!isAnalyzeEnabled}
                   className={clsx(
-                    'w-full min-h-[48px] px-6 rounded-input font-semibold text-sm flex items-center justify-center gap-2 transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1',
+                    'group w-full min-h-[48px] pl-6 pr-2 rounded-[14px] font-semibold text-sm flex items-center justify-between gap-2 transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1',
                       isAnalyzeEnabled
-                        ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-sm cursor-pointer opacity-100'
+                        ? 'btn-cashfree-primary btn-shine-sweep text-white cursor-pointer opacity-100'
                         : 'bg-line border border-line text-ink-500 shadow-none cursor-not-allowed opacity-100'
                   )}
                 >
                   {isAnalyzing ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="mx-auto inline-flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-lime border-t-transparent rounded-full animate-spin" />
                       <span>Extracting details...</span>
-                    </>
+                    </span>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4" />
-                      <span>Extract details</span>
+                      <span className="mx-auto pl-6 inline-flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-lime" />
+                        <span>Extract details</span>
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={clsx(
+                          'w-8 h-8 rounded-[9px] inline-flex items-center justify-center shrink-0 transition-transform duration-200',
+                          isAnalyzeEnabled
+                            ? 'bg-lime text-ink-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+                            : 'bg-slate-200 text-ink-500'
+                        )}
+                      >
+                        <ArrowUpRight className="w-4 h-4 stroke-[2.3]" />
+                      </span>
                     </>
                   )}
                 </button>

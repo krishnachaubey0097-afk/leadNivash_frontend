@@ -419,14 +419,14 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3 self-start sm:self-auto">
-          {/* Plan Pill Trigger: Pro = ink-black + lime dot, Trial = amber */}
+          {/* Plan Pill Trigger: Pro = ink-black + lime dot, Trial = amber highlighted + shine */}
           <button
             type="button"
             onClick={() => setIsUpgradeModalOpen(true)}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors shadow-2xs cursor-pointer border ${
+            className={`btn-shine-sweep inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all shadow-2xs cursor-pointer border ${
               isPaidPlan
                 ? 'bg-ink-black text-white border-ink-black hover:bg-ink-900'
-                : 'bg-amber-50 border-amber-200 text-amber-900 hover:bg-amber-100/80'
+                : 'bg-amber-50 border-amber-300 text-amber-900 hover:bg-amber-100/80'
             }`}
           >
             {isPaidPlan && <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />}

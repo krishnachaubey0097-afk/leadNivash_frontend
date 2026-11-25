@@ -5,6 +5,7 @@ import {
   Crown,
   Check,
   ArrowRight,
+  ArrowUpRight,
   Sparkles,
   ShieldCheck,
   Calendar,
@@ -90,12 +91,12 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <button
               type="button"
               onClick={handleOpenSpecialOffer}
-              className="group pl-5 pr-2.5 py-2.5 rounded-[18px] bg-ink-black hover:bg-ink-900 text-white font-semibold text-sm shadow-sm flex items-center justify-center gap-3 cursor-pointer transition min-h-[48px] whitespace-nowrap"
+              className="group btn-cashfree-primary btn-shine-sweep pl-5 pr-2 py-2 rounded-[16px] text-white font-semibold text-sm flex items-center justify-center gap-3 cursor-pointer transition-all min-h-[48px] whitespace-nowrap"
               title="Claim Free Trial Special Offer"
             >
               <span>Claim Offer: ₹3,299/yr</span>
-              <span className="w-7 h-7 rounded-[10px] bg-lime text-ink-black flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5">
-                <ArrowRight className="w-4 h-4" />
+              <span className="w-8 h-8 rounded-[10px] bg-lime text-ink-black flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                <ArrowUpRight className="w-4 h-4 stroke-[2.3]" />
               </span>
             </button>
           </div>
@@ -328,9 +329,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 rel="noopener noreferrer"
                 className="block"
               >
-                <Button className="w-full text-xs font-bold py-3 rounded-[16px] bg-ink-black hover:bg-ink-900 text-white min-h-[44px]">
+                <Button className="w-full text-xs font-bold min-h-[44px] justify-between">
                   <span>Get Monthly Plan — ₹399/mo</span>
-                  <ArrowRight className="w-3.5 h-3.5 ml-1" />
                 </Button>
               </a>
               <span className="text-[10px] text-center text-muted block mt-2">
@@ -428,7 +428,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               <button
                 type="button"
                 onClick={handleOpenSpecialOffer}
-                className="group w-full py-2.5 pl-4 pr-2.5 rounded-[16px] bg-ink-black hover:bg-ink-900 text-white font-bold text-xs tracking-wide shadow-sm flex items-center justify-between gap-2 cursor-pointer transition min-h-[48px] whitespace-nowrap"
+                className="group btn-cashfree-primary btn-shine-sweep w-full py-2 pl-4 pr-2 rounded-[16px] text-white font-bold text-xs tracking-wide flex items-center justify-between gap-2 cursor-pointer transition-all min-h-[48px] whitespace-nowrap"
               >
                 <span className="flex items-center gap-2">
                   <Crown className="w-4 h-4 text-lime shrink-0" />
@@ -438,8 +438,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                       : 'Upgrade to Yearly Pass — ₹3,999'}
                   </span>
                 </span>
-                <span className="w-7 h-7 rounded-[10px] bg-lime text-ink-black flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5">
-                  <ArrowRight className="w-4 h-4 shrink-0" />
+                <span className="w-8 h-8 rounded-[10px] bg-lime text-ink-black flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                  <ArrowUpRight className="w-4 h-4 stroke-[2.3]" />
                 </span>
               </button>
               <div className="flex items-center justify-center gap-1.5 text-[10px] text-ink-500 text-center">
