@@ -871,7 +871,7 @@ ${agencyOrOwnerName}`;
                       href={`https://wa.me/?text=${encodeURIComponent(emiQuoteText)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
+                      className="group btn-cashfree-primary btn-shine-sweep mobile-shine-primary pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                     >
                       <Share2 className="w-3.5 h-3.5 text-lime" />
                       <span>Share on WhatsApp</span>
@@ -1093,7 +1093,7 @@ ${agencyOrOwnerName}`;
                       href={`https://wa.me/?text=${encodeURIComponent(registryQuoteText)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
+                      className="group btn-cashfree-primary btn-shine-sweep mobile-shine-primary pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                     >
                       <Share2 className="w-3.5 h-3.5 text-lime" />
                       <span>Share on WhatsApp</span>
@@ -1261,7 +1261,7 @@ ${agencyOrOwnerName}`;
                       href={`https://wa.me/?text=${encodeURIComponent(areaQuoteText)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
+                      className="group btn-cashfree-primary btn-shine-sweep mobile-shine-primary pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                     >
                       <Share2 className="w-3.5 h-3.5 text-lime" />
                       <span>Share on WhatsApp</span>
@@ -1419,7 +1419,7 @@ ${agencyOrOwnerName}`;
                       href={`https://wa.me/?text=${encodeURIComponent(commissionQuoteText)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
+                      className="group btn-cashfree-primary btn-shine-sweep mobile-shine-primary pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                     >
                       <Share2 className="w-3.5 h-3.5 text-lime" />
                       <span>Share on WhatsApp</span>
@@ -1510,7 +1510,7 @@ ${agencyOrOwnerName}`;
                     href={`https://wa.me/?text=${encodeURIComponent(activeTemplate.text)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group btn-cashfree-primary btn-shine-sweep pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
+                    className="group btn-cashfree-primary btn-shine-sweep mobile-shine-primary pl-3.5 pr-1.5 h-9 rounded-[11px] text-white font-semibold text-sm inline-flex items-center gap-2 transition whitespace-nowrap"
                   >
                     <Share2 className="w-3.5 h-3.5 text-lime" />
                     <span>Share on WhatsApp</span>

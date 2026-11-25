@@ -595,7 +595,7 @@ export const LandingPage: React.FC = () => {
                   <div className="btn-shine-border" />
                   <button
                     onClick={scrollToInquiry}
-                    className="relative z-10 w-full group btn-cashfree-primary btn-shine-sweep inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 h-[54px] rounded-[18px] active:scale-[0.98] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 cursor-pointer focus:outline-none whitespace-nowrap"
+                    className="relative z-10 w-full group btn-cashfree-primary btn-shine-sweep mobile-shine-primary inline-flex items-center justify-between sm:justify-center gap-3 pl-6 pr-2.5 h-[54px] rounded-[18px] active:scale-[0.98] text-white font-extrabold text-xs tracking-wider uppercase transition-all duration-300 cursor-pointer focus:outline-none whitespace-nowrap"
                   >
                     <span className="flex items-center gap-2 whitespace-nowrap">
                       <span>Get Free Demo</span>

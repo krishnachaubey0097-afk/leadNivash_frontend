@@ -518,7 +518,9 @@ export const DashboardPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => navigate('/app/properties/new')}
-                      className="group btn-shine-sweep-light h-10 pl-3.5 pr-1.5 rounded-[11px] bg-white hover:bg-lime-soft text-ink-black text-xs font-bold inline-flex items-center gap-2 transition cursor-pointer shadow-sm whitespace-nowrap"
+                      className={`group btn-shine-sweep-light h-10 pl-3.5 pr-1.5 rounded-[11px] bg-white hover:bg-lime-soft text-ink-black text-xs font-bold inline-flex items-center gap-2 transition cursor-pointer shadow-sm whitespace-nowrap ${
+                        planTier !== 'trial' ? 'mobile-shine-primary' : ''
+                      }`}
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add property</span>

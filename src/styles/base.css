@@ -396,6 +396,16 @@
   z-index: 1;
 }
 
+/* Mobile (< 1024px): Restrict shine sweep strictly to the single most important CTA per tab */
+@media (max-width: 1023px) {
+  .btn-shine-sweep:not(.mobile-shine-primary)::after,
+  .btn-shine-sweep-light:not(.mobile-shine-primary)::after {
+    animation: none !important;
+    opacity: 0 !important;
+    display: none !important;
+  }
+}
+
 .btn-cashfree-primary {
   background:
     radial-gradient(85% 95% at 50% 118%, rgba(215, 247, 154, 0.28) 0%, rgba(1, 142, 69, 0.14) 42%, rgba(18, 20, 15, 0) 76%),

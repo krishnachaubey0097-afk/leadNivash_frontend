@@ -929,7 +929,7 @@ export const PastePage: React.FC = () => {
                   className={clsx(
                     'group btn-cashfree-primary w-full min-h-[48px] pl-6 pr-2 rounded-[14px] font-semibold text-sm text-white flex items-center justify-between gap-2 transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1',
                       isAnalyzeEnabled
-                        ? 'btn-shine-sweep cursor-pointer opacity-100'
+                        ? 'btn-shine-sweep mobile-shine-primary cursor-pointer opacity-100'
                         : 'cursor-not-allowed opacity-40'
                   )}
                 >
@@ -1310,7 +1310,7 @@ export const PastePage: React.FC = () => {
               onClick={handleFindMatches}
               className={clsx(
                 'w-full sm:w-auto min-h-[48px] font-semibold text-xs gap-1.5 shadow-sm transition-opacity',
-                !itemType && 'opacity-45'
+                itemType ? 'mobile-shine-primary' : 'opacity-45'
               )}
             >
               {isMatching || isSaving ? (

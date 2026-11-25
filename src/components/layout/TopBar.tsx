@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AvatarMenu } from './AvatarMenu';
 import { NotificationMenu } from './NotificationMenu';
 import { Tooltip } from '../ui/Tooltip';
-import { Plus } from 'lucide-react';
+import { Crown, Plus } from 'lucide-react';
 import { BRAND_NAME } from '../../config/constants';
+import { useAuth } from '../../features/auth/AuthProvider';
+import { SpecialOfferModal } from '../../features/pricing/SpecialOfferModal';
+import clsx from 'clsx';
 
 export const TopBar: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuth();
+  const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
+  const isTrialUser = user?.plan?.tier === 'trial';
 
   const getPageTitle = (pathname: string): { title: string; subtitle?: string } => {
     const cleanPath = pathname.replace(/\/+$/, '') || '/';
@@ -54,31 +60,46 @@ export const TopBar: React.FC = () => {
           </div>
 
           {/* Mobile Left: Brand Logo & Title */}
-          <div className="flex lg:hidden items-center gap-2.5 min-w-0">
+          <div className="flex lg:hidden items-center gap-2 min-w-0">
             <Link to="/app" className="flex items-center gap-2 shrink-0 group" aria-label={`${BRAND_NAME} Home`}>
               <div className="w-8 h-8 rounded-lg bg-surface border border-border p-1 flex items-center justify-center">
                 <img src="/logo-icon.png" alt={BRAND_NAME} className="w-full h-full object-contain" />
               </div>
-              <span className="text-base font-bold text-ink-900 leading-none">
+              <span className="text-sm sm:text-base font-bold text-ink-900 leading-none">
                 {BRAND_NAME}
               </span>
             </Link>
 
             {!isDashboard && (
-              <div className="flex items-center gap-2 pl-2.5 border-l border-border text-sm font-medium text-muted truncate">
-                <span className="truncate">{title}</span>
+              <div className={clsx('items-center gap-1.5 pl-2 border-l border-border text-xs font-medium text-muted truncate', isTrialUser ? 'hidden sm:flex' : 'flex')}>
+                <span className="truncate max-w-[100px]">{title}</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* RIGHT = Global Shortcut icon button (40px) + Bell + Avatar (32 circle) */}
+        {/* RIGHT = Mobile Trial Upgrade + Global Shortcut + Bell + Avatar */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          {isTrialUser && (
+            <button
+              type="button"
+              onClick={() => setIsUpgradeOpen(true)}
+              aria-label="Upgrade plan"
+              className={clsx(
+                'lg:hidden inline-flex items-center gap-1.5 h-8 px-2.5 rounded-[10px] bg-ink-black text-white border border-lime/45 text-[11px] font-bold whitespace-nowrap cursor-pointer transition active:scale-95 shadow-xs',
+                isDashboard && 'btn-shine-sweep mobile-shine-primary'
+              )}
+            >
+              <Crown className="w-3 h-3 text-lime shrink-0" />
+              <span>Upgrade</span>
+            </button>
+          )}
+
           {/* Desktop Single 40px icon button shortcut with tooltip (replaces floating pill) */}
           <Tooltip content="Paste a message">
             <Link
               to="/app/paste"
-              className="w-10 h-10 rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-surface-hover active:scale-95 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand-600"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-muted hover:text-ink hover:bg-surface-hover active:scale-95 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand-600"
               aria-label="Paste a message"
             >
               <Plus className="w-4 h-4 text-brand-600" />
@@ -92,6 +113,11 @@ export const TopBar: React.FC = () => {
           <AvatarMenu />
         </div>
       </div>
+
+      <SpecialOfferModal
+        isOpen={isUpgradeOpen}
+        onClose={() => setIsUpgradeOpen(false)}
+      />
     </header>
   );
 };
