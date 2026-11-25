@@ -26,12 +26,11 @@ import {
   Menu,
   X,
   LogIn,
-  ChevronDown,
-  ChevronUp,
   Phone,
   Mail,
   ArrowUp,
   HelpCircle,
+  Plus,
 } from 'lucide-react';
 import { apiClient } from '../../lib/api/client';
 import { useAuth } from '../auth/AuthProvider';
@@ -142,8 +141,9 @@ export const LandingPage: React.FC = () => {
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  // FAQ Accordion State
+  // FAQ Accordion & Category State
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [faqCategory, setFaqCategory] = useState<'all' | 'security' | 'workflow' | 'trial'>('all');
 
   // Back to Top & Downward Progressive Blur Scroll State
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -196,6 +196,33 @@ export const LandingPage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Scroll-reveal observer (triggers once per section, respects reduced motion)
+  useEffect(() => {
+    const targets = Array.from(document.querySelectorAll<HTMLElement>('.reveal-section'));
+    if (!targets.length) return;
+    if (
+      typeof IntersectionObserver === 'undefined' ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      targets.forEach((el) => el.setAttribute('data-visible', 'true'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.setAttribute('data-visible', 'true');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+    );
+    targets.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -244,15 +271,15 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================= */}
       {/* FLOATING CAPSULE NAVIGATION (Upper Header Bar)            */}
       {/* ========================================================= */}
-      <header className="sticky top-3 sm:top-5 z-50 w-full px-3 sm:px-6 flex justify-center pointer-events-none transition-all">
-        <div className="pointer-events-auto max-w-5xl w-full h-14 sm:h-15 px-2.5 sm:px-3.5 rounded-[20px] bg-surface border border-line shadow-xl shadow-ink-black/5 flex items-center justify-between gap-2 sm:gap-4 transition-all">
+      <header className="sticky top-3 sm:top-5 z-50 w-full px-2.5 sm:px-6 flex justify-center pointer-events-none transition-all">
+        <div className="pointer-events-auto max-w-5xl w-full h-14 sm:h-15 px-2 sm:px-3.5 rounded-[20px] bg-white border border-line shadow-xl shadow-ink-black/5 flex items-center justify-between gap-1.5 sm:gap-4 transition-all">
           {/* Logo with strict brand styling: LeadNivash */}
-          <Link to="/" className="flex items-center gap-2.5 pl-1.5 sm:pl-2 group focus:outline-none rounded-[16px] shrink-0">
-            <div className="w-8 h-8 rounded-[12px] bg-surface border border-line p-1 shadow-2xs group-hover:border-brand-600/40 transition flex items-center justify-center">
+          <Link to="/" className="flex items-center gap-2 pl-1 sm:pl-2 group focus:outline-none rounded-[16px] shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[10px] sm:rounded-[12px] bg-white border border-line p-1 shadow-2xs group-hover:border-brand-600/40 transition flex items-center justify-center">
               <img src="/logo-icon.png" alt="LeadNivash" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm sm:text-base font-black tracking-tight text-ink-900 font-heading leading-none">
+              <span className="text-xs sm:text-base font-black tracking-tight text-ink-900 font-heading leading-none">
                 Lead<span className="text-brand-700">Nivash</span>
               </span>
             </div>
@@ -262,42 +289,42 @@ export const LandingPage: React.FC = () => {
           <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 text-[11px] xl:text-xs font-bold uppercase tracking-wider text-ink-700">
             <a
               href="#how-it-works"
-              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[16px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[10px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
             >
               How It Works
             </a>
             <a
               href="#capabilities"
-              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[16px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[10px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
             >
               Features
             </a>
             <a
               href="#financial-impact"
-              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[16px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[10px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
             >
               ROI Calculator
             </a>
             <a
               href="#pricing"
-              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[16px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[10px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
             >
               Pricing
             </a>
             <a
               href="#why-leadnivash"
-              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[16px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-[10px] whitespace-nowrap leading-none hover:text-ink-900 hover:bg-lime-soft transition-colors"
             >
               Why Us
             </a>
           </nav>
 
           {/* Right Action Items */}
-          <div className="flex items-center gap-2 shrink-0 pr-1">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 pr-0.5 sm:pr-1">
             {isAuthenticated ? (
               <Link
                 to="/app"
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-ink-900 bg-lime-soft border border-line px-3 py-1.5 rounded-[16px] hover:bg-lime/50 transition-colors whitespace-nowrap leading-none"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-ink-900 bg-white border border-line px-3.5 h-10 rounded-[10px] hover:bg-lime-soft transition-colors whitespace-nowrap leading-none"
               >
                 <span>Dashboard</span>
                 <ArrowRight className="w-3.5 h-3.5 text-brand-700 shrink-0" />
@@ -305,19 +332,19 @@ export const LandingPage: React.FC = () => {
             ) : (
               <Link
                 to="/login"
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-ink-700 hover:text-ink-900 px-3 py-1.5 rounded-[16px] hover:bg-lime-soft transition-colors whitespace-nowrap leading-none"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-ink-900 bg-white border border-line px-3.5 h-10 rounded-[10px] hover:bg-lime-soft transition-colors whitespace-nowrap leading-none"
               >
-                <LogIn className="w-3.5 h-3.5 text-ink-500 shrink-0" />
+                <LogIn className="w-3.5 h-3.5 text-ink-700 shrink-0" />
                 <span>Sign In</span>
               </Link>
             )}
 
             <button
               onClick={scrollToInquiry}
-              className="group relative inline-flex items-center gap-2 pl-3.5 sm:pl-4 pr-1.5 sm:pr-2 py-1.5 sm:py-2 rounded-[16px] bg-ink-black hover:bg-ink-900 active:scale-[0.98] text-white font-extrabold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer whitespace-nowrap leading-none min-h-[44px]"
+              className="group relative inline-flex items-center gap-1.5 sm:gap-2.5 pl-2.5 sm:pl-4 pr-1 sm:pr-1.5 h-9 sm:h-10 rounded-[10px] bg-ink-black hover:bg-ink-900 active:scale-[0.98] text-white font-extrabold text-[10px] sm:text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all cursor-pointer whitespace-nowrap leading-none min-h-[36px] sm:min-h-[40px]"
             >
               <span>Get Free Demo</span>
-              <span className="w-6 h-6 rounded-[10px] bg-lime text-ink-black flex items-center justify-center font-bold text-xs shadow-2xs group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0">
+              <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-[7px] bg-lime text-ink-black flex items-center justify-center font-bold text-xs shadow-2xs group-hover:translate-x-0.5 transition-transform shrink-0">
                 <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
               </span>
             </button>
@@ -326,7 +353,7 @@ export const LandingPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-11 h-11 min-w-[44px] min-h-[44px] rounded-[16px] flex items-center justify-center text-ink-700 hover:text-ink-900 hover:bg-lime-soft active:scale-95 transition cursor-pointer border border-line shadow-2xs shrink-0"
+              className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 min-w-[36px] min-h-[36px] rounded-[10px] flex items-center justify-center text-ink-900 hover:bg-lime-soft active:scale-95 transition cursor-pointer border border-line bg-white shrink-0"
               aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileMenuOpen}
             >
@@ -490,8 +517,12 @@ export const LandingPage: React.FC = () => {
               />
             </video>
 
-            {/* Subtle Professional Cream Gradient Wash */}
+            {/* Subtle Cream Wash + Soft Lime Ambient Radial Shape */}
             <div className="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/75 to-lime-soft/85" />
+            <div
+              aria-hidden="true"
+              className="absolute left-1/2 top-10 -translate-x-1/2 w-[560px] sm:w-[760px] h-[340px] sm:h-[420px] rounded-full bg-lime/40 blur-[120px] pointer-events-none"
+            />
           </div>
 
           <div className="relative z-10 max-w-6xl mx-auto w-full">
@@ -645,100 +676,103 @@ export const LandingPage: React.FC = () => {
                     <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" />
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-[10px] font-bold text-emerald-800 shadow-2xs">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-[16px] bg-lime-soft border border-line text-[10px] font-bold text-ink-900 shadow-2xs">
+                      <span className="w-1.5 h-1.5 rounded-full bg-brand-600 animate-pulse" />
                       Encrypted Owner Vault Active
                     </span>
                   </div>
                 </div>
 
-                {/* 3-Part Product Preview with Apple-Class Clean Surfaces */}
+                {/* 3-Part Product Preview with Staggered Entrance */}
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                   {/* Card 1: WhatsApp Parser Simulation */}
                   <div
+                    style={{ animationDelay: '100ms' }}
                     className={clsx(
-                      'p-4 rounded-2xl bg-slate-50/90 border transition-all duration-300 space-y-3',
+                      'animate-hero-stagger p-4 rounded-[16px] bg-cream border transition-all duration-300 space-y-3',
                       activeProcessStep === 0 || activeProcessStep === 1
-                        ? 'border-emerald-500 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
-                        : 'border-slate-200/80'
+                        ? 'border-ink-black shadow-lg ring-2 ring-lime/60'
+                        : 'border-line'
                     )}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-ink-500">
                         WhatsApp Message
                       </span>
-                      <span className="text-[10px] text-emerald-800 bg-emerald-100 border border-emerald-200 px-2.5 py-0.5 rounded-full font-bold">
+                      <span className="text-[10px] text-ink-black bg-lime px-2.5 py-0.5 rounded-[12px] font-bold">
                         1-Tap Parse
                       </span>
                     </div>
-                    <div className="p-3 rounded-xl bg-white border border-slate-200/80 text-[11px] font-mono text-slate-800 line-clamp-3 shadow-2xs leading-relaxed">
+                    <div className="p-3 rounded-[12px] bg-surface border border-line text-[11px] font-mono text-ink-900 line-clamp-3 shadow-2xs leading-relaxed">
                       "3 BHK builder floor, 2nd floor with lift, Model Town Panipat, 200 gaj, demand 1.25 Cr. Owner: 9876543210"
                     </div>
-                    <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-xs">
-                      <span className="font-bold text-slate-900">3 BHK · 200 Gaj</span>
-                      <span className="font-extrabold text-emerald-700">₹1.25 Cr</span>
+                    <div className="pt-2 border-t border-line flex items-center justify-between text-xs">
+                      <span className="font-bold text-ink-900">3 BHK · 200 Gaj</span>
+                      <span className="font-extrabold text-brand-700">₹1.25 Cr</span>
                     </div>
                   </div>
 
                   {/* Card 2: Smart Property Match Score Indicator */}
                   <div
+                    style={{ animationDelay: '200ms' }}
                     className={clsx(
-                      'p-4 rounded-2xl bg-slate-50/90 border transition-all duration-300 space-y-3 flex flex-col justify-between',
+                      'animate-hero-stagger p-4 rounded-[16px] bg-cream border transition-all duration-300 space-y-3 flex flex-col justify-between',
                       activeProcessStep === 2
-                        ? 'border-emerald-500 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
-                        : 'border-slate-200/80'
+                        ? 'border-ink-black shadow-lg ring-2 ring-lime/60'
+                        : 'border-line'
                     )}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-ink-500">
                         Smart Property Match
                       </span>
-                      <span className="text-[10px] text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full font-bold">
+                      <span className="text-[10px] text-brand-700 bg-lime-soft border border-line px-2.5 py-0.5 rounded-[12px] font-bold">
                         Buyer Match
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-14 h-14 rounded-full border-4 border-emerald-100 border-t-emerald-600 flex items-center justify-center shrink-0 bg-white shadow-2xs">
-                        <span className="text-xs font-black text-emerald-700 font-heading">96%</span>
+                      <div className="w-14 h-14 rounded-full border-4 border-lime-soft border-t-brand-600 flex items-center justify-center shrink-0 bg-surface shadow-2xs">
+                        <span className="text-xs font-black text-brand-700 font-heading">96%</span>
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-slate-900">Rajesh Sharma</p>
-                        <p className="text-[11px] text-slate-600">Budget: ₹1.20 - 1.35 Cr</p>
-                        <span className="text-[10px] font-bold text-emerald-700">Model Town Match</span>
+                        <p className="text-xs font-bold text-ink-900">Rajesh Sharma</p>
+                        <p className="text-[11px] text-ink-700">Budget: ₹1.20 - 1.35 Cr</p>
+                        <span className="text-[10px] font-bold text-brand-700">Model Town Match</span>
                       </div>
                     </div>
-                    <div className="pt-2 border-t border-slate-200/80 text-[11px] text-slate-500 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                    <div className="pt-2 border-t border-line text-[11px] text-ink-700 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-brand-600" />
                       <span>Matched instantly across 18 inquiries</span>
                     </div>
                   </div>
 
                   {/* Card 3: Masked Flyer & Branded Share */}
                   <div
+                    style={{ animationDelay: '300ms' }}
                     className={clsx(
-                      'p-4 rounded-2xl bg-slate-50/90 border transition-all duration-300 space-y-3 flex flex-col justify-between',
+                      'animate-hero-stagger p-4 rounded-[16px] bg-cream border transition-all duration-300 space-y-3 flex flex-col justify-between',
                       activeProcessStep === 3 || activeProcessStep === 4
-                        ? 'border-emerald-500 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/30'
-                        : 'border-slate-200/80'
+                        ? 'border-ink-black shadow-lg ring-2 ring-lime/60'
+                        : 'border-line'
                     )}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-ink-500">
                         Masked Flyer Output
                       </span>
-                      <span className="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-bold">
+                      <span className="text-[10px] text-ink-black bg-lime px-2.5 py-0.5 rounded-[12px] font-bold">
                         Safe Share
                       </span>
                     </div>
-                    <div className="p-3 rounded-xl bg-white border border-slate-200/80 text-slate-900 space-y-1 shadow-2xs">
-                      <span className="text-[10px] uppercase tracking-wider text-emerald-700 font-bold block">
+                    <div className="p-3 rounded-[12px] bg-surface border border-line text-ink-900 space-y-1 shadow-2xs">
+                      <span className="text-[10px] uppercase tracking-wider text-brand-700 font-bold block">
                         Watermarked Flyer
                       </span>
-                      <p className="text-xs font-bold text-slate-900">3 BHK Luxury Floor · Model Town</p>
-                      <p className="text-[10px] text-slate-500">Marketed by: Sharma Real Estate Agency</p>
+                      <p className="text-xs font-bold text-ink-900">3 BHK Luxury Floor · Model Town</p>
+                      <p className="text-[10px] text-ink-500">Marketed by: Sharma Real Estate Agency</p>
                     </div>
-                    <div className="pt-2 border-t border-slate-200/80 text-[11px] text-emerald-700 font-semibold flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <div className="pt-2 border-t border-line text-[11px] text-brand-700 font-semibold flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
                       <span>Owner contact 100% hidden</span>
                     </div>
                   </div>
@@ -752,7 +786,7 @@ export const LandingPage: React.FC = () => {
         {/* SECTION 2 — PURPOSE-BUILT FOR AGENTS: PRODUCT DEMO UPGRADE*/}
         {/* ========================================================= */}
         <section id="capabilities" className="py-16 sm:py-24 px-4 sm:px-6 bg-lime-soft border-y border-line relative overflow-hidden">
-          <div className="max-w-6xl mx-auto space-y-12 relative z-10">
+          <div className="max-w-6xl mx-auto space-y-12 relative z-10 reveal-section">
             {/* 1. Section Header & Introduction */}
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <span className="inline-flex items-center px-3 py-1 rounded-[16px] bg-lime text-ink-black text-[11px] font-black uppercase tracking-widest">
@@ -788,7 +822,7 @@ export const LandingPage: React.FC = () => {
                     className={clsx(
                       'px-3.5 py-1.5 rounded-[16px] flex items-center gap-1.5 transition-all duration-200 cursor-pointer min-h-[44px] sm:min-h-0',
                       videoMode === 'desktop'
-                        ? 'bg-ink-black text-white shadow-sm'
+                        ? 'bg-lime text-ink-900 shadow-sm'
                         : 'text-ink-700 hover:text-ink-900'
                     )}
                   >
@@ -802,7 +836,7 @@ export const LandingPage: React.FC = () => {
                     className={clsx(
                       'px-3.5 py-1.5 rounded-[16px] flex items-center gap-1.5 transition-all duration-200 cursor-pointer min-h-[44px] sm:min-h-0',
                       videoMode === 'mobile'
-                        ? 'bg-ink-black text-white shadow-sm'
+                        ? 'bg-lime text-ink-900 shadow-sm'
                         : 'text-ink-700 hover:text-ink-900'
                     )}
                   >
@@ -929,7 +963,7 @@ export const LandingPage: React.FC = () => {
         {/* SECTION 3 — HOW IT WORKS (Cream Surface)                  */}
         {/* ========================================================= */}
         <section id="how-it-works" className="py-16 sm:py-24 px-4 sm:px-6 bg-cream w-full relative overflow-hidden">
-          <div className="relative z-10 max-w-6xl mx-auto space-y-12">
+          <div className="relative z-10 max-w-6xl mx-auto space-y-12 reveal-section">
             {/* 1. Section Header & Introduction */}
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <span className="inline-flex items-center px-3 py-1 rounded-[16px] bg-lime text-ink-black text-[11px] font-black uppercase tracking-widest">
@@ -1023,11 +1057,11 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Active Stage Visual Showcase Deck */}
-              <div className="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white/95 p-4 sm:p-8 shadow-xl transition-all duration-500">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div className="rounded-[20px] border border-line bg-surface p-4 sm:p-8 shadow-xl transition-all duration-300">
+                <div key={activeWorkflowStep} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center animate-tab-fade">
                   {/* Left Column: Stage Narrative & Action */}
                   <div className="lg:col-span-5 space-y-4 text-left">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-xs">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[16px] bg-lime text-ink-900 text-xs font-bold shadow-xs">
                       <span>
                         {activeWorkflowStep === 0 && 'STEP 01 — PASTE A MESSAGE'}
                         {activeWorkflowStep === 1 && 'STEP 02 — AI UNDERSTANDS IT'}
@@ -1037,7 +1071,7 @@ export const LandingPage: React.FC = () => {
                       </span>
                     </div>
 
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 font-heading leading-snug">
+                    <h3 className="text-xl sm:text-2xl font-black text-ink-900 font-heading leading-snug">
                       {activeWorkflowStep === 0 && 'Paste a Message'}
                       {activeWorkflowStep === 1 && 'AI Understands It'}
                       {activeWorkflowStep === 2 && 'Save and Organise'}
@@ -1045,7 +1079,7 @@ export const LandingPage: React.FC = () => {
                       {activeWorkflowStep === 4 && 'Share and Track'}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                    <p className="text-xs sm:text-sm text-ink-700 leading-relaxed font-normal">
                       {activeWorkflowStep === 0 &&
                         'Copy a buyer requirement or property listing from WhatsApp and paste it into LeadNivash.'}
                       {activeWorkflowStep === 1 &&
@@ -1062,175 +1096,172 @@ export const LandingPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setActiveWorkflowStep((prev) => (prev + 1) % 5)}
-                        className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 text-xs font-bold transition cursor-pointer min-h-[44px]"
+                        className="group inline-flex items-center gap-1.5 px-4 py-2.5 rounded-[16px] bg-lime-soft hover:bg-lime active:scale-95 text-brand-700 hover:text-ink-900 text-xs font-bold border border-line transition cursor-pointer min-h-[44px]"
                       >
                         <span>Next Stage</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                       </button>
-                      <span className="text-[11px] text-slate-500 font-medium">Tap any step above to explore</span>
+                      <span className="text-[11px] text-ink-500 font-medium">Tap any step above to explore</span>
                     </div>
                   </div>
 
-                  {/* Right Column: High-Fidelity Interactive Visual Simulation */}
+                  {/* Right Column: Interactive Visual Simulation */}
                   <div className="lg:col-span-7">
-                    {/* Step 01 Visual: Realistic WhatsApp Message Bubble (Apple-Class Light Card) */}
+                    {/* Step 01 Visual: WhatsApp Message Bubble */}
                     {activeWorkflowStep === 0 && (
-                      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xl space-y-3.5 animate-hero-up text-slate-900">
-                        <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
+                      <div className="p-4 sm:p-5 rounded-[18px] bg-cream border border-line shadow-lg space-y-3.5 text-ink-900">
+                        <div className="flex items-center justify-between border-b border-line pb-2.5">
                           <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                            <span className="text-xs font-bold text-slate-700">WhatsApp Incoming Chat</span>
+                            <span className="w-2.5 h-2.5 rounded-full bg-brand-600" />
+                            <span className="text-xs font-bold text-ink-900">WhatsApp Incoming Chat</span>
                           </div>
-                          <span className="text-[10px] text-slate-500 font-mono">10:42 AM · NCR Broker Group</span>
+                          <span className="text-[10px] text-ink-500 font-mono">10:42 AM · NCR Broker Group</span>
                         </div>
-                        <div className="p-3.5 rounded-2xl rounded-tl-xs bg-emerald-50/90 border border-emerald-200 text-slate-900 text-xs sm:text-sm font-sans leading-relaxed shadow-xs">
+                        <div className="p-3.5 rounded-[16px] rounded-tl-xs bg-lime-soft border border-line text-ink-900 text-xs sm:text-sm font-sans leading-relaxed shadow-xs">
                           "Need 3 BHK in Model Town, Panipat. Budget 1.25 Cr. Prefer lift and parking."
                         </div>
-                        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                        <div className="flex items-center justify-between text-[11px] text-ink-500 pt-1">
                           <span className="italic">* Fictional sample data for illustration</span>
-                          <span className="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200">
+                          <span className="text-ink-900 font-bold bg-lime px-2.5 py-0.5 rounded-[10px]">
                             1-Tap Quick Paste Ready
                           </span>
                         </div>
                       </div>
                     )}
 
-                    {/* Step 02 Visual: AI Extraction with Scanning Animation (Apple-Class Light Card) */}
+                    {/* Step 02 Visual: AI Extraction */}
                     {activeWorkflowStep === 1 && (
-                      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-emerald-500/30 shadow-xl space-y-3.5 relative overflow-hidden animate-hero-up text-slate-900">
-                        {/* Scanning Light Beam */}
-                        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent animate-pulse" />
-
-                        <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
+                      <div className="p-4 sm:p-5 rounded-[18px] bg-cream border border-line shadow-lg space-y-3.5 relative overflow-hidden text-ink-900">
+                        <div className="flex items-center justify-between border-b border-line pb-2.5">
                           <div className="flex items-center gap-2">
-                            <Sparkles className="w-4 h-4 text-emerald-600" />
-                            <span className="text-xs font-bold text-slate-800">AI Entity Extraction Active</span>
+                            <Sparkles className="w-4 h-4 text-brand-600" />
+                            <span className="text-xs font-bold text-ink-900">AI Entity Extraction Active</span>
                           </div>
-                          <span className="text-[10px] text-emerald-700 font-mono font-bold">4 Attributes Identified</span>
+                          <span className="text-[10px] text-brand-700 font-mono font-bold">4 Attributes Identified</span>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
-                          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
-                            <span className="text-[10px] uppercase font-bold text-slate-500 block">Property</span>
-                            <span className="text-xs font-bold text-emerald-700">3 BHK Builder Floor</span>
+                          <div className="p-2.5 rounded-[12px] bg-surface border border-line shadow-2xs">
+                            <span className="text-[10px] uppercase font-bold text-ink-500 block">Property</span>
+                            <span className="text-xs font-bold text-brand-700">3 BHK Builder Floor</span>
                           </div>
-                          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
-                            <span className="text-[10px] uppercase font-bold text-slate-500 block">Locality</span>
-                            <span className="text-xs font-bold text-emerald-700">Model Town, Panipat</span>
+                          <div className="p-2.5 rounded-[12px] bg-surface border border-line shadow-2xs">
+                            <span className="text-[10px] uppercase font-bold text-ink-500 block">Locality</span>
+                            <span className="text-xs font-bold text-brand-700">Model Town, Panipat</span>
                           </div>
-                          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
-                            <span className="text-[10px] uppercase font-bold text-slate-500 block">Budget</span>
-                            <span className="text-xs font-bold text-emerald-700">₹1.25 Cr</span>
+                          <div className="p-2.5 rounded-[12px] bg-surface border border-line shadow-2xs">
+                            <span className="text-[10px] uppercase font-bold text-ink-500 block">Budget</span>
+                            <span className="text-xs font-bold text-brand-700">₹1.25 Cr</span>
                           </div>
-                          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
-                            <span className="text-[10px] uppercase font-bold text-slate-500 block">Amenities</span>
-                            <span className="text-xs font-bold text-emerald-700">Lift + Dedicated Parking</span>
+                          <div className="p-2.5 rounded-[12px] bg-surface border border-line shadow-2xs">
+                            <span className="text-[10px] uppercase font-bold text-ink-500 block">Amenities</span>
+                            <span className="text-xs font-bold text-brand-700">Lift + Dedicated Parking</span>
                           </div>
                         </div>
 
-                        <div className="text-[11px] text-slate-500 pt-1 flex items-center justify-between">
+                        <div className="text-[11px] text-ink-500 pt-1 flex items-center justify-between">
                           <span>Zero manual typing required</span>
-                          <span className="text-emerald-700 font-bold">Confidence: High</span>
+                          <span className="text-brand-700 font-bold">Confidence: High</span>
                         </div>
                       </div>
                     )}
 
-                    {/* Step 03 Visual: Save & Organise in Vault (Apple-Class Light Card) */}
+                    {/* Step 03 Visual: Save & Organise in Vault */}
                     {activeWorkflowStep === 2 && (
-                      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xl space-y-3.5 animate-hero-up text-slate-900">
-                        <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
+                      <div className="p-4 sm:p-5 rounded-[18px] bg-cream border border-line shadow-lg space-y-3.5 text-ink-900">
+                        <div className="flex items-center justify-between border-b border-line pb-2.5">
                           <div className="flex items-center gap-2">
-                            <Layers className="w-4 h-4 text-emerald-600" />
-                            <span className="text-xs font-bold text-slate-800">Buyer Record #LN-8492</span>
+                            <Layers className="w-4 h-4 text-brand-600" />
+                            <span className="text-xs font-bold text-ink-900">Buyer Record #LN-8492</span>
                           </div>
-                          <span className="inline-flex items-center gap-1 text-[10px] text-emerald-800 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span className="inline-flex items-center gap-1 text-[10px] text-ink-900 font-bold bg-lime px-2.5 py-0.5 rounded-[12px]">
+                            <CheckCircle2 className="w-3 h-3 text-ink-900" />
                             Saved to Vault
                           </span>
                         </div>
 
-                        <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2 text-left shadow-2xs">
+                        <div className="p-3.5 rounded-[14px] bg-surface border border-line space-y-2 text-left shadow-2xs">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-slate-900">Rajesh Sharma (Verified Buyer)</span>
-                            <span className="text-xs font-extrabold text-emerald-700">₹1.25 Cr Max</span>
+                            <span className="text-xs font-bold text-ink-900">Rajesh Sharma (Verified Buyer)</span>
+                            <span className="text-xs font-extrabold text-brand-700">₹1.25 Cr Max</span>
                           </div>
-                          <p className="text-[11px] text-slate-600">
+                          <p className="text-[11px] text-ink-700">
                             Seeking 3 BHK with lift in Model Town · Contact stored in encrypted vault
                           </p>
                         </div>
 
-                        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                        <div className="flex items-center justify-between text-[11px] text-ink-500 pt-1">
                           <span>Auto-indexed in 0.4s</span>
-                          <span className="text-emerald-700 font-semibold">100% Privacy Preserved</span>
+                          <span className="text-brand-700 font-semibold">100% Privacy Preserved</span>
                         </div>
                       </div>
                     )}
 
-                    {/* Step 04 Visual: Find Matches with Evaluation Score (Apple-Class Light Card) */}
+                    {/* Step 04 Visual: Find Matches with Evaluation Score */}
                     {activeWorkflowStep === 3 && (
-                      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-emerald-500/30 shadow-xl space-y-3.5 animate-hero-up text-slate-900">
-                        <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
+                      <div className="p-4 sm:p-5 rounded-[18px] bg-cream border border-line shadow-lg space-y-3.5 text-ink-900">
+                        <div className="flex items-center justify-between border-b border-line pb-2.5">
                           <div className="flex items-center gap-2">
-                            <Search className="w-4 h-4 text-emerald-600" />
-                            <span className="text-xs font-bold text-slate-800">Matching Engine Evaluation</span>
+                            <Search className="w-4 h-4 text-brand-600" />
+                            <span className="text-xs font-bold text-ink-900">Matching Engine Evaluation</span>
                           </div>
-                          <span className="text-[10px] font-mono text-emerald-700 font-bold">2 Listings Compared</span>
+                          <span className="text-[10px] font-mono text-brand-700 font-bold">2 Listings Compared</span>
                         </div>
 
                         {/* Best Matching Listing */}
-                        <div className="p-3.5 rounded-xl bg-slate-50 border-2 border-emerald-500/60 shadow-md shadow-emerald-500/5 space-y-2 text-left">
+                        <div className="p-3.5 rounded-[14px] bg-surface border-2 border-ink-black shadow-sm space-y-2 text-left">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-slate-900">3 BHK Luxury Floor · Model Town</span>
-                            <span className="text-xs font-black text-emerald-800 font-heading bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
+                            <span className="text-xs font-bold text-ink-900">3 BHK Luxury Floor · Model Town</span>
+                            <span className="text-xs font-black text-ink-900 font-heading bg-lime px-2 py-0.5 rounded-[10px]">
                               96% Match*
                             </span>
                           </div>
-                          <div className="text-[11px] text-slate-600 flex items-center justify-between">
+                          <div className="text-[11px] text-ink-700 flex items-center justify-between">
                             <span>Demand: ₹1.22 Cr · 200 Gaj</span>
-                            <span className="text-emerald-700 font-bold">Matches: Locality, Budget, Lift</span>
+                            <span className="text-brand-700 font-bold">Matches: Locality, Budget, Lift</span>
                           </div>
                         </div>
 
-                        <p className="text-[10px] text-slate-500 italic text-left">
+                        <p className="text-[10px] text-ink-500 italic text-left">
                           * Match score is an illustrative demo value showing multi-criteria correlation.
                         </p>
                       </div>
                     )}
 
-                    {/* Step 05 Visual: Masked Flyer & Pipeline Tracker (Apple-Class Light Card) */}
+                    {/* Step 05 Visual: Masked Flyer & Pipeline Tracker */}
                     {activeWorkflowStep === 4 && (
-                      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xl space-y-3.5 animate-hero-up text-slate-900">
-                        <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
+                      <div className="p-4 sm:p-5 rounded-[18px] bg-cream border border-line shadow-lg space-y-3.5 text-ink-900">
+                        <div className="flex items-center justify-between border-b border-line pb-2.5">
                           <div className="flex items-center gap-2">
-                            <Share2 className="w-4 h-4 text-emerald-600" />
-                            <span className="text-xs font-bold text-slate-800">Masked Flyer Output & Deal Tracker</span>
+                            <Share2 className="w-4 h-4 text-brand-600" />
+                            <span className="text-xs font-bold text-ink-900">Masked Flyer Output & Deal Tracker</span>
                           </div>
-                          <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                          <span className="text-[10px] font-bold text-ink-900 bg-lime px-2.5 py-0.5 rounded-[12px]">
                             Negotiation Stage
                           </span>
                         </div>
 
-                        <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2 text-left shadow-2xs">
+                        <div className="p-3.5 rounded-[14px] bg-surface border border-line space-y-2 text-left shadow-2xs">
                           <div className="flex items-center justify-between">
                             <div>
-                              <span className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider block">
+                              <span className="text-[10px] text-brand-700 font-bold uppercase tracking-wider block">
                                 Sharma Real Estate Agency
                               </span>
-                              <p className="text-xs font-bold text-slate-900">3 BHK Builder Floor · Model Town</p>
+                              <p className="text-xs font-bold text-ink-900">3 BHK Builder Floor · Model Town</p>
                             </div>
-                            <span className="text-xs font-black text-emerald-700">₹1.22 Cr</span>
+                            <span className="text-xs font-black text-brand-700">₹1.22 Cr</span>
                           </div>
-                          <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500">
-                            <span className="text-emerald-700 flex items-center gap-1 font-semibold">
+                          <div className="pt-2 border-t border-line flex items-center justify-between text-[11px] text-ink-500">
+                            <span className="text-brand-700 flex items-center gap-1 font-semibold">
                               <ShieldCheck className="w-3.5 h-3.5" /> Owner Contact Hidden
                             </span>
-                            <span className="text-slate-600">Site Visit: Tomorrow 4 PM</span>
+                            <span className="text-ink-700">Site Visit: Tomorrow 4 PM</span>
                           </div>
                         </div>
 
-                        <div className="text-[11px] text-slate-500 flex items-center justify-between pt-1">
+                        <div className="text-[11px] text-ink-500 flex items-center justify-between pt-1">
                           <span>Direct WhatsApp Share Ready</span>
-                          <span className="text-emerald-700 font-bold">Commission Protected</span>
+                          <span className="text-brand-700 font-bold">Commission Protected</span>
                         </div>
                       </div>
                     )}
@@ -1333,10 +1364,22 @@ export const LandingPage: React.FC = () => {
         {/* SECTION 4 — FEATURES (DARK --ink-black SHOWCASE)          */}
         {/* ========================================================= */}
         <section id="features" className="py-16 sm:py-24 px-4 sm:px-6 bg-ink-black text-white border-y border-white/10 relative overflow-hidden">
-          <div className="max-w-6xl mx-auto space-y-12 relative z-10">
+          {/* Decorative Corner Soundwave Clusters (purely decorative) */}
+          <div aria-hidden="true" className="pointer-events-none select-none hidden sm:flex items-end gap-1.5 absolute top-8 right-8 h-16 animate-soundwave">
+            {[28, 48, 36, 60, 44, 52, 30, 42, 22, 34].map((h, i) => (
+              <span key={i} className="w-1 rounded-full bg-lime/60" style={{ height: `${h}%` }} />
+            ))}
+          </div>
+          <div aria-hidden="true" className="pointer-events-none select-none hidden sm:flex items-end gap-1.5 absolute bottom-8 left-8 h-16 animate-soundwave">
+            {[22, 38, 54, 34, 48, 60, 40, 28, 46, 30].map((h, i) => (
+              <span key={i} className="w-1 rounded-full bg-lime/60" style={{ height: `${h}%` }} />
+            ))}
+          </div>
+
+          <div className="max-w-6xl mx-auto space-y-12 relative z-10 reveal-section">
             {/* 1. Section Header & Introduction */}
             <div className="text-center max-w-2xl mx-auto space-y-3">
-              <span className="inline-flex items-center px-3 py-1 rounded-[16px] bg-lime text-ink-black text-[11px] font-black uppercase tracking-widest">
+              <span className="inline-flex items-center px-3 py-1 rounded-[16px] border border-lime/50 bg-lime/10 text-lime text-[11px] font-black uppercase tracking-widest">
                 CORE CAPABILITIES
               </span>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white font-heading tracking-tight leading-tight">
@@ -1345,9 +1388,15 @@ export const LandingPage: React.FC = () => {
                   In One Place.
                 </span>
               </h2>
-              <p className="text-sm sm:text-base text-white/75 max-w-xl mx-auto leading-relaxed font-normal">
+              <p className="text-sm sm:text-base text-[#C9CCC6] max-w-xl mx-auto leading-relaxed font-normal">
                 From organising properties and understanding WhatsApp enquiries to matching buyers and tracking commissions, LeadNivash brings your brokerage workflow together.
               </p>
+              <div className="pt-1">
+                <a href="#demo-inquiry-section" className="inline-flex items-center gap-1.5 text-xs font-bold text-lime hover:underline">
+                  <span>Explore LeadNivash AI</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
             </div>
 
             {/* Compact Section Sub-label */}
@@ -1649,7 +1698,7 @@ export const LandingPage: React.FC = () => {
         {/* SECTION 5 — FINANCIAL IMPACT (Lime-Soft Alternating)      */}
         {/* ========================================================= */}
         <section id="financial-impact" className="py-16 sm:py-24 px-4 sm:px-6 bg-lime-soft border-y border-line relative overflow-hidden">
-          <div className="max-w-5xl mx-auto space-y-12 relative z-10">
+          <div className="max-w-5xl mx-auto space-y-12 relative z-10 reveal-section">
             {/* 1. Section Header & Introduction */}
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <span className="inline-flex items-center px-3 py-1 rounded-[16px] bg-lime text-ink-black text-[11px] font-black uppercase tracking-widest">
@@ -1920,7 +1969,7 @@ export const LandingPage: React.FC = () => {
         {/* BROKER CALCULATOR TOOLKIT SPOTLIGHT SECTION (Cream)       */}
         {/* ========================================================= */}
         <section id="broker-toolkit" className="py-16 sm:py-20 px-4 sm:px-6 bg-cream w-full text-center relative overflow-hidden">
-          <div className="max-w-5xl mx-auto space-y-10">
+          <div className="max-w-5xl mx-auto space-y-10 reveal-section">
             <div className="max-w-2xl mx-auto space-y-3">
               <span className="inline-flex items-center px-3 py-1 rounded-[16px] bg-lime text-ink-black text-[11px] font-black uppercase tracking-widest">
                 ESSENTIAL UTILITIES
@@ -1939,7 +1988,7 @@ export const LandingPage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
               <Link
                 to="/app/tools/area"
-                className="p-5 rounded-[20px] bg-surface border border-line shadow-2xs hover:border-brand-600/50 hover:shadow-lg transition-all space-y-3 group cursor-pointer block"
+                className="p-5 rounded-[20px] bg-surface border border-line shadow-2xs hover:border-brand-600/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 space-y-3 group cursor-pointer block"
               >
                 <div className="w-10 h-10 rounded-[14px] bg-lime-soft text-brand-700 flex items-center justify-center font-bold group-hover:scale-105 group-hover:bg-ink-black group-hover:text-lime transition-all">
                   <Maximize2 className="w-5 h-5 stroke-[2.2]" />
@@ -1957,7 +2006,7 @@ export const LandingPage: React.FC = () => {
 
               <Link
                 to="/app/tools/registry"
-                className="p-5 rounded-[20px] bg-surface border border-line shadow-2xs hover:border-brand-600/50 hover:shadow-lg transition-all space-y-3 group cursor-pointer block"
+                className="p-5 rounded-[20px] bg-surface border border-line shadow-2xs hover:border-brand-600/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 space-y-3 group cursor-pointer block"
               >
                 <div className="w-10 h-10 rounded-[14px] bg-lime-soft text-brand-700 flex items-center justify-center font-bold group-hover:scale-105 group-hover:bg-ink-black group-hover:text-lime transition-all">
                   <Building2 className="w-5 h-5 stroke-[2.2]" />
@@ -1975,7 +2024,7 @@ export const LandingPage: React.FC = () => {
 
               <Link
                 to="/app/tools/emi"
-                className="p-5 rounded-[20px] bg-surface border border-line shadow-2xs hover:border-brand-600/50 hover:shadow-lg transition-all space-y-3 group cursor-pointer block"
+                className="p-5 rounded-[20px] bg-surface border border-line shadow-2xs hover:border-brand-600/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 space-y-3 group cursor-pointer block"
               >
                 <div className="w-10 h-10 rounded-[14px] bg-lime-soft text-brand-700 flex items-center justify-center font-bold group-hover:scale-105 group-hover:bg-ink-black group-hover:text-lime transition-all">
                   <Calculator className="w-5 h-5 stroke-[2.2]" />
@@ -1993,7 +2042,7 @@ export const LandingPage: React.FC = () => {
 
               <Link
                 to="/app/tools/commission"
-                className="p-5 rounded-[20px] bg-surface border border-line shadow-2xs hover:border-brand-600/50 hover:shadow-lg transition-all space-y-3 group cursor-pointer block"
+                className="p-5 rounded-[20px] bg-surface border border-line shadow-2xs hover:border-brand-600/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 space-y-3 group cursor-pointer block"
               >
                 <div className="w-10 h-10 rounded-[14px] bg-lime-soft text-brand-700 flex items-center justify-center font-bold group-hover:scale-105 group-hover:bg-ink-black group-hover:text-lime transition-all">
                   <TrendingUp className="w-5 h-5 stroke-[2.2]" />
@@ -2027,7 +2076,7 @@ export const LandingPage: React.FC = () => {
         {/* SECTION 6 — PRICING (Lime-Soft Alternating)               */}
         {/* ========================================================= */}
         <section id="pricing" className="py-16 sm:py-24 px-4 sm:px-6 bg-lime-soft border-y border-line w-full relative overflow-hidden">
-          <div className="relative z-10 max-w-5xl mx-auto">
+          <div className="relative z-10 max-w-5xl mx-auto reveal-section">
             <PricingSection showTitle={true} />
           </div>
         </section>
@@ -2036,7 +2085,7 @@ export const LandingPage: React.FC = () => {
         {/* SECTION 7 — WHY CHOOSE LeadNivash? (Cream Surface)        */}
         {/* ========================================================= */}
         <section id="why-leadnivash" className="py-16 sm:py-24 px-4 sm:px-6 bg-cream relative overflow-hidden">
-          <div className="max-w-6xl mx-auto space-y-12 relative z-10">
+          <div className="max-w-6xl mx-auto space-y-12 relative z-10 reveal-section">
             {/* Section Introduction */}
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <span className="inline-flex items-center px-3 py-1 rounded-[16px] bg-lime text-ink-black text-[11px] font-black uppercase tracking-widest">
@@ -2254,8 +2303,8 @@ export const LandingPage: React.FC = () => {
         {/* SECTION 7.5 — FAQ (Lime-Soft Alternating)                 */}
         {/* ========================================================= */}
         <section id="faq-section" className="py-16 sm:py-24 px-4 sm:px-6 bg-lime-soft border-y border-line relative">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center space-y-3 mb-12">
+          <div className="max-w-5xl mx-auto reveal-section">
+            <div className="text-center space-y-3 mb-8">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] bg-lime text-ink-black text-[11px] font-bold tracking-wider uppercase">
                 <HelpCircle className="w-3.5 h-3.5 text-ink-black" />
                 <span>Got Questions? We Have Answers</span>
@@ -2268,59 +2317,107 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="space-y-3">
+            {/* Category Filter Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+              {(
+                [
+                  { id: 'all', label: 'All Questions' },
+                  { id: 'security', label: 'Privacy & Vault' },
+                  { id: 'workflow', label: 'AI & Workflow' },
+                  { id: 'trial', label: 'Trial & Tools' },
+                ] as const
+              ).map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => {
+                    setFaqCategory(cat.id);
+                    setOpenFaq(0);
+                  }}
+                  className={clsx(
+                    'px-4 py-2 rounded-full text-xs font-bold border transition-all duration-150 cursor-pointer min-h-[38px]',
+                    faqCategory === cat.id
+                      ? 'bg-lime border-ink-black text-ink-900 shadow-2xs'
+                      : 'bg-surface border-line text-ink-700 hover:text-ink-900 hover:bg-cream'
+                  )}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <div key={faqCategory} className="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-start animate-tab-fade">
               {[
                 {
+                  cat: 'security',
                   q: 'How does LeadNivash protect my client and owner data from competitors?',
                   a: 'Owner Vault Data Isolation guarantees that your listings, client inquiries, phone numbers, and commission agreements are strictly encrypted and visible ONLY to your authenticated account. No other broker or agency on the platform can ever view or access your private inventory.',
                 },
                 {
+                  cat: 'workflow',
                   q: 'What is Quick Chat and how does AI requirement matching work?',
                   a: 'Quick Chat lets you speak or paste raw WhatsApp client messages (e.g., "3 BHK flat in Gurgaon under 1.5 Cr near Metro"). Our built-in intelligence instantly extracts budget, bedroom counts, property type, and location filters, automatically scoring and displaying genuine matching properties from your portfolio.',
                 },
                 {
+                  cat: 'trial',
                   q: 'Can I use LeadNivash on my phone without downloading from the App Store or Play Store?',
                   a: 'Yes! LeadNivash is engineered as an installable Progressive Web App (PWA). Simply open leadnivash.com on Chrome (Android) or Safari (iOS) and tap "Add to Home Screen" for an instant, native full-screen app experience with offline resilience.',
                 },
                 {
+                  cat: 'workflow',
                   q: 'Does data synchronize across my laptop and mobile phone in real time?',
                   a: 'Yes. Any property or buyer added or updated in the field from your mobile immediately reflects on your office desktop or tablet, powered by cloud database synchronization and strict session management.',
                 },
                 {
+                  cat: 'security',
                   q: 'Can I share property flyers on WhatsApp without revealing the owner’s direct contact?',
                   a: 'Absolutely. With one click, generate Masked Marketing Flyers and shareable cards containing your agency logo, property photos, pricing, and specs while completely concealing owner phone numbers and private addresses.',
                 },
                 {
+                  cat: 'trial',
                   q: 'What tools are included in the 14-day free trial?',
                   a: 'You get unrestricted access to all 4 broker utility engines: Stamp Duty & Circle Rate Calculator across major Indian states, EMI & Loan Eligibility Estimator, Commission Invoice Generator, and Land Unit Converter (Gaj, Bigha, Sq. Yd, Marla, Biswa).',
                 },
-              ].map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-[18px] border border-line bg-surface shadow-2xs overflow-hidden transition-all duration-200"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                    className="w-full px-5 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-lime-soft/50 transition-colors focus:outline-none"
-                    aria-expanded={openFaq === idx}
-                  >
-                    <p className="text-sm sm:text-base font-bold text-ink-900 font-heading">{faq.q}</p>
-                    <div className="shrink-0 w-8 h-8 rounded-[12px] bg-lime-soft border border-line flex items-center justify-center text-ink-900">
-                      {openFaq === idx ? (
-                        <ChevronUp className="w-4 h-4" />
-                      ) : (
-                        <ChevronDown className="w-4 h-4" />
-                      )}
+              ]
+                .filter((item) => faqCategory === 'all' || item.cat === faqCategory)
+                .map((faq, idx) => {
+                  const isOpen = openFaq === idx;
+                  return (
+                    <div
+                      key={faq.q}
+                      className="rounded-[16px] border border-line bg-surface shadow-2xs overflow-hidden transition-all duration-200"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setOpenFaq(isOpen ? null : idx)}
+                        className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-lime-soft/40 transition-colors focus:outline-none"
+                        aria-expanded={isOpen}
+                      >
+                        <p className="text-sm font-bold text-ink-900 font-heading">{faq.q}</p>
+                        <div className="shrink-0 w-8 h-8 rounded-full bg-cream border border-line flex items-center justify-center text-ink-900">
+                          <Plus
+                            className={clsx(
+                              'w-4 h-4 transition-transform duration-250',
+                              isOpen && 'rotate-45'
+                            )}
+                          />
+                        </div>
+                      </button>
+                      <div
+                        className={clsx(
+                          'grid transition-all duration-250 ease-out',
+                          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                        )}
+                      >
+                        <div className="overflow-hidden">
+                          <div className="px-5 pb-4 pt-2 text-xs sm:text-sm text-ink-700 leading-relaxed border-t border-line">
+                            {faq.a}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </button>
-                  {openFaq === idx && (
-                    <div className="px-5 sm:px-6 pb-5 pt-1 text-xs sm:text-sm text-ink-700 leading-relaxed border-t border-line">
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              ))}
+                  );
+                })}
             </div>
           </div>
         </section>
@@ -2329,7 +2426,7 @@ export const LandingPage: React.FC = () => {
         {/* SECTION 8 — FINAL CTA AND FREE DEMO (Cream Surface)       */}
         {/* ========================================================= */}
         <section id="demo-inquiry-section" className="py-16 sm:py-24 px-4 sm:px-6 bg-cream">
-          <div className="max-w-4xl mx-auto rounded-[20px] bg-surface p-6 sm:p-12 text-ink-900 shadow-2xl border border-line text-left relative overflow-hidden">
+          <div className="max-w-4xl mx-auto rounded-[20px] bg-surface p-6 sm:p-12 text-ink-900 shadow-2xl border border-line text-left relative overflow-hidden reveal-section">
 
             <div className="max-w-2xl space-y-3 mb-8">
               <h2 className="text-3xl sm:text-4xl font-black font-heading tracking-tight text-ink-900">
@@ -2506,7 +2603,7 @@ export const LandingPage: React.FC = () => {
                   Lead<span className="text-lime">Nivash</span>
                 </span>
               </div>
-              <p className="text-xs text-white/70 leading-relaxed">
+              <p className="text-xs text-[#C9CCC6] leading-relaxed">
                 India's #1 Real Estate Broker Operating System. AI-powered property matching, buyer CRM, and owner inventory protection.
               </p>
             </div>
@@ -2515,7 +2612,7 @@ export const LandingPage: React.FC = () => {
               <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-3 font-heading">
                 Platform
               </h3>
-              <ul className="space-y-2 text-xs text-white/75">
+              <ul className="space-y-2 text-xs text-[#C9CCC6]">
                 <li><a href="#capabilities" className="hover:text-lime transition">Core Features</a></li>
                 <li><a href="#how-it-works" className="hover:text-lime transition">How It Works</a></li>
                 <li><Link to="/pricing" className="hover:text-lime transition">Subscription Plans</Link></li>
@@ -2527,7 +2624,7 @@ export const LandingPage: React.FC = () => {
               <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-3 font-heading">
                 Broker Utilities
               </h3>
-              <ul className="space-y-2 text-xs text-white/75">
+              <ul className="space-y-2 text-xs text-[#C9CCC6]">
                 <li><Link to="/tools" className="hover:text-lime transition">Circle Rate & Stamp Duty</Link></li>
                 <li><Link to="/tools" className="hover:text-lime transition">EMI & Loan Eligibility</Link></li>
                 <li><Link to="/tools" className="hover:text-lime transition">Invoice Generator</Link></li>
@@ -2539,7 +2636,7 @@ export const LandingPage: React.FC = () => {
               <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-3 font-heading">
                 Direct Contact & Support
               </h3>
-              <ul className="space-y-2.5 text-xs text-white/75">
+              <ul className="space-y-2.5 text-xs text-[#C9CCC6]">
                 <li>
                   <a
                     href="tel:+919876543210"
@@ -2575,7 +2672,7 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Footer Metadata & Legal Links */}
-          <div className="mt-4 sm:mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/75 font-medium">
+          <div className="mt-4 sm:mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#C9CCC6] font-medium">
             <p>© {new Date().getFullYear()} LeadNivash Inc. · India's #1 Real Estate Broker Operating System</p>
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[11px]">
               <Link to="/privacy" className="hover:text-lime transition">Privacy Policy</Link>

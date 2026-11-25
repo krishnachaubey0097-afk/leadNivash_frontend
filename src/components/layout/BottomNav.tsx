@@ -26,8 +26,8 @@ export const BottomNav: React.FC = () => {
                 clsx(
                   'flex flex-col items-center justify-center flex-1 py-1.5 min-h-[48px] min-w-[48px] text-[11px] font-medium transition-colors duration-150 relative gap-0.5',
                   isActive
-                    ? 'text-brand-600 font-semibold'
-                    : 'text-muted hover:text-ink'
+                    ? 'text-brand-700 font-semibold'
+                    : 'text-ink-700 dark:text-slate-400 hover:text-ink-900'
                 )
               }
             >
@@ -36,13 +36,13 @@ export const BottomNav: React.FC = () => {
                   <Icon
                     className={clsx(
                       'w-5 h-5',
-                      isActive ? 'text-brand-600' : 'text-muted'
+                      isActive ? 'text-brand-600' : 'text-ink-500'
                     )}
                     strokeWidth={isActive ? 2.2 : 1.8}
                   />
                   <span>{item.label}</span>
                   {isActive && (
-                    <span className="absolute top-1 w-1 h-1 rounded-full bg-brand-600" />
+                    <span className="absolute top-0 w-6 h-0.5 rounded-full bg-brand-600" />
                   )}
                 </>
               )}

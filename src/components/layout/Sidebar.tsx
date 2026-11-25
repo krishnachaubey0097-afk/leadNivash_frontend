@@ -72,7 +72,7 @@ export const Sidebar: React.FC = () => {
     <aside
       className={clsx(
         'hidden lg:flex flex-col h-screen sticky top-0 shrink-0 border-r border-border select-none z-20 transition-all duration-200',
-        'bg-[rgba(14,34,53,0.04)] dark:bg-[rgba(14,34,53,0.35)] backdrop-blur-md',
+        'bg-[rgba(18,20,15,0.04)] dark:bg-ink-black backdrop-blur-md',
         isCollapsed ? 'w-[72px] p-2.5' : 'w-[240px] p-4'
       )}
     >

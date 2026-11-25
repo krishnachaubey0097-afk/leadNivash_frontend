@@ -402,7 +402,7 @@ export const DashboardPage: React.FC = () => {
       {/* ── TOP HEADER / GREETING BAR ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
         <div>
-          <h1 className="text-[22px] font-bold text-slate-900 leading-tight">
+          <h1 className="text-[22px] font-bold text-ink-900 dark:text-white leading-tight">
             Dashboard
           </h1>
           <p className="text-sm text-ink-700 dark:text-slate-400 mt-0.5">
@@ -470,14 +470,14 @@ export const DashboardPage: React.FC = () => {
         <div className="space-y-6">
           {/* ── HERO ROW: Glass Hero Card (2/3) + WhatsApp Paste Card (1/3) ── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-            {/* HERO GLASS CARD (spans 2/3 width on desktop) */}
-            <div className="lg:col-span-2 rounded-[20px] bg-gradient-to-br from-[rgba(14,34,53,0.05)] via-[rgba(1,122,60,0.04)] to-[rgba(14,34,53,0.08)] backdrop-blur-md border border-[rgba(14,34,53,0.10)] p-6 shadow-sm flex flex-col justify-between transition-all">
+            {/* DARK HERO CARD (--ink-black #12140F, spans 2/3 width on desktop) */}
+            <div className="lg:col-span-2 rounded-[20px] bg-ink-black text-white border border-white/10 p-6 shadow-sm flex flex-col justify-between transition-all">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <span className="text-sm font-medium text-slate-700 block">
+                  <span className="text-sm font-medium text-[#C9CCC6] block">
                     Pending commission
                   </span>
-                  <span className="text-3xl sm:text-4xl font-bold text-slate-900 mt-1 block tracking-tight">
+                  <span className="text-3xl sm:text-4xl font-bold text-white mt-1 block tracking-tight">
                     {formatRupees(pendingCommissionPaise)}
                   </span>
                 </div>
@@ -486,7 +486,7 @@ export const DashboardPage: React.FC = () => {
                   variant="secondary"
                   size="sm"
                   onClick={() => setActiveSegment('track-record')}
-                  className="font-medium gap-1 text-xs shrink-0"
+                  className="font-medium gap-1 text-xs shrink-0 bg-white text-ink-900 hover:bg-slate-100 border-0"
                 >
                   <span>View deals</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -494,18 +494,18 @@ export const DashboardPage: React.FC = () => {
               </div>
 
               <div>
-                <div className="border-t border-slate-200/60 my-4" />
-                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm font-medium text-slate-600">
+                <div className="border-t border-white/15 my-4" />
+                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm font-medium text-[#C9CCC6]">
                   <span>
-                    <strong className="text-slate-900 font-semibold">{totalPropertiesCount}</strong> Listings
+                    <strong className="text-white font-semibold">{totalPropertiesCount}</strong> Listings
                   </span>
-                  <span className="text-slate-300">|</span>
+                  <span className="text-white/30">|</span>
                   <span>
-                    <strong className="text-slate-900 font-semibold">{totalBuyersCount}</strong> Buyers
+                    <strong className="text-white font-semibold">{totalBuyersCount}</strong> Buyers
                   </span>
-                  <span className="text-slate-300">|</span>
+                  <span className="text-white/30">|</span>
                   <span>
-                    <strong className="text-brand-600 font-semibold">{matches.length}</strong> Matches today
+                    <strong className="text-lime font-semibold">{matches.length}</strong> Matches today
                   </span>
                 </div>
               </div>

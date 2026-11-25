@@ -382,7 +382,7 @@ export const SettingsPage: React.FC = () => {
 
               <div className="min-w-0 space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-[18px] font-bold text-slate-900 dark:text-white leading-snug truncate capitalize">
+                  <h2 className="text-[18px] font-bold text-ink-900 dark:text-white leading-snug truncate capitalize">
                     {displayTitle}
                   </h2>
                   {isBackendVerified && (
@@ -537,16 +537,16 @@ export const SettingsPage: React.FC = () => {
             </Card>
           )}
 
-          {/* SECTION: SUBSCRIPTION (GLASS HERO CARD — second and last glass hero moment on desktop) */}
+          {/* SECTION: SUBSCRIPTION */}
           {activeSection === 'subscription' && (
-            <GlassCard className="p-6 space-y-5 bg-gradient-to-br from-white/85 via-emerald-50/35 to-slate-100/60 dark:from-slate-900/75 dark:to-emerald-950/25">
+            <GlassCard className="p-6 space-y-5 bg-surface dark:bg-ink-black border border-line">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold">
                     <Crown className="w-3.5 h-3.5 text-brand-600" />
                     <span>{planTitle}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white pt-1">
+                  <h3 className="text-lg font-bold text-ink-900 dark:text-white pt-1">
                     {planTier === 'trial'
                       ? trialDaysLeft !== null
                         ? `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} remaining in your free trial`
