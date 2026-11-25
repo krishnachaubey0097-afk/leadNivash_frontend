@@ -681,17 +681,17 @@ export const PastePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Primary Extract Details Button — Cashfree Ink-Black + Shine + Lime Chip when enabled; crisp slate disabled contrast */}
+              {/* Primary Extract Details Button — Always matches Reference #3 primary CTA box color */}
               <div className="pt-1">
                 <button
                   type="button"
                   onClick={handleAnalyze}
                   disabled={!isAnalyzeEnabled}
                   className={clsx(
-                    'group w-full min-h-[48px] pl-6 pr-2 rounded-[14px] font-semibold text-sm flex items-center justify-between gap-2 transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1',
+                    'group btn-cashfree-primary w-full min-h-[48px] pl-6 pr-2 rounded-[14px] font-semibold text-sm text-white flex items-center justify-between gap-2 transition-all whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-brand-600 focus:ring-offset-1',
                       isAnalyzeEnabled
-                        ? 'btn-cashfree-primary btn-shine-sweep text-white cursor-pointer opacity-100'
-                        : 'bg-[#E9EDF1] border border-line text-ink-700 shadow-none cursor-not-allowed opacity-100'
+                        ? 'btn-shine-sweep cursor-pointer opacity-100'
+                        : 'cursor-not-allowed opacity-90'
                   )}
                 >
                   {isAnalyzing ? (
@@ -702,17 +702,12 @@ export const PastePage: React.FC = () => {
                   ) : (
                     <>
                       <span className="mx-auto pl-6 inline-flex items-center gap-2">
-                        <Sparkles className={clsx('w-4 h-4', isAnalyzeEnabled ? 'text-lime' : 'text-brand-700')} />
+                        <Sparkles className="w-4 h-4 text-lime" />
                         <span>Extract details</span>
                       </span>
                       <span
                         aria-hidden="true"
-                        className={clsx(
-                          'w-8 h-8 rounded-[9px] inline-flex items-center justify-center shrink-0 transition-transform duration-200',
-                          isAnalyzeEnabled
-                            ? 'bg-lime text-ink-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
-                            : 'bg-white border border-line text-ink-700'
-                        )}
+                        className="w-8 h-8 rounded-[9px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                       >
                         <ArrowUpRight className="w-4 h-4 stroke-[2.3]" />
                       </span>
