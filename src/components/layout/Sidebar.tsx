@@ -19,6 +19,7 @@ import { useAuth } from '../../features/auth/AuthProvider';
 import { SpecialOfferModal } from '../../features/pricing/SpecialOfferModal';
 import { openVideoGuide } from '../../features/onboarding/GuideVideoModal';
 import { BRAND_NAME } from '../../config/constants';
+import { BrandLogoBox } from '../ui/BrandLogo';
 import clsx from 'clsx';
 
 export const Sidebar: React.FC = () => {
@@ -118,13 +119,7 @@ export const Sidebar: React.FC = () => {
           )}
           title={BRAND_NAME}
         >
-          <div className="w-8 h-8 rounded-[10px] bg-white border border-white/20 p-1 flex items-center justify-center shrink-0 shadow-xs group-hover:border-lime transition-colors duration-150">
-            <img
-              src="/logo-icon.png"
-              alt={`${BRAND_NAME} logo`}
-              className="w-full h-full object-contain"
-            />
-          </div>
+          <BrandLogoBox className="w-8 h-8 rounded-[10px] border border-white/20 p-1 shadow-xs group-hover:border-lime transition-colors duration-150" />
           {!isCollapsed && (
             <div className="truncate">
               <span className="text-base font-bold text-white leading-none tracking-tight block font-jakarta">

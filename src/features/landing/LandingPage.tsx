@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from '../../components/ui/Button';
+import { BrandLogoBox } from '../../components/ui/BrandLogo';
 import {
   Sparkles,
   ArrowRight,
@@ -327,9 +328,7 @@ export const LandingPage: React.FC = () => {
         <div className="pointer-events-auto max-w-5xl w-full h-14 sm:h-15 px-2 sm:px-3.5 rounded-[20px] bg-white border border-line shadow-xl shadow-ink-black/5 flex items-center justify-between gap-1.5 sm:gap-4 transition-all">
           {/* Logo with strict brand styling: LeadNivash */}
           <Link to="/" className="flex items-center gap-2 pl-1 sm:pl-2 group focus:outline-none rounded-[16px] shrink-0">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[10px] sm:rounded-[12px] bg-white border border-line p-1 shadow-2xs group-hover:border-brand-600/40 transition flex items-center justify-center">
-              <img src="/logo-icon.png" alt="LeadNivash" className="w-full h-full object-contain" />
-            </div>
+            <BrandLogoBox className="w-7 h-7 sm:w-8 sm:h-8 rounded-[10px] sm:rounded-[12px] border border-line p-1 shadow-2xs group-hover:border-brand-600/40 transition" />
             <div className="flex flex-col">
               <span className="text-xs sm:text-base font-black tracking-tight text-ink-900 font-heading leading-none">
                 Lead<span className="text-brand-700">Nivash</span>
@@ -435,7 +434,7 @@ export const LandingPage: React.FC = () => {
                 {/* Drawer Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-line">
                   <div className="flex items-center gap-2.5">
-                    <img src="/logo-icon.png" alt="LeadNivash" className="w-7 h-7 object-contain" />
+                    <BrandLogoBox className="w-7 h-7 rounded-[9px] border border-line p-0.5" iconClassName="w-6 h-6" />
                     <span className="font-black text-ink-900 font-heading text-base">
                       Lead<span className="text-brand-600">Nivash</span>
                     </span>
@@ -2654,9 +2653,7 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-white/10 text-left">
             <div className="md:col-span-1 space-y-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-[12px] bg-white p-1 flex items-center justify-center shadow">
-                  <img src="/logo-icon.png" alt="LeadNivash" className="w-full h-full object-contain" />
-                </div>
+                <BrandLogoBox className="w-8 h-8 rounded-[12px] p-1 shadow" />
                 <span className="text-lg font-black tracking-tight text-white font-heading">
                   Lead<span className="text-lime">Nivash</span>
                 </span>

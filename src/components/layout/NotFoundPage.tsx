@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrandLogoBox } from '../ui/BrandLogo';
 import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { Home, LayoutDashboard, HelpCircle } from 'lucide-react';
@@ -15,9 +16,7 @@ export const NotFoundPage: React.FC = () => {
       <div className="relative max-w-md w-full bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl shadow-xl space-y-5 text-center">
         {/* Logo */}
         <Link to="/" className="inline-flex items-center gap-2 mb-2 group">
-          <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 p-1.5 shadow-2xs group-hover:border-emerald-600/40 transition flex items-center justify-center">
-            <img src="/logo-icon.png" alt="LeadNivash" className="w-full h-full object-contain" />
-          </div>
+          <BrandLogoBox className="w-10 h-10 rounded-2xl border border-slate-200 p-1.5 shadow-2xs group-hover:border-emerald-600/40 transition" />
           <span className="text-lg font-black tracking-tight text-ink font-heading">
             Lead<span className="text-emerald-700">Nivash</span>
           </span>

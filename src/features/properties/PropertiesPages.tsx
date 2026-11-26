@@ -1469,14 +1469,14 @@ export const PropertyNewPage: React.FC = () => {
 
           {/* ── 5. OWNER PRIVACY VAULT ── */}
           <div className="p-4 rounded-card bg-surface border border-border space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-brand-600" />
+                <ShieldCheck className="w-4 h-4 text-brand-600 shrink-0" />
                 <span className="text-card-title font-semibold text-ink">
                   5. Owner Privacy Vault
                 </span>
               </div>
-              <span className="text-meta font-medium text-brand-700 bg-brand-50 border border-brand-200/60 px-2 py-0.5 rounded">
+              <span className="text-meta font-medium text-brand-700 bg-brand-50 border border-brand-200/60 px-2 py-0.5 rounded whitespace-nowrap">
                 Protected · Hidden on Flyers
               </span>
             </div>
@@ -1855,10 +1855,10 @@ export const PropertyDetailPage: React.FC = () => {
 
         {/* Owner Privacy Vault Card */}
         <div className="p-4 rounded-card bg-surface border border-border space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-brand-600" />
-              <div>
+          <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <ShieldCheck className="w-5 h-5 text-brand-600 shrink-0" />
+              <div className="min-w-0">
                 <h4 className="text-xs font-semibold text-ink">
                   Owner Privacy Vault
                 </h4>
@@ -1871,7 +1871,7 @@ export const PropertyDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsOwnerRevealed(!isOwnerRevealed)}
-              className="px-3 py-1.5 rounded-input bg-white border border-border hover:border-brand-600 text-xs font-semibold text-brand-700 flex items-center gap-1.5 transition cursor-pointer"
+              className="px-3 py-1.5 rounded-input bg-white border border-border hover:border-brand-600 text-xs font-semibold text-brand-700 flex items-center gap-1.5 transition cursor-pointer shrink-0"
             >
               {isOwnerRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
               <span>{isOwnerRevealed ? 'Hide' : 'Reveal Contact'}</span>

@@ -22,6 +22,7 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { TopLoadingBar } from '../../components/ui/LoadingBar';
 import { SEO } from '../../components/SEO';
+import { BrandLogoBox } from '../../components/ui/BrandLogo';
 import { formatRupees } from '../../lib/money';
 import {
   fetchPublicLeadFormProfile,
@@ -349,9 +350,7 @@ export const PublicLeadFormPage: React.FC = () => {
       {/* Top Brand Header */}
       <header className="max-w-3xl mx-auto mb-5 flex items-center justify-between gap-3 bg-white px-4 py-3 rounded-2xl border border-line shadow-2xs">
         <Link to="/" className="flex items-center gap-2.5 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-white border border-line p-1.5 shadow-2xs shrink-0 flex items-center justify-center">
-            <img src="/logo-icon.png" alt="LeadNivash" className="w-full h-full object-contain" />
-          </div>
+          <BrandLogoBox className="w-9 h-9 rounded-xl border border-line p-1.5 shadow-2xs" />
           <div className="min-w-0">
             <span className="text-base font-black tracking-tight text-ink-900 font-heading block truncate">
               Lead<span className="text-brand-600">Nivash</span>

@@ -2458,14 +2458,15 @@ export const BuyerDetailPage: React.FC = () => {
 
       {/* ── LIVE MATCHING INVENTORY SECTION ── */}
       <div className="space-y-3 pt-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-brand-600" />
-            <h2 className="text-base sm:text-lg font-bold text-ink">
-              Matching Properties ({matches.length})
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <Sparkles className="w-5 h-5 text-brand-600 shrink-0" />
+            <h2 className="text-base sm:text-lg font-bold text-ink leading-snug">
+              Matching Properties{' '}
+              <span className="whitespace-nowrap">({matches.length})</span>
             </h2>
           </div>
-          <span className="text-xs text-muted font-medium">
+          <span className="text-xs text-muted font-medium pl-7 sm:pl-0">
             Ranked by budget & locality match
           </span>
         </div>
@@ -2475,11 +2476,11 @@ export const BuyerDetailPage: React.FC = () => {
             Evaluating inventory matches...
           </div>
         ) : matches.length === 0 ? (
-          <Card className="p-8 text-center space-y-2.5 rounded-2xl bg-white border border-border shadow-card">
-            <p className="text-xs sm:text-sm text-secondary text-muted">
+          <Card className="p-6 sm:p-8 flex flex-col items-center text-center gap-3 rounded-2xl bg-white border border-border shadow-card">
+            <p className="text-xs sm:text-sm text-secondary text-muted max-w-sm">
               No matching properties currently in inventory within this budget & locality.
             </p>
-            <Link to="/app/properties/new">
+            <Link to="/app/properties/new" className="inline-flex">
               <Button size="sm" variant="primary" className="text-xs font-semibold">
                 + Add Property to Match
               </Button>

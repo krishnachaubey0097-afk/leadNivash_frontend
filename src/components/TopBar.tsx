@@ -1,6 +1,7 @@
 import React from 'react';
 import { BRAND_NAME } from '../config/constants';
 import { Link } from 'react-router-dom';
+import { BrandLogoIcon } from './ui/BrandLogo';
 import { useAuth } from '../lib/auth';
 import { Settings as SettingsIcon, LogOut } from 'lucide-react';
 
@@ -12,11 +13,7 @@ export const TopBar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo and Brand */}
         <Link to="/app/today" className="flex items-center gap-2.5 group">
-          <img
-            src="/logo-icon.png"
-            alt="LeadNivash Logo"
-            className="w-8 h-8 object-contain transition-transform group-hover:scale-105"
-          />
+          <BrandLogoIcon className="w-8 h-8 transition-transform group-hover:scale-105" />
           <div className="flex flex-col">
             <span className="text-lg font-extrabold tracking-tight text-slate-900 leading-none">
                 {BRAND_NAME}

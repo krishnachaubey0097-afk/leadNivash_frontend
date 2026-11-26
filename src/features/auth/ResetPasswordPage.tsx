@@ -6,6 +6,7 @@ import { Input } from '../../components/ui/Input';
 import { Lock, CheckCircle2, AlertCircle, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { ApiError } from '../../lib/api/errors';
 import { SEO } from '../../components/SEO';
+import { BrandLogoBox } from '../../components/ui/BrandLogo';
 
 export const ResetPasswordPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -83,14 +84,8 @@ export const ResetPasswordPage: React.FC = () => {
       <div className="w-full max-w-md">
         {/* Brand Logo & Header */}
         <div className="flex flex-col items-center mb-6 text-center">
-          <Link to="/" className="flex items-center gap-2 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 p-1.5 shadow-sm">
-              <img
-                src="/logo-icon.png"
-                alt="LeadNivash"
-                className="w-full h-full object-contain"
-              />
-            </div>
+          <Link to="/" className="flex items-center gap-2.5 mb-3.5">
+            <BrandLogoBox className="w-10 h-10 rounded-xl border border-slate-200/90 p-1.5 shadow-sm" />
             <span className="text-2xl font-black tracking-tight text-slate-900 font-heading">
               Lead<span className="text-emerald-700">Nivash</span>
             </span>

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { AvatarMenu } from './AvatarMenu';
 import { NotificationMenu } from './NotificationMenu';
 import { Tooltip } from '../ui/Tooltip';
+import { BrandLogoBox } from '../ui/BrandLogo';
 import { Crown, Plus } from 'lucide-react';
 import { BRAND_NAME } from '../../config/constants';
 import { useAuth } from '../../features/auth/AuthProvider';
@@ -62,9 +63,7 @@ export const TopBar: React.FC = () => {
           {/* Mobile Left: Brand Logo & Title */}
           <div className="flex lg:hidden items-center gap-2 min-w-0">
             <Link to="/app" className="flex items-center gap-2 shrink-0 group" aria-label={`${BRAND_NAME} Home`}>
-              <div className="w-8 h-8 rounded-lg bg-surface border border-border p-1 flex items-center justify-center">
-                <img src="/logo-icon.png" alt={BRAND_NAME} className="w-full h-full object-contain" />
-              </div>
+              <BrandLogoBox className="w-8 h-8 rounded-lg border border-border p-1" />
               <span className="text-sm sm:text-base font-bold text-ink-900 leading-none">
                 {BRAND_NAME}
               </span>

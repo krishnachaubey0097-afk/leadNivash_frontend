@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { TopBar } from './TopBar';
 import { BottomNav } from './BottomNav';
+import { BrandLogoIcon } from './ui/BrandLogo';
 import { useAuth } from '../lib/auth';
 
 export const Layout: React.FC = () => {
@@ -11,11 +12,7 @@ export const Layout: React.FC = () => {
     return (
       <div className="min-h-screen bg-bg flex items-center justify-center p-4">
         <div className="flex flex-col items-center gap-4">
-          <img
-            src="/logo-icon.png"
-            alt="LeadNivash"
-            className="w-12 h-12 object-contain animate-bounce"
-          />
+          <BrandLogoIcon className="w-12 h-12 animate-bounce" />
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           <span className="text-xs text-slate-500 font-medium tracking-wide">
             Loading LeadNivash...
