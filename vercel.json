@@ -23,6 +23,17 @@
       "destination": "/api/seo-meta?path=/flyer/:id"
     },
     {
+      "source": "/form/:brokerId",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(WhatsApp|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Slackbot|TelegramBot|Discordbot|Pinterest|Embedly|Quora).*"
+        }
+      ],
+      "destination": "/api/seo-meta?path=/form/:brokerId"
+    },
+    {
       "source": "/api/((?!seo-meta$).*)",
       "destination": "https://leadnivash.onrender.com/api/$1"
     },

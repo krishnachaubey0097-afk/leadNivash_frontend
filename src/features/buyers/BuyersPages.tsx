@@ -26,11 +26,13 @@ import {
   Phone,
   SlidersHorizontal,
   Send,
+  Share2,
   Check,
   Download,
   Inbox,
   MessageSquare,
 } from 'lucide-react';
+import { ShareLeadFormModal } from '../../components/leadForm/ShareLeadFormModal';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
@@ -105,7 +107,7 @@ interface FlyerInquiryRaw {
 
 interface UnifiedInquiryRow {
   id: string;
-  source: 'flyer' | 'quick_chat';
+  source: 'flyer' | 'quick_chat' | 'lead_form';
   clientName: string;
   clientPhone: string;
   requirement: string;
@@ -152,6 +154,7 @@ export const BuyersListPage: React.FC = () => {
     Record<string, 'new' | 'contacted' | 'closed'>
   >({});
   const [selectedInquiry, setSelectedInquiry] = useState<UnifiedInquiryRow | null>(null);
+  const [isShareFormOpen, setIsShareFormOpen] = useState<boolean>(false);
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -479,7 +482,7 @@ export const BuyersListPage: React.FC = () => {
     });
 
     buyers
-      .filter((b) => b.source === 'paste')
+      .filter((b) => b.source === 'paste' || b.source === 'lead_form')
       .forEach((b) => {
         const id = `buyer_${b._id}`;
         const baseStatus: 'new' | 'contacted' | 'closed' =
@@ -489,8 +492,9 @@ export const BuyersListPage: React.FC = () => {
             ? 'contacted'
             : 'new';
         const maxPaise = b.budget?.maxPaise || 0;
+        const budgetPrefix = b.budget?.isApproximate ? '~' : '';
         const budgetLabel = b.budget?.minPaise
-          ? `${formatRupees(b.budget.minPaise)} — ${formatRupees(maxPaise)}`
+          ? `${budgetPrefix}${formatRupees(b.budget.minPaise)} — ${formatRupees(maxPaise)}`
           : maxPaise > 0
           ? `Up to ${formatRupees(maxPaise)}`
           : 'Flexible';
@@ -501,7 +505,7 @@ export const BuyersListPage: React.FC = () => {
 
         rows.push({
           id,
-          source: 'quick_chat',
+          source: b.source === 'lead_form' ? 'lead_form' : 'quick_chat',
           clientName: b.name,
           clientPhone: b.phone || '',
           requirement: (b.types || []).join(', ') || 'Property Requirement',
@@ -589,7 +593,7 @@ export const BuyersListPage: React.FC = () => {
       [
         r.clientName,
         r.clientPhone,
-        r.source === 'flyer' ? 'Flyer' : 'Quick Chat',
+        r.source === 'flyer' ? 'Flyer' : r.source === 'lead_form' ? 'Share Form' : 'Quick Chat',
         r.requirement,
         r.budgetLabel,
         r.locality,
@@ -632,17 +636,36 @@ export const BuyersListPage: React.FC = () => {
           </p>
         </div>
 
-        <Link to="/app/buyers/new" className="shrink-0 self-start sm:self-auto">
+        <div className="flex items-center gap-2.5 flex-wrap shrink-0 self-start sm:self-auto">
           <Button
-            variant="primary"
+            type="button"
+            variant="secondary"
             size="md"
-            className="mobile-shine-primary gap-1.5 shadow-sm font-semibold text-xs sm:text-sm"
+            onClick={() => setIsShareFormOpen(true)}
+            className="gap-1.5 font-semibold text-xs sm:text-sm"
           >
-            <Plus className="w-4 h-4" />
-            <span>Add buyer</span>
+            <Share2 className="w-4 h-4 text-brand-600" />
+            <span>Share Form</span>
           </Button>
-        </Link>
+
+          <Link to="/app/buyers/new" className="shrink-0">
+            <Button
+              variant="primary"
+              size="md"
+              className="mobile-shine-primary gap-1.5 shadow-sm font-semibold text-xs sm:text-sm"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add buyer</span>
+            </Button>
+          </Link>
+        </div>
       </div>
+
+      <ShareLeadFormModal
+        isOpen={isShareFormOpen}
+        onClose={() => setIsShareFormOpen(false)}
+        context="buyers"
+      />
 
       {/* ── 1B. SEGMENTED TABS: All buyers | Inquiries ── */}
       <div className="inline-flex items-center p-1 bg-[#E9EDF1] rounded-xl border border-line">
@@ -937,8 +960,13 @@ export const BuyersListPage: React.FC = () => {
                       {initials}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-base font-bold text-ink-900 truncate group-hover:text-brand-700 transition-colors leading-tight">
-                        {buyer.name}
+                      <h3 className="text-base font-bold text-ink-900 truncate group-hover:text-brand-700 transition-colors leading-tight flex items-center gap-1.5">
+                        <span className="truncate">{buyer.name}</span>
+                        {buyer.source === 'lead_form' && (
+                          <span className="px-1.5 py-0.5 rounded bg-lime-soft text-brand-700 border border-brand-600/20 text-[10px] font-bold shrink-0">
+                            Client Form
+                          </span>
+                        )}
                       </h3>
                       <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-0.5">
                         <span>{isPhoneRevealed ? buyer.phone : getMaskedPhone(buyer.phone)}</span>
@@ -1007,7 +1035,7 @@ export const BuyersListPage: React.FC = () => {
                   <div className="p-3 rounded-[10px] bg-slate-50 border border-slate-100 flex items-baseline justify-between gap-2 mt-auto">
                     <div>
                       <span className="text-[11px] font-medium text-slate-400 block">
-                        Target budget
+                        {buyer.budget?.isApproximate ? 'Approx. budget' : 'Target budget'}
                       </span>
                       <span className="text-base sm:text-lg font-bold text-slate-900 tabular-nums leading-tight">
                         {budgetText}
@@ -1373,7 +1401,11 @@ export const BuyersListPage: React.FC = () => {
                               {row.requirement}
                             </span>
                             <span className="text-[11px] text-slate-500">
-                              {row.source === 'flyer' ? 'Flyer inquiry' : 'Quick Chat'}
+                              {row.source === 'flyer'
+                                ? 'Flyer inquiry'
+                                : row.source === 'lead_form'
+                                ? 'Client Share Form'
+                                : 'Quick Chat'}
                             </span>
                           </div>
                         </TableCell>

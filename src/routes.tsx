@@ -38,6 +38,7 @@ import { ToolsPage } from './features/tools/ToolsPage';
 import { SettingsPage } from './features/settings/SettingsPages';
 import { AdminPage } from './features/admin/AdminPage';
 import { PublicFlyerPage } from './features/flyer/PublicFlyerPage';
+import { PublicLeadFormPage } from './features/leadForm/PublicLeadFormPage';
 import { NotFoundPage } from './components/layout/NotFoundPage';
 
 export const AppRoutes: React.FC = () => {
@@ -52,6 +53,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/flyer/:id" element={<PublicFlyerPage />} />
+      <Route path="/form/:brokerId" element={<PublicLeadFormPage />} />
 
       {/* Public Auth Pages */}
       <Route path="/login" element={<LoginPage />} />

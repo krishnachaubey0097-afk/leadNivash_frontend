@@ -14,10 +14,12 @@ export interface PropertyItem {
     unit: 'gaj' | 'sqft' | 'marla' | 'kanal' | 'acre' | 'bigha';
   };
   priceDemandPaise: number;
+  isApproxPrice?: boolean;
   facing?: string;
   tags?: string[];
   description?: string;
   status: 'available' | 'hold' | 'sold' | 'rented';
+  source?: 'manual' | 'paste' | 'lead_form';
   pitchCount?: number;
   photos?: Array<{
     url: string;
@@ -35,6 +37,7 @@ export interface PropertyItem {
   owner?: {
     name?: string;
     phone?: string;
+    email?: string;
     notes?: string;
   };
   createdAt?: string;

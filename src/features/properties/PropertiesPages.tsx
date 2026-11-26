@@ -41,6 +41,7 @@ import { useToast } from '../../components/ui/Toast';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { PropertyCardSkeleton, PropertyDetailSkeleton } from '../../components/ui/Skeleton';
 import { useAuth } from '../auth/AuthProvider';
+import { ShareLeadFormModal } from '../../components/leadForm/ShareLeadFormModal';
 import {
   fetchProperties,
   fetchPropertyById,
@@ -94,6 +95,7 @@ export const PropertiesListPage: React.FC = () => {
   // Delete Dialog state
   const [propertyToDelete, setPropertyToDelete] = useState<{ id: string; title: string } | null>(null);
   const [isDeletingProperty, setIsDeletingProperty] = useState(false);
+  const [isShareFormOpen, setIsShareFormOpen] = useState(false);
 
   const confirmDeleteProperty = async () => {
     if (!propertyToDelete) return;
@@ -344,17 +346,36 @@ export const PropertiesListPage: React.FC = () => {
           </p>
         </div>
 
-        <Link to="/app/properties/new" className="shrink-0 self-start sm:self-auto">
+        <div className="flex items-center gap-2.5 flex-wrap shrink-0 self-start sm:self-auto">
           <Button
-            variant="primary"
+            type="button"
+            variant="secondary"
             size="md"
-            className="mobile-shine-primary gap-1.5 shadow-sm font-semibold text-xs sm:text-sm"
+            onClick={() => setIsShareFormOpen(true)}
+            className="gap-1.5 font-semibold text-xs sm:text-sm"
           >
-            <Plus className="w-4 h-4" />
-            <span>Add property</span>
+            <Share2 className="w-4 h-4 text-brand-600" />
+            <span>Share Form</span>
           </Button>
-        </Link>
+
+          <Link to="/app/properties/new" className="shrink-0">
+            <Button
+              variant="primary"
+              size="md"
+              className="mobile-shine-primary gap-1.5 shadow-sm font-semibold text-xs sm:text-sm"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add property</span>
+            </Button>
+          </Link>
+        </div>
       </div>
+
+      <ShareLeadFormModal
+        isOpen={isShareFormOpen}
+        onClose={() => setIsShareFormOpen(false)}
+        context="properties"
+      />
 
       {/* ── 2. CONTROLS ROW: Search Bar (~360px) + Filter Chips + Filters Button + Sort Dropdown ── */}
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
@@ -576,6 +597,12 @@ export const PropertiesListPage: React.FC = () => {
                     </div>
                   )}
 
+                  {prop.source === 'lead_form' && (
+                    <span className="absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded-full bg-ink-black text-lime text-[10px] font-bold shadow-xs">
+                      Seller Form
+                    </span>
+                  )}
+
                   {/* StatusChip top-right over the thumbnail (never truncates "Sold / Closed" mid-word) */}
                   <div className="absolute top-3 right-3 z-10">
                     <StatusChip
@@ -623,9 +650,12 @@ export const PropertiesListPage: React.FC = () => {
                   <div className="pt-2 border-t border-slate-100 flex items-baseline justify-between gap-2 mt-auto">
                     <div>
                       <span className="text-lg font-bold tabular-nums text-ink-900 leading-tight block">
+                        {prop.isApproxPrice ? '~' : ''}
                         {formatRupees(prop.priceDemandPaise)}
                       </span>
-                      <span className="text-[11px] text-slate-400 font-medium">Asking demand</span>
+                      <span className="text-[11px] text-slate-400 font-medium">
+                        {prop.isApproxPrice ? 'Approx. demand' : 'Asking demand'}
+                      </span>
                     </div>
                     <div className="text-right">
                       <span className="text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded inline-block">

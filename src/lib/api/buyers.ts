@@ -5,6 +5,8 @@ export interface BuyerItem {
   _id: string;
   name: string;
   phone: string;
+  phoneE164?: string;
+  email?: string;
   localities: Array<{ display: string; key: string } | string>;
   anyLocality?: boolean;
   types: string[];
@@ -12,6 +14,7 @@ export interface BuyerItem {
   budget: {
     minPaise?: number;
     maxPaise: number;
+    isApproximate?: boolean;
   };
   sizeGaj?: {
     min?: number;
@@ -19,7 +22,7 @@ export interface BuyerItem {
   };
   urgency: 'hot' | 'warm' | 'cold';
   status: 'active' | 'paused' | 'closed';
-  source?: 'manual' | 'paste';
+  source?: 'manual' | 'paste' | 'lead_form';
   notes?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -162,6 +165,13 @@ export function clearLocalBuyersCache(): void {
   }
 }
 
+function normalizeBuyerItem(b: BuyerItem): BuyerItem {
+  return {
+    ...b,
+    phone: b.phone || b.phoneE164 || '',
+  };
+}
+
 export async function fetchBuyers(params?: {
   urgency?: string;
   status?: string;
@@ -178,7 +188,9 @@ export async function fetchBuyers(params?: {
     if (Array.isArray(res)) {
       // Backend MongoDB is the single source of truth:
       // Filter out legacy test seeds and immediately synchronize local memory and cache
-      const cleanList = res.filter((b: BuyerItem) => !b._id?.startsWith('buyer_seed_'));
+      const cleanList = res
+        .filter((b: BuyerItem) => !b._id?.startsWith('buyer_seed_'))
+        .map(normalizeBuyerItem);
       localBuyersStore = cleanList;
       persistLocalBuyers(cleanList);
       return cleanList;
@@ -211,9 +223,10 @@ export async function fetchBuyerById(id: string): Promise<BuyerItem> {
   try {
     const res = await apiClient.get<any, any>(`/buyers/${id}`);
     if (res && res._id) {
-      localBuyersStore = [res, ...localBuyersStore.filter((b) => b._id !== res._id)];
+      const normalized = normalizeBuyerItem(res);
+      localBuyersStore = [normalized, ...localBuyersStore.filter((b) => b._id !== normalized._id)];
       persistLocalBuyers(localBuyersStore);
-      return res;
+      return normalized;
     }
   } catch (err) {
     localBuyersStore = localBuyersStore.filter((b) => b._id !== id);
@@ -226,7 +239,7 @@ export async function fetchBuyerById(id: string): Promise<BuyerItem> {
 }
 
 export async function createBuyer(data: CreateBuyerDto): Promise<BuyerItem> {
-  const res = await apiClient.post<any, any>('/buyers', data);
+  const res = normalizeBuyerItem(await apiClient.post<any, any>('/buyers', data));
   localBuyersStore = [res, ...localBuyersStore.filter((b) => b._id !== res._id)];
   persistLocalBuyers(localBuyersStore);
   if (typeof window !== 'undefined') {
@@ -236,8 +249,8 @@ export async function createBuyer(data: CreateBuyerDto): Promise<BuyerItem> {
 }
 
 export async function updateBuyer(id: string, data: Partial<CreateBuyerDto>): Promise<BuyerItem> {
-  const res = await apiClient.patch<any, any>(`/buyers/${id}`, data);
-  localBuyersStore = localBuyersStore.map((b) => (b._id === id ? { ...b, ...data } : b));
+  const res = normalizeBuyerItem(await apiClient.patch<any, any>(`/buyers/${id}`, data));
+  localBuyersStore = localBuyersStore.map((b) => (b._id === id ? { ...b, ...res, ...data } : b));
   persistLocalBuyers(localBuyersStore);
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('leadnivash_data_changed'));

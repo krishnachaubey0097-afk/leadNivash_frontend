@@ -86,6 +86,42 @@ export default async function handler(req, res) {
   let image = DEFAULT_IMAGE;
   const canonicalUrl = `${SITE_URL}${routePath === '/' ? '/' : routePath}`;
 
+  // Dynamic metadata for shared broker lead intake forms (/form/:brokerId)
+  if (routePath.startsWith('/form/')) {
+    const formBrokerId = routePath.slice('/form/'.length).split('/')[0];
+    meta = {
+      title: 'Share Your Property Requirement or Listing | LeadNivash',
+      description:
+        'Submit your buying requirement or property listing details directly to your verified property advisor.',
+      ogType: 'website',
+    };
+
+    if (formBrokerId && /^[0-9a-fA-F]{24}$/.test(formBrokerId)) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 2500);
+        const apiRes = await fetch(
+          `${BACKEND_URL}/api/v1/public/lead-form/${encodeURIComponent(formBrokerId)}`,
+          { signal: controller.signal }
+        );
+        clearTimeout(timeout);
+        if (apiRes.ok) {
+          const json = await apiRes.json();
+          const profile = json?.data || json;
+          if (profile?.agencyName) {
+            meta = {
+              title: `${profile.agencyName} — Property Requirement & Listing Form | LeadNivash`,
+              description: `Looking to buy or sell in ${profile.city || 'India'}? Share your requirement in 30 seconds directly with ${profile.agencyName}.`,
+              ogType: 'website',
+            };
+          }
+        }
+      } catch {
+        // Fallback safely if backend is waking
+      }
+    }
+  }
+
   // Dynamic metadata + photo preview for shared public property flyers (/flyer/:id)
   if (routePath.startsWith('/flyer/')) {
     const flyerId = routePath.slice('/flyer/'.length).split('/')[0];

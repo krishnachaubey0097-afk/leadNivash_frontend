@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Cookie, X } from 'lucide-react';
 import { Button } from '../ui/Button';
 
 export const CookieConsentBanner: React.FC = () => {
+  const location = useLocation();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export const CookieConsentBanner: React.FC = () => {
     setIsVisible(false);
   };
 
-  if (!isVisible) return null;
+  if (!isVisible || location.pathname.startsWith('/form/')) return null;
 
   return (
     <div
