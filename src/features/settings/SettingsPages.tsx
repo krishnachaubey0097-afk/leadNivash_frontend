@@ -537,7 +537,19 @@ export const SettingsPage: React.FC = () => {
                       />
                       <Lock className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
-                    <span className="text-xs text-slate-500 block">Used to log in</span>
+                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                      <span className="text-xs text-slate-500">Used to log in</span>
+                      {user?.emailVerified && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                          <Check className="w-3 h-3" /> Verified
+                        </span>
+                      )}
+                      {user?.hasGoogleLinked && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                          Google Linked
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 

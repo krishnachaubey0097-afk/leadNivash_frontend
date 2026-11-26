@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -14,40 +14,82 @@ import {
   Eye,
   EyeOff,
   ShieldCheck,
+  KeyRound,
+  CheckCircle2,
 } from 'lucide-react';
 import { ApiError } from '../../lib/api/errors';
+import { apiClient } from '../../lib/api/client';
 import { normalizeToE164 } from '../../lib/phone';
 import { SEO } from '../../components/SEO';
 import { BrandLogoBox } from '../../components/ui/BrandLogo';
+import {
+  fetchAuthProviders,
+  requestGoogleAccessToken,
+  type AuthProvidersConfig,
+} from '../../lib/googleAuth';
 import clsx from 'clsx';
 
 export const RegisterPage: React.FC = () => {
-  const { register, googleLogin, isAuthenticated, isLoading } = useAuth();
+  const { register, googleLogin, verifyEmailOtp, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // Automatically redirect if already authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated && !isLoading) {
       navigate('/app', { replace: true });
     }
   }, [isAuthenticated, isLoading, navigate]);
 
-  // Registration Mode: 'google' | 'direct'
-  const [activeTab, setActiveTab] = useState<'google' | 'direct'>('google');
+  const [providers, setProviders] = useState<AuthProvidersConfig>({
+    googleEnabled: Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID),
+    googleClientId: (import.meta.env.VITE_GOOGLE_CLIENT_ID || '').trim() || null,
+    emailOtpEnabled: true,
+    smtpConfigured: false,
+    passwordEnabled: true,
+  });
+
+  useEffect(() => {
+    fetchAuthProviders().then(setProviders);
+  }, []);
+
+  const initialTab = searchParams.get('tab');
+  const initialEmail = searchParams.get('email') || '';
+
+  // Registration Mode: 'google' | 'otp' | 'direct'
+  const [activeTab, setActiveTab] = useState<'google' | 'otp' | 'direct'>(
+    initialTab === 'otp' ? 'otp' : initialTab === 'direct' ? 'direct' : 'google'
+  );
 
   // Google OAuth Flow State
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [googleStep, setGoogleStep] = useState<1 | 2>(1); // 1: Connect Google, 2: Enter mandatory phone
+  const [googleStep, setGoogleStep] = useState<1 | 2>(1);
+  const [googleAccessToken, setGoogleAccessToken] = useState<string | null>(null);
   const [googleEmail, setGoogleEmail] = useState('');
   const [googleName, setGoogleName] = useState('');
   const [googlePhone, setGooglePhone] = useState('');
   const [googleAgency, setGoogleAgency] = useState('');
   const [googleCity, setGoogleCity] = useState('Panipat');
+  const [googleTermsAccepted, setGoogleTermsAccepted] = useState(true);
 
-  // Common Form Data for Direct Registration
+  // Email OTP Registration Flow State (1: send email, 2: verify 6-digit code, 3: complete details)
+  const [otpStep, setOtpStep] = useState<1 | 2 | 3>(1);
+  const [otpEmail, setOtpEmail] = useState(initialEmail);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpVerificationToken, setOtpVerificationToken] = useState('');
+  const [otpDevHint, setOtpDevHint] = useState<string | null>(null);
+  const [otpName, setOtpName] = useState('');
+  const [otpPhone, setOtpPhone] = useState('');
+  const [otpAgency, setOtpAgency] = useState('');
+  const [otpCity, setOtpCity] = useState('Panipat');
+  const [otpPassword, setOtpPassword] = useState('');
+  const [otpTermsAccepted, setOtpTermsAccepted] = useState(true);
+  const [isOtpLoading, setIsOtpLoading] = useState(false);
+
+  // Common Form Data for Direct Manual Registration
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    email: initialEmail,
     password: '',
     confirmPassword: '',
     phone: '',
@@ -61,6 +103,8 @@ export const RegisterPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const googleClientId = providers.googleClientId;
 
   // Validate Indian Phone Number
   const validatePhone = (phoneStr: string): string | null => {
@@ -82,18 +126,30 @@ export const RegisterPage: React.FC = () => {
     return 'Please enter a valid 10-digit mobile number.';
   };
 
-  // Google Sign-Up Handler
-  const handleGoogleStart = () => {
+  // Real Google OAuth Start
+  const handleGoogleStart = async () => {
     setErrorMsg(null);
     setFieldErrors({});
-    setIsGoogleLoading(true);
+    if (!googleClientId) {
+      setErrorMsg('Google OAuth Client ID is not configured yet. Please register with Email OTP or Create Manually.');
+      return;
+    }
 
+    setIsGoogleLoading(true);
     try {
-      const simulatedEmail = googleEmail || 'broker.new@leadnivesh.com';
-      const simulatedName = googleName || (googleEmail ? googleEmail.split('@')[0] : 'Broker Partner');
-      setGoogleEmail(simulatedEmail);
-      setGoogleName(simulatedName);
-      setGoogleStep(2); // Immediately advance to mandatory phone collection
+      const token = await requestGoogleAccessToken(googleClientId);
+      setGoogleAccessToken(token);
+
+      const res = await googleLogin({ accessToken: token });
+      if (!res?.requiresPhone) {
+        // Existing account with this Google email logged straight in!
+        navigate('/app', { replace: true });
+        return;
+      }
+
+      setGoogleEmail(res.user?.email || '');
+      setGoogleName(res.user?.name || '');
+      setGoogleStep(2);
     } catch (err: any) {
       setErrorMsg(err?.message || 'Google authentication failed.');
     } finally {
@@ -106,25 +162,33 @@ export const RegisterPage: React.FC = () => {
     setErrorMsg(null);
     setFieldErrors({});
 
+    if (!googleTermsAccepted) {
+      setErrorMsg('Please accept the Terms of Service and Privacy Policy to continue.');
+      return;
+    }
+
     const phoneErr = validatePhone(googlePhone);
     if (phoneErr) {
       setFieldErrors({ googlePhone: phoneErr });
       return;
     }
 
+    if (!googleAccessToken) {
+      setErrorMsg('Google session expired. Please authorize with Google again.');
+      setGoogleStep(1);
+      return;
+    }
+
     setIsGoogleLoading(true);
     try {
-      const cleanPhone = googlePhone.replace(/\D/g, '');
-      const formattedPhone = cleanPhone.startsWith('91') && cleanPhone.length === 12
-        ? `+${cleanPhone}`
-        : `+91${cleanPhone.slice(-10)}`;
-
+      const formattedPhone = normalizeToE164(googlePhone);
       await googleLogin({
-        email: googleEmail,
-        name: googleName || 'Verified Broker',
+        accessToken: googleAccessToken,
+        name: googleName.trim() || 'Verified Broker',
         phone: formattedPhone,
-        agencyName: googleAgency || (googleName ? `${googleName} Realty` : 'Prime Realty'),
-        city: googleCity || 'Panipat',
+        agencyName: googleAgency.trim() || (googleName ? `${googleName} Realty` : 'Prime Realty'),
+        city: googleCity.trim() || 'Panipat',
+        consent: { termsAccepted: true, privacyVersion: '1.0' },
       });
 
       navigate('/app', { replace: true });
@@ -132,6 +196,112 @@ export const RegisterPage: React.FC = () => {
       setErrorMsg(err?.message || 'Could not complete Google registration.');
     } finally {
       setIsGoogleLoading(false);
+    }
+  };
+
+  // Email OTP Registration Handlers
+  const handleSendRegisterOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+    setOtpDevHint(null);
+
+    const cleanEmail = otpEmail.trim().toLowerCase();
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      setErrorMsg('Please enter a valid work email address.');
+      return;
+    }
+
+    setIsOtpLoading(true);
+    try {
+      const res = (await apiClient.post('/auth/send-otp', {
+        email: cleanEmail,
+        purpose: 'register',
+      })) as any;
+      setOtpEmail(cleanEmail);
+      if (res?.devOtp) setOtpDevHint(String(res.devOtp));
+      setOtpStep(2);
+    } catch (err: any) {
+      setErrorMsg(err?.message || 'Could not send OTP verification code.');
+    } finally {
+      setIsOtpLoading(false);
+    }
+  };
+
+  const handleVerifyRegisterOtpCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+    const cleanCode = otpCode.trim();
+    if (cleanCode.length !== 6) {
+      setErrorMsg('Please enter the 6-digit verification code.');
+      return;
+    }
+
+    setIsOtpLoading(true);
+    try {
+      const res = await verifyEmailOtp({
+        email: otpEmail.trim().toLowerCase(),
+        otp: cleanCode,
+        purpose: 'register',
+      });
+
+      if (!res.requiresOnboarding) {
+        navigate('/app', { replace: true });
+        return;
+      }
+
+      setOtpVerificationToken(res.verificationToken || '');
+      setOtpStep(3);
+    } catch (err: any) {
+      setErrorMsg(err?.message || 'Invalid or expired verification code.');
+    } finally {
+      setIsOtpLoading(false);
+    }
+  };
+
+  const handleCompleteOtpRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+    setFieldErrors({});
+
+    if (!otpName.trim() || otpName.trim().length < 2) {
+      setFieldErrors({ otpName: 'Please enter your full name.' });
+      return;
+    }
+
+    const phoneErr = validatePhone(otpPhone);
+    if (phoneErr) {
+      setFieldErrors({ otpPhone: phoneErr });
+      return;
+    }
+
+    if (otpPassword && otpPassword.length < 8) {
+      setFieldErrors({ otpPassword: 'Optional password must be at least 8 characters.' });
+      return;
+    }
+
+    if (!otpTermsAccepted) {
+      setErrorMsg('Please accept the Terms of Service and Privacy Policy to continue.');
+      return;
+    }
+
+    setIsOtpLoading(true);
+    try {
+      await verifyEmailOtp({
+        email: otpEmail.trim().toLowerCase(),
+        verificationToken: otpVerificationToken,
+        purpose: 'register',
+        name: otpName.trim(),
+        phone: normalizeToE164(otpPhone),
+        agencyName: otpAgency.trim() || `${otpName.trim()} Realty`,
+        city: otpCity.trim() || 'Panipat',
+        password: otpPassword || undefined,
+        consent: { termsAccepted: true, privacyVersion: '1.0' },
+      });
+      navigate('/app', { replace: true });
+    } catch (err: any) {
+      setErrorMsg(err?.message || 'Could not complete Email OTP registration.');
+    } finally {
+      setIsOtpLoading(false);
     }
   };
 
@@ -148,7 +318,6 @@ export const RegisterPage: React.FC = () => {
       return;
     }
 
-    // Mandatory mobile number check
     const phoneErr = validatePhone(formData.phone);
     if (phoneErr) {
       setFieldErrors((prev) => ({ ...prev, phone: phoneErr }));
@@ -181,7 +350,7 @@ export const RegisterPage: React.FC = () => {
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 409) {
-          setErrorMsg('An account with this email address already exists. Please sign in instead.');
+          setErrorMsg('An account with this email address already exists. Sign in via Password, Google, or Email OTP.');
         } else if (err.status === 429) {
           setErrorMsg(err.message || 'Too many attempts. Please try again in a few moments.');
         } else if (err.fields) {
@@ -221,12 +390,12 @@ export const RegisterPage: React.FC = () => {
             Create Your Broker Account
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Free 14-day trial • Full access to inventory, matching engine & WhatsApp flyer generator
+            Free 14-day trial • Full access to inventory, matching engine &amp; WhatsApp flyer generator
           </p>
         </div>
 
-        {/* Tab Selection */}
-        <div className="flex p-1 bg-slate-100 rounded-full border border-slate-200/80 mb-4 max-w-sm mx-auto">
+        {/* 3-Method Tab Selection */}
+        <div className="grid grid-cols-3 p-1 bg-slate-100 rounded-full border border-slate-200/80 mb-4 max-w-md mx-auto gap-1">
           <button
             type="button"
             onClick={() => {
@@ -234,20 +403,38 @@ export const RegisterPage: React.FC = () => {
               setErrorMsg(null);
             }}
             className={clsx(
-              'flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition cursor-pointer text-center flex items-center justify-center gap-1.5',
+              'py-1.5 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-bold transition cursor-pointer text-center flex items-center justify-center gap-1.5 whitespace-nowrap',
               activeTab === 'google'
                 ? 'bg-white text-emerald-800 shadow-xs'
                 : 'text-slate-500 hover:text-slate-900'
             )}
           >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
             </svg>
-            <span>Google Account</span>
+            <span>Google</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('otp');
+              setErrorMsg(null);
+            }}
+            className={clsx(
+              'py-1.5 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-bold transition cursor-pointer text-center flex items-center justify-center gap-1 whitespace-nowrap',
+              activeTab === 'otp'
+                ? 'bg-white text-emerald-800 shadow-xs'
+                : 'text-slate-500 hover:text-slate-900'
+            )}
+          >
+            <KeyRound className="w-3.5 h-3.5 shrink-0" />
+            <span>Email OTP</span>
+          </button>
+
           <button
             type="button"
             onClick={() => {
@@ -255,13 +442,13 @@ export const RegisterPage: React.FC = () => {
               setErrorMsg(null);
             }}
             className={clsx(
-              'flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition cursor-pointer text-center',
+              'py-1.5 px-2 sm:px-3 rounded-full text-[11px] sm:text-xs font-bold transition cursor-pointer text-center whitespace-nowrap',
               activeTab === 'direct'
                 ? 'bg-white text-emerald-800 shadow-xs'
                 : 'text-slate-500 hover:text-slate-900'
             )}
           >
-            Create Manually
+            Password
           </button>
         </div>
 
@@ -275,7 +462,7 @@ export const RegisterPage: React.FC = () => {
           )}
 
           {/* ======================================================== */}
-          {/* OPTION 1: SIGN UP USING GOOGLE ACCOUNT                  */}
+          {/* OPTION 1: SIGN UP USING REAL GOOGLE AUTHORIZATION        */}
           {/* ======================================================== */}
           {activeTab === 'google' && (
             <div>
@@ -291,38 +478,64 @@ export const RegisterPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900">Sign Up with Google</h3>
+                    <h2 className="text-sm font-bold text-slate-900">Sign Up or Sign In with Google</h2>
                     <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
-                      Instantly connect your Google workspace account. You'll enter your verified mobile number next.
+                      Connect your Google account in one click. Existing accounts open immediately; new brokers verify mobile number next.
                     </p>
                   </div>
 
-                  <div className="space-y-3 pt-2">
-                    <Input
-                      label="Your Work / Google Email"
-                      type="email"
-                      required
-                      value={googleEmail}
-                      onChange={(e) => setGoogleEmail(e.target.value)}
-                      placeholder="e.g. sharma.broker@gmail.com"
-                      leftIcon={<Mail className="w-4 h-4 text-slate-400" />}
-                    />
+                  {!googleClientId ? (
+                    <div className="space-y-3 pt-1">
+                      <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 text-left text-xs text-amber-900 space-y-1.5">
+                        <span className="font-bold flex items-center gap-1.5 text-amber-800">
+                          <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                          Google Client ID Required
+                        </span>
+                        <p className="text-[11px] text-amber-800/90 leading-relaxed">
+                          Add <code className="font-mono">GOOGLE_CLIENT_ID</code> in backend environment variables (or <code className="font-mono">VITE_GOOGLE_CLIENT_ID</code> on Vercel) to activate Google Sign-Up.
+                        </p>
+                      </div>
 
-                    <button
-                      type="button"
-                      onClick={handleGoogleStart}
-                      disabled={isGoogleLoading || !googleEmail.trim()}
-                      className="w-full py-3 px-4 rounded-full bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-slate-300 text-slate-800 font-bold text-xs flex items-center justify-center gap-2.5 shadow-sm hover:shadow transition cursor-pointer"
-                    >
-                      <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-                      </svg>
-                      <span>Continue with Google</span>
-                    </button>
-                  </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setActiveTab('otp')}
+                          className="py-2.5 px-3 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+                        >
+                          <KeyRound className="w-3.5 h-3.5" />
+                          <span>Use Email OTP</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setActiveTab('direct')}
+                          className="py-2.5 px-3 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+                        >
+                          <Mail className="w-3.5 h-3.5" />
+                          <span>Use Password</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="pt-2 space-y-2.5">
+                      <button
+                        type="button"
+                        onClick={handleGoogleStart}
+                        disabled={isGoogleLoading}
+                        className="w-full py-3 px-4 rounded-full bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-slate-300 text-slate-800 font-bold text-xs flex items-center justify-center gap-2.5 shadow-sm hover:shadow transition cursor-pointer disabled:opacity-60"
+                      >
+                        <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                        </svg>
+                        <span>{isGoogleLoading ? 'Connecting to Google...' : 'Continue with Google'}</span>
+                      </button>
+                      <p className="text-[11px] text-slate-400">
+                        Opens official Google Account verification popup
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -378,7 +591,8 @@ export const RegisterPage: React.FC = () => {
                     <input
                       type="checkbox"
                       id="terms-google"
-                      required
+                      checked={googleTermsAccepted}
+                      onChange={(e) => setGoogleTermsAccepted(e.target.checked)}
                       className="mt-0.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                     />
                     <label htmlFor="terms-google">
@@ -397,16 +611,220 @@ export const RegisterPage: React.FC = () => {
                   <Button
                     type="submit"
                     isLoading={isGoogleLoading}
-                    className="w-full font-bold justify-between"
+                    className="w-full font-bold justify-center"
                   >
-                    <span>Complete Registration & Enter Workspace</span>
+                    <span>Complete Registration &amp; Enter Workspace</span>
                   </Button>
                 </form>
               )}
             </div>
           )}
 
-          {/* OPTION 2: CREATE ACCOUNT (DIRECT REGISTRATION FORM)     */}
+          {/* ======================================================== */}
+          {/* OPTION 2: SIGN UP USING EMAIL OTP VERIFICATION           */}
+          {/* ======================================================== */}
+          {activeTab === 'otp' && (
+            <div>
+              {otpStep === 1 && (
+                <form onSubmit={handleSendRegisterOtp} className="space-y-4">
+                  <div className="text-center space-y-1 pb-1">
+                    <h2 className="text-sm font-bold text-slate-900">Sign Up via Email OTP</h2>
+                    <p className="text-xs text-slate-500">
+                      Verify your work email with a 6-digit OTP first, then add your mobile &amp; agency profile.
+                    </p>
+                  </div>
+
+                  <Input
+                    label="Your Work Email *"
+                    type="email"
+                    required
+                    value={otpEmail}
+                    onChange={(e) => setOtpEmail(e.target.value)}
+                    placeholder="e.g. sharma.broker@gmail.com"
+                    leftIcon={<Mail className="w-4 h-4 text-slate-400" />}
+                  />
+
+                  <Button
+                    type="submit"
+                    isLoading={isOtpLoading}
+                    className="w-full font-bold justify-center min-h-[44px]"
+                  >
+                    <KeyRound className="w-4 h-4 mr-1.5" />
+                    <span>Send 6-Digit Verification Code</span>
+                  </Button>
+                </form>
+              )}
+
+              {otpStep === 2 && (
+                <form onSubmit={handleVerifyRegisterOtpCode} className="space-y-4">
+                  <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800 flex items-center justify-between gap-2">
+                    <span className="truncate">
+                      OTP sent to: <strong>{otpEmail}</strong>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOtpStep(1);
+                        setOtpCode('');
+                        setOtpDevHint(null);
+                      }}
+                      className="text-emerald-700 underline font-bold text-[11px] cursor-pointer shrink-0"
+                    >
+                      Change
+                    </button>
+                  </div>
+
+                  {otpDevHint && (
+                    <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-900 flex items-center justify-between">
+                      <span>Dev Preview OTP:</span>
+                      <code className="font-mono font-bold text-sm tracking-widest">{otpDevHint}</code>
+                    </div>
+                  )}
+
+                  <Input
+                    label="Enter 6-Digit Email Code *"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    required
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                    placeholder="123456"
+                    leftIcon={<KeyRound className="w-4 h-4 text-slate-400" />}
+                    className="tracking-widest font-mono text-center text-lg"
+                  />
+
+                  <div className="flex justify-between items-center text-xs">
+                    <button
+                      type="button"
+                      disabled={isOtpLoading}
+                      onClick={handleSendRegisterOtp}
+                      className="text-emerald-700 font-bold hover:underline cursor-pointer"
+                    >
+                      Resend OTP
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setOtpStep(1)}
+                      className="text-slate-500 hover:text-slate-900 cursor-pointer"
+                    >
+                      Back
+                    </button>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    isLoading={isOtpLoading}
+                    className="w-full font-bold justify-center min-h-[44px]"
+                  >
+                    <CheckCircle2 className="w-4 h-4 mr-1.5" />
+                    <span>Verify Email Code</span>
+                  </Button>
+                </form>
+              )}
+
+              {otpStep === 3 && (
+                <form onSubmit={handleCompleteOtpRegister} className="space-y-3.5">
+                  <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>
+                      Verified email: <strong>{otpEmail}</strong>. Finish your broker profile below.
+                    </span>
+                  </div>
+
+                  <Input
+                    label="Full Name *"
+                    required
+                    value={otpName}
+                    onChange={(e) => setOtpName(e.target.value)}
+                    placeholder="e.g. Rajesh Sharma"
+                    error={fieldErrors['otpName']}
+                    leftIcon={<UserIcon className="w-4 h-4 text-slate-400" />}
+                  />
+
+                  <Input
+                    label="Mandatory Mobile Number (+91) *"
+                    type="tel"
+                    required
+                    maxLength={10}
+                    value={otpPhone}
+                    onChange={(e) => setOtpPhone(e.target.value.replace(/\D/g, ''))}
+                    placeholder="9876543210"
+                    error={fieldErrors['otpPhone']}
+                    leftIcon={<Phone className="w-4 h-4 text-slate-400" />}
+                  />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Input
+                      label="Agency / Firm Name"
+                      value={otpAgency}
+                      onChange={(e) => setOtpAgency(e.target.value)}
+                      placeholder="e.g. Sharma Properties"
+                      leftIcon={<Building className="w-4 h-4 text-slate-400" />}
+                    />
+                    <Input
+                      label="City"
+                      value={otpCity}
+                      onChange={(e) => setOtpCity(e.target.value)}
+                      placeholder="Panipat"
+                      leftIcon={<MapPin className="w-4 h-4 text-slate-400" />}
+                    />
+                  </div>
+
+                  <Input
+                    label="Set Password (Optional — enables Password login too)"
+                    type={showPassword ? 'text' : 'password'}
+                    value={otpPassword}
+                    onChange={(e) => setOtpPassword(e.target.value)}
+                    placeholder="Optional: min 8 characters"
+                    error={fieldErrors['otpPassword']}
+                    leftIcon={<Lock className="w-4 h-4 text-slate-400" />}
+                    rightElement={
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="text-slate-400 hover:text-slate-600"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    }
+                  />
+
+                  <div className="flex items-start gap-2 pt-1 text-[11px] text-slate-600">
+                    <input
+                      type="checkbox"
+                      id="terms-otp"
+                      checked={otpTermsAccepted}
+                      onChange={(e) => setOtpTermsAccepted(e.target.checked)}
+                      className="mt-0.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                    />
+                    <label htmlFor="terms-otp">
+                      I agree to the{' '}
+                      <Link to="/terms" className="text-emerald-700 underline font-semibold">
+                        Terms of Service
+                      </Link>{' '}
+                      and{' '}
+                      <Link to="/privacy" className="text-emerald-700 underline font-semibold">
+                        Privacy Policy
+                      </Link>
+                      , and confirm that I am 18 years of age or older.
+                    </label>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    isLoading={isOtpLoading}
+                    className="w-full font-bold justify-center min-h-[44px]"
+                  >
+                    <span>Create Account &amp; Enter Workspace</span>
+                  </Button>
+                </form>
+              )}
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* OPTION 3: CREATE ACCOUNT (DIRECT REGISTRATION FORM)      */}
           {/* ======================================================== */}
           {activeTab === 'direct' && (
             <form onSubmit={handleSubmit} className="space-y-3.5">
@@ -548,7 +966,7 @@ export const RegisterPage: React.FC = () => {
               <Button
                 type="submit"
                 isLoading={loading}
-                className="w-full font-bold justify-between"
+                className="w-full font-bold justify-center min-h-[44px]"
               >
                 <span>Create Broker Account</span>
               </Button>

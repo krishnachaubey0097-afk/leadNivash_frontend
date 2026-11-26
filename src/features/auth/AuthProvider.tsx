@@ -43,7 +43,38 @@ export interface User {
   agency?: UserAgency;
   preferences?: UserPreferences;
   plan: UserPlan;
+  emailVerified?: boolean;
+  hasPassword?: boolean;
+  authProviders?: ('password' | 'google' | 'email_otp')[];
+  hasGoogleLinked?: boolean;
+  lastLoginAt?: string;
+  lastLoginMethod?: 'password' | 'google' | 'email_otp';
   createdAt: string;
+}
+
+export interface GoogleLoginPayload {
+  credential?: string;
+  accessToken?: string;
+  email?: string;
+  name?: string;
+  googleId?: string;
+  phone?: string;
+  agencyName?: string;
+  city?: string;
+  consent?: { termsAccepted: boolean; privacyVersion: string };
+}
+
+export interface VerifyOtpPayload {
+  email: string;
+  otp?: string;
+  verificationToken?: string;
+  purpose: 'login' | 'register' | 'verify_email';
+  name?: string;
+  phone?: string;
+  password?: string;
+  agencyName?: string;
+  city?: string;
+  consent?: { termsAccepted: boolean; privacyVersion: string };
 }
 
 interface AuthContextType {
@@ -52,14 +83,16 @@ interface AuthContextType {
   isLoading: boolean;
   isServerWaking: boolean;
   login: (email: string, pass: string) => Promise<void>;
-  googleLogin: (payload: {
-    email: string;
-    name: string;
-    googleId?: string;
-    phone?: string;
-    agencyName?: string;
-    city?: string;
-  }) => Promise<{ requiresPhone?: boolean; user?: any }>;
+  googleLogin: (payload: GoogleLoginPayload) => Promise<{ requiresPhone?: boolean; user?: any }>;
+  verifyEmailOtp: (
+    payload: VerifyOtpPayload
+  ) => Promise<{
+    verified: boolean;
+    requiresOnboarding?: boolean;
+    verificationToken?: string;
+    email?: string;
+    user?: any;
+  }>;
   register: (payload: {
     name: string;
     email: string;
@@ -192,14 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem(STORAGE_SESSION_KEY, 'true');
   };
 
-  const googleLogin = async (payload: {
-    email: string;
-    name: string;
-    googleId?: string;
-    phone?: string;
-    agencyName?: string;
-    city?: string;
-  }) => {
+  const googleLogin = async (payload: GoogleLoginPayload) => {
     clearLocalPropertiesCache();
     clearLocalBuyersCache();
     const res = (await apiClient.post('/auth/google', payload)) as any;
@@ -214,6 +240,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem(STORAGE_SESSION_KEY, 'true');
     }
     return { requiresPhone: false, user: authUser };
+  };
+
+  const verifyEmailOtp = async (payload: VerifyOtpPayload) => {
+    clearLocalPropertiesCache();
+    clearLocalBuyersCache();
+    const res = (await apiClient.post('/auth/verify-otp', payload)) as any;
+    if (res?.requiresOnboarding) {
+      return {
+        verified: true,
+        requiresOnboarding: true,
+        verificationToken: res.verificationToken,
+        email: res.email,
+      };
+    }
+    const { accessToken, user: authUser } = res || {};
+    if (accessToken && authUser) {
+      tokenStore.set(accessToken);
+      setUser(authUser);
+      localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(authUser));
+      localStorage.setItem(STORAGE_SESSION_KEY, 'true');
+    }
+    return { verified: true, requiresOnboarding: false, user: authUser };
   };
 
   const register = async (payload: {
@@ -282,6 +330,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isServerWaking,
         login,
         googleLogin,
+        verifyEmailOtp,
         register,
         logout,
         refreshUser,
