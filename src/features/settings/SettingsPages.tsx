@@ -7,7 +7,8 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { Modal } from '../../components/ui/Modal';
 import { useToast } from '../../components/ui/Toast';
 import { apiClient } from '../../lib/api/client';
-import { BRAND_NAME, PLAN_PRICING } from '../../config/constants';
+import { BRAND_CONTACT, BRAND_NAME, PLAN_PRICING } from '../../config/constants';
+import { SocialLinks } from '../../components/ui/SocialLinks';
 import {
   ShieldCheck,
   Inbox,
@@ -904,6 +905,22 @@ export const SettingsPage: React.FC = () => {
                   <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
                 </button>
               </div>
+
+              <div className="pt-3 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-0.5">
+                  <span className="text-xs font-semibold text-slate-900 block">
+                    Official Support & Social Channels
+                  </span>
+                  <a
+                    href={`mailto:${BRAND_CONTACT.email}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-brand-700 hover:underline"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    <span>{BRAND_CONTACT.email}</span>
+                  </a>
+                </div>
+                <SocialLinks variant="light" showLabels />
+              </div>
             </Card>
           )}
 
@@ -1019,7 +1036,7 @@ export const SettingsPage: React.FC = () => {
             </Button>
             {deletePhrase.trim() === DELETE_CONFIRM_PHRASE ? (
               <a
-                href={`mailto:privacy@leadnivash.com?subject=${encodeURIComponent(
+                href={`mailto:${BRAND_CONTACT.email}?subject=${encodeURIComponent(
                   `Account Erasure Request - ${BRAND_NAME}`
                 )}&body=${encodeURIComponent(
                   `Hello ${BRAND_NAME} Privacy Team,\n\nI request permanent erasure of my account.\nBroker Name: ${name || user?.name || ''}\nPhone: ${user?.phone || ''}\nAgency: ${agencyName || user?.agency?.name || ''}`

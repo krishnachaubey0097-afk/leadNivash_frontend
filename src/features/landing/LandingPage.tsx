@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from '../../components/ui/Button';
 import { BrandLogoBox } from '../../components/ui/BrandLogo';
+import { SocialLinks } from '../../components/ui/SocialLinks';
+import { BRAND_CONTACT, SOCIAL_LINKS } from '../../config/constants';
 import {
   Sparkles,
   ArrowRight,
@@ -303,8 +305,17 @@ export const LandingPage: React.FC = () => {
       url: `${SITE_URL}/`,
       logo: `${SITE_URL}/logo-icon.png`,
       image: DEFAULT_OG_IMAGE,
-      email: 'contact@leadnivash.com',
-      telephone: '+919876543210',
+      email: BRAND_CONTACT.email,
+      telephone: BRAND_CONTACT.phone,
+      sameAs: [SOCIAL_LINKS.x, SOCIAL_LINKS.instagram, SOCIAL_LINKS.linkedin],
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer support',
+        email: BRAND_CONTACT.email,
+        telephone: BRAND_CONTACT.phone,
+        areaServed: 'IN',
+        availableLanguage: ['en', 'hi', 'pa', 'ta', 'mr'],
+      },
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'Panipat',
@@ -2661,6 +2672,7 @@ export const LandingPage: React.FC = () => {
               <p className="text-xs text-[#C9CCC6] leading-relaxed">
                 India's #1 Real Estate Broker Operating System. AI-powered property matching, buyer CRM, and owner inventory protection.
               </p>
+              <SocialLinks variant="dark" className="pt-1" />
             </div>
 
             <div>
@@ -2703,11 +2715,11 @@ export const LandingPage: React.FC = () => {
                 </li>
                 <li>
                   <a
-                    href="mailto:contact@leadnivash.com"
+                    href={`mailto:${BRAND_CONTACT.email}`}
                     className="inline-flex items-center gap-2 hover:text-lime transition text-white/90"
                   >
                     <Mail className="w-3.5 h-3.5 text-lime" />
-                    <span>contact@leadnivash.com</span>
+                    <span>{BRAND_CONTACT.email}</span>
                   </a>
                 </li>
                 <li>

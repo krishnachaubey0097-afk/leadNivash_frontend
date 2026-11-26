@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { SOCIAL_LINKS } from '../config/constants';
 
 export const SITE_NAME = 'LeadNivash';
 export const SITE_URL = 'https://lead-nivash-frontend.vercel.app';
@@ -80,6 +81,8 @@ export const SEO: React.FC<SEOProps> = ({
 
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content={SOCIAL_LINKS.xHandle} />
+      <meta name="twitter:creator" content={SOCIAL_LINKS.xHandle} />
       <meta name="twitter:url" content={canonicalUrl} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />

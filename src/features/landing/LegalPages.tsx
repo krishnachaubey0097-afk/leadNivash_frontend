@@ -19,7 +19,8 @@ import {
 } from 'lucide-react';
 import { PricingSection } from '../pricing/PricingSection';
 import { SEO, SITE_URL, DEFAULT_OG_IMAGE } from '../../components/SEO';
-import { PLAN_PRICING } from '../../config/constants';
+import { BRAND_CONTACT, PLAN_PRICING } from '../../config/constants';
+import { SocialLinks } from '../../components/ui/SocialLinks';
 
 /* =========================================================================
    1. PRICING PAGE
@@ -206,7 +207,7 @@ export const PrivacyPage: React.FC = () => {
           <ul className="list-disc pl-5 space-y-1 text-slate-700">
             <li><strong>Right to Access & Export:</strong> You can export all your properties, buyers, and deals in JSON or CSV format directly from the <Link to="/app/settings" className="underline font-bold text-emerald-700">Settings</Link> page at any time.</li>
             <li><strong>Right to Rectification:</strong> You can edit and update property listings, buyer criteria, and profile details directly within the app.</li>
-            <li><strong>Right to Erasure (Account Deletion):</strong> You can request permanent account and data deletion by clicking "Request Account Deletion" in Settings or by emailing <a href="mailto:privacy@leadnivash.com" className="underline font-bold text-emerald-700">privacy@leadnivash.com</a>. Upon verification, all your data will be permanently purged within 30 days.</li>
+            <li><strong>Right to Erasure (Account Deletion):</strong> You can request permanent account and data deletion by clicking "Request Account Deletion" in Settings or by emailing <a href={`mailto:${BRAND_CONTACT.email}`} className="underline font-bold text-emerald-700">{BRAND_CONTACT.email}</a>. Upon verification, all your data will be permanently purged within 30 days.</li>
           </ul>
         </section>
 
@@ -232,7 +233,7 @@ export const PrivacyPage: React.FC = () => {
           </p>
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1 text-[11px]">
             <p><strong>Grievance & Privacy Officer:</strong> LeadNivash Legal & Compliance Team</p>
-            <p><strong>Email:</strong> <a href="mailto:privacy@leadnivash.com" className="underline font-bold text-emerald-700">privacy@leadnivash.com</a></p>
+            <p><strong>Email:</strong> <a href={`mailto:${BRAND_CONTACT.email}`} className="underline font-bold text-emerald-700">{BRAND_CONTACT.email}</a></p>
             <p><strong>Support Telephone:</strong> <a href="tel:+919876543210" className="underline font-bold text-emerald-700">+91 98765 43210</a></p>
             <p><strong>Operating Territory:</strong> Panipat & Gurugram, Haryana, India</p>
           </div>
@@ -394,7 +395,7 @@ export const RefundPolicyPage: React.FC = () => {
         <section className="space-y-2">
           <h2 className="text-sm font-bold text-ink">3. How to Request a Refund</h2>
           <p className="text-muted">
-            To initiate a refund, simply send an email to <a href="mailto:billing@leadnivash.com" className="underline font-bold text-emerald-700">billing@leadnivash.com</a> or message our WhatsApp Support at <a href="https://wa.me/919876543210" className="underline font-bold text-emerald-700">+91 98765 43210</a> with:
+            To initiate a refund, simply send an email to <a href={`mailto:${BRAND_CONTACT.email}`} className="underline font-bold text-emerald-700">{BRAND_CONTACT.email}</a> or message our WhatsApp Support at <a href="https://wa.me/919876543210" className="underline font-bold text-emerald-700">+91 98765 43210</a> with:
           </p>
           <ul className="list-disc pl-5 space-y-1 text-slate-700">
             <li>Your registered broker mobile number or login email.</li>
@@ -614,17 +615,30 @@ export const ContactPage: React.FC = () => {
         </a>
 
         <a
-          href="mailto:contact@leadnivash.com"
+          href={`mailto:${BRAND_CONTACT.email}`}
           className="p-3.5 rounded-2xl bg-white border border-border/80 shadow-2xs hover:border-emerald-500/40 flex items-center gap-2.5 text-xs font-bold text-ink transition"
         >
           <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
             <Mail className="w-4 h-4" />
           </div>
-          <div>
+          <div className="min-w-0">
             <span className="text-[10px] text-muted block uppercase font-bold">Email Us</span>
-            <span>contact@leadnivash.com</span>
+            <span className="truncate block">{BRAND_CONTACT.email}</span>
           </div>
         </a>
+      </div>
+
+      {/* Social Media Channels */}
+      <div className="p-4 rounded-2xl bg-white border border-border/80 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-muted block">
+            Connect With Us
+          </span>
+          <span className="text-xs text-slate-600">
+            Follow product updates, broker tips & releases on official channels
+          </span>
+        </div>
+        <SocialLinks variant="light" showLabels />
       </div>
 
       {errorMsg && (

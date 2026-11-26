@@ -185,6 +185,8 @@ export default async function handler(req, res) {
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@leadnivassh" />
+    <meta name="twitter:creator" content="@leadnivassh" />
     <meta name="twitter:url" content="${canonicalEsc}" />
     <meta name="twitter:title" content="${titleEsc}" />
     <meta name="twitter:description" content="${descEsc}" />
