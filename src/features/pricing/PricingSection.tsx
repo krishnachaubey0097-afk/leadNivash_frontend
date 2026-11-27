@@ -12,6 +12,7 @@ import {
 import { Button } from '../../components/ui/Button';
 import { SpecialOfferModal } from './SpecialOfferModal';
 import { useAuth } from '../auth/AuthProvider';
+import { type CashfreePlanCode } from '../../lib/cashfree';
 import clsx from 'clsx';
 
 interface PricingSectionProps {
@@ -27,18 +28,15 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
 }) => {
   const { user } = useAuth();
   const [isSpecialOfferModalOpen, setIsSpecialOfferModalOpen] = useState(false);
+  const [modalPlanCode, setModalPlanCode] = useState<CashfreePlanCode>('yearly_trial_3299');
   const [isTrialOfferActive, setIsTrialOfferActive] = useState(true);
   const [mobileTab, setMobileTab] = useState<'all' | 'trial' | 'monthly' | 'yearly'>('all');
 
-  const handleOpenSpecialOffer = () => {
+  const handleOpenCheckout = (plan: CashfreePlanCode) => {
     setIsTrialOfferActive(true);
+    setModalPlanCode(plan);
     setIsSpecialOfferModalOpen(true);
   };
-
-  const whatsappMonthlyUrl = `https://wa.me/918570089497?text=${encodeURIComponent(
-    `Hello LeadNivash, I want to subscribe to the Monthly Plan (₹399/month). My registered account is: ${user?.phone || user?.email || 'New Broker'
-    }.`
-  )}`;
 
   const HeadingTag = headingAs;
 
@@ -93,7 +91,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <button
               type="button"
-              onClick={handleOpenSpecialOffer}
+              onClick={() => handleOpenCheckout('yearly_trial_3299')}
               className="group btn-cashfree-primary btn-shine-sweep pl-5 pr-2 py-2 rounded-[16px] text-white font-semibold text-sm flex items-center justify-center gap-3 cursor-pointer transition-all min-h-[48px] whitespace-nowrap"
               title="Claim Free Trial Special Offer"
             >
@@ -322,20 +320,17 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               </div>
             </div>
 
-            {/* CTA Button */}
+            {/* CTA Button — Cashfree AutoPay / Checkout */}
             <div className="pt-6">
-              <a
-                href={whatsappMonthlyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
+              <Button
+                type="button"
+                onClick={() => handleOpenCheckout('monthly_399')}
+                className="w-full text-xs font-bold min-h-[44px] justify-between"
               >
-                <Button className="w-full text-xs font-bold min-h-[44px] justify-between">
-                  <span>Get Monthly Plan — ₹399/mo</span>
-                </Button>
-              </a>
+                <span>Get Monthly Plan — ₹399/mo</span>
+              </Button>
               <span className="text-[10px] text-center text-muted block mt-2">
-                Standard monthly rate · No discount applied
+                UPI AutoPay / Card · Cancel anytime
               </span>
             </div>
           </div>
@@ -428,7 +423,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <div className="pt-6 space-y-2">
               <button
                 type="button"
-                onClick={handleOpenSpecialOffer}
+                onClick={() =>
+                  handleOpenCheckout(isTrialOfferActive ? 'yearly_trial_3299' : 'yearly_3999')
+                }
                 className="group btn-cashfree-primary btn-shine-sweep w-full py-2 pl-4 pr-2 rounded-[16px] text-white font-bold text-xs tracking-wide flex items-center justify-between gap-2 cursor-pointer transition-all min-h-[48px] whitespace-nowrap"
               >
                 <span className="flex items-center gap-2">
@@ -466,20 +463,19 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             .
           </span>
         </div>
-        <a
-          href="https://wa.me/918570089497?text=Hi%20LeadNivash%2C%20I%20have%20questions%20about%20subscription%20plans"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          to="/contact"
           className="text-emerald-700 font-bold hover:underline shrink-0 flex items-center gap-1 cursor-pointer"
         >
-          <span>Need custom enterprise team licenses? Chat with us &rarr;</span>
-        </a>
+          <span>Need custom enterprise team licenses? Contact support &rarr;</span>
+        </Link>
       </div>
 
-      {/* Interactive Special Offer Modal */}
+      {/* Interactive Cashfree Upgrade Modal */}
       <SpecialOfferModal
         isOpen={isSpecialOfferModalOpen}
         onClose={() => setIsSpecialOfferModalOpen(false)}
+        planCode={modalPlanCode}
         onClaim={() => setIsTrialOfferActive(true)}
       />
     </div>

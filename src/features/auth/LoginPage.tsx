@@ -32,7 +32,11 @@ export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const rawFrom = (location.state as any)?.from?.pathname;
+  const fromLocation = (location.state as any)?.from;
+  const queryRedirect = new URLSearchParams(location.search).get('redirect');
+  const rawFrom =
+    queryRedirect ||
+    (fromLocation?.pathname ? `${fromLocation.pathname}${fromLocation.search || ''}` : '');
   const from = rawFrom && rawFrom !== '/login' ? rawFrom : '/app';
 
   // Automatically redirect if already authenticated

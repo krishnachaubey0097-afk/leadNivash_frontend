@@ -34,6 +34,13 @@ import { SpecialOfferModal } from '../pricing/SpecialOfferModal';
 import { startInteractiveTour } from '../onboarding/OnboardingTour';
 import { openVideoGuide } from '../onboarding/GuideVideoModal';
 import { INDIAN_STATES, DEFAULT_STATE_NAME, getStateRule } from '../../lib/indianStates';
+import {
+  verifyCashfreePayment,
+  cancelCashfreeAutoPay,
+  fetchPaymentHistory,
+  type PaymentRecordDto,
+  type CashfreePlanCode,
+} from '../../lib/cashfree';
 import clsx from 'clsx';
 
 type SettingsSection =
@@ -104,8 +111,70 @@ export const SettingsPage: React.FC = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [inquiriesCount, setInquiriesCount] = useState<number>(0);
   const [isSpecialOfferOpen, setIsSpecialOfferOpen] = useState(false);
+  const [specialOfferPlanCode, setSpecialOfferPlanCode] = useState<CashfreePlanCode>('yearly_trial_3299');
+  const [paymentHistory, setPaymentHistory] = useState<PaymentRecordDto[]>([]);
+  const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+  const [isCancellingAutoPay, setIsCancellingAutoPay] = useState(false);
   const [isErasureModalOpen, setIsErasureModalOpen] = useState(false);
   const [deletePhrase, setDeletePhrase] = useState('');
+
+  // Handle Cashfree return verification & ?pay= deep-link inside Subscription section
+  useEffect(() => {
+    const cfSubId = searchParams.get('cf_sub_id');
+    const cfOrderId = searchParams.get('cf_order_id');
+    const payPlan = searchParams.get('pay') as CashfreePlanCode | null;
+
+    if (cfSubId || cfOrderId) {
+      setIsVerifyingPayment(true);
+      verifyCashfreePayment({
+        subscriptionId: cfSubId || undefined,
+        orderId: cfOrderId || undefined,
+      })
+        .then(async (res) => {
+          await refreshUser();
+          const hist = await fetchPaymentHistory().catch(() => []);
+          setPaymentHistory(hist);
+          if (res.activated) {
+            success(`Payment verified! Your ${res.planTier === 'pro' ? 'LeadNivash Pro' : 'Monthly'} plan is active.`);
+          } else {
+            error(`Payment status: ${res.status}. If you completed payment, your plan will activate shortly.`);
+          }
+        })
+        .catch((err: any) => {
+          error(err?.message || 'Could not verify Cashfree payment status yet.');
+        })
+        .finally(() => {
+          setIsVerifyingPayment(false);
+          setSearchParams({ section: 'subscription' }, { replace: true });
+        });
+    } else if (payPlan && ['monthly_399', 'yearly_trial_3299', 'yearly_3999'].includes(payPlan)) {
+      setSpecialOfferPlanCode(payPlan);
+      setIsSpecialOfferOpen(true);
+      setSearchParams({ section: 'subscription' }, { replace: true });
+    }
+  }, [searchParams, refreshUser, success, error, setSearchParams]);
+
+  useEffect(() => {
+    if (activeSection === 'subscription') {
+      fetchPaymentHistory()
+        .then(setPaymentHistory)
+        .catch(() => {});
+    }
+  }, [activeSection]);
+
+  const handleCancelAutoPay = async (subscriptionId: string) => {
+    setIsCancellingAutoPay(true);
+    try {
+      await cancelCashfreeAutoPay(subscriptionId);
+      const hist = await fetchPaymentHistory().catch(() => []);
+      setPaymentHistory(hist);
+      success('AutoPay renewal cancelled. Your current active period remains available until expiry.');
+    } catch (err: any) {
+      error(err?.message || 'Failed to cancel AutoPay subscription.');
+    } finally {
+      setIsCancellingAutoPay(false);
+    }
+  };
 
   // Sync state whenever AuthContext user updates
   useEffect(() => {
@@ -573,51 +642,127 @@ export const SettingsPage: React.FC = () => {
 
           {/* SECTION: SUBSCRIPTION */}
           {activeSection === 'subscription' && (
-            <GlassCard className="p-6 space-y-5 !bg-ink-black text-white border border-white/10 border-t-2 border-t-lime">
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/10 text-white text-xs font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />
-                    <Crown className="w-3.5 h-3.5 text-lime" />
-                    <span>{planTitle}</span>
+            <div className="space-y-4">
+              <GlassCard className="p-6 space-y-5 !bg-ink-black text-white border border-white/10 border-t-2 border-t-lime">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/10 text-white text-xs font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />
+                      <Crown className="w-3.5 h-3.5 text-lime" />
+                      <span>{planTitle}</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-white pt-1">
+                      {isVerifyingPayment
+                        ? 'Verifying Cashfree payment...'
+                        : planTier === 'trial'
+                        ? trialDaysLeft !== null
+                          ? `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} remaining in your free trial`
+                          : `${PLAN_PRICING.trialDays}-day free trial active`
+                        : 'Active subscription'}
+                    </h3>
+                    {planLimits && (
+                      <p className="text-xs text-white/70">
+                        Plan limits: Up to {planLimits.maxProperties ?? (planLimits as any).maxListings ?? 15} properties ·{' '}
+                        {planLimits.maxBuyers ?? 10} buyers ·{' '}
+                        {planLimits.maxParsePerMonth ?? (planLimits as any).maxParsesMonthly ?? 100} AI parses/month
+                      </p>
+                    )}
                   </div>
-                  <h3 className="text-lg font-bold text-white pt-1">
-                    {planTier === 'trial'
-                      ? trialDaysLeft !== null
-                        ? `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} remaining in your free trial`
-                        : `${PLAN_PRICING.trialDays}-day free trial active`
-                      : 'Active subscription'}
-                  </h3>
-                  {planLimits && (
-                    <p className="text-xs text-white/70">
-                      Plan limits: Up to {planLimits.maxProperties} properties · {planLimits.maxBuyers} buyers ·{' '}
-                      {planLimits.maxParsePerMonth} AI parses/month
-                    </p>
-                  )}
+
+                  <div className="flex flex-wrap gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSpecialOfferPlanCode('monthly_399');
+                        setIsSpecialOfferOpen(true);
+                      }}
+                      className="inline-flex items-center gap-1.5 h-10 px-3.5 rounded-[12px] bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/15 whitespace-nowrap transition-all cursor-pointer"
+                    >
+                      <span>{`Monthly · ₹${PLAN_PRICING.monthlyRupees}`}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSpecialOfferPlanCode(planTier === 'pro' ? 'yearly_3999' : 'yearly_trial_3299');
+                        setIsSpecialOfferOpen(true);
+                      }}
+                      className="group btn-shine-sweep-light mobile-shine-primary inline-flex items-center gap-2.5 h-10 pl-4 pr-1.5 rounded-[12px] bg-white hover:bg-lime-soft text-ink-black text-sm font-semibold whitespace-nowrap transition-all cursor-pointer shadow-sm"
+                    >
+                      <span className="relative z-10">{`Upgrade · ${PLAN_PRICING.formattedAnnualOffer}`}</span>
+                      <span className="relative z-10 w-7 h-7 rounded-[8px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                        <ArrowUpRight className="w-4 h-4 stroke-[2.25]" />
+                      </span>
+                    </button>
+                  </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsSpecialOfferOpen(true)}
-                  className="group btn-shine-sweep-light mobile-shine-primary inline-flex items-center gap-2.5 h-10 pl-4 pr-1.5 rounded-[12px] bg-white hover:bg-lime-soft text-ink-black text-sm font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer shadow-sm"
-                >
-                  <span className="relative z-10">{`Upgrade · ${PLAN_PRICING.formattedAnnualOffer}`}</span>
-                  <span className="relative z-10 w-7 h-7 rounded-[8px] bg-lime text-ink-black inline-flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                    <ArrowUpRight className="w-4 h-4 stroke-[2.25]" />
+                {/* Single price line sourced from shared plan config */}
+                <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm">
+                  <span className="text-white/80 font-medium tabular-nums">
+                    {PLAN_PRICING.priceLine}
                   </span>
-                </button>
-              </div>
+                  <span className="text-xs text-white/70">
+                    Cashfree AutoPay &amp; UPI · 7-day refund guarantee
+                  </span>
+                </div>
+              </GlassCard>
 
-              {/* Single price line sourced from shared plan config */}
-              <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm">
-                <span className="text-white/80 font-medium tabular-nums">
-                  {PLAN_PRICING.priceLine}
-                </span>
-                <span className="text-xs text-white/70">
-                  7-day unconditional refund guarantee
-                </span>
-              </div>
-            </GlassCard>
+              {paymentHistory.length > 0 && (
+                <Card className="p-5 rounded-[14px] border border-border bg-white space-y-3">
+                  <h4 className="text-sm font-bold text-slate-900">
+                    Billing &amp; AutoPay Subscriptions
+                  </h4>
+                  <div className="divide-y divide-slate-100">
+                    {paymentHistory.map((item) => (
+                      <div
+                        key={item._id}
+                        className="py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+                      >
+                        <div>
+                          <span className="font-bold text-slate-900">
+                            {item.planCode === 'monthly_399'
+                              ? 'Monthly Plan'
+                              : item.planCode === 'yearly_trial_3299'
+                              ? 'Yearly Trial Offer'
+                              : 'Yearly Plan'}{' '}
+                            · ₹{item.amountINR.toLocaleString('en-IN')}
+                          </span>
+                          <span className="block text-[11px] text-slate-500">
+                            Ref: {item.cashfreeId} · {new Date(item.createdAt).toLocaleDateString('en-IN')}
+                            {item.autopayEnabled ? ' · AutoPay Active' : ''}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={clsx(
+                              'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase',
+                              item.status === 'ACTIVE' || item.status === 'PAID'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : item.status === 'CANCELLED' || item.status === 'FAILED'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                : 'bg-slate-100 text-slate-700'
+                            )}
+                          >
+                            {item.status}
+                          </span>
+                          {item.mode === 'autopay' && item.autopayEnabled && item.status === 'ACTIVE' && (
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="secondary"
+                              isLoading={isCancellingAutoPay}
+                              onClick={() => handleCancelAutoPay(item.cashfreeId)}
+                            >
+                              Cancel AutoPay
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              )}
+            </div>
           )}
 
           {/* SECTION: REGIONAL PREFERENCES */}
@@ -1094,6 +1239,7 @@ export const SettingsPage: React.FC = () => {
       <SpecialOfferModal
         isOpen={isSpecialOfferOpen}
         onClose={() => setIsSpecialOfferOpen(false)}
+        planCode={specialOfferPlanCode}
       />
     </div>
   );
