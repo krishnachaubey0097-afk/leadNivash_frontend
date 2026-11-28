@@ -20,6 +20,7 @@ import {
   UserCheck,
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
+import { CustomSelect } from '../../components/ui/CustomSelect';
 import { apiClient } from '../../lib/api/client';
 import { useToast } from '../../components/ui/Toast';
 
@@ -636,18 +637,20 @@ export const AdminPage: React.FC = () => {
                         </span>
                       </td>
                       <td className="p-3.5">
-                        <select
+                        <CustomSelect
+                          title={`Update plan tier for ${u.name || u.email}`}
                           value={u.plan?.tier || 'trial'}
                           disabled={updatingUserId === u._id}
-                          onChange={(e) => handlePlanChange(u._id, e.target.value as any)}
-                          className="px-2 py-1 text-[11px] rounded-lg border border-border bg-white font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer disabled:opacity-50"
-                        >
-                          <option value="trial">Trial</option>
-                          <option value="starter">Starter</option>
-                          <option value="pro">Pro</option>
-                          <option value="team">Team</option>
-                          <option value="agency">Agency</option>
-                        </select>
+                          onChange={(val) => handlePlanChange(u._id, val as any)}
+                          options={[
+                            { value: 'trial', label: 'Trial' },
+                            { value: 'starter', label: 'Starter' },
+                            { value: 'pro', label: 'Pro' },
+                            { value: 'team', label: 'Team' },
+                            { value: 'agency', label: 'Agency' },
+                          ]}
+                          className="min-h-[32px] px-2.5 py-1 text-[11px] rounded-lg min-w-[105px]"
+                        />
                       </td>
                       <td className="p-3.5 text-right font-mono text-[11px] text-muted whitespace-nowrap">
                         {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '—'}

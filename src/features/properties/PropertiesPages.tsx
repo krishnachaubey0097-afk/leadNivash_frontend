@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { CustomSelect } from '../../components/ui/CustomSelect';
 import {
   Building2,
   Plus,
@@ -1239,19 +1240,21 @@ export const PropertyNewPage: React.FC = () => {
             {/* Facing Direction */}
             <div className="space-y-1.5">
               <label className="text-secondary font-medium text-ink block">Facing Direction</label>
-              <select
+              <CustomSelect
+                title="Facing Direction"
                 value={facing}
-                onChange={(e) => setFacing(e.target.value)}
-                className="w-full min-h-[48px] px-3 bg-white border border-border rounded-input text-sm font-medium text-ink focus:outline-none focus:ring-2 focus:ring-brand-600"
-              >
-                <option value="North">North</option>
-                <option value="North-East">North-East</option>
-                <option value="East">East</option>
-                <option value="South-East">South-East</option>
-                <option value="South">South</option>
-                <option value="West">West</option>
-                <option value="North-West">North-West</option>
-              </select>
+                onChange={(val) => setFacing(val)}
+                options={[
+                  { value: 'North', label: 'North' },
+                  { value: 'North-East', label: 'North-East' },
+                  { value: 'East', label: 'East' },
+                  { value: 'South-East', label: 'South-East' },
+                  { value: 'South', label: 'South' },
+                  { value: 'West', label: 'West' },
+                  { value: 'North-West', label: 'North-West' },
+                ]}
+                className="min-h-[48px] text-sm font-medium"
+              />
             </div>
           </div>
 
@@ -1264,17 +1267,14 @@ export const PropertyNewPage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <label className="text-secondary font-medium text-ink block">Locality</label>
-                <select
+                <CustomSelect
+                  title="Select Locality"
+                  searchPlaceholder="Search locality..."
                   value={locality}
-                  onChange={(e) => setLocality(e.target.value)}
-                  className="w-full min-h-[48px] px-3 bg-white border border-border rounded-input text-sm font-medium text-ink focus:outline-none focus:ring-2 focus:ring-brand-600"
-                >
-                  {localitiesList.map((loc) => (
-                    <option key={loc} value={loc}>
-                      {loc}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => setLocality(val)}
+                  options={localitiesList.map((loc) => ({ value: loc, label: loc }))}
+                  className="min-h-[48px] text-sm font-medium"
+                />
               </div>
 
               <div className="space-y-1.5">
@@ -1309,17 +1309,13 @@ export const PropertyNewPage: React.FC = () => {
                   className="w-full min-h-[48px] px-3.5 bg-white border border-border rounded-input text-sm text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-brand-600"
                 />
 
-                <select
+                <CustomSelect
+                  title="Area Unit"
                   value={sizeUnit}
-                  onChange={(e) => setSizeUnit(e.target.value as any)}
-                  className="w-full min-h-[48px] px-3 bg-white border border-border rounded-input text-sm font-medium text-ink focus:outline-none focus:ring-2 focus:ring-brand-600"
-                >
-                  {unitOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => setSizeUnit(val as any)}
+                  options={unitOptions.map((opt) => ({ value: opt.value, label: opt.label }))}
+                  className="min-h-[48px] text-sm font-medium"
+                />
               </div>
               <p className="text-meta text-muted">
                 Haryana Marla standard (225 sq ft / 25 Gaj) applied automatically during buyer matching.

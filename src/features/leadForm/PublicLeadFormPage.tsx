@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
+import { CustomSelect } from '../../components/ui/CustomSelect';
 import { TopLoadingBar } from '../../components/ui/LoadingBar';
 import { SEO } from '../../components/SEO';
 import { BrandLogoBox } from '../../components/ui/BrandLogo';
@@ -910,17 +911,13 @@ export const PublicLeadFormPage: React.FC = () => {
                           onChange={(e) => setBuyerSizeMax(e.target.value)}
                           className="h-11 px-3 bg-white border border-border rounded-input text-sm text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
                         />
-                        <select
+                        <CustomSelect
+                          title="Area Unit"
                           value={buyerSizeUnit}
-                          onChange={(e) => setBuyerSizeUnit(e.target.value as any)}
-                          className="h-11 px-2.5 bg-white border border-border rounded-input text-xs font-semibold text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
-                        >
-                          {UNIT_OPTIONS.map((u) => (
-                            <option key={u.value} value={u.value}>
-                              {u.label}
-                            </option>
-                          ))}
-                        </select>
+                          onChange={(val) => setBuyerSizeUnit(val as any)}
+                          options={UNIT_OPTIONS.map((u) => ({ value: u.value, label: u.label }))}
+                          className="h-11 px-2.5 text-xs"
+                        />
                       </div>
                     </div>
 
@@ -1073,18 +1070,14 @@ export const PublicLeadFormPage: React.FC = () => {
                       <label htmlFor="seller-unit" className="text-xs font-semibold text-ink-900 block">
                         Area Unit
                       </label>
-                      <select
+                      <CustomSelect
                         id="seller-unit"
+                        title="Area Unit"
                         value={sellerSizeUnit}
-                        onChange={(e) => setSellerSizeUnit(e.target.value as any)}
-                        className="w-full h-11 px-3 bg-white border border-border rounded-input text-sm font-semibold text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
-                      >
-                        {UNIT_OPTIONS.map((u) => (
-                          <option key={u.value} value={u.value}>
-                            {u.label}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(val) => setSellerSizeUnit(val as any)}
+                        options={UNIT_OPTIONS.map((u) => ({ value: u.value, label: u.label }))}
+                        className="h-11 text-sm"
+                      />
                     </div>
 
                     <div className="space-y-1.5">
@@ -1094,18 +1087,14 @@ export const PublicLeadFormPage: React.FC = () => {
                           <span>Facing</span>
                         </span>
                       </label>
-                      <select
+                      <CustomSelect
                         id="seller-facing"
+                        title="Facing Direction"
                         value={facing}
-                        onChange={(e) => setFacing(e.target.value)}
-                        className="w-full h-11 px-3 bg-white border border-border rounded-input text-sm font-semibold text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
-                      >
-                        {FACING_OPTIONS.map((f) => (
-                          <option key={f} value={f}>
-                            {f}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(val) => setFacing(val)}
+                        options={FACING_OPTIONS.map((f) => ({ value: f, label: f }))}
+                        className="h-11 text-sm"
+                      />
                     </div>
                   </div>
 

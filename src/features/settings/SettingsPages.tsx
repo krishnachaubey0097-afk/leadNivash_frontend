@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
+import { CustomSelect } from '../../components/ui/CustomSelect';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Modal } from '../../components/ui/Modal';
 import { useToast } from '../../components/ui/Toast';
@@ -158,7 +159,7 @@ export const SettingsPage: React.FC = () => {
     if (activeSection === 'subscription') {
       fetchPaymentHistory()
         .then(setPaymentHistory)
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [activeSection]);
 
@@ -655,10 +656,10 @@ export const SettingsPage: React.FC = () => {
                       {isVerifyingPayment
                         ? 'Verifying Cashfree payment...'
                         : planTier === 'trial'
-                        ? trialDaysLeft !== null
-                          ? `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} remaining in your free trial`
-                          : `${PLAN_PRICING.trialDays}-day free trial active`
-                        : 'Active subscription'}
+                          ? trialDaysLeft !== null
+                            ? `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} remaining in your free trial`
+                            : `${PLAN_PRICING.trialDays}-day free trial active`
+                          : 'Active subscription'}
                     </h3>
                     {planLimits && (
                       <p className="text-xs text-white/70">
@@ -723,8 +724,8 @@ export const SettingsPage: React.FC = () => {
                             {item.planCode === 'monthly_399'
                               ? 'Monthly Plan'
                               : item.planCode === 'yearly_trial_3299'
-                              ? 'Yearly Trial Offer'
-                              : 'Yearly Plan'}{' '}
+                                ? 'Yearly Trial Offer'
+                                : 'Yearly Plan'}{' '}
                             · ₹{item.amountINR.toLocaleString('en-IN')}
                           </span>
                           <span className="block text-[11px] text-slate-500">
@@ -739,8 +740,8 @@ export const SettingsPage: React.FC = () => {
                               item.status === 'ACTIVE' || item.status === 'PAID'
                                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                 : item.status === 'CANCELLED' || item.status === 'FAILED'
-                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                                : 'bg-slate-100 text-slate-700'
+                                  ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                  : 'bg-slate-100 text-slate-700'
                             )}
                           >
                             {item.status}
@@ -779,40 +780,33 @@ export const SettingsPage: React.FC = () => {
 
               {/* Pan-India Operating State / Union Territory Selector */}
               <div className="space-y-2.5">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <label htmlFor="regional-state-select" className="text-xs font-semibold text-slate-700 block">
                     Operating State / Union Territory (All India)
                   </label>
-                  <span className="text-[11px] font-semibold text-brand-700 bg-lime-soft px-2 py-0.5 rounded-full border border-lime">
+                  <span className="text-[11px] font-semibold text-brand-700 bg-lime-soft px-2.5 py-0.5 rounded-full border border-lime whitespace-nowrap shrink-0">
                     Syncs to Stamp Duty Tool
                   </span>
                 </div>
-                <select
+                <CustomSelect
                   id="regional-state-select"
+                  title="Operating State / Union Territory"
+                  ariaLabel="Operating State / Union Territory (All India)"
+                  searchPlaceholder="Search Indian state or UT..."
                   value={defaultState}
-                  onChange={(e) => {
-                    const nextState = e.target.value;
+                  onChange={(nextState) => {
                     setDefaultState(nextState);
                     const rule = getStateRule(nextState);
                     setMarlaStandard(rule.defaultMarlaToGaj === 25 ? '25' : '30.25');
                   }}
-                  className="w-full h-11 bg-white border border-border rounded-input px-3.5 text-sm font-semibold text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
-                >
-                  <optgroup label="Indian States (28)">
-                    {INDIAN_STATES.filter((s) => s.regionType === 'State').map((s) => (
-                      <option key={s.name} value={s.name}>
-                        {s.name} — Stamp Duty {s.stampFemalePct}%–{s.stampMalePct + s.urbanExtraPct}%
-                      </option>
-                    ))}
-                  </optgroup>
-                  <optgroup label="Union Territories (8)">
-                    {INDIAN_STATES.filter((s) => s.regionType === 'Union Territory').map((s) => (
-                      <option key={s.name} value={s.name}>
-                        {s.name} — Stamp Duty {s.stampFemalePct}%–{s.stampMalePct + s.urbanExtraPct}%
-                      </option>
-                    ))}
-                  </optgroup>
-                </select>
+                  options={INDIAN_STATES.map((s) => ({
+                    value: s.name,
+                    label: `${s.name} — Stamp Duty ${s.stampFemalePct}%–${s.stampMalePct + s.urbanExtraPct}%`,
+                    group: s.regionType === 'State' ? 'Indian States (28)' : 'Union Territories (8)',
+                    hint: `${s.authorityLabel} · ${s.popularUnitLabel}`,
+                  }))}
+                  className="h-11 text-sm"
+                />
 
                 {/* Live State Fee Summary Box */}
                 {(() => {

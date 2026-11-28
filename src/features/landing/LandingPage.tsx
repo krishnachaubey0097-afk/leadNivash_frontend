@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from '../../components/ui/Button';
+import { CustomSelect } from '../../components/ui/CustomSelect';
 import { BrandLogoBox } from '../../components/ui/BrandLogo';
 import { SocialLinks } from '../../components/ui/SocialLinks';
 import { BRAND_CONTACT, SOCIAL_LINKS } from '../../config/constants';
@@ -2600,18 +2601,20 @@ export const LandingPage: React.FC = () => {
                     <label htmlFor="active-props-select" className="block text-[11px] font-bold uppercase tracking-wider text-ink-700 mb-1.5">
                       Active Properties Managed (Optional)
                     </label>
-                    <select
+                    <CustomSelect
                       id="active-props-select"
-                      aria-label="Active Properties Managed"
+                      title="Active Properties Managed"
+                      ariaLabel="Active Properties Managed"
                       value={formActiveProps}
-                      onChange={(e) => setFormActiveProps(e.target.value)}
-                      className="w-full bg-cream border border-line rounded-[16px] px-4 py-3 text-sm text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-brand-600 shadow-2xs cursor-pointer min-h-[44px]"
-                    >
-                      <option value="1-10">1 to 10 properties</option>
-                      <option value="10-50">10 to 50 properties</option>
-                      <option value="50-100">50 to 100 properties</option>
-                      <option value="100+">100+ properties</option>
-                    </select>
+                      onChange={(val) => setFormActiveProps(val)}
+                      options={[
+                        { value: '1-10', label: '1 to 10 properties' },
+                        { value: '10-50', label: '10 to 50 properties' },
+                        { value: '50-100', label: '50 to 100 properties' },
+                        { value: '100+', label: '100+ properties' },
+                      ]}
+                      className="rounded-[16px] px-4 py-3 text-sm font-medium min-h-[44px] shadow-2xs"
+                    />
                   </div>
 
                   <div>

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
+import { CustomSelect } from '../../components/ui/CustomSelect';
 import { useToast } from '../../components/ui/Toast';
 import { useAuth } from '../auth/AuthProvider';
 import { formatRupees, formatAmountInWords } from '../../lib/money';
@@ -894,35 +895,28 @@ ${agencyOrOwnerName}`;
               <Card className="p-5 space-y-4 rounded-[14px] border-border bg-white">
                 {/* State / Union Territory Selector */}
                 <div className="space-y-1.5 pb-3 border-b border-slate-100">
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
                     <label htmlFor="tool-registry-state" className="text-xs font-semibold text-slate-700 block">
                       State / Union Territory (India)
                     </label>
-                    <span className="text-[11px] font-semibold text-brand-700 bg-lime-soft px-2 py-0.5 rounded-full border border-lime">
+                    <span className="text-[11px] font-semibold text-brand-700 bg-lime-soft px-2.5 py-0.5 rounded-full border border-lime whitespace-nowrap shrink-0">
                       {activeStateRule.authorityLabel}
                     </span>
                   </div>
-                  <select
+                  <CustomSelect
                     id="tool-registry-state"
+                    title="State / Union Territory (India)"
+                    searchPlaceholder="Search state or territory..."
                     value={selectedState}
-                    onChange={(e) => setSelectedState(e.target.value)}
-                    className="w-full h-11 bg-white border border-border rounded-input px-3 text-sm font-semibold text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
-                  >
-                    <optgroup label="Indian States (28)">
-                      {INDIAN_STATES.filter((s) => s.regionType === 'State').map((s) => (
-                        <option key={s.name} value={s.name}>
-                          {s.name} ({s.stampFemalePct}%–{s.stampMalePct + s.urbanExtraPct}%)
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Union Territories (8)">
-                      {INDIAN_STATES.filter((s) => s.regionType === 'Union Territory').map((s) => (
-                        <option key={s.name} value={s.name}>
-                          {s.name} ({s.stampFemalePct}%–{s.stampMalePct + s.urbanExtraPct}%)
-                        </option>
-                      ))}
-                    </optgroup>
-                  </select>
+                    onChange={(val) => setSelectedState(val)}
+                    options={INDIAN_STATES.map((s) => ({
+                      value: s.name,
+                      label: `${s.name} (${s.stampFemalePct}%–${s.stampMalePct + s.urbanExtraPct}%)`,
+                      group: s.regionType === 'State' ? 'Indian States (28)' : 'Union Territories (8)',
+                      hint: s.authorityLabel,
+                    }))}
+                    className="h-11 text-sm"
+                  />
                   <p className="text-[11px] text-slate-500 leading-snug">
                     {activeStateRule.note}
                   </p>
@@ -1304,46 +1298,52 @@ ${agencyOrOwnerName}`;
                     <label className="text-xs font-semibold text-slate-700 block">
                       Commission rate (%)
                     </label>
-                    <select
+                    <CustomSelect
+                      title="Commission Rate (%)"
                       value={commissionRate}
-                      onChange={(e) => setCommissionRate(Number(e.target.value))}
-                      className="w-full h-11 bg-white border border-border rounded-input px-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
-                    >
-                      <option value={1.0}>1.0% (Single side)</option>
-                      <option value={2.0}>2.0% (Both sides: 1% + 1%)</option>
-                      <option value={0.5}>0.5% (Large ticket)</option>
-                    </select>
+                      onChange={(val) => setCommissionRate(Number(val))}
+                      options={[
+                        { value: 1.0, label: '1.0% (Single side)' },
+                        { value: 2.0, label: '2.0% (Both sides: 1% + 1%)' },
+                        { value: 0.5, label: '0.5% (Large ticket)' },
+                      ]}
+                      className="h-11 text-sm font-medium"
+                    />
                   </div>
 
                   <div className="space-y-1">
                     <label className="text-xs font-semibold text-slate-700 block">
                       Agency house cut (%)
                     </label>
-                    <select
+                    <CustomSelect
+                      title="Agency House Cut (%)"
                       value={agencyCut}
-                      onChange={(e) => setAgencyCut(Number(e.target.value))}
-                      className="w-full h-11 bg-white border border-border rounded-input px-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
-                    >
-                      <option value={0}>0% (Solo independent)</option>
-                      <option value={10}>10% Agency desk fee</option>
-                      <option value={20}>20% Standard split</option>
-                      <option value={30}>30% Prime desk fee</option>
-                    </select>
+                      onChange={(val) => setAgencyCut(Number(val))}
+                      options={[
+                        { value: 0, label: '0% (Solo independent)' },
+                        { value: 10, label: '10% Agency desk fee' },
+                        { value: 20, label: '20% Standard split' },
+                        { value: 30, label: '30% Prime desk fee' },
+                      ]}
+                      className="h-11 text-sm font-medium"
+                    />
                   </div>
 
                   <div className="space-y-1 sm:col-span-2">
                     <label className="text-xs font-semibold text-slate-700 block">
                       Co-broker split ratio
                     </label>
-                    <select
+                    <CustomSelect
+                      title="Co-broker Split Ratio"
                       value={splitRatio}
-                      onChange={(e) => setSplitRatio(Number(e.target.value))}
-                      className="w-full h-11 bg-white border border-border rounded-input px-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600 cursor-pointer"
-                    >
-                      <option value={50}>50 / 50 Equal co-broker split</option>
-                      <option value={60}>60 / 40 Lead broker advantage</option>
-                      <option value={100}>100% Solo (No co-broker split)</option>
-                    </select>
+                      onChange={(val) => setSplitRatio(Number(val))}
+                      options={[
+                        { value: 50, label: '50 / 50 Equal co-broker split' },
+                        { value: 60, label: '60 / 40 Lead broker advantage' },
+                        { value: 100, label: '100% Solo (No co-broker split)' },
+                      ]}
+                      className="h-11 text-sm font-medium"
+                    />
                   </div>
                 </div>
               </Card>
